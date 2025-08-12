@@ -1,0 +1,95 @@
+DMP Monthly Toggle Implementation
+What It Shows
+The toggle should display the monthly profitability that DMP earns from the merchant's account,.
+Math Formula
+// DMP Monthly Profitability Calculation
+dmpMonthlyProfit = markupCollected - netCost
+// Where:
+// markupCollected = baseVolume * priceDifferential
+// netCost = processingFees - markupCollected
+Example Calculation
+Using $100,000 volume with 6% price differential:
+•	Base Volume: $76,923 (after removing tax/tip)
+•	Markup Collected: $76,923 × 6% = $4,615
+•	Processing Fees: $106,000 × 4% = $4,240
+•	Net Cost: $4,240 - $4,615 = -$375 (merchant saves)
+•	DMP Monthly Profit: $4,615 - (-$375) = $4,990
+Implementation
+const calculateDMPProfitability = () => {
+  const baseVolume = creditCardVolume / (1 + taxRate + tipRate);
+  const markupCollected = baseVolume * priceDifferential;
+  const adjustedVolume = baseVolume * (1 + priceDifferential) * (1 + taxRate + tipRate);
+  const processingFees = adjustedVolume * flatRatePercent;
+  const netCost = processingFees - markupCollected;
+  
+  return markupCollected - netCost;
+};
+Comprehensive Tooltips
+Input Field Tooltips
+Monthly Credit Card Volume
+"The total dollar amount of credit card transactions processed per month. This is your gross credit card sales volume."
+Current Processing Rate (%)
+"Your current effective rate for processing credit cards, including all fees. Usually between 2-4%."
+Interchange Cost (%)
+"The wholesale cost charged by card networks (Visa/Mastercard). Typically 1.8-2.5% depending on card types."
+Flat Rate Processing (%)
+"DMP's flat processing rate that will be charged on the adjusted volume. This covers all processing costs."
+Tax Rate (%)
+"Local sales tax percentage that increases transaction totals. Enter 0 if not applicable."
+Tip Rate (%)
+"Average tip percentage that increases transaction totals. Common in restaurants (15-25%). Enter 0 if not applicable."
+Price Differential (%)
+"The markup percentage added to cash prices when customers pay with cards. This covers your processing costs."
+Live Preview Section Tooltips
+Base Volume
+"Your actual sales volume before taxes and tips are added. Calculated as: Credit Card Volume ÷ (1 + Tax Rate + Tip Rate)"
+Marked Up Volume
+"Base volume after applying the price differential. Calculated as: Base Volume × (1 + Price Differential)"
+Adjusted Volume
+"Final transaction volume after adding back taxes and tips. This is what gets processed through DMP."
+Markup Collected
+"Total monthly revenue collected from the price differential. Calculated as: Base Volume × Price Differential"
+Processing Fees
+"Total monthly fees paid to DMP for processing. Calculated as: Adjusted Volume × Flat Rate"
+Processing Savings Section Tooltips
+Current Processing Cost
+"What you currently pay monthly for credit card processing. Calculated as: Credit Card Volume × Current Processing Rate"
+New Processing Cost
+"Your actual out-of-pocket cost with DMP's dual pricing system. Calculated as: Processing Fees - Markup Collected. Negative amounts mean you earn money from processing."
+Monthly Savings
+"The difference between your current processing cost and your new processing cost. Calculated as: Current Cost - New Cost"
+DMP Monthly Toggle Section
+DMP Monthly Profitability
+"The monthly profit DMP earns from your account through dual pricing. Calculated as: Markup Collected - New Processing Cost. This shows the revenue generated for DMP from your processing volume."
+UI Implementation Structure
+Toggle Section Layout
+{/* DMP Monthly Profitability Toggle */}
+<div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl border border-blue-200 p-6">
+  <div className="flex items-center justify-between mb-4">
+    <h4 className="text-sm font-semibold text-blue-800">DMP Monthly Profitability</h4>
+    <Switch checked={showDMPProfit} onCheckedChange={setShowDMPProfit} />
+  </div>
+  
+  {showDMPProfit && (
+    <div className="bg-white rounded-lg p-4 border border-blue-100">
+      <div className="flex items-center gap-2 mb-2">
+        <span className="text-sm text-gray-600">DMP Monthly Profit</span>
+        <Tooltip>
+          <TooltipTrigger><HelpCircle className="w-4 h-4" /></TooltipTrigger>
+          <TooltipContent>DMP profitability tooltip text here</TooltipContent>
+        </Tooltip>
+      </div>
+      <p className="text-2xl font-bold text-blue-600">
+        {formatCurrency(calculateDMPProfitability())}
+      </p>
+    </div>
+  )}
+</div>
+Key Implementation Notes
+1.	Real-time Updates: All calculations update immediately when any input changes
+2.	Error Handling: Handle division by zero and negative values gracefully
+3.	Formatting: Use consistent currency formatting throughout
+4.	Responsive Design: Ensure tooltips work well on mobile devices
+5.	Professional Styling: Match the existing DMP brand colors and styling
+This implementation provides sales reps with complete transparency into both merchant savings and DMP's business model, making it a powerful sales tool.
+

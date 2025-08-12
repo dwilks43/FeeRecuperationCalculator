@@ -1,0 +1,115 @@
+DMP Savings Calculator Widget - Development Roadmap
+Project Overview
+Create a standalone, real-time savings calculator widget that replicates the core dual pricing calculations from Step 4 of the DMP Quote Generator. This will be a single-page application focused solely on showing merchants their potential savings with DMP's dual pricing model.
+
+Core Features Required
+Input Collection: All Step 4 parameters
+Real-time Calculations: Live preview of savings as inputs change
+Processing Savings Display: Current vs. new costs with monthly savings
+DMP Profitability Toggle: Show merchant credit and ROI calculations
+Clean, Professional UI: Sales-ready presentation
+Input Parameters Needed
+Monthly Credit Card Volume ($)
+Current Processing Rate (%)
+Interchange Cost (%)
+Flat Rate Processing (%)
+Tax Rate (%)
+Tip Rate (%)
+Price Differential (%)
+Key Mathematical Formulas
+Dual Pricing Calculations
+// Step 1: Base volume calculation
+baseVolume = creditCardVolume / (1 + taxRate + tipRate)
+// Step 2: Markup calculations
+markedUpVolume = baseVolume * (1 + priceDifferential)
+adjustedVolume = markedUpVolume * (1 + taxRate + tipRate)
+markupCollected = baseVolume * priceDifferential
+// Step 3: Processing costs
+processingFees = adjustedVolume * flatRatePercent
+netCost = processingFees - markupCollected
+currentCost = creditCardVolume * currentRate
+// Step 4: Savings
+monthlyProcessingSavings = currentCost - netCost
+DMP Profitability (when toggled)
+// Merchant credit calculation
+netMargin = flatRatePercent - interchangeCost
+volumeFactor = adjustedVolume / 100000
+merchantCredit = netMargin * roiTimeframe * profitShare * volumeFactor * 1000
+// ROI calculation
+roiMonths = merchantCredit / monthlyProcessingSavings
+Recommended Build Structure
+Technology Stack
+Frontend: React with TypeScript
+Styling: Tailwind CSS + Shadcn/ui components
+State: React useState (no external state management needed)
+Build: Vite for fast development
+Component Structure
+src/
+├── components/
+│   ├── InputForm.tsx           # All input fields
+│   ├── ProcessingSavings.tsx   # Current vs new cost display
+│   ├── DualPricingBreakdown.tsx # Volume calculations display
+│   └── DMPProfitability.tsx    # Merchant credit/ROI (toggleable)
+├── utils/
+│   └── calculations.ts         # All math functions
+├── types/
+│   └── calculator.ts          # TypeScript interfaces
+└── App.tsx                    # Main layout
+Development Steps
+Phase 1: Setup & Core Structure (30 minutes)
+Initialize React + TypeScript + Tailwind project
+Install Shadcn/ui components (Card, Input, Label, Switch, Button)
+Create basic layout with input form and results sections
+Define TypeScript interfaces for all data types
+Phase 2: Input Collection (45 minutes)
+Build InputForm component with all 7 required fields
+Add real-time validation and formatting
+Implement controlled inputs with React state
+Add helpful placeholders and labels
+Phase 3: Core Calculations (60 minutes)
+Create calculations.ts utility file
+Implement all dual pricing math functions
+Add DMP profitability calculations
+Test calculations against known examples from existing tool
+Phase 4: Results Display (90 minutes)
+Build ProcessingSavings component (3-card layout like Step 4)
+Create DualPricingBreakdown component showing volume flow
+Add DMP Profitability toggle section
+Implement conditional rendering and proper formatting
+Phase 5: Polish & Testing (45 minutes)
+Add responsive design for mobile/tablet
+Implement proper currency formatting
+Add helpful tooltips/explanations
+Test with various input scenarios
+Add error handling for edge cases
+Key Files to Share with New Agent
+From the existing DMP project, share these specific files:
+
+client/src/components/quote-generator/steps/MonthlyVolumeStep.tsx (lines 230-340 for calculations)
+shared/utils/quoteCalculations.ts (for formatting functions)
+Any relevant TypeScript interfaces from types/quoteTypes.ts
+Critical Implementation Notes
+Calculation Accuracy
+Use the exact same formulas from MonthlyVolumeStep.tsx
+Ensure percentage inputs are properly converted (divide by 100)
+Handle edge cases where savings might be negative
+User Experience
+All calculations should update in real-time as user types
+Use debouncing if performance becomes an issue
+Provide clear visual feedback for positive/negative savings
+Include example values or presets for quick demos
+Default Values (for demo purposes)
+Monthly Volume: $100,000
+Current Rate: 2.45%
+Interchange Cost: 2.25%
+Flat Rate: 4%
+Tax Rate: 10%
+Tip Rate: 20%
+Price Differential: 6%
+DMP Settings (configurable)
+ROI Timeframe: 6 months
+DMP Profit Share: 50%
+Expected Output
+A professional, single-page calculator that sales reps can use on tablets/laptops to show merchants real-time savings calculations during sales presentations. The tool should be intuitive enough that merchants can adjust parameters themselves and see immediate results.
+
+This roadmap provides a clear path to recreate the core value proposition of the DMP system in a focused, presentation-ready format.
