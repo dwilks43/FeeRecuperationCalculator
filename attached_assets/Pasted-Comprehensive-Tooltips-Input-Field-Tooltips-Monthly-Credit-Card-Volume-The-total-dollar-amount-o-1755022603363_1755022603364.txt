@@ -1,0 +1,48 @@
+Comprehensive Tooltips
+Input Field Tooltips
+Monthly Credit Card Volume
+"The total dollar amount of credit card transactions processed per month. This is your gross credit card sales volume."
+
+Current Processing Rate (%)
+"Your current effective rate for processing credit cards, including all fees. Usually between 2-4%."
+
+Interchange Cost (%)
+"The wholesale cost charged by card networks (Visa/Mastercard). Typically 1.8-2.5% depending on card types."
+
+Flat Rate Processing (%)
+"DMP's flat processing rate that will be charged on the adjusted volume. This covers all processing costs."
+
+Tax Rate (%)
+"Local sales tax percentage that increases transaction totals. Enter 0 if not applicable."
+
+Tip Rate (%)
+"Average tip percentage that increases transaction totals. Common in restaurants (15-25%). Enter 0 if not applicable."
+
+Price Differential (%)
+"The markup percentage added to cash prices when customers pay with cards. This covers your processing costs."
+
+Live Preview Section Tooltips
+Base Volume
+"Your actual sales volume before taxes and tips are added. Calculated as: Credit Card Volume ÷ (1 + Tax Rate + Tip Rate)"
+
+Marked Up Volume
+"Base volume after applying the price differential. Calculated as: Base Volume × (1 + Price Differential)"
+
+Adjusted Volume
+"Final transaction volume after adding back taxes and tips. This is what gets processed through DMP."
+
+Markup Collected
+"Total monthly revenue collected from the price differential. Calculated as: Base Volume × Price Differential"
+
+Processing Fees
+"Total monthly fees paid to DMP for processing. Calculated as: Adjusted Volume × Flat Rate"
+
+Processing Savings Section Tooltips
+Current Processing Cost
+"What you currently pay monthly for credit card processing. Calculated as: Credit Card Volume × Current Processing Rate"
+
+New Processing Cost
+"Your actual out-of-pocket cost with DMP's dual pricing system. Calculated as: Processing Fees - Markup Collected. Negative amounts mean you earn money from processing."
+
+Monthly Savings
+"The difference between your current processing cost and your new processing cost. Calculated as: Current Cost - New Cost"

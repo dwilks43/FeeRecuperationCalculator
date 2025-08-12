@@ -51,12 +51,12 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
     content: 'Final transaction volume after adding back taxes and tips. This is what gets processed through DMP.'
   },
   'markup-collected': {
-    title: 'Card Price Increase Collected',
+    title: 'Markup Collected',
     content: 'Total monthly revenue collected from the price differential. Calculated as: Base Volume × Price Differential'
   },
   'processing-fees': {
-    title: 'Total Processing Fees Charged',
-    content: 'Total monthly fees charged by DMP for processing. Calculated as: Adjusted Volume × Flat Rate Processing'
+    title: 'Processing Fees',
+    content: 'Total monthly fees paid to DMP for processing. Calculated as: Adjusted Volume × Flat Rate'
   },
   'current-cost': {
     title: 'Current Processing Cost',
@@ -64,11 +64,19 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
   },
   'new-cost': {
     title: 'New Processing Cost',
-    content: 'Your actual out-of-pocket cost with DMP\'s dual pricing system. Calculated as: Total Processing Fees Charged - Card Price Increase Collected. When negative, it means you earn a windfall profit from processing beyond just covering your costs.'
+    content: 'Your actual out-of-pocket cost with DMP\'s dual pricing system. Calculated as: Processing Fees - Markup Collected. Negative amounts mean you earn money from processing.'
   },
   'monthly-savings': {
     title: 'Monthly Savings',
     content: 'The difference between your current processing cost and your new processing cost. Calculated as: Current Cost - New Cost'
+  },
+  'annual-savings': {
+    title: 'Annual Savings',
+    content: 'Your total savings projected over 12 months. Calculated as: Monthly Savings × 12'
+  },
+  'annual-volume': {
+    title: 'Annual Processing Volume',
+    content: 'Your total credit card processing volume projected over 12 months. Calculated as: Monthly Volume × 12'
   },
   'dmp-profit': {
     title: 'DMP Monthly Profit',

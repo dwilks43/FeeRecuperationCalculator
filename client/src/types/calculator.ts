@@ -43,4 +43,6 @@ export type TooltipKey =
   | 'current-cost'
   | 'new-cost'
   | 'monthly-savings'
+  | 'annual-savings'
+  | 'annual-volume'
   | 'dmp-profit';
