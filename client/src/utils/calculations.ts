@@ -110,7 +110,7 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
   // Step 5: Calculate processing costs
   const processingFees = calculateCorrectProcessingFees(adjustedVolume, flatRate);
   const currentCost = monthlyVolume * (currentRate / 100);
-  const netCost = Math.max(0, processingFees - markupCollected);
+  const netCost = processingFees - markupCollected;
 
   // Step 6: Calculate savings
   const monthlySavings = currentCost - netCost;

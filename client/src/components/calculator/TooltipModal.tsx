@@ -64,7 +64,7 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
   },
   'new-cost': {
     title: 'New Processing Cost',
-    content: 'Your actual out-of-pocket cost with DMP\'s dual pricing system. Calculated as: Processing Fees - Markup Collected. Negative amounts mean you earn money from processing.'
+    content: 'Your actual out-of-pocket cost with DMP\'s dual pricing system. Calculated as: Total Processing Fees Charged - Card Price Increase Collected. When negative, it means you earn a windfall profit from processing beyond just covering your costs.'
   },
   'monthly-savings': {
     title: 'Monthly Savings',
