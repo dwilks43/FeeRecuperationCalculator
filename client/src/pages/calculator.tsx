@@ -8,6 +8,7 @@ import DualPricingBreakdown from "@/components/calculator/DualPricingBreakdown";
 import DMPProfitability from "@/components/calculator/DMPProfitability";
 import TooltipModal from "@/components/calculator/TooltipModal";
 import EmailReportDialog from "@/components/calculator/EmailReportDialog";
+import dmpLogoPath from "@assets/DMP—Logo Mark—2 Color_1755032066759.jpg";
 import { CalculatorInputs, TooltipKey } from "@/types/calculator";
 import { calculateResults, debounce, formatCurrency, formatLargeNumber } from "@/utils/calculations";
 
@@ -112,7 +113,17 @@ export default function Calculator() {
   };
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 min-h-screen relative">
+      {/* DMP Logo Watermark */}
+      <div className="absolute top-4 left-4 z-10">
+        <img 
+          src={dmpLogoPath} 
+          alt="DMP Logo" 
+          className="w-12 h-12 opacity-80 hover:opacity-100 transition-opacity"
+          data-testid="img-dmp-logo"
+        />
+      </div>
+      
       <div className="container mx-auto px-4 py-8 max-w-6xl">
         {/* Header Section */}
         <div className="text-center mb-8">

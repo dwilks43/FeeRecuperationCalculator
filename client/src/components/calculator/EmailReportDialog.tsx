@@ -78,9 +78,12 @@ export default function EmailReportDialog({ calculatorData, children }: EmailRep
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md" aria-describedby="email-dialog-description">
         <DialogHeader>
           <DialogTitle>Email Your Savings Report</DialogTitle>
+          <p id="email-dialog-description" className="text-sm text-muted-foreground">
+            Enter your email to receive a professional PDF report with your savings analysis.
+          </p>
         </DialogHeader>
         <form onSubmit={handleSendEmail} className="space-y-4">
           <div className="space-y-2">
