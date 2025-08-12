@@ -1,7 +1,7 @@
 import { useState, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, RotateCcw, Calendar, HelpCircle } from "lucide-react";
+import { FileText, RotateCcw, Calendar, HelpCircle, Download } from "lucide-react";
 import InputForm from "@/components/calculator/InputForm";
 import ProcessingSavings from "@/components/calculator/ProcessingSavings";
 import DualPricingBreakdown from "@/components/calculator/DualPricingBreakdown";
@@ -24,6 +24,7 @@ export default function Calculator() {
   const [showDMPProfit, setShowDMPProfit] = useState(false);
   const [tooltipKey, setTooltipKey] = useState<TooltipKey | null>(null);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const results = calculateResults(inputs);
 
@@ -59,9 +60,53 @@ export default function Calculator() {
     setShowDMPProfit(false);
   };
 
-  const handleGenerateReport = () => {
-    // TODO: Implement PDF generation
-    console.log('Generate report clicked', { inputs, results });
+  const handleGenerateReport = async () => {
+    try {
+      setIsGeneratingPDF(true);
+      
+      const reportData = {
+        monthlyVolume: inputs.monthlyVolume,
+        currentRate: inputs.currentRate,
+        interchangeCost: inputs.interchangeCost,
+        flatRate: inputs.flatRate,
+        taxRate: inputs.taxRate,
+        tipRate: inputs.tipRate,
+        priceDifferential: inputs.priceDifferential,
+        baseVolume: results.baseVolume,
+        adjustedVolume: results.adjustedVolume,
+        processingFees: results.processingFees,
+        markupCollected: results.markupCollected,
+        currentCost: results.currentCost,
+        newCost: results.newCost,
+        monthlySavings: results.monthlySavings,
+        annualSavings: results.annualSavings,
+        dmpProfit: showDMPProfit ? results.dmpProfit : null
+      };
+
+      const response = await fetch('/api/generate-savings-report', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(reportData),
+      });
+
+      if (!response.ok) throw new Error('PDF generation failed');
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'DMP-Savings-Report.pdf';
+      a.click();
+      window.URL.revokeObjectURL(url);
+      
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Failed to generate PDF report. Please try again.');
+    } finally {
+      setIsGeneratingPDF(false);
+    }
   };
 
   return (
@@ -193,11 +238,21 @@ export default function Calculator() {
           <div className="flex justify-center">
             <Button
               onClick={handleGenerateReport}
-              className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-8 shadow-lg"
+              disabled={isGeneratingPDF}
+              className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-8 shadow-lg disabled:opacity-50"
               data-testid="button-generate-report"
             >
-              <FileText className="h-4 w-4 mr-2" />
-              Generate Savings Report
+              {isGeneratingPDF ? (
+                <>
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                  Generating PDF...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Download PDF Report
+                </>
+              )}
             </Button>
           </div>
         </div>
