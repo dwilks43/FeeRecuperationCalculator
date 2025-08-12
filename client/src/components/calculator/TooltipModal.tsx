@@ -71,8 +71,8 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
     content: 'The difference between your current processing cost and your new processing cost. Calculated as: Current Cost - New Cost'
   },
   'dmp-profit': {
-    title: 'DMP Monthly Profitability',
-    content: 'The monthly profit DMP earns from your account through dual pricing. Calculated as: Markup Collected - New Processing Cost. This shows the revenue generated for DMP from your processing volume.'
+    title: 'DMP Monthly Profit',
+    content: 'The profit DMP earns from your account each month. Calculated as: (Flat Rate Processing % - Interchange Cost %) × Monthly Credit Card Volume'
   }
 };
 

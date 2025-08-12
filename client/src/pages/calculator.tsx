@@ -99,13 +99,6 @@ export default function Calculator() {
               onTooltip={handleTooltip}
             />
 
-            <DMPProfitability
-              results={results}
-              showDMPProfit={showDMPProfit}
-              onToggle={setShowDMPProfit}
-              onTooltip={handleTooltip}
-            />
-
             {/* Annual Summary Card */}
             <Card className="shadow-lg border-gray-200">
               <CardContent className="p-6">
@@ -133,25 +126,58 @@ export default function Calculator() {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
-          <Button
-            onClick={handleGenerateReport}
-            className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-8 shadow-lg"
-            data-testid="button-generate-report"
-          >
-            <FileText className="h-4 w-4 mr-2" />
-            Generate Savings Report
-          </Button>
-          <Button
-            variant="outline"
-            onClick={handleReset}
-            className="bg-white hover:bg-gray-50 text-dmp-blue-600 font-semibold py-3 px-8 border-dmp-blue-300"
-            data-testid="button-reset"
-          >
-            <RotateCcw className="h-4 w-4 mr-2" />
-            Reset Calculator
-          </Button>
+        {/* DMP Toggle and Action Buttons */}
+        <div className="mt-8 space-y-6">
+          {/* DMP Toggle Section */}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <Button
+              variant={showDMPProfit ? "default" : "outline"}
+              onClick={() => setShowDMPProfit(!showDMPProfit)}
+              className={`font-semibold py-3 px-8 ${
+                showDMPProfit 
+                  ? "bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white shadow-lg" 
+                  : "bg-white hover:bg-gray-50 text-dmp-blue-600 border-dmp-blue-300"
+              }`}
+              data-testid="button-toggle-dmp"
+            >
+              DMP
+            </Button>
+            <Button
+              variant="outline"
+              onClick={handleReset}
+              className="bg-white hover:bg-gray-50 text-dmp-blue-600 font-semibold py-3 px-8 border-dmp-blue-300"
+              data-testid="button-reset"
+            >
+              <RotateCcw className="h-4 w-4 mr-2" />
+              Reset Calculator
+            </Button>
+          </div>
+
+          {/* DMP Profitability Card (conditionally shown) */}
+          {showDMPProfit && (
+            <div className="flex justify-center">
+              <div className="w-full max-w-md">
+                <DMPProfitability
+                  results={results}
+                  showDMPProfit={showDMPProfit}
+                  onToggle={setShowDMPProfit}
+                  onTooltip={handleTooltip}
+                />
+              </div>
+            </div>
+          )}
+
+          {/* Generate Report Button */}
+          <div className="flex justify-center">
+            <Button
+              onClick={handleGenerateReport}
+              className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-8 shadow-lg"
+              data-testid="button-generate-report"
+            >
+              <FileText className="h-4 w-4 mr-2" />
+              Generate Savings Report
+            </Button>
+          </div>
         </div>
       </div>
 

@@ -117,8 +117,8 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
   const annualSavings = monthlySavings * 12;
   const annualVolume = monthlyVolume * 12;
 
-  // Step 7: Calculate DMP profit
-  const dmpProfit = markupCollected - netCost;
+  // Step 7: Calculate DMP profit using the correct formula
+  const dmpProfit = (inputs.flatRate - inputs.interchangeCost) / 100 * inputs.monthlyVolume;
 
   return {
     baseVolume: Number(baseVolume.toFixed(2)),
