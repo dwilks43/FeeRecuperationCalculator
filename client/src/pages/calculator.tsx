@@ -1,12 +1,13 @@
 import { useState, useCallback } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, RotateCcw, Calendar, HelpCircle, Download } from "lucide-react";
+import { FileText, RotateCcw, Calendar, HelpCircle, Download, Mail } from "lucide-react";
 import InputForm from "@/components/calculator/InputForm";
 import ProcessingSavings from "@/components/calculator/ProcessingSavings";
 import DualPricingBreakdown from "@/components/calculator/DualPricingBreakdown";
 import DMPProfitability from "@/components/calculator/DMPProfitability";
 import TooltipModal from "@/components/calculator/TooltipModal";
+import EmailReportDialog from "@/components/calculator/EmailReportDialog";
 import { CalculatorInputs, TooltipKey } from "@/types/calculator";
 import { calculateResults, debounce, formatCurrency, formatLargeNumber } from "@/utils/calculations";
 
@@ -27,6 +28,26 @@ export default function Calculator() {
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const results = calculateResults(inputs);
+  
+  // Prepare calculator data for PDF and email
+  const calculatorData = {
+    monthlyVolume: inputs.monthlyVolume,
+    currentRate: inputs.currentRate,
+    interchangeCost: inputs.interchangeCost,
+    flatRate: inputs.flatRate,
+    taxRate: inputs.taxRate,
+    tipRate: inputs.tipRate,
+    priceDifferential: inputs.priceDifferential,
+    baseVolume: results.baseVolume,
+    adjustedVolume: results.adjustedVolume,
+    processingFees: results.processingFees,
+    markupCollected: results.markupCollected,
+    currentCost: results.currentCost,
+    newCost: results.newCost,
+    monthlySavings: results.monthlySavings,
+    annualSavings: results.annualSavings,
+    dmpProfit: showDMPProfit ? results.dmpProfit : null
+  };
 
   const debouncedInputChange = useCallback(
     debounce((field: keyof CalculatorInputs, value: number) => {
@@ -64,31 +85,12 @@ export default function Calculator() {
     try {
       setIsGeneratingPDF(true);
       
-      const reportData = {
-        monthlyVolume: inputs.monthlyVolume,
-        currentRate: inputs.currentRate,
-        interchangeCost: inputs.interchangeCost,
-        flatRate: inputs.flatRate,
-        taxRate: inputs.taxRate,
-        tipRate: inputs.tipRate,
-        priceDifferential: inputs.priceDifferential,
-        baseVolume: results.baseVolume,
-        adjustedVolume: results.adjustedVolume,
-        processingFees: results.processingFees,
-        markupCollected: results.markupCollected,
-        currentCost: results.currentCost,
-        newCost: results.newCost,
-        monthlySavings: results.monthlySavings,
-        annualSavings: results.annualSavings,
-        dmpProfit: showDMPProfit ? results.dmpProfit : null
-      };
-
       const response = await fetch('/api/generate-savings-report', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(reportData),
+        body: JSON.stringify(calculatorData),
       });
 
       if (!response.ok) throw new Error('PDF generation failed');
@@ -234,26 +236,39 @@ export default function Calculator() {
             </div>
           )}
 
-          {/* Generate Report Button */}
+          {/* Generate Report Buttons */}
           <div className="flex justify-center">
-            <Button
-              onClick={handleGenerateReport}
-              disabled={isGeneratingPDF}
-              className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-8 shadow-lg disabled:opacity-50"
-              data-testid="button-generate-report"
-            >
-              {isGeneratingPDF ? (
-                <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                  Generating PDF...
-                </>
-              ) : (
-                <>
-                  <Download className="h-4 w-4 mr-2" />
-                  Download PDF Report
-                </>
-              )}
-            </Button>
+            <div className="grid grid-cols-2 gap-3 w-full max-w-md">
+              <Button 
+                onClick={handleGenerateReport}
+                disabled={isGeneratingPDF}
+                className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-4 shadow-lg disabled:opacity-50"
+                data-testid="button-download-pdf"
+              >
+                {isGeneratingPDF ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    Generating...
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4 mr-2" />
+                    Download PDF
+                  </>
+                )}
+              </Button>
+              
+              <EmailReportDialog calculatorData={calculatorData}>
+                <Button 
+                  variant="outline" 
+                  className="w-full bg-white hover:bg-gray-50 text-dmp-blue-600 border-dmp-blue-300 font-semibold py-3 px-4 shadow-lg"
+                  data-testid="button-email-report"
+                >
+                  <Mail className="w-4 h-4 mr-2" />
+                  Email Report
+                </Button>
+              </EmailReportDialog>
+            </div>
           </div>
         </div>
       </div>

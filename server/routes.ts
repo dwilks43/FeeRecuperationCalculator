@@ -41,6 +41,137 @@ function generateISOAmpLoginLink(
   return `${baseUrl}?m=${hexEncodedMessage}&s=${signature}&t=${unixTime}&v=${version}`;
 }
 
+async function sendSavingsReportEmail(recipientEmail: string, recipientName: string, calculatorData: any) {
+  const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
+  const verifiedSender = process.env.POSTMARK_VERIFIED_SENDER;
+  
+  if (!postmarkToken || !verifiedSender) {
+    throw new Error('Postmark configuration missing');
+  }
+
+  // Generate PDF buffer
+  const pdfBuffer = await generateSavingsReportPDF(calculatorData);
+  
+  // Convert PDF to base64 for attachment
+  const pdfBase64 = pdfBuffer.toString('base64');
+  
+  const emailData = {
+    From: verifiedSender,
+    To: recipientEmail,
+    Subject: 'Your DMP Dual Pricing Savings Report',
+    HtmlBody: generateEmailHTML(recipientName, calculatorData, verifiedSender),
+    TextBody: generateEmailText(recipientName, calculatorData, verifiedSender),
+    Attachments: [{
+      Name: 'DMP-Savings-Report.pdf',
+      Content: pdfBase64,
+      ContentType: 'application/pdf'
+    }]
+  };
+
+  const response = await fetch('https://api.postmarkapp.com/email', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'X-Postmark-Server-Token': postmarkToken
+    },
+    body: JSON.stringify(emailData)
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Postmark API error: ${response.status} - ${error}`);
+  }
+
+  return await response.json();
+}
+
+function generateEmailHTML(recipientName: string, data: any, verifiedSender: string): string {
+  const { monthlySavings, annualSavings, monthlyVolume } = data;
+  
+  return `
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        .header { background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%); color: white; padding: 30px; text-align: center; border-radius: 8px; }
+        .content { background: #f9f9f9; padding: 30px; border-radius: 8px; margin: 20px 0; }
+        .highlight { background: #e8f4fd; border-left: 4px solid #004ED3; padding: 15px; margin: 20px 0; }
+        .savings { font-size: 24px; font-weight: bold; color: #059669; }
+        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; }
+        .cta { background: #004ED3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Your Dual Pricing Savings Report</h1>
+            <p>Personalized analysis from Dynamic Merchant Processing</p>
+        </div>
+        
+        <div class="content">
+            <p>Hello ${recipientName || 'Valued Merchant'},</p>
+            
+            <p>Thank you for using our Dual Pricing Savings Calculator. Based on your monthly volume of <strong>$${monthlyVolume.toLocaleString()}</strong>, we've prepared a comprehensive analysis of your potential savings.</p>
+            
+            <div class="highlight">
+                <h3>Your Potential Savings:</h3>
+                <div class="savings">Monthly: $${monthlySavings.toFixed(2)}</div>
+                <div class="savings">Annual: $${annualSavings.toFixed(2)}</div>
+            </div>
+            
+            <p>Your detailed savings report is attached to this email as a PDF. This report includes:</p>
+            <ul>
+                <li>Complete breakdown of your current vs. new processing costs</li>
+                <li>Volume analysis with dual pricing calculations</li>
+                <li>Monthly and annual savings projections</li>
+                <li>Professional formatting for presentations</li>
+            </ul>
+            
+            <p>Ready to start saving? Our team is here to help you implement this solution.</p>
+            
+            <a href="mailto:${verifiedSender}?subject=DMP Dual Pricing Implementation" class="cta">Contact Us Today</a>
+        </div>
+        
+        <div class="footer">
+            <p>Dynamic Merchant Processing | Professional Payment Solutions</p>
+            <p>This report was generated using your provided data and DMP's proven dual pricing model.</p>
+        </div>
+    </div>
+</body>
+</html>`;
+}
+
+function generateEmailText(recipientName: string, data: any, verifiedSender: string): string {
+  const { monthlySavings, annualSavings, monthlyVolume } = data;
+  
+  return `
+Hello ${recipientName || 'Valued Merchant'},
+
+Thank you for using our Dual Pricing Savings Calculator. Based on your monthly volume of $${monthlyVolume.toLocaleString()}, we've prepared a comprehensive analysis of your potential savings.
+
+YOUR POTENTIAL SAVINGS:
+Monthly: $${monthlySavings.toFixed(2)}
+Annual: $${annualSavings.toFixed(2)}
+
+Your detailed savings report is attached to this email as a PDF. This report includes:
+- Complete breakdown of your current vs. new processing costs
+- Volume analysis with dual pricing calculations  
+- Monthly and annual savings projections
+- Professional formatting for presentations
+
+Ready to start saving? Our team is here to help you implement this solution.
+
+Contact us at: ${verifiedSender}
+
+Dynamic Merchant Processing | Professional Payment Solutions
+This report was generated using your provided data and DMP's proven dual pricing model.
+`;
+}
+
 async function generateSavingsReportPDF(data: any): Promise<Buffer> {
   const apiKey = process.env.DOCRAPTOR_API_KEY;
   if (!apiKey) {
@@ -392,6 +523,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error('PDF generation failed:', error);
       res.status(500).json({ error: 'Failed to generate PDF' });
+    }
+  });
+
+  // Email PDF Report Route
+  app.post("/api/email-savings-report", async (req, res) => {
+    try {
+      const { email, name, calculatorData } = req.body;
+      
+      // Basic validation
+      if (!email || !calculatorData) {
+        return res.status(400).json({ error: 'Email and calculator data required' });
+      }
+      
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return res.status(400).json({ error: 'Invalid email address' });
+      }
+      
+      // Send email with PDF attachment
+      const result = await sendSavingsReportEmail(email, name, calculatorData);
+      
+      res.json({ 
+        success: true, 
+        messageId: result.MessageID,
+        message: 'Savings report sent successfully'
+      });
+      
+    } catch (error) {
+      console.error('Email sending failed:', error);
+      res.status(500).json({ error: 'Failed to send email' });
     }
   });
 
