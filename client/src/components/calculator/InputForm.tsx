@@ -76,7 +76,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
               <Input
                 type="text"
-                className="pl-8 py-3 focus:ring-2 focus:ring-dmp-blue-500"
+                className="pl-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="100,000"
                 value={inputValues.monthlyVolume}
                 onChange={(e) => handleInputChange('monthlyVolume', e.target.value)}
@@ -102,7 +102,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             <div className="relative">
               <Input
                 type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500"
+                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="2.45"
                 value={inputValues.currentRate}
                 onChange={(e) => handleInputChange('currentRate', e.target.value)}
@@ -129,7 +129,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             <div className="relative">
               <Input
                 type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500"
+                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="2.25"
                 value={inputValues.interchangeCost}
                 onChange={(e) => handleInputChange('interchangeCost', e.target.value)}
@@ -176,7 +176,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             <div className="relative">
               <Input
                 type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500"
+                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="4.00"
                 value={inputValues.flatRate}
                 onChange={(e) => handleInputChange('flatRate', e.target.value)}
@@ -203,7 +203,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             <div className="relative">
               <Input
                 type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500"
+                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="10.00"
                 value={inputValues.taxRate}
                 onChange={(e) => handleInputChange('taxRate', e.target.value)}
@@ -230,7 +230,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             <div className="relative">
               <Input
                 type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500"
+                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="20.00"
                 value={inputValues.tipRate}
                 onChange={(e) => handleInputChange('tipRate', e.target.value)}
@@ -257,7 +257,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             <div className="relative">
               <Input
                 type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500"
+                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="6.00"
                 value={inputValues.priceDifferential}
                 onChange={(e) => handleInputChange('priceDifferential', e.target.value)}
@@ -268,18 +268,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           </div>
         </div>
 
-        {/* Load Demo Values Button */}
-        <div className="pt-4 border-t border-gray-200">
-          <Button
-            variant="outline"
-            onClick={loadDemoValues}
-            className="w-full bg-dmp-blue-50 hover:bg-dmp-blue-100 text-dmp-blue-700 border-dmp-blue-200"
-            data-testid="button-load-demo"
-          >
-            <Zap className="h-4 w-4 mr-2" />
-            Load Demo Values
-          </Button>
-        </div>
+
       </CardContent>
     </Card>
   );
