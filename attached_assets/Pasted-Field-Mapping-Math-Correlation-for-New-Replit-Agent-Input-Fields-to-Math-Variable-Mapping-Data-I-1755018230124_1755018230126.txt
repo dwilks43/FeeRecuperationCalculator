@@ -1,0 +1,67 @@
+Field Mapping & Math Correlation for New Replit Agent
+Input Fields to Math Variable Mapping
+Data Input Fields → Code Variables
+Monthly Credit Card Volume        → creditCardVolume / monthlyVolume.creditCardVolume
+Current Processing Rate (%)       → processingRates.currentRate
+Interchange Cost (%)              → processingRates.interchangeCost  
+Flat Rate Processing (%)          → processingRates.flatRatePercent
+Tax Rate (%)                      → processingRates.taxPercent
+Tip Rate (%)                      → processingRates.tipPercent
+Price Differential (%)            → processingRates.priceDifferential
+UI Display Fields → Calculation Mapping
+Live Preview Section Calculations
+Adjusted Card Volume → adjustedVolume
+
+// Step 1: Remove tax/tip to get base volume
+const baseVolume = creditCardVolume / (1 + taxRate + tipRate);
+// Step 2: Add price differential markup
+const markedUpVolume = baseVolume * (1 + priceDifferential);
+// Step 3: Add tax/tip back = ADJUSTED CARD VOLUME
+const adjustedVolume = markedUpVolume * (1 + taxRate + tipRate);
+Card Price Increase Collected → markupCollected
+
+const baseVolume = creditCardVolume / (1 + taxRate + tipRate);
+const markupCollected = baseVolume * priceDifferential;
+Total Processing Fees Charged → processingFees
+
+const processingFees = adjustedVolume * flatRatePercent;
+Processing Savings Section Calculations
+Current Processing Cost → currentCost
+
+const currentCost = creditCardVolume * currentRate;
+New Processing Cost → netCost
+
+const netCost = processingFees - markupCollected;
+Monthly Savings → monthlyProcessingSavings
+
+const monthlyProcessingSavings = currentCost - netCost;
+Annual Impact → annual
+
+const annual = monthlyProcessingSavings * 12;
+Complete Calculation Flow
+// Convert percentages to decimals
+const currentRate = currentProcessingRate / 100;
+const flatRatePercent = flatRateProcessing / 100;
+const priceDifferential = priceDifferentialPercent / 100;
+const taxRate = taxRatePercent / 100;
+const tipRate = tipRatePercent / 100;
+// Dual pricing math sequence
+const baseVolume = creditCardVolume / (1 + taxRate + tipRate);
+const markedUpVolume = baseVolume * (1 + priceDifferential);
+const adjustedVolume = markedUpVolume * (1 + taxRate + tipRate);
+const markupCollected = baseVolume * priceDifferential;
+const processingFees = adjustedVolume * flatRatePercent;
+// Cost calculations
+const currentCost = creditCardVolume * currentRate;
+const netCost = processingFees - markupCollected;
+const monthlyProcessingSavings = currentCost - netCost;
+const annual = monthlyProcessingSavings * 12;
+// DMP Profitability (when toggled)
+const dmpMonthlyProfit = markupCollected - netCost;
+Key Implementation Notes for New Agent
+Percentage Handling: All percentage inputs must be divided by 100 before use in calculations
+Variable Names: Use the exact variable names shown above for consistency
+Calculation Order: Follow the sequence exactly - baseVolume first, then markedUp, then adjusted
+Display Fields: Match the UI field names exactly as listed in the mapping
+Real-time Updates: All calculations should recalculate immediately when any input changes
+This mapping ensures the new agent builds the calculator with identical math logic and proper field correlation to the existing DMP system.
