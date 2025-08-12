@@ -13,6 +13,7 @@ export interface CalculatorResults {
   markedUpVolume: number;
   adjustedVolume: number;
   markupCollected: number;
+  processingFees: number;
   currentCost: number;
   newCost: number;
   monthlySavings: number;
@@ -38,6 +39,7 @@ export type TooltipKey =
   | 'marked-up-volume'
   | 'adjusted-volume'
   | 'markup-collected'
+  | 'processing-fees'
   | 'current-cost'
   | 'new-cost'
   | 'monthly-savings'

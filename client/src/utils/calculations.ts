@@ -125,6 +125,7 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
     markedUpVolume: Number(markedUpVolume.toFixed(2)),
     adjustedVolume: Number(adjustedVolume.toFixed(2)),
     markupCollected: Number(markupCollected.toFixed(2)),
+    processingFees: Number(processingFees.toFixed(2)),
     currentCost: Number(currentCost.toFixed(2)),
     newCost: Number(netCost.toFixed(2)),
     monthlySavings: Number(monthlySavings.toFixed(2)),

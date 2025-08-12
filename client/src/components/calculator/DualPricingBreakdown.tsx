@@ -38,29 +38,10 @@ export default function DualPricingBreakdown({ results, onTooltip }: DualPricing
           </span>
         </div>
 
-        {/* Marked Up Volume */}
+        {/* Adjusted Card Volume */}
         <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Marked Up Volume</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto p-0"
-              onClick={() => onTooltip('marked-up-volume')}
-              data-testid="button-tooltip-marked-up-volume"
-            >
-              <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-            </Button>
-          </div>
-          <span className="text-lg font-bold text-dmp-blue-600" data-testid="text-marked-up-volume">
-            {formatCurrency(results.markedUpVolume)}
-          </span>
-        </div>
-
-        {/* Adjusted Volume */}
-        <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Adjusted Volume</span>
+            <span className="text-sm font-medium text-gray-700">Adjusted Card Volume</span>
             <Button
               variant="ghost"
               size="sm"
@@ -71,15 +52,34 @@ export default function DualPricingBreakdown({ results, onTooltip }: DualPricing
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
             </Button>
           </div>
-          <span className="text-lg font-bold text-green-600" data-testid="text-adjusted-volume">
+          <span className="text-lg font-bold text-dmp-blue-600" data-testid="text-adjusted-volume">
             {formatCurrency(results.adjustedVolume)}
           </span>
         </div>
 
-        {/* Markup Collected */}
+        {/* Total Processing Fees Charged */}
+        <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-medium text-gray-700">Total Processing Fees Charged</span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-auto p-0"
+              onClick={() => onTooltip('processing-fees')}
+              data-testid="button-tooltip-processing-fees"
+            >
+              <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+            </Button>
+          </div>
+          <span className="text-lg font-bold text-green-600" data-testid="text-processing-fees">
+            {formatCurrency(results.processingFees)}
+          </span>
+        </div>
+
+        {/* Card Price Increase Collected */}
         <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Markup Collected</span>
+            <span className="text-sm font-medium text-gray-700">Card Price Increase Collected</span>
             <Button
               variant="ghost"
               size="sm"

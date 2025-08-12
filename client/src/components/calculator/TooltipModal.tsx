@@ -51,8 +51,12 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
     content: 'Final transaction volume after adding back taxes and tips. This is what gets processed through DMP.'
   },
   'markup-collected': {
-    title: 'Markup Collected',
+    title: 'Card Price Increase Collected',
     content: 'Total monthly revenue collected from the price differential. Calculated as: Base Volume × Price Differential'
+  },
+  'processing-fees': {
+    title: 'Total Processing Fees Charged',
+    content: 'Total monthly fees charged by DMP for processing. Calculated as: Adjusted Volume × Flat Rate Processing'
   },
   'current-cost': {
     title: 'Current Processing Cost',
