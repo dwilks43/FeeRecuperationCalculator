@@ -119,7 +119,7 @@ export default function Calculator() {
         <img 
           src={dmpLogoPath} 
           alt="DMP Logo" 
-          className="w-12 h-12 opacity-80 hover:opacity-100 transition-opacity"
+          className="w-16 h-auto opacity-80 hover:opacity-100 transition-opacity"
           data-testid="img-dmp-logo"
         />
       </div>
