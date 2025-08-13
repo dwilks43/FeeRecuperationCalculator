@@ -29,6 +29,17 @@ export interface TooltipContent {
   content: string;
 }
 
+export interface CustomerInfo {
+  businessName: string;
+  businessAddress: string;
+  contactName: string;
+  contactTitle?: string;
+  contactEmail: string;
+  salesRepName: string;
+  salesRepEmail: string;
+  salesRepPhone: string;
+}
+
 export type TooltipKey = 
   | 'monthly-volume'
   | 'current-rate'

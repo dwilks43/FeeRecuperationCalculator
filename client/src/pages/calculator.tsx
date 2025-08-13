@@ -8,8 +8,9 @@ import DualPricingBreakdown from "@/components/calculator/DualPricingBreakdown";
 import DMPProfitability from "@/components/calculator/DMPProfitability";
 import TooltipModal from "@/components/calculator/TooltipModal";
 import EmailReportDialog from "@/components/calculator/EmailReportDialog";
+import { CustomerInfoForm } from "@/components/calculator/CustomerInfoForm";
 import dmpLogoPath from "@assets/DMP—Logo Mark—2 Color_1755032066759.jpg";
-import { CalculatorInputs, TooltipKey } from "@/types/calculator";
+import { CalculatorInputs, TooltipKey, CustomerInfo } from "@/types/calculator";
 import { calculateResults, debounce, formatCurrency, formatLargeNumber } from "@/utils/calculations";
 
 export default function Calculator() {
@@ -27,11 +28,13 @@ export default function Calculator() {
   const [tooltipKey, setTooltipKey] = useState<TooltipKey | null>(null);
   const [isTooltipOpen, setIsTooltipOpen] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState<Partial<CustomerInfo>>({});
 
   const results = calculateResults(inputs);
   
   // Prepare calculator data for PDF and email
   const calculatorData = {
+    ...customerInfo,
     monthlyVolume: inputs.monthlyVolume,
     currentRate: inputs.currentRate,
     interchangeCost: inputs.interchangeCost,
@@ -135,6 +138,14 @@ export default function Calculator() {
           <p className="text-gray-600 text-lg" data-testid="text-subtitle">
             Calculate your potential monthly savings with DMP's dual pricing model
           </p>
+        </div>
+
+        {/* Customer Information Section */}
+        <div className="mb-8">
+          <CustomerInfoForm
+            onDataChange={setCustomerInfo}
+            initialData={customerInfo}
+          />
         </div>
 
         <div className="grid lg:grid-cols-2 gap-8">

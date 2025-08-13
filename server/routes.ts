@@ -214,6 +214,16 @@ async function generateSavingsReportPDF(data: any): Promise<Buffer> {
 
 function generateSavingsReportHTML(data: any): string {
   const {
+    // Customer Information
+    businessName,
+    businessAddress,
+    contactName,
+    contactTitle,
+    contactEmail,
+    salesRepName,
+    salesRepEmail,
+    salesRepPhone,
+    // Calculator Data
     monthlyVolume,
     currentRate,
     interchangeCost,
@@ -482,8 +492,60 @@ function generateSavingsReportHTML(data: any): string {
             <div class="report-meta">
                 <div class="report-title">Savings Analysis Report</div>
                 <div class="report-date">Generated: ${new Date().toLocaleDateString()}</div>
+                ${salesRepName ? `<div class="report-date">Sales Rep: ${salesRepName}</div>` : ''}
             </div>
         </div>
+        
+        ${businessName ? `
+        <!-- Customer Summary -->
+        <div class="section">
+            <h2 class="section-title">Customer Summary</h2>
+            <table class="input-table">
+                <tbody>
+                    <tr>
+                        <td><strong>Business Name:</strong></td>
+                        <td>${businessName}</td>
+                    </tr>
+                    ${businessAddress ? `
+                    <tr>
+                        <td><strong>Address:</strong></td>
+                        <td>${businessAddress}</td>
+                    </tr>
+                    ` : ''}
+                    ${contactName ? `
+                    <tr>
+                        <td><strong>Contact:</strong></td>
+                        <td>${contactName}${contactTitle ? ` - ${contactTitle}` : ''}</td>
+                    </tr>
+                    ` : ''}
+                    ${contactEmail ? `
+                    <tr>
+                        <td><strong>Email:</strong></td>
+                        <td>${contactEmail}</td>
+                    </tr>
+                    ` : ''}
+                    ${salesRepName ? `
+                    <tr>
+                        <td><strong>Sales Rep:</strong></td>
+                        <td>${salesRepName}</td>
+                    </tr>
+                    ` : ''}
+                    ${salesRepEmail ? `
+                    <tr>
+                        <td><strong>Sales Rep Email:</strong></td>
+                        <td>${salesRepEmail}</td>
+                    </tr>
+                    ` : ''}
+                    ${salesRepPhone ? `
+                    <tr>
+                        <td><strong>Sales Rep Phone:</strong></td>
+                        <td>${salesRepPhone}</td>
+                    </tr>
+                    ` : ''}
+                </tbody>
+            </table>
+        </div>
+        ` : ''}
         
         <!-- Executive Summary -->
         <div class="summary-grid">
