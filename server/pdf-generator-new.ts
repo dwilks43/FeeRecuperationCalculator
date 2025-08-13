@@ -65,7 +65,7 @@ function generateQuoteStyleHTML(data: any): string {
         .logo {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, #0ea5e9, #0369a1);
+            background: #0ea5e9;
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -73,7 +73,7 @@ function generateQuoteStyleHTML(data: any): string {
             color: white;
             font-weight: bold;
             font-size: 16px;
-            box-shadow: 0 2px 4px rgba(14, 165, 233, 0.3);
+            border: 2px solid #0369a1;
         }
 
         .company-name {
@@ -127,43 +127,97 @@ function generateQuoteStyleHTML(data: any): string {
             border-bottom: none;
         }
 
-        /* Monthly Processing Savings Section - Match widget exactly */
-        .processing-savings {
-            background: linear-gradient(to right, #f0fdf4, #dcfce7);
-            border: 2px solid #22c55e;
+        /* Monthly Processing Savings Section - Complete 3-card section matching widget exactly */
+        .processing-savings-container {
+            background: linear-gradient(to bottom right, #dbeafe, #e0e7ff);
+            border: 1px solid #3b82f6;
             border-radius: 12px;
             padding: 1.5rem;
             margin: 2rem 0;
-            box-shadow: 0 4px 6px rgba(34, 197, 94, 0.1);
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
+        }
+
+        .processing-savings-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .processing-savings-title {
             font-size: 16pt;
             font-weight: 700;
-            color: #059669;
-            margin-bottom: 1rem;
+            color: #1e40af;
+        }
+
+        .processing-cards {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        .processing-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1rem;
+            border: 1px solid #e5e7eb;
+        }
+
+        .processing-card.current {
+            border-color: #fca5a5;
+        }
+
+        .processing-card.new {
+            border-color: #86efac;
+        }
+
+        .processing-card.savings {
+            background: linear-gradient(to right, #f0fdf4, #dcfce7);
+            border: 2px solid #22c55e;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 11pt;
+            font-weight: 500;
+            color: #6b7280;
+        }
+
+        .card-value-row {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .trophy-icon {
-            width: 20px;
-            height: 20px;
+        .card-value.current {
+            font-size: 18pt;
+            font-weight: 700;
+            color: #dc2626;
+        }
+
+        .card-value.new {
+            font-size: 18pt;
+            font-weight: 700;
             color: #16a34a;
         }
 
-        .monthly-savings-amount {
-            font-size: 28pt;
+        .card-value.savings {
+            font-size: 24pt;
             font-weight: 800;
             color: #15803d;
-            margin: 0.5rem 0;
         }
 
         .savings-subtitle {
             font-size: 11pt;
             color: #16a34a;
             font-weight: 500;
+            margin-top: 0.25rem;
         }
 
         /* Annual Impact Section - Match widget exactly */
@@ -311,26 +365,51 @@ function generateQuoteStyleHTML(data: any): string {
                         <td>Adjusted Card Volume</td>
                         <td>\${{ADJUSTED_VOLUME}}</td>
                     </tr>
-                    <tr>
-                        <td>Current Processing Cost</td>
-                        <td>\${{CURRENT_COST}}</td>
-                    </tr>
-                    <tr>
-                        <td>New Processing Cost</td>
-                        <td>\${{NEW_COST}}</td>
-                    </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Monthly Processing Savings - Styled like widget -->
-        <div class="processing-savings">
-            <div class="processing-savings-title">
-                <span>🏆</span>
-                Monthly Savings
+        <!-- Monthly Processing Savings - Complete 3-card section matching widget exactly -->
+        <div class="processing-savings-container">
+            <div class="processing-savings-header">
+                <span>🐷</span>
+                <div class="processing-savings-title">Monthly Processing Savings</div>
             </div>
-            <div class="monthly-savings-amount">\${{MONTHLY_SAVINGS}}</div>
-            <div class="savings-subtitle">per month saved with DMP</div>
+            <div class="processing-cards">
+                <!-- Current Processing Cost Card -->
+                <div class="processing-card current">
+                    <div class="card-header">
+                        <span class="card-title">Current Processing Cost</span>
+                    </div>
+                    <div class="card-value-row">
+                        <span>⊖</span>
+                        <span class="card-value current">\${{CURRENT_COST}}</span>
+                    </div>
+                </div>
+                
+                <!-- New Processing Cost Card -->
+                <div class="processing-card new">
+                    <div class="card-header">
+                        <span class="card-title">New Processing Cost</span>
+                    </div>
+                    <div class="card-value-row">
+                        <span>✓</span>
+                        <span class="card-value new">\${{NEW_COST}}</span>
+                    </div>
+                </div>
+                
+                <!-- Monthly Savings Card -->
+                <div class="processing-card savings">
+                    <div class="card-header">
+                        <span class="card-title">Monthly Savings</span>
+                    </div>
+                    <div class="card-value-row">
+                        <span>🏆</span>
+                        <span class="card-value savings">\${{MONTHLY_SAVINGS}}</span>
+                    </div>
+                    <div class="savings-subtitle">per month saved with DMP</div>
+                </div>
+            </div>
         </div>
 
         <!-- Annual Impact - Styled like widget -->
