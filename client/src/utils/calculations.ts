@@ -118,7 +118,7 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
   const annualVolume = monthlyVolume * 12;
 
   // Step 7: Calculate DMP profit using the correct formula
-  const dmpProfit = (inputs.flatRate - inputs.interchangeCost) / 100 * inputs.monthlyVolume;
+  const dmpProfit = (inputs.flatRate - inputs.interchangeCost) / 100 * adjustedVolume;
 
   // Step 8: Calculate Skytab Bonus (Gross)
   const skytabBonusRaw = (inputs.flatRate - inputs.interchangeCost) / 100 * 0.60 * inputs.monthlyVolume * 18;
