@@ -178,7 +178,8 @@ async function generateSavingsReportPDF(data: any): Promise<Buffer> {
     throw new Error('DOCRAPTOR_API_KEY not configured');
   }
   
-  const htmlContent = generateSavingsReportHTML(data);
+  const { generateQuoteStyleHTML } = await import('./pdf-generator-new');
+  const htmlContent = generateQuoteStyleHTML(data);
   
   const docConfig = {
     document_type: 'pdf',
