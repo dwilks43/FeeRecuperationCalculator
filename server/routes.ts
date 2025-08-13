@@ -268,46 +268,29 @@ function generateSavingsReportHTML(data: any): string {
         }
         
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            border-bottom: 3px solid #0ea5e9;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-        }
-        
-        .company-branding {
-            flex: 1;
+            text-align: center;
+            margin-bottom: 3rem;
         }
         
         .company-name {
-            font-size: 24pt;
+            font-size: 18pt;
             font-weight: 700;
             color: #0ea5e9;
-            margin-bottom: 0.25rem;
-        }
-        
-        .company-tagline {
-            font-size: 12pt;
-            color: #64748b;
-            font-style: italic;
-        }
-        
-        .report-meta {
-            text-align: right;
-            flex: 1;
-        }
-        
-        .report-title {
-            font-size: 18pt;
-            font-weight: 600;
-            color: #374151;
+            line-height: 1.2;
             margin-bottom: 0.5rem;
         }
         
-        .report-date {
-            font-size: 10pt;
+        .report-title {
+            font-size: 14pt;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.25rem;
+        }
+        
+        .report-meta {
+            font-size: 12pt;
             color: #6b7280;
+            margin-bottom: 2rem;
         }
         
         .summary-grid {
@@ -485,85 +468,72 @@ function generateSavingsReportHTML(data: any): string {
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <div class="company-branding">
-                <div class="company-name">Dynamic Merchant Processing</div>
-                <div class="company-tagline">Dual Pricing Savings Report</div>
+            <div class="company-name">
+                Dynamic Merchant<br>
+                Processing
             </div>
-            <div class="report-meta">
-                <div class="report-title">Savings Analysis Report</div>
-                <div class="report-date">Generated: ${new Date().toLocaleDateString()}</div>
-                ${salesRepName ? `<div class="report-date">Sales Rep: ${salesRepName}</div>` : ''}
-            </div>
+            <div class="report-title">Dual Pricing Savings Report</div>
+            <div class="report-meta">Report Date: ${new Date().toLocaleDateString()}</div>
         </div>
         
         ${businessName ? `
-        <!-- Customer Summary -->
+        <!-- Quote Summary Section -->
         <div class="section">
-            <h2 class="section-title">Customer Summary</h2>
-            <table class="input-table">
-                <tbody>
-                    <tr>
-                        <td><strong>Business Name:</strong></td>
-                        <td>${businessName}</td>
-                    </tr>
-                    ${businessAddress ? `
-                    <tr>
-                        <td><strong>Address:</strong></td>
-                        <td>${businessAddress}</td>
-                    </tr>
-                    ` : ''}
-                    ${contactName ? `
-                    <tr>
-                        <td><strong>Contact:</strong></td>
-                        <td>${contactName}${contactTitle ? ` - ${contactTitle}` : ''}</td>
-                    </tr>
-                    ` : ''}
-                    ${contactEmail ? `
-                    <tr>
-                        <td><strong>Email:</strong></td>
-                        <td>${contactEmail}</td>
-                    </tr>
-                    ` : ''}
-                    ${salesRepName ? `
-                    <tr>
-                        <td><strong>Sales Rep:</strong></td>
-                        <td>${salesRepName}</td>
-                    </tr>
-                    ` : ''}
-                    ${salesRepEmail ? `
-                    <tr>
-                        <td><strong>Sales Rep Email:</strong></td>
-                        <td>${salesRepEmail}</td>
-                    </tr>
-                    ` : ''}
-                    ${salesRepPhone ? `
-                    <tr>
-                        <td><strong>Sales Rep Phone:</strong></td>
-                        <td>${salesRepPhone}</td>
-                    </tr>
-                    ` : ''}
-                </tbody>
-            </table>
+            <h2 class="section-title" style="text-align: center; font-size: 14pt; font-weight: 700; color: #374151; margin-bottom: 1.5rem; letter-spacing: 2px;">
+                QUOTE SUMMARY
+            </h2>
+            <div style="margin-bottom: 2rem;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 11pt;">
+                    <tbody>
+                        ${businessName ? `
+                        <tr>
+                            <td style="padding: 0.4rem 0; font-weight: 600; color: #374151; width: 35%;">Business Name:</td>
+                            <td style="padding: 0.4rem 0; color: #1f2937;">${businessName}</td>
+                        </tr>
+                        ` : ''}
+                        ${contactName ? `
+                        <tr>
+                            <td style="padding: 0.4rem 0; font-weight: 600; color: #374151;">Contact:</td>
+                            <td style="padding: 0.4rem 0; color: #1f2937;">${contactName}</td>
+                        </tr>
+                        ` : ''}
+                        ${contactTitle ? `
+                        <tr>
+                            <td style="padding: 0.4rem 0; font-weight: 600; color: #374151;">Contact Title:</td>
+                            <td style="padding: 0.4rem 0; color: #1f2937;">${contactTitle}</td>
+                        </tr>
+                        ` : ''}
+                        ${contactEmail ? `
+                        <tr>
+                            <td style="padding: 0.4rem 0; font-weight: 600; color: #374151;">Email:</td>
+                            <td style="padding: 0.4rem 0; color: #1f2937;">${contactEmail}</td>
+                        </tr>
+                        ` : ''}
+                        ${salesRepName ? `
+                        <tr>
+                            <td style="padding: 0.4rem 0; font-weight: 600; color: #374151;">Sales Rep:</td>
+                            <td style="padding: 0.4rem 0; color: #1f2937;">${salesRepName}</td>
+                        </tr>
+                        ` : ''}
+                        ${salesRepPhone ? `
+                        <tr>
+                            <td style="padding: 0.4rem 0; font-weight: 600; color: #374151;">Phone Number:</td>
+                            <td style="padding: 0.4rem 0; color: #1f2937;">${salesRepPhone}</td>
+                        </tr>
+                        ` : ''}
+                        ${businessAddress ? `
+                        <tr>
+                            <td style="padding: 0.4rem 0; font-weight: 600; color: #374151;">Address:</td>
+                            <td style="padding: 0.4rem 0; color: #1f2937;">${businessAddress}</td>
+                        </tr>
+                        ` : ''}
+                    </tbody>
+                </table>
+            </div>
         </div>
         ` : ''}
         
-        <!-- Executive Summary -->
-        <div class="summary-grid">
-            <div class="summary-card">
-                <h3>Current Cost</h3>
-                <div class="value">$${currentCost.toFixed(2)}</div>
-            </div>
-            <div class="summary-card">
-                <h3>New Cost</h3>
-                <div class="value ${newCost >= 0 ? 'savings-negative' : 'savings-positive'}">
-                    $${Math.abs(newCost).toFixed(2)}${newCost < 0 ? ' Credit' : ''}
-                </div>
-            </div>
-            <div class="summary-card">
-                <h3>Monthly Savings</h3>
-                <div class="value savings-positive">$${monthlySavings.toFixed(2)}</div>
-            </div>
-        </div>
+
         
         <!-- Input Parameters -->
         <div class="section">
