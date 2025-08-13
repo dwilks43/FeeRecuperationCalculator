@@ -124,6 +124,9 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
   const skytabBonusRaw = (inputs.flatRate - inputs.interchangeCost) / 100 * 0.60 * inputs.monthlyVolume * 18;
   const skytabBonus = Math.min(skytabBonusRaw, 10000); // Cap at $10,000
 
+  // Step 9: Calculate Skytab Bonus Rep 50%
+  const skytabBonusRep = skytabBonus * 0.50;
+
   return {
     baseVolume: Number(baseVolume.toFixed(2)),
     markedUpVolume: Number(markedUpVolume.toFixed(2)),
@@ -136,7 +139,8 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
     annualSavings: Number(annualSavings.toFixed(2)),
     annualVolume: Number(annualVolume.toFixed(2)),
     dmpProfit: Number(dmpProfit.toFixed(2)),
-    skytabBonus: Number(skytabBonus.toFixed(2))
+    skytabBonus: Number(skytabBonus.toFixed(2)),
+    skytabBonusRep: Number(skytabBonusRep.toFixed(2))
   };
 }
 

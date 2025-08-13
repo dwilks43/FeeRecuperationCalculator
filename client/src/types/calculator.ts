@@ -21,6 +21,7 @@ export interface CalculatorResults {
   annualVolume: number;
   dmpProfit: number;
   skytabBonus: number;
+  skytabBonusRep: number;
 }
 
 export interface TooltipContent {
@@ -47,4 +48,5 @@ export type TooltipKey =
   | 'annual-savings'
   | 'annual-volume'
   | 'dmp-profit'
-  | 'skytab-bonus';
+  | 'skytab-bonus'
+  | 'skytab-bonus-rep';

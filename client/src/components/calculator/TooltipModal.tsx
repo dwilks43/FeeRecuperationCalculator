@@ -85,6 +85,10 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
   'skytab-bonus': {
     title: 'Skytab Bonus Calculation (Gross)',
     content: 'A bonus calculation for Skytab merchants over 18 months with a 60% factor applied. Formula: (Flat Rate % - Interchange Cost %) × 60% × Monthly Credit Card Volume × 18. Maximum bonus is capped at $10,000.'
+  },
+  'skytab-bonus-rep': {
+    title: 'Skytab Bonus Calculation (Rep 50%)',
+    content: 'Representative commission calculation based on 50% of the gross Skytab bonus amount. This is calculated after applying the $10,000 maximum cap to the gross bonus.'
   }
 };
 
