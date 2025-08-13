@@ -25,7 +25,13 @@ export default function DMPProfitability({
         
         <div className="bg-white rounded-lg p-4 border border-blue-100">
           <div className="flex items-center gap-2 mb-3">
-            <span className="text-sm font-medium text-gray-600">DMP Monthly Profit</span>
+            <span className="text-sm font-medium text-gray-600">
+              Gross Profit
+              <br />
+              <span className="text-xs text-gray-500">
+                (without removal of schedule A or ISO % charged)
+              </span>
+            </span>
             <Button
               variant="ghost"
               size="sm"
@@ -42,7 +48,7 @@ export default function DMPProfitability({
               {formatCurrency(results.dmpProfit)}
             </span>
           </div>
-          <p className="text-xs text-dmp-blue-600 mt-1">Monthly profit from dual pricing</p>
+          <p className="text-xs text-dmp-blue-600 mt-1">Monthly gross profit from dual pricing</p>
         </div>
       </CardContent>
     </Card>
