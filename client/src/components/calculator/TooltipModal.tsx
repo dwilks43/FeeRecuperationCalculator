@@ -79,8 +79,12 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
     content: 'Your total credit card processing volume projected over 12 months. Calculated as: Monthly Volume × 12'
   },
   'dmp-profit': {
-    title: 'DMP Monthly Profit',
-    content: 'The profit DMP earns from your account each month. Calculated as: (Flat Rate Processing % - Interchange Cost %) × Monthly Credit Card Volume'
+    title: 'Gross Profit',
+    content: 'The profit DMP earns from your account each month (without removal of schedule A or ISO % charged). Calculated as: (Flat Rate Processing % - Interchange Cost %) × Monthly Credit Card Volume'
+  },
+  'skytab-bonus': {
+    title: 'Skytab Bonus Calculation (Gross)',
+    content: 'A bonus calculation for Skytab merchants over 18 months with a 60% factor applied. Formula: (Flat Rate % - Interchange Cost %) × 60% × Monthly Credit Card Volume × 18. Maximum bonus is capped at $10,000.'
   }
 };
 

@@ -23,7 +23,8 @@ export default function DMPProfitability({
           <h4 className="text-lg font-semibold text-dmp-blue-800">DMP</h4>
         </div>
         
-        <div className="bg-white rounded-lg p-4 border border-blue-100">
+        {/* Gross Profit */}
+        <div className="bg-white rounded-lg p-4 border border-blue-100 mb-4">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-gray-600">
               Gross Profit
@@ -49,6 +50,35 @@ export default function DMPProfitability({
             </span>
           </div>
           <p className="text-xs text-dmp-blue-600 mt-1">Monthly gross profit from dual pricing</p>
+        </div>
+
+        {/* Skytab Bonus Calculation */}
+        <div className="bg-white rounded-lg p-4 border border-blue-100">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-sm font-medium text-gray-600">
+              Skytab Bonus Calculation (Gross)
+              <br />
+              <span className="text-xs text-gray-500">
+                Capped at $10,000 maximum
+              </span>
+            </span>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-auto p-0"
+              onClick={() => onTooltip('skytab-bonus')}
+              data-testid="button-tooltip-skytab-bonus"
+            >
+              <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+            </Button>
+          </div>
+          <div className="flex items-center gap-2">
+            <PieChart className="h-5 w-5 text-green-600" />
+            <span className="text-2xl font-bold text-green-600" data-testid="text-skytab-bonus">
+              {formatCurrency(results.skytabBonus)}
+            </span>
+          </div>
+          <p className="text-xs text-green-600 mt-1">18-month bonus calculation with 60% factor</p>
         </div>
       </CardContent>
     </Card>

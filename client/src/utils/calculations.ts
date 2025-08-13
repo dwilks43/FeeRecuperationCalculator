@@ -120,6 +120,10 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
   // Step 7: Calculate DMP profit using the correct formula
   const dmpProfit = (inputs.flatRate - inputs.interchangeCost) / 100 * inputs.monthlyVolume;
 
+  // Step 8: Calculate Skytab Bonus (Gross)
+  const skytabBonusRaw = (inputs.flatRate - inputs.interchangeCost) / 100 * 0.60 * inputs.monthlyVolume * 18;
+  const skytabBonus = Math.min(skytabBonusRaw, 10000); // Cap at $10,000
+
   return {
     baseVolume: Number(baseVolume.toFixed(2)),
     markedUpVolume: Number(markedUpVolume.toFixed(2)),
@@ -131,7 +135,8 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
     monthlySavings: Number(monthlySavings.toFixed(2)),
     annualSavings: Number(annualSavings.toFixed(2)),
     annualVolume: Number(annualVolume.toFixed(2)),
-    dmpProfit: Number(dmpProfit.toFixed(2))
+    dmpProfit: Number(dmpProfit.toFixed(2)),
+    skytabBonus: Number(skytabBonus.toFixed(2))
   };
 }
 

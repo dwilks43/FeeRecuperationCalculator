@@ -47,7 +47,8 @@ export default function Calculator() {
     newCost: results.newCost,
     monthlySavings: results.monthlySavings,
     annualSavings: results.annualSavings,
-    dmpProfit: showDMPProfit ? results.dmpProfit : null
+    dmpProfit: showDMPProfit ? results.dmpProfit : null,
+    skytabBonus: showDMPProfit ? results.skytabBonus : null
   };
 
   const debouncedInputChange = useCallback(
