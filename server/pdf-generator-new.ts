@@ -179,23 +179,18 @@ function getProfessionalStyles(): string {
 
     /* Summary Grid for 3-card layout */
     .summary-grid {
-        display: table;
-        width: 100%;
-        table-layout: fixed;
-        border-collapse: separate;
-        border-spacing: 1rem;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1rem;
         margin-bottom: 2rem;
     }
 
     .summary-card {
-        display: table-cell;
-        background: #ffffff;
-        border: 2px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 2rem;
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
         text-align: center;
-        vertical-align: top;
-        width: 33.33%;
     }
 
     .summary-card h3 {
@@ -208,9 +203,9 @@ function getProfessionalStyles(): string {
     }
 
     .summary-card .value {
-        font-size: 20pt;
-        font-weight: 800;
-        color: #1f2937;
+        font-size: 18pt;
+        font-weight: 700;
+        color: #004ED3;
         line-height: 1.2;
     }
 
@@ -228,7 +223,11 @@ function getProfessionalStyles(): string {
     }
 
     .savings-positive {
-        color: #0ea5e9;
+        color: #059669;
+    }
+
+    .savings-negative {
+        color: #dc2626;
     }
 
     /* Data Grid Tables */
@@ -504,7 +503,8 @@ function generateQuoteStyleHTML(data: any): string {
     <div class="quote-container">
         <header class="quote-header">
             <div class="company-branding">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" class="company-logo" alt="DMP Logo" />
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" 
+                     class="company-logo" alt="DMP Logo" style="width: 60px; height: auto;" />
                 <div class="company-text">
                     <h1 class="company-name">Dynamic Merchant Processing</h1>
                     <p class="company-tagline">Your Partner in Payment Solutions</p>
@@ -519,51 +519,6 @@ function generateQuoteStyleHTML(data: any): string {
             </div>
         </header>
 
-        ${businessName ? `
-        <!-- Quote Summary Section -->
-        <section class="section merchant-section">
-            <h3 class="section-title">Quote Summary</h3>
-            <div class="merchant-details">
-                ${businessName ? `
-                <div class="detail-row">
-                    <span class="label">Business Name:</span>
-                    <span class="value">${businessName}</span>
-                </div>
-                ` : ''}
-                ${contactName ? `
-                <div class="detail-row">
-                    <span class="label">Contact:</span>
-                    <span class="value">${contactName}${contactTitle ? `, ${contactTitle}` : ""}</span>
-                </div>
-                ` : ''}
-                ${contactEmail ? `
-                <div class="detail-row">
-                    <span class="label">Email:</span>
-                    <span class="value">${contactEmail}</span>
-                </div>
-                ` : ''}
-                ${salesRepName ? `
-                <div class="detail-row">
-                    <span class="label">Sales Rep:</span>
-                    <span class="value">${salesRepName}</span>
-                </div>
-                ` : ''}
-                ${salesRepPhone ? `
-                <div class="detail-row">
-                    <span class="label">Phone:</span>
-                    <span class="value">${salesRepPhone}</span>
-                </div>
-                ` : ''}
-                ${businessAddress ? `
-                <div class="detail-row">
-                    <span class="label">Address:</span>
-                    <span class="value">${businessAddress}</span>
-                </div>
-                ` : ''}
-            </div>
-        </section>
-        ` : ''}
-
         <!-- Processing Savings -->
         <section class="section processing-section">
             <h3 class="section-title">Processing Savings</h3>
@@ -574,11 +529,11 @@ function generateQuoteStyleHTML(data: any): string {
                 </div>
                 <div class="summary-card">
                     <h3>New Cost</h3>
-                    <div class="value savings-positive">$${Math.abs(newCost).toFixed(2)}${newCost < 0 ? ' Credit' : ''}</div>
+                    <div class="value savings-positive">${newCost < 0 ? '$' + Math.abs(newCost).toFixed(2) + ' Credit' : '$' + newCost.toFixed(2)}</div>
                 </div>
                 <div class="summary-card savings">
                     <h3>Monthly Savings</h3>
-                    <div class="value savings-amount">$${monthlySavings.toFixed(2)}</div>
+                    <div class="value savings-amount">$${Math.abs(monthlySavings).toFixed(2)}</div>
                 </div>
             </div>
         </section>

@@ -134,23 +134,18 @@
 
         /* Summary Grid for 3-card layout */
         .summary-grid {
-            display: table;
-            width: 100%;
-            table-layout: fixed;
-            border-collapse: separate;
-            border-spacing: 1rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
             margin-bottom: 2rem;
         }
 
         .summary-card {
-            display: table-cell;
-            background: #ffffff;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 2rem;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 1rem;
             text-align: center;
-            vertical-align: top;
-            width: 33.33%;
         }
 
         .summary-card h3 {
@@ -163,9 +158,9 @@
         }
 
         .summary-card .value {
-            font-size: 20pt;
-            font-weight: 800;
-            color: #1f2937;
+            font-size: 18pt;
+            font-weight: 700;
+            color: #004ED3;
             line-height: 1.2;
         }
 
@@ -183,7 +178,11 @@
         }
 
         .savings-positive {
-            color: #0ea5e9;
+            color: #059669;
+        }
+
+        .savings-negative {
+            color: #dc2626;
         }
 
         /* Data Grid Tables */
@@ -251,7 +250,8 @@
     <div class="quote-container">
         <header class="quote-header">
             <div class="company-branding">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" class="company-logo" alt="DMP Logo" />
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" 
+                     class="company-logo" alt="DMP Logo" style="width: 60px; height: auto;" />
                 <div class="company-text">
                     <h1 class="company-name">Dynamic Merchant Processing</h1>
                     <p class="company-tagline">Your Partner in Payment Solutions</p>
@@ -265,33 +265,6 @@
                 </div>
             </div>
         </header>
-
-        <!-- Quote Summary Section -->
-        <section class="section merchant-section">
-            <h3 class="section-title">Quote Summary</h3>
-            <div class="merchant-details">
-                <div class="detail-row">
-                    <span class="label">Business Name:</span>
-                    <span class="value">Test Business LLC</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Contact:</span>
-                    <span class="value">John Smith, Manager</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Email:</span>
-                    <span class="value">john@testbusiness.com</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Sales Rep:</span>
-                    <span class="value">Jane Doe</span>
-                </div>
-                <div class="detail-row">
-                    <span class="label">Phone:</span>
-                    <span class="value">(555) 123-4567</span>
-                </div>
-            </div>
-        </section>
 
         <!-- Processing Savings -->
         <section class="section processing-section">
