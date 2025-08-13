@@ -1,0 +1,64 @@
+DMP Quote PDF Styling Standards
+Fonts
+Primary Font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif
+Base Font Size: 10pt
+Line Height: 1.4
+Page & Container
+Container Width: 7.5 inches
+Container Padding: 0.5 inches all around
+Background: White
+Header Layout & Dimensions
+Structure: Flexbox layout with company branding (left) and quote meta (right)
+Bottom Border: 3px solid #0ea5e9 (DMP blue)
+Margin Bottom: 2rem
+Padding Bottom: 1.5rem
+Company Branding:
+Logo: 60px width, auto height (max 60px)
+Company Name: 24pt, font-weight 700, color #0ea5e9
+Tagline: 12pt, color #64748b, italic
+Quote Meta (right-aligned):
+Quote Title: 18pt, font-weight 600, color #374151
+Details: 10pt font size
+Section Spacing Standards
+Section Margin Bottom: 3rem
+Section Title: 16pt, font-weight 700, color #0ea5e9
+Section Title Padding Bottom: 1rem
+Section Title Border: 2px solid #e5e7eb
+Table Styling
+Border Collapse: collapse
+Font Size: 10pt
+Cell Padding: 0.75rem
+Border: 1px solid #e5e7eb (bottom borders only)
+Table Headers:
+Background: #f8fafc
+Font Weight: 600
+Color: #374151
+Bottom Border: 2px solid #d1d5db
+Table Rows:
+Hover Background: #f9fafb
+Total Rows: #f8fafc background, font-weight 600
+Card/Grid Systems
+Processing Cards: Table-cell display, 25% width each
+Financial Cards: Table-cell display, 33.33% width each
+Card Padding: 2rem
+Card Border: 2px solid #e5e7eb
+Card Border Radius: 12px
+Footer Format
+Position: 3rem margin-top, 2rem padding-top
+Border: 1px solid #e5e7eb (top only)
+Alignment: Center
+Required Content:
+Main Text: "Thank you for considering Dynamic Merchant Processing for your payment processing needs." (11pt, color #374151)
+Contact Info: "Questions? Contact us at info@dmprocessing.com or call (555) 123-4567" (10pt, color #6b7280)
+Color Palette
+Primary Blue: #0ea5e9 (headers, borders, company name)
+Dark Gray: #1f2937 (main text)
+Medium Gray: #374151 (secondary text)
+Light Gray: #6b7280 (labels, meta text)
+Success Green: #22c55e (savings, ROI sections)
+Warning Orange: #f59e0b (credit amounts)
+Print Optimizations
+Color Adjust: exact (preserves colors when printing)
+Page Breaks: Avoided within sections
+Section Protection: page-break-inside: avoid
+This comprehensive styling ensures consistent, professional PDF output that matches DMP's brand standards and provides excellent readability both on screen and in print.

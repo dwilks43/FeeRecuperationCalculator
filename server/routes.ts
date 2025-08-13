@@ -242,11 +242,13 @@ function generateSavingsReportHTML(data: any): string {
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
         body {
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 11pt;
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
             line-height: 1.4;
             color: #1f2937;
             background: white;
+            -webkit-print-color-adjust: exact;
+            color-adjust: exact;
         }
         
         .container {
@@ -256,23 +258,46 @@ function generateSavingsReportHTML(data: any): string {
         }
         
         .header {
-            background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            border-bottom: 3px solid #0ea5e9;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
         }
         
-        .header h1 {
+        .company-branding {
+            flex: 1;
+        }
+        
+        .company-name {
             font-size: 24pt;
             font-weight: 700;
+            color: #0ea5e9;
+            margin-bottom: 0.25rem;
+        }
+        
+        .company-tagline {
+            font-size: 12pt;
+            color: #64748b;
+            font-style: italic;
+        }
+        
+        .report-meta {
+            text-align: right;
+            flex: 1;
+        }
+        
+        .report-title {
+            font-size: 18pt;
+            font-weight: 600;
+            color: #374151;
             margin-bottom: 0.5rem;
         }
         
-        .header p {
-            font-size: 12pt;
-            opacity: 0.9;
+        .report-date {
+            font-size: 10pt;
+            color: #6b7280;
         }
         
         .summary-grid {
@@ -308,19 +333,103 @@ function generateSavingsReportHTML(data: any): string {
         .savings-negative { color: #dc2626; }
         
         .section {
-            margin-bottom: 2rem;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 1.5rem;
+            margin-bottom: 3rem;
+            page-break-inside: avoid;
         }
         
-        .section h2 {
-            font-size: 14pt;
-            color: #1f2937;
+        .section-title {
+            font-size: 16pt;
+            font-weight: 700;
+            color: #0ea5e9;
+            padding-bottom: 1rem;
             margin-bottom: 1rem;
-            border-bottom: 2px solid #004ED3;
-            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e5e7eb;
+        }
+        
+        .input-table, .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 10pt;
+            margin-bottom: 1rem;
+        }
+        
+        .input-table th, .results-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #374151;
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 2px solid #d1d5db;
+        }
+        
+        .input-table td, .results-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e5e7eb;
+            color: #1f2937;
+        }
+        
+        .input-table tr:hover, .results-table tr:hover {
+            background: #f9fafb;
+        }
+        
+        .total-row {
+            background: #f8fafc !important;
+            font-weight: 600;
+        }
+        
+        .financial-cards {
+            display: table;
+            width: 100%;
+            margin: 1rem 0;
+        }
+        
+        .financial-card {
+            display: table-cell;
+            width: 33.33%;
+            padding: 2rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            text-align: center;
+            margin-right: 1rem;
+        }
+        
+        .financial-card:last-child {
+            margin-right: 0;
+        }
+        
+        .financial-card h4 {
+            font-size: 12pt;
+            color: #6b7280;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .financial-card .amount {
+            font-size: 20pt;
+            font-weight: 700;
+            color: #0ea5e9;
+        }
+        
+        .savings-amount { color: #22c55e !important; }
+        .cost-amount { color: #f59e0b !important; }
+        
+        .footer {
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e5e7eb;
+            text-align: center;
+        }
+        
+        .footer .main-text {
+            font-size: 11pt;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer .contact-info {
+            font-size: 10pt;
+            color: #6b7280;
         }
         
         .data-grid {
@@ -366,8 +475,14 @@ function generateSavingsReportHTML(data: any): string {
     <div class="container">
         <!-- Header -->
         <div class="header">
-            <h1>DMP Dual Pricing Savings Calculator</h1>
-            <p>Your Potential Monthly Savings Analysis</p>
+            <div class="company-branding">
+                <div class="company-name">Dynamic Merchant Processing</div>
+                <div class="company-tagline">Dual Pricing Savings Report</div>
+            </div>
+            <div class="report-meta">
+                <div class="report-title">Savings Analysis Report</div>
+                <div class="report-date">Generated: ${new Date().toLocaleDateString()}</div>
+            </div>
         </div>
         
         <!-- Executive Summary -->
@@ -390,106 +505,142 @@ function generateSavingsReportHTML(data: any): string {
         
         <!-- Input Parameters -->
         <div class="section">
-            <h2>Merchant Information</h2>
-            <div class="data-grid">
-                <div class="data-row">
-                    <span class="data-label">Monthly Credit Card Volume</span>
-                    <span class="data-value">$${monthlyVolume.toLocaleString()}</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Current Processing Rate</span>
-                    <span class="data-value">${currentRate}%</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Interchange Cost</span>
-                    <span class="data-value">${interchangeCost}%</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Flat Rate Processing</span>
-                    <span class="data-value">${flatRate}%</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Tax Rate</span>
-                    <span class="data-value">${taxRate}%</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Tip Rate</span>
-                    <span class="data-value">${tipRate}%</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Price Differential</span>
-                    <span class="data-value">${priceDifferential}%</span>
-                </div>
-            </div>
+            <h2 class="section-title">Merchant Information</h2>
+            <table class="input-table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Monthly Credit Card Volume</td>
+                        <td>$${monthlyVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    </tr>
+                    <tr>
+                        <td>Current Processing Rate</td>
+                        <td>${currentRate.toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Interchange Cost</td>
+                        <td>${interchangeCost.toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Flat Rate Processing</td>
+                        <td>${flatRate.toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Tax Rate</td>
+                        <td>${taxRate.toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Tip Rate</td>
+                        <td>${tipRate.toFixed(2)}%</td>
+                    </tr>
+                    <tr>
+                        <td>Price Differential</td>
+                        <td>${priceDifferential.toFixed(2)}%</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         
-        <!-- Volume Breakdown -->
+        <!-- Processing Analysis -->
         <div class="section">
-            <h2>Live Volume Breakdown</h2>
-            <div class="data-grid">
-                <div class="data-row">
-                    <span class="data-label">Base Volume</span>
-                    <span class="data-value">$${baseVolume.toLocaleString()}</span>
+            <h2 class="section-title">Processing Analysis</h2>
+            <div class="financial-cards">
+                <div class="financial-card">
+                    <h4>Current Monthly Cost</h4>
+                    <div class="amount cost-amount">$${currentCost.toFixed(2)}</div>
                 </div>
-                <div class="data-row">
-                    <span class="data-label">Adjusted Card Volume</span>
-                    <span class="data-value">$${adjustedVolume.toLocaleString()}</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Total Processing Fees Charged</span>
-                    <span class="data-value">$${processingFees.toFixed(2)}</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Card Price Increase Collected</span>
-                    <span class="data-value">$${markupCollected.toFixed(2)}</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Savings Analysis -->
-        <div class="section">
-            <h2>Savings Analysis</h2>
-            <div class="data-grid">
-                <div class="data-row">
-                    <span class="data-label">Current Processing Cost</span>
-                    <span class="data-value">$${currentCost.toFixed(2)}</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">New Processing Cost</span>
-                    <span class="data-value ${newCost >= 0 ? 'savings-negative' : 'savings-positive'}">
+                <div class="financial-card">
+                    <h4>New Monthly Cost</h4>
+                    <div class="amount ${newCost >= 0 ? 'cost-amount' : 'savings-amount'}">
                         $${Math.abs(newCost).toFixed(2)}${newCost < 0 ? ' Credit' : ''}
-                    </span>
+                    </div>
                 </div>
-                <div class="data-row">
-                    <span class="data-label">Monthly Savings</span>
-                    <span class="data-value savings-positive">$${monthlySavings.toFixed(2)}</span>
-                </div>
-                <div class="data-row">
-                    <span class="data-label">Annual Impact</span>
-                    <span class="data-value savings-positive">$${annualSavings.toFixed(2)}</span>
+                <div class="financial-card">
+                    <h4>Monthly Savings</h4>
+                    <div class="amount savings-amount">$${monthlySavings.toFixed(2)}</div>
                 </div>
             </div>
+            
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>Volume Breakdown</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Base Volume</td>
+                        <td>$${baseVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    </tr>
+                    <tr>
+                        <td>Adjusted Card Volume</td>
+                        <td>$${adjustedVolume.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+                    </tr>
+                    <tr>
+                        <td>Total Processing Fees Charged</td>
+                        <td>$${processingFees.toFixed(2)}</td>
+                    </tr>
+                    <tr>
+                        <td>Card Price Increase Collected</td>
+                        <td>$${markupCollected.toFixed(2)}</td>
+                    </tr>
+                    <tr class="total-row">
+                        <td><strong>Annual Savings Projection</strong></td>
+                        <td><strong>$${annualSavings.toFixed(2)}</strong></td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         
-        ${dmpProfit ? `
+        ${dmpProfit !== null ? `
         <!-- DMP Profitability -->
         <div class="section">
-            <h2>DMP Monthly Profitability</h2>
-            <div class="data-row">
-                <span class="data-label">DMP Monthly Profit</span>
-                <span class="data-value">$${dmpProfit.toFixed(2)}</span>
+            <h2 class="section-title">DMP Profitability Analysis</h2>
+            <div class="financial-cards">
+                <div class="financial-card">
+                    <h4>DMP Gross Profit</h4>
+                    <div class="amount">$${dmpProfit.toFixed(2)}</div>
+                    <p style="font-size: 8pt; color: #6b7280; margin-top: 0.5rem;">
+                        (without removal of schedule A or ISO % charged)
+                    </p>
+                </div>
+                ${data.skytabBonus ? `
+                <div class="financial-card">
+                    <h4>Skytab Bonus (Gross)</h4>
+                    <div class="amount savings-amount">$${data.skytabBonus.toFixed(2)}</div>
+                    <p style="font-size: 8pt; color: #6b7280; margin-top: 0.5rem;">
+                        18-month bonus calculation, capped at $10,000
+                    </p>
+                </div>
+                ` : ''}
+                ${data.skytabBonusRep ? `
+                <div class="financial-card">
+                    <h4>Skytab Bonus (Rep 50%)</h4>
+                    <div class="amount" style="color: #7c3aed;">$${data.skytabBonusRep.toFixed(2)}</div>
+                    <p style="font-size: 8pt; color: #6b7280; margin-top: 0.5rem;">
+                        Rep commission at 50% of gross bonus
+                    </p>
+                </div>
+                ` : ''}
             </div>
         </div>
         ` : ''}
         
         <!-- Footer -->
         <div class="footer">
-            <p>Generated on ${new Date().toLocaleDateString()} by Dynamic Merchant Processing</p>
-            <p>This report is based on the provided merchant data and DMP's dual pricing model.</p>
+            <div class="main-text">Thank you for considering Dynamic Merchant Processing for your payment processing needs.</div>
+            <div class="contact-info">Questions? Contact us at info@dmprocessing.com or call (555) 123-4567</div>
         </div>
     </div>
 </body>
-</html>`;
+</html>
+  `;
 }
 
 export async function registerRoutes(app: Express): Promise<Server> {
