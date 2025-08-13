@@ -1,26 +1,4 @@
-
-
-function generateQuoteStyleHTML(data: any): string {
-  const {
-    monthlyVolume,
-    currentRate,
-    interchangeCost,
-    flatRate,
-    priceDifferential,
-    baseVolume,
-    adjustedVolume,
-    currentCost,
-    newCost,
-    monthlySavings,
-    annualSavings
-  } = data;
-
-  // Generate report number and date
-  const reportNumber = Date.now().toString().slice(-8);
-  const currentDate = new Date().toLocaleDateString();
-
-  // Use the exact simplified template with placeholder replacement
-  const template = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -186,8 +164,8 @@ function generateQuoteStyleHTML(data: any): string {
                 </div>
             </div>
             <div class="report-info">
-                <div><strong>Report #:</strong> SAV{{REPORT_NUMBER}}</div>
-                <div><strong>Date:</strong> {{DATE}}</div>
+                <div><strong>Report #:</strong> SAV12345678</div>
+                <div><strong>Date:</strong> 8/13/2025</div>
             </div>
         </div>
 
@@ -195,15 +173,15 @@ function generateQuoteStyleHTML(data: any): string {
         <div class="savings-cards">
             <div class="card">
                 <h3>Current Cost</h3>
-                <div class="amount">\${{CURRENT_COST}}</div>
+                <div class="amount">$2,500.00</div>
             </div>
             <div class="card">
                 <h3>New Cost</h3>
-                <div class="amount">\${{NEW_COST}}</div>
+                <div class="amount">$425.00</div>
             </div>
             <div class="card savings">
                 <h3>Monthly Savings</h3>
-                <div class="amount">\${{MONTHLY_SAVINGS}}</div>
+                <div class="amount">$2,075.00</div>
             </div>
         </div>
 
@@ -220,23 +198,23 @@ function generateQuoteStyleHTML(data: any): string {
                 <tbody>
                     <tr>
                         <td>Monthly Credit Card Volume</td>
-                        <td>\${{VOLUME}}</td>
+                        <td>$100,000</td>
                     </tr>
                     <tr>
                         <td>Current Processing Rate</td>
-                        <td>{{CURRENT_RATE}}%</td>
+                        <td>2.50%</td>
                     </tr>
                     <tr>
                         <td>Interchange Cost</td>
-                        <td>{{INTERCHANGE}}%</td>
+                        <td>1.95%</td>
                     </tr>
                     <tr>
                         <td>Flat Rate Processing</td>
-                        <td>{{FLAT_RATE}}%</td>
+                        <td>2.20%</td>
                     </tr>
                     <tr>
                         <td>Price Differential</td>
-                        <td>{{PRICE_DIFF}}%</td>
+                        <td>4.00%</td>
                     </tr>
                 </tbody>
             </table>
@@ -255,15 +233,15 @@ function generateQuoteStyleHTML(data: any): string {
                 <tbody>
                     <tr>
                         <td>Base Volume</td>
-                        <td>\${{BASE_VOLUME}}</td>
+                        <td>$76,923</td>
                     </tr>
                     <tr>
                         <td>Adjusted Card Volume</td>
-                        <td>\${{ADJUSTED_VOLUME}}</td>
+                        <td>$104,000</td>
                     </tr>
                     <tr>
                         <td>Annual Savings Projection</td>
-                        <td>\${{ANNUAL_SAVINGS}}</td>
+                        <td>$24,900</td>
                     </tr>
                 </tbody>
             </table>
@@ -276,23 +254,4 @@ function generateQuoteStyleHTML(data: any): string {
         </div>
     </div>
 </body>
-</html>`;
-
-  // Replace placeholders with actual data
-  return template
-    .replace(/{{REPORT_NUMBER}}/g, reportNumber)
-    .replace(/{{DATE}}/g, currentDate)
-    .replace(/{{CURRENT_COST}}/g, currentCost.toFixed(2))
-    .replace(/{{NEW_COST}}/g, newCost < 0 ? Math.abs(newCost).toFixed(2) : newCost.toFixed(2))
-    .replace(/{{MONTHLY_SAVINGS}}/g, Math.abs(monthlySavings).toFixed(2))
-    .replace(/{{VOLUME}}/g, monthlyVolume.toLocaleString())
-    .replace(/{{CURRENT_RATE}}/g, currentRate.toFixed(2))
-    .replace(/{{INTERCHANGE}}/g, interchangeCost.toFixed(2))
-    .replace(/{{FLAT_RATE}}/g, flatRate.toFixed(2))
-    .replace(/{{PRICE_DIFF}}/g, priceDifferential.toFixed(2))
-    .replace(/{{BASE_VOLUME}}/g, baseVolume.toLocaleString())
-    .replace(/{{ADJUSTED_VOLUME}}/g, adjustedVolume.toLocaleString())
-    .replace(/{{ANNUAL_SAVINGS}}/g, annualSavings.toFixed(2));
-}
-
-export { generateQuoteStyleHTML };
+</html>
