@@ -30,6 +30,25 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     onInputChange(field, numericValue);
   };
 
+  const formatVolumeInput = (value: string): string => {
+    if (!value) return '';
+    const numericValue = parseNumericInput(value);
+    if (numericValue === 0) return '';
+    return numericValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
+  const handleVolumeChange = (value: string) => {
+    // Allow user to type freely, but format on blur
+    setInputValues(prev => ({ ...prev, monthlyVolume: value }));
+    const numericValue = parseNumericInput(value);
+    onInputChange('monthlyVolume', numericValue);
+  };
+
+  const handleVolumeBlur = () => {
+    const formatted = formatVolumeInput(inputValues.monthlyVolume);
+    setInputValues(prev => ({ ...prev, monthlyVolume: formatted }));
+  };
+
   const loadDemoValues = () => {
     const demoValues = {
       monthlyVolume: 100000,
@@ -77,9 +96,10 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               <Input
                 type="text"
                 className="pl-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
-                placeholder="100,000"
+                placeholder="100,000.00"
                 value={inputValues.monthlyVolume}
-                onChange={(e) => handleInputChange('monthlyVolume', e.target.value)}
+                onChange={(e) => handleVolumeChange(e.target.value)}
+                onBlur={handleVolumeBlur}
                 data-testid="input-monthly-volume"
               />
             </div>
