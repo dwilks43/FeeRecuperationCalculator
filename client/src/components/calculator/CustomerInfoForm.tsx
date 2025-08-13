@@ -48,7 +48,11 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
   const watchedValues = watch();
   
   React.useEffect(() => {
-    onDataChange(watchedValues);
+    const timeoutId = setTimeout(() => {
+      onDataChange(watchedValues);
+    }, 100);
+    
+    return () => clearTimeout(timeoutId);
   }, [JSON.stringify(watchedValues)]);
 
   const formatPhoneNumber = (value: string) => {
