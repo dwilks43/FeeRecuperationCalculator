@@ -1,3 +1,289 @@
+function getProfessionalStyles(): string {
+  return `
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        font-size: 10pt;
+        line-height: 1.4;
+        color: #1f2937;
+        background: white;
+        -webkit-print-color-adjust: exact;
+        color-adjust: exact;
+    }
+
+    .quote-container {
+        width: 7.5in;
+        margin: 0 auto;
+        padding: 0.5in;
+        background: white;
+    }
+
+    /* Professional Header */
+    .quote-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 2rem;
+        margin-bottom: 3rem;
+        background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%);
+        border: 3px solid #0ea5e9;
+        border-radius: 12px;
+        color: white;
+        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+    }
+
+    .company-branding {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .company-logo {
+        width: 60px;
+        height: 60px;
+        border-radius: 8px;
+    }
+
+    .company-text {
+        color: white;
+    }
+
+    .company-name {
+        font-size: 18pt;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .company-tagline {
+        font-size: 11pt;
+        color: rgba(255, 255, 255, 0.9);
+        font-weight: 500;
+    }
+
+    .quote-meta {
+        text-align: right;
+        color: white;
+    }
+
+    .quote-title {
+        font-size: 16pt;
+        font-weight: 700;
+        color: white;
+        margin-bottom: 0.5rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    }
+
+    .quote-details {
+        font-size: 10pt;
+        line-height: 1.5;
+    }
+
+    /* Section Styles */
+    .section {
+        margin-bottom: 3rem;
+        page-break-inside: avoid;
+    }
+
+    .section-title {
+        font-size: 14pt;
+        font-weight: 700;
+        color: #0ea5e9;
+        margin-bottom: 1rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 2px solid #0ea5e9;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    /* Merchant Details */
+    .merchant-details {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+    }
+
+    .detail-row {
+        display: flex;
+        margin-bottom: 0.75rem;
+        padding: 0.5rem 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .detail-row:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+    }
+
+    .label {
+        font-weight: 600;
+        color: #374151;
+        width: 40%;
+        flex-shrink: 0;
+    }
+
+    .value {
+        color: #1f2937;
+        font-weight: 500;
+    }
+
+    /* Summary Grid */
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .summary-card {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        transition: all 0.2s ease;
+    }
+
+    .summary-card h3 {
+        font-size: 11pt;
+        font-weight: 600;
+        color: #6b7280;
+        margin-bottom: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .summary-card .value {
+        font-size: 18pt;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .summary-card.savings {
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border-color: #22c55e;
+    }
+
+    .summary-card.savings h3 {
+        color: #16a34a;
+    }
+
+    .savings-amount {
+        color: #16a34a !important;
+    }
+
+    .savings-positive {
+        color: #0ea5e9 !important;
+    }
+
+    /* Data Grid Tables */
+    .data-grid {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        background: white;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .data-grid th {
+        background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%);
+        color: white;
+        font-weight: 700;
+        padding: 1rem 0.75rem;
+        text-align: left;
+        font-size: 10pt;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .data-grid th:last-child {
+        text-align: right;
+    }
+
+    .data-grid td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #e5e7eb;
+        font-size: 10pt;
+        line-height: 1.4;
+    }
+
+    .data-grid td:last-child {
+        text-align: right;
+        font-weight: 600;
+    }
+
+    .data-grid tr:hover {
+        background: #f8fafc;
+    }
+
+    .highlight-row {
+        background: #fef3c7 !important;
+        font-weight: 700;
+        border-left: 4px solid #f59e0b;
+    }
+
+    .highlight-row td {
+        color: #92400e;
+        font-weight: 700;
+    }
+
+    /* Footer */
+    .quote-footer {
+        margin-top: 4rem;
+        padding-top: 2rem;
+        border-top: 2px solid #e5e7eb;
+        text-align: center;
+    }
+
+    .footer-content {
+        color: #6b7280;
+    }
+
+    .footer-text {
+        font-size: 11pt;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 0.5rem;
+    }
+
+    .footer-contact {
+        font-size: 10pt;
+        color: #6b7280;
+    }
+
+    /* Print Styles */
+    @media print {
+        body {
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .quote-container {
+            width: 100%;
+            margin: 0;
+            padding: 0.5in;
+        }
+        
+        .section {
+            page-break-inside: avoid;
+        }
+        
+        .quote-header {
+            page-break-after: avoid;
+        }
+    }
+  `;
+}
+
 function generateQuoteStyleHTML(data: any): string {
   const {
     // Customer Information
@@ -30,326 +316,102 @@ function generateQuoteStyleHTML(data: any): string {
 
   return `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Merchant Processing - Dual Pricing Savings Report</title>
     <style>
-        body {
-            font-family: 'Helvetica', Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            color: #000;
-            background-color: white;
-            font-size: 10pt;
-        }
-        
-        .container {
-            max-width: 8.5in;
-            margin: 0 auto;
-            padding: 50px;
-        }
-        
-        .header {
-            margin-bottom: 40px;
-        }
-        
-        .company-info {
-            float: left;
-            width: 50%;
-        }
-        
-        .company-name {
-            font-size: 18pt;
-            font-weight: bold;
-            color: #0ea5e9;
-            margin-bottom: 10px;
-        }
-        
-        .company-address {
-            font-size: 10pt;
-            color: #333;
-            line-height: 1.4;
-        }
-        
-        .quote-info {
-            float: right;
-            width: 40%;
-            text-align: right;
-        }
-        
-        .quote-title {
-            font-size: 24pt;
-            font-weight: bold;
-            color: #000;
-            margin-bottom: 10px;
-        }
-        
-        .quote-meta {
-            font-size: 10pt;
-            color: #333;
-            line-height: 1.4;
-        }
-        
-        .clear {
-            clear: both;
-        }
-        
-        .divider {
-            border-bottom: 1px solid #ccc;
-            margin: 20px 0;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-        }
-        
-        .section-title {
-            font-size: 14pt;
-            font-weight: bold;
-            color: #000;
-            margin-bottom: 15px;
-            text-align: center;
-            letter-spacing: 2px;
-        }
-        
-        .customer-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        .customer-table td {
-            padding: 8px 0;
-            border-bottom: none;
-            font-size: 10pt;
-        }
-        
-        .customer-table td:first-child {
-            font-weight: bold;
-            color: #333;
-            width: 35%;
-        }
-        
-        .customer-table td:last-child {
-            color: #000;
-        }
-        
-        .parameters-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        
-        .parameters-table th {
-            background: #f5f5f5;
-            color: #000;
-            font-weight: bold;
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ccc;
-            font-size: 10pt;
-        }
-        
-        .parameters-table td {
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            font-size: 10pt;
-        }
-        
-        .parameters-table th:last-child,
-        .parameters-table td:last-child {
-            text-align: right;
-        }
-        
-        .savings-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-            margin: 30px 0;
-        }
-        
-        .savings-card {
-            text-align: center;
-            padding: 20px;
-            border: 2px solid #ddd;
-            background: #f9f9f9;
-        }
-        
-        .savings-card h3 {
-            font-size: 11pt;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-            line-height: 1.3;
-        }
-        
-        .savings-card .amount {
-            font-size: 18pt;
-            font-weight: bold;
-            color: #000;
-        }
-        
-        .savings-card.positive .amount {
-            color: #16a34a;
-        }
-        
-        .savings-card.credit .amount {
-            color: #0ea5e9;
-        }
-        
-        .breakdown-section {
-            margin-top: 30px;
-        }
-        
-        .breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .breakdown-table th {
-            background: #f5f5f5;
-            color: #000;
-            font-weight: bold;
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ccc;
-            font-size: 10pt;
-        }
-        
-        .breakdown-table td {
-            padding: 10px 12px;
-            border: 1px solid #ccc;
-            font-size: 10pt;
-        }
-        
-        .breakdown-table th:last-child,
-        .breakdown-table td:last-child {
-            text-align: right;
-        }
-        
-        .total-row {
-            font-weight: bold;
-            background: #f0f0f0;
-        }
-        
-        .footer {
-            margin-top: 40px;
-            text-align: center;
-            color: #666;
-            font-size: 8pt;
-            line-height: 1.4;
-        }
-        
-        @media print {
-            .container { 
-                width: 100%; 
-                margin: 0; 
-                padding: 50px 50px; 
-            }
-        }
+        ${getProfessionalStyles()}
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <div class="company-info">
-                <div class="company-name">Dynamic Merchant<br>Processing</div>
-                <div class="company-address">
-                    Platinum POS Program Quote<br>
-                    Generated: ${new Date().toLocaleDateString()}
+    <div class="quote-container">
+        <header class="quote-header">
+            <div class="company-branding">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" class="company-logo" alt="DMP Logo" />
+                <div class="company-text">
+                    <h1 class="company-name">Dynamic Merchant Processing</h1>
+                    <p class="company-tagline">Your Partner in Payment Solutions</p>
                 </div>
             </div>
-            <div class="quote-info">
-                <div class="quote-title">QUOTE</div>
-                <div class="quote-meta">
-                    Quote #: SAV${Date.now().toString().slice(-8)}<br>
-                    Date: ${new Date().toLocaleDateString()}<br>
-                    Status: Generated
+            <div class="quote-meta">
+                <h2 class="quote-title">Dual Pricing Savings Report</h2>
+                <div class="quote-details">
+                    <p><strong>Report #:</strong> SAV${Date.now().toString().slice(-8)}</p>
+                    <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
                 </div>
             </div>
-            <div class="clear"></div>
-            <div class="divider"></div>
-        </div>
+        </header>
 
         ${businessName ? `
         <!-- Quote Summary Section -->
-        <div class="section">
-            <h2 class="section-title">QUOTE SUMMARY</h2>
-            <table class="customer-table">
-                <tbody>
-                    ${businessName ? `
-                    <tr>
-                        <td>Business Name:</td>
-                        <td>${businessName}</td>
-                    </tr>
-                    ` : ''}
-                    ${contactName ? `
-                    <tr>
-                        <td>Contact:</td>
-                        <td>${contactName}</td>
-                    </tr>
-                    ` : ''}
-                    ${contactTitle ? `
-                    <tr>
-                        <td>Contact Title:</td>
-                        <td>${contactTitle}</td>
-                    </tr>
-                    ` : ''}
-                    ${contactEmail ? `
-                    <tr>
-                        <td>Email:</td>
-                        <td>${contactEmail}</td>
-                    </tr>
-                    ` : ''}
-                    ${salesRepName ? `
-                    <tr>
-                        <td>Sales Rep:</td>
-                        <td>${salesRepName}</td>
-                    </tr>
-                    ` : ''}
-                    ${salesRepPhone ? `
-                    <tr>
-                        <td>Phone Number:</td>
-                        <td>${salesRepPhone}</td>
-                    </tr>
-                    ` : ''}
-                    ${businessAddress ? `
-                    <tr>
-                        <td>Address:</td>
-                        <td>${businessAddress}</td>
-                    </tr>
-                    ` : ''}
-                </tbody>
-            </table>
-        </div>
+        <section class="section merchant-section">
+            <h3 class="section-title">Quote Summary</h3>
+            <div class="merchant-details">
+                ${businessName ? `
+                <div class="detail-row">
+                    <span class="label">Business Name:</span>
+                    <span class="value">${businessName}</span>
+                </div>
+                ` : ''}
+                ${contactName ? `
+                <div class="detail-row">
+                    <span class="label">Contact:</span>
+                    <span class="value">${contactName}${contactTitle ? `, ${contactTitle}` : ""}</span>
+                </div>
+                ` : ''}
+                ${contactEmail ? `
+                <div class="detail-row">
+                    <span class="label">Email:</span>
+                    <span class="value">${contactEmail}</span>
+                </div>
+                ` : ''}
+                ${salesRepName ? `
+                <div class="detail-row">
+                    <span class="label">Sales Rep:</span>
+                    <span class="value">${salesRepName}</span>
+                </div>
+                ` : ''}
+                ${salesRepPhone ? `
+                <div class="detail-row">
+                    <span class="label">Phone:</span>
+                    <span class="value">${salesRepPhone}</span>
+                </div>
+                ` : ''}
+                ${businessAddress ? `
+                <div class="detail-row">
+                    <span class="label">Address:</span>
+                    <span class="value">${businessAddress}</span>
+                </div>
+                ` : ''}
+            </div>
+        </section>
         ` : ''}
 
         <!-- Processing Savings -->
-        <div class="section">
-            <h2 class="section-title">PROCESSING SAVINGS</h2>
-            <div class="savings-grid">
-                <div class="savings-card">
-                    <h3>Current Processing Cost</h3>
-                    <div class="amount">$${currentCost.toFixed(2)}</div>
+        <section class="section processing-section">
+            <h3 class="section-title">Processing Savings</h3>
+            <div class="summary-grid">
+                <div class="summary-card">
+                    <h3>Current Cost</h3>
+                    <div class="value">$${currentCost.toFixed(2)}</div>
                 </div>
-                <div class="savings-card credit">
-                    <h3>New Processing Cost</h3>
-                    <div class="amount">
-                        $${Math.abs(newCost).toFixed(2)}${newCost < 0 ? '<br><small>Credit</small>' : ''}
-                    </div>
+                <div class="summary-card">
+                    <h3>New Cost</h3>
+                    <div class="value savings-positive">$${Math.abs(newCost).toFixed(2)}${newCost < 0 ? ' Credit' : ''}</div>
                 </div>
-                <div class="savings-card positive">
+                <div class="summary-card savings">
                     <h3>Monthly Savings</h3>
-                    <div class="amount">$${monthlySavings.toFixed(2)}</div>
+                    <div class="value savings-amount">$${monthlySavings.toFixed(2)}</div>
                 </div>
             </div>
-        </div>
+        </section>
 
         <!-- Parameters Table -->
-        <div class="section">
-            <table class="parameters-table">
+        <section class="section">
+            <h3 class="section-title">Merchant Information</h3>
+            <table class="data-grid">
                 <thead>
                     <tr>
                         <th>Parameter</th>
@@ -387,11 +449,12 @@ function generateQuoteStyleHTML(data: any): string {
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </section>
 
         <!-- Volume Breakdown -->
-        <div class="breakdown-section">
-            <table class="breakdown-table">
+        <section class="section">
+            <h3 class="section-title">Volume Analysis</h3>
+            <table class="data-grid">
                 <thead>
                     <tr>
                         <th>Volume Breakdown</th>
@@ -415,19 +478,21 @@ function generateQuoteStyleHTML(data: any): string {
                         <td>Card Price Increase Collected</td>
                         <td>$${markupCollected.toFixed(2)}</td>
                     </tr>
-                    <tr class="total-row">
+                    <tr class="highlight-row">
                         <td><strong>Annual Savings Projection</strong></td>
                         <td><strong>$${annualSavings.toFixed(2)}</strong></td>
                     </tr>
                 </tbody>
             </table>
-        </div>
+        </section>
 
         <!-- Footer -->
-        <div class="footer">
-            <p><strong>Thank you for considering Dynamic Merchant Processing</strong></p>
-            <p>Questions? Contact us at support@dmprocessing.com or (256) 835-6001</p>
-        </div>
+        <footer class="quote-footer">
+            <div class="footer-content">
+                <p class="footer-text">Thank you for considering Dynamic Merchant Processing for your payment processing needs.</p>
+                <p class="footer-contact">Questions? Contact us at info@dmprocessing.com or call (555) 123-4567</p>
+            </div>
+        </footer>
     </div>
 </body>
 </html>

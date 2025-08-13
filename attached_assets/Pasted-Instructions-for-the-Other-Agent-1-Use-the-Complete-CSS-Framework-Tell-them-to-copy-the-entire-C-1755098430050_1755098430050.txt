@@ -1,0 +1,67 @@
+Instructions for the Other Agent:
+1. Use the Complete CSS Framework
+Tell them to copy the entire CSS section from getProfessionalStyles() in professionalPdfService.ts. Don't let them abbreviate it - the CSS is what makes it professional.
+
+2. Header Structure Must Match Exactly
+Give them this exact header code:
+
+<header class="quote-header">
+    <div class="company-branding">
+        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" class="company-logo" alt="DMP Logo" />
+        <div class="company-text">
+            <h1 class="company-name">Dynamic Merchant Processing</h1>
+            <p class="company-tagline">Your Partner in Payment Solutions</p>
+        </div>
+    </div>
+    <div class="quote-meta">
+        <h2 class="quote-title">Dual Pricing Savings Report</h2>
+        <div class="quote-details">
+            <p><strong>Report #:</strong> SAV${Date.now()}</p>
+            <p><strong>Date:</strong> ${new Date().toLocaleDateString()}</p>
+        </div>
+    </div>
+</header>
+3. Card-Based Savings Section
+Replace their plain text with this card structure:
+
+<div class="summary-grid">
+    <div class="summary-card">
+        <h3>Current Cost</h3>
+        <div class="value">$${currentCost.toFixed(2)}</div>
+    </div>
+    <div class="summary-card">
+        <h3>New Cost</h3>
+        <div class="value savings-positive">$${newCost.toFixed(2)}</div>
+    </div>
+    <div class="summary-card savings">
+        <h3>Monthly Savings</h3>
+        <div class="value savings-amount">$${monthlySavings.toFixed(2)}</div>
+    </div>
+</div>
+4. Critical CSS Classes They're Missing
+Tell them these specific CSS classes are mandatory:
+
+.quote-container with exact 7.5in width
+.quote-header with flexbox layout
+.summary-grid with grid layout
+.summary-card with proper styling
+.section with 3rem margins
+.data-grid for parameter tables
+5. Essential Styling Rules
+Emphasize these non-negotiable requirements:
+
+Font: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif
+Container width: 7.5in exactly
+Header border: 3px solid #0ea5e9
+Card styling: 2px borders, 1rem padding, border-radius 8px
+Color scheme: Use exact DMP colors (#0ea5e9, #1f2937, etc.)
+6. Give Them This Complete Template
+Instead of letting them guess, provide the exact abbreviated template structure from your step5PdfTemplate.ts but simplified for just the savings calculator data.
+
+7. Test Method
+Tell them to:
+
+Generate the HTML first and view it in browser
+Compare side-by-side with your PDF preview at /api/quote/{id}/professional-preview
+Only send to DocRaptor once the HTML looks identical
+The issue is they're trying to "interpret" the design instead of copying the exact code structure. The professional appearance comes from the complete CSS framework, not simplified styling.
