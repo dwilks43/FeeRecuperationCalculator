@@ -121,7 +121,7 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
   const dmpProfit = (inputs.flatRate - inputs.interchangeCost) / 100 * adjustedVolume;
 
   // Step 8: Calculate Skytab Bonus (Gross)
-  const skytabBonusRaw = (inputs.flatRate - inputs.interchangeCost) / 100 * 0.60 * inputs.monthlyVolume * 18;
+  const skytabBonusRaw = (inputs.flatRate - inputs.interchangeCost) / 100 * 0.60 * adjustedVolume * 18;
   const skytabBonus = Math.min(skytabBonusRaw, 10000); // Cap at $10,000
 
   // Step 9: Calculate Skytab Bonus Rep 50%
