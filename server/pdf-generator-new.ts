@@ -1,5 +1,6 @@
 function getProfessionalStyles(): string {
   return `
+    /* Reset and Base Styles */
     * {
         box-sizing: border-box;
         margin: 0;
@@ -12,8 +13,8 @@ function getProfessionalStyles(): string {
         line-height: 1.4;
         color: #1f2937;
         background: white;
-        -webkit-print-color-adjust: exact;
-        color-adjust: exact;
+        margin: 0;
+        padding: 0;
     }
 
     .quote-container {
@@ -23,18 +24,14 @@ function getProfessionalStyles(): string {
         background: white;
     }
 
-    /* Professional Header */
+    /* Header Styles */
     .quote-header {
         display: flex;
         justify-content: space-between;
-        align-items: center;
-        padding: 2rem;
-        margin-bottom: 3rem;
-        background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%);
-        border: 3px solid #0ea5e9;
-        border-radius: 12px;
-        color: white;
-        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+        align-items: flex-start;
+        margin-bottom: 2rem;
+        padding-bottom: 1.5rem;
+        border-bottom: 3px solid #0ea5e9;
     }
 
     .company-branding {
@@ -45,44 +42,37 @@ function getProfessionalStyles(): string {
 
     .company-logo {
         width: 60px;
-        height: 60px;
-        border-radius: 8px;
+        height: auto;
+        max-height: 60px;
     }
 
-    .company-text {
-        color: white;
-    }
-
-    .company-name {
-        font-size: 18pt;
+    .company-text .company-name {
+        font-size: 24pt;
         font-weight: 700;
-        color: white;
+        color: #0ea5e9;
         margin-bottom: 0.5rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .company-tagline {
-        font-size: 11pt;
-        color: rgba(255, 255, 255, 0.9);
-        font-weight: 500;
+        font-size: 12pt;
+        color: #64748b;
+        font-style: italic;
     }
 
     .quote-meta {
         text-align: right;
-        color: white;
     }
 
     .quote-title {
-        font-size: 16pt;
-        font-weight: 700;
-        color: white;
-        margin-bottom: 0.5rem;
-        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        font-size: 18pt;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 1rem;
     }
 
-    .quote-details {
+    .quote-details p {
+        margin-bottom: 0.5rem;
         font-size: 10pt;
-        line-height: 1.5;
     }
 
     /* Section Styles */
@@ -92,83 +82,140 @@ function getProfessionalStyles(): string {
     }
 
     .section-title {
-        font-size: 14pt;
+        font-size: 16pt;
         font-weight: 700;
         color: #0ea5e9;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 2px solid #0ea5e9;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #e5e7eb;
         text-transform: uppercase;
         letter-spacing: 1px;
     }
 
-    /* Merchant Details */
+    /* Merchant Information */
     .merchant-details {
         background: #f8fafc;
-        border: 1px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 1.5rem;
+        padding: 2rem;
+        border-radius: 12px;
+        border-left: 6px solid #0ea5e9;
+        border: 2px solid #e5e7eb;
     }
 
     .detail-row {
-        display: flex;
-        margin-bottom: 0.75rem;
-        padding: 0.5rem 0;
-        border-bottom: 1px solid #e5e7eb;
+        display: table;
+        width: 100%;
+        margin-bottom: 1rem;
     }
 
     .detail-row:last-child {
-        border-bottom: none;
         margin-bottom: 0;
     }
 
     .label {
-        font-weight: 600;
+        display: table-cell;
+        font-weight: 700;
+        width: 140px;
         color: #374151;
-        width: 40%;
-        flex-shrink: 0;
+        vertical-align: top;
+        padding-right: 1rem;
     }
 
     .value {
+        display: table-cell;
         color: #1f2937;
+        vertical-align: top;
         font-weight: 500;
     }
 
-    /* Summary Grid */
+    /* Processing Overview */
+    .processing-grid {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .processing-card {
+        display: table-cell;
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        vertical-align: top;
+        width: 25%;
+    }
+
+    .processing-card h4 {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #6b7280;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .processing-value {
+        font-size: 20pt;
+        font-weight: 800;
+        color: #1f2937;
+        line-height: 1.2;
+    }
+
+    .processing-card.savings {
+        background: #f0fdf4;
+        border-color: #22c55e;
+    }
+
+    .savings-amount {
+        color: #16a34a;
+    }
+
+    .highlight {
+        color: #0ea5e9;
+    }
+
+    /* Summary Grid for 3-card layout */
     .summary-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 1.5rem;
-        margin: 2rem 0;
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 1rem;
+        margin-bottom: 2rem;
     }
 
     .summary-card {
-        background: #f8fafc;
-        border: 2px solid #e2e8f0;
-        border-radius: 8px;
-        padding: 1rem;
+        display: table-cell;
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2rem;
         text-align: center;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        transition: all 0.2s ease;
+        vertical-align: top;
+        width: 33.33%;
     }
 
     .summary-card h3 {
         font-size: 11pt;
-        font-weight: 600;
+        font-weight: 700;
         color: #6b7280;
-        margin-bottom: 0.75rem;
+        margin-bottom: 1rem;
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 1px;
     }
 
     .summary-card .value {
-        font-size: 18pt;
-        font-weight: 700;
+        font-size: 20pt;
+        font-weight: 800;
         color: #1f2937;
+        line-height: 1.2;
     }
 
     .summary-card.savings {
-        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        background: #f0fdf4;
         border-color: #22c55e;
     }
 
@@ -177,11 +224,11 @@ function getProfessionalStyles(): string {
     }
 
     .savings-amount {
-        color: #16a34a !important;
+        color: #16a34a;
     }
 
     .savings-positive {
-        color: #0ea5e9 !important;
+        color: #0ea5e9;
     }
 
     /* Data Grid Tables */
@@ -189,31 +236,25 @@ function getProfessionalStyles(): string {
         width: 100%;
         border-collapse: collapse;
         margin-top: 1rem;
-        background: white;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        border-radius: 8px;
-        overflow: hidden;
+        font-size: 10pt;
+    }
+
+    .data-grid th,
+    .data-grid td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
     }
 
     .data-grid th {
-        background: linear-gradient(135deg, #0ea5e9 0%, #22d3ee 100%);
-        color: white;
-        font-weight: 700;
-        padding: 1rem 0.75rem;
-        text-align: left;
-        font-size: 10pt;
-        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        background: #f8fafc;
+        font-weight: 600;
+        color: #374151;
+        border-bottom: 2px solid #d1d5db;
     }
 
-    .data-grid th:last-child {
-        text-align: right;
-    }
-
-    .data-grid td {
-        padding: 0.75rem;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 10pt;
-        line-height: 1.4;
+    .data-grid tr:hover {
+        background: #f9fafb;
     }
 
     .data-grid td:last-child {
@@ -221,36 +262,159 @@ function getProfessionalStyles(): string {
         font-weight: 600;
     }
 
-    .data-grid tr:hover {
-        background: #f8fafc;
-    }
-
     .highlight-row {
-        background: #fef3c7 !important;
-        font-weight: 700;
-        border-left: 4px solid #f59e0b;
+        background: #f8fafc;
+        font-weight: 600;
     }
 
     .highlight-row td {
-        color: #92400e;
+        color: #1e40af;
         font-weight: 700;
+    }
+
+    /* Equipment Table */
+    .equipment-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+        font-size: 10pt;
+    }
+
+    .equipment-table th,
+    .equipment-table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .equipment-table th {
+        background: #f8fafc;
+        font-weight: 600;
+        color: #374151;
+        border-bottom: 2px solid #d1d5db;
+    }
+
+    .equipment-table tr:hover {
+        background: #f9fafb;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .item-description {
+        color: #6b7280;
+        font-size: 9pt;
+    }
+
+    .item-qty,
+    .item-price,
+    .item-total {
+        text-align: right;
+    }
+
+    .total-row {
+        background: #f8fafc;
+        font-weight: 600;
+    }
+
+    .total-label {
+        text-align: right;
+        color: #374151;
+    }
+
+    .total-amount {
+        text-align: right;
+        color: #1e40af;
+        font-weight: 700;
+    }
+
+    /* Financial Section */
+    .financial-grid {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        border-spacing: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .financial-card {
+        display: table-cell;
+        background: #ffffff;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        vertical-align: top;
+        width: 33.33%;
+    }
+
+    .financial-card h4 {
+        font-size: 11pt;
+        font-weight: 700;
+        color: #6b7280;
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .financial-value {
+        font-size: 22pt;
+        font-weight: 800;
+        color: #1f2937;
+        line-height: 1.2;
+    }
+
+    .financial-card.credit {
+        background: #fef3c7;
+        border-color: #f59e0b;
+    }
+
+    .credit-amount {
+        color: #d97706;
+    }
+
+    .financial-card.total {
+        background: #eff6ff;
+        border-color: #0ea5e9;
+    }
+
+    .total-amount {
+        color: #0ea5e9;
+    }
+
+    /* ROI Section */
+    .roi-section {
+        background: #f0fdf4;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border-left: 4px solid #22c55e;
+    }
+
+    .roi-section h4 {
+        font-size: 12pt;
+        font-weight: 600;
+        color: #166534;
+        margin-bottom: 1rem;
+    }
+
+    .roi-details p {
+        margin-bottom: 0.5rem;
+        color: #15803d;
     }
 
     /* Footer */
     .quote-footer {
-        margin-top: 4rem;
+        margin-top: 3rem;
         padding-top: 2rem;
-        border-top: 2px solid #e5e7eb;
+        border-top: 1px solid #e5e7eb;
         text-align: center;
-    }
-
-    .footer-content {
-        color: #6b7280;
     }
 
     .footer-text {
         font-size: 11pt;
-        font-weight: 600;
         color: #374151;
         margin-bottom: 0.5rem;
     }
@@ -260,7 +424,7 @@ function getProfessionalStyles(): string {
         color: #6b7280;
     }
 
-    /* Print Styles */
+    /* Print Optimizations */
     @media print {
         body {
             -webkit-print-color-adjust: exact;
@@ -268,9 +432,7 @@ function getProfessionalStyles(): string {
         }
         
         .quote-container {
-            width: 100%;
-            margin: 0;
-            padding: 0.5in;
+            padding: 0;
         }
         
         .section {
@@ -280,6 +442,19 @@ function getProfessionalStyles(): string {
         .quote-header {
             page-break-after: avoid;
         }
+    }
+
+    /* Page Break Controls */
+    .page-break-before {
+        page-break-before: always;
+    }
+    
+    .page-break-after {
+        page-break-after: always;
+    }
+    
+    .no-page-break {
+        page-break-inside: avoid;
     }
   `;
 }
