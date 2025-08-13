@@ -1,26 +1,4 @@
-
-
-function generateQuoteStyleHTML(data: any): string {
-  const {
-    monthlyVolume,
-    currentRate,
-    interchangeCost,
-    flatRate,
-    priceDifferential,
-    baseVolume,
-    adjustedVolume,
-    currentCost,
-    newCost,
-    monthlySavings,
-    annualSavings
-  } = data;
-
-  // Generate report number and date
-  const reportNumber = Date.now().toString().slice(-8);
-  const currentDate = new Date().toLocaleDateString();
-
-  // Use the exact simplified template with placeholder replacement - reordered with savings at bottom
-  const template = `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -147,12 +125,6 @@ function generateQuoteStyleHTML(data: any): string {
             gap: 0.5rem;
         }
 
-        .trophy-icon {
-            width: 20px;
-            height: 20px;
-            color: #16a34a;
-        }
-
         .monthly-savings-amount {
             font-size: 28pt;
             font-weight: 800;
@@ -184,12 +156,6 @@ function generateQuoteStyleHTML(data: any): string {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-        }
-
-        .calendar-icon {
-            width: 20px;
-            height: 20px;
-            color: #7c3aed;
         }
 
         .annual-grid {
@@ -252,8 +218,8 @@ function generateQuoteStyleHTML(data: any): string {
                 </div>
             </div>
             <div class="report-info">
-                <div><strong>Report #:</strong> SAV{{REPORT_NUMBER}}</div>
-                <div><strong>Date:</strong> {{DATE}}</div>
+                <div><strong>Report #:</strong> SAV12345678</div>
+                <div><strong>Date:</strong> 8/13/2025</div>
             </div>
         </div>
 
@@ -270,23 +236,23 @@ function generateQuoteStyleHTML(data: any): string {
                 <tbody>
                     <tr>
                         <td>Monthly Credit Card Volume</td>
-                        <td>\${{VOLUME}}</td>
+                        <td>$10,000</td>
                     </tr>
                     <tr>
                         <td>Current Processing Rate</td>
-                        <td>{{CURRENT_RATE}}%</td>
+                        <td>2.00%</td>
                     </tr>
                     <tr>
                         <td>Interchange Cost</td>
-                        <td>{{INTERCHANGE}}%</td>
+                        <td>2.00%</td>
                     </tr>
                     <tr>
                         <td>Flat Rate Processing</td>
-                        <td>{{FLAT_RATE}}%</td>
+                        <td>4.00%</td>
                     </tr>
                     <tr>
                         <td>Price Differential</td>
-                        <td>{{PRICE_DIFF}}%</td>
+                        <td>6.00%</td>
                     </tr>
                 </tbody>
             </table>
@@ -305,19 +271,19 @@ function generateQuoteStyleHTML(data: any): string {
                 <tbody>
                     <tr>
                         <td>Base Volume</td>
-                        <td>\${{BASE_VOLUME}}</td>
+                        <td>$7,692</td>
                     </tr>
                     <tr>
                         <td>Adjusted Card Volume</td>
-                        <td>\${{ADJUSTED_VOLUME}}</td>
+                        <td>$10,600</td>
                     </tr>
                     <tr>
                         <td>Current Processing Cost</td>
-                        <td>\${{CURRENT_COST}}</td>
+                        <td>$200.00</td>
                     </tr>
                     <tr>
                         <td>New Processing Cost</td>
-                        <td>\${{NEW_COST}}</td>
+                        <td>$37.54</td>
                     </tr>
                 </tbody>
             </table>
@@ -329,7 +295,7 @@ function generateQuoteStyleHTML(data: any): string {
                 <span>🏆</span>
                 Monthly Savings
             </div>
-            <div class="monthly-savings-amount">\${{MONTHLY_SAVINGS}}</div>
+            <div class="monthly-savings-amount">$237.54</div>
             <div class="savings-subtitle">per month saved with DMP</div>
         </div>
 
@@ -342,11 +308,11 @@ function generateQuoteStyleHTML(data: any): string {
             <div class="annual-grid">
                 <div class="annual-card savings">
                     <div class="annual-card-title">Annual Savings</div>
-                    <div class="annual-card-amount savings">\${{ANNUAL_SAVINGS}}</div>
+                    <div class="annual-card-amount savings">$2,850.48</div>
                 </div>
                 <div class="annual-card volume">
                     <div class="annual-card-title">Processing Volume</div>
-                    <div class="annual-card-amount volume">\${{ANNUAL_VOLUME}}</div>
+                    <div class="annual-card-amount volume">$120,000</div>
                 </div>
             </div>
         </div>
@@ -358,27 +324,4 @@ function generateQuoteStyleHTML(data: any): string {
         </div>
     </div>
 </body>
-</html>`;
-
-  // Calculate annual volume (12 months of monthly volume)
-  const annualVolume = monthlyVolume * 12;
-
-  // Replace placeholders with actual data
-  return template
-    .replace(/{{REPORT_NUMBER}}/g, reportNumber)
-    .replace(/{{DATE}}/g, currentDate)
-    .replace(/{{CURRENT_COST}}/g, currentCost.toFixed(2))
-    .replace(/{{NEW_COST}}/g, newCost < 0 ? Math.abs(newCost).toFixed(2) : newCost.toFixed(2))
-    .replace(/{{MONTHLY_SAVINGS}}/g, Math.abs(monthlySavings).toFixed(2))
-    .replace(/{{VOLUME}}/g, monthlyVolume.toLocaleString())
-    .replace(/{{CURRENT_RATE}}/g, currentRate.toFixed(2))
-    .replace(/{{INTERCHANGE}}/g, interchangeCost.toFixed(2))
-    .replace(/{{FLAT_RATE}}/g, flatRate.toFixed(2))
-    .replace(/{{PRICE_DIFF}}/g, priceDifferential.toFixed(2))
-    .replace(/{{BASE_VOLUME}}/g, baseVolume.toLocaleString())
-    .replace(/{{ADJUSTED_VOLUME}}/g, adjustedVolume.toLocaleString())
-    .replace(/{{ANNUAL_SAVINGS}}/g, annualSavings.toFixed(2))
-    .replace(/{{ANNUAL_VOLUME}}/g, annualVolume.toLocaleString());
-}
-
-export { generateQuoteStyleHTML };
+</html>
