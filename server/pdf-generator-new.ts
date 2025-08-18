@@ -7,6 +7,8 @@ function generateQuoteStyleHTML(data: any): string {
     interchangeCost,
     flatRate,
     priceDifferential,
+    taxRate = 0,
+    tipRate = 0,
     baseVolume,
     adjustedVolume,
     currentCost,
@@ -204,13 +206,13 @@ function generateQuoteStyleHTML(data: any): string {
         }
 
         .card-value.current {
-            font-size: 18pt;
+            font-size: 24pt;
             font-weight: 700;
             color: #dc2626;
         }
 
         .card-value.new {
-            font-size: 18pt;
+            font-size: 24pt;
             font-weight: 700;
             color: #16a34a;
         }
@@ -304,7 +306,7 @@ function generateQuoteStyleHTML(data: any): string {
                 <td style="vertical-align: top; width: 70%;">
                     <table style="border-collapse: collapse;">
                         <tr>
-                            <td class="logo" style="width: 60px; height: 40px; background-color: #0ea5e9; color: white; text-align: center; vertical-align: middle; font-weight: bold; font-size: 18px; border: 2px solid #0369a1; border-radius: 4px;">DMP</td>
+                            <td style="width: 60px; height: 40px; background-color: #0ea5e9 !important; color: white !important; text-align: center !important; vertical-align: middle !important; font-weight: bold !important; font-size: 18px !important; border: 2px solid #0369a1 !important; border-radius: 4px !important; line-height: 36px !important;">DMP</td>
                             <td style="padding-left: 1rem; vertical-align: middle;">
                                 <div style="font-size: 18pt; font-weight: 700; color: #0ea5e9;">Dynamic Merchant Processing</div>
                                 <div style="color: #6b7280; font-style: italic;">Dual Pricing Savings Report</div>
@@ -391,51 +393,16 @@ function generateQuoteStyleHTML(data: any): string {
                         <td>Price Differential</td>
                         <td>{{PRICE_DIFF}}%</td>
                     </tr>
+                    <tr>
+                        <td>Tax Rate</td>
+                        <td>{{TAX_RATE}}%</td>
+                    </tr>
+                    <tr>
+                        <td>Tip Rate</td>
+                        <td>{{TIP_RATE}}%</td>
+                    </tr>
                 </tbody>
             </table>
-        </div>
-
-        <!-- Monthly Processing Savings - Complete 3-card section matching widget exactly -->
-        <div class="processing-savings-container">
-            <div class="processing-savings-header">
-                <span>🐷</span>
-                <div class="processing-savings-title">Monthly Processing Savings</div>
-            </div>
-            <div class="processing-cards">
-                <!-- Current Processing Cost Card -->
-                <div class="processing-card current">
-                    <div class="card-header">
-                        <span class="card-title">Current Processing Cost</span>
-                    </div>
-                    <div class="card-value-row">
-                        <span>⊖</span>
-                        <span class="card-value current">\${{CURRENT_COST}}</span>
-                    </div>
-                </div>
-                
-                <!-- New Processing Cost Card -->
-                <div class="processing-card new">
-                    <div class="card-header">
-                        <span class="card-title">New Processing Cost</span>
-                    </div>
-                    <div class="card-value-row">
-                        <span>✓</span>
-                        <span class="card-value new">\${{NEW_COST}}</span>
-                    </div>
-                </div>
-                
-                <!-- Monthly Savings Card -->
-                <div class="processing-card savings">
-                    <div class="card-header">
-                        <span class="card-title">Monthly Savings</span>
-                    </div>
-                    <div class="card-value-row">
-                        <span>🏆</span>
-                        <span class="card-value savings">\${{MONTHLY_SAVINGS}}</span>
-                    </div>
-                    <div class="savings-subtitle">per month saved with DMP</div>
-                </div>
-            </div>
         </div>
 
         <!-- Volume Breakdown -->
@@ -472,6 +439,49 @@ function generateQuoteStyleHTML(data: any): string {
             </table>
         </div>
 
+        <!-- Monthly Processing Savings - Complete 3-card section matching widget exactly -->
+        <div class="processing-savings-container">
+            <div class="processing-savings-header">
+                <span>🐷</span>
+                <div class="processing-savings-title">Monthly Processing Savings</div>
+            </div>
+            <div class="processing-cards">
+                <!-- Current Processing Cost Card -->
+                <div class="processing-card current">
+                    <div class="card-header">
+                        <span class="card-title">Current Processing Cost</span>
+                    </div>
+                    <div class="card-value-row">
+                        <span>⊖</span>
+                        <span class="card-value current">\${{CURRENT_COST_FORMATTED}}</span>
+                    </div>
+                </div>
+                
+                <!-- New Processing Cost Card -->
+                <div class="processing-card new">
+                    <div class="card-header">
+                        <span class="card-title">New Processing Cost</span>
+                    </div>
+                    <div class="card-value-row">
+                        <span>✓</span>
+                        <span class="card-value new">\${{NEW_COST_FORMATTED}}</span>
+                    </div>
+                </div>
+                
+                <!-- Monthly Savings Card -->
+                <div class="processing-card savings">
+                    <div class="card-header">
+                        <span class="card-title">Monthly Savings</span>
+                    </div>
+                    <div class="card-value-row">
+                        <span>🏆</span>
+                        <span class="card-value savings">\${{MONTHLY_SAVINGS_FORMATTED}}</span>
+                    </div>
+                    <div class="savings-subtitle">per month saved with DMP</div>
+                </div>
+            </div>
+        </div>
+
         <!-- Annual Impact - Styled like other sections -->
         <div class="section">
             <h3 class="section-title">
@@ -481,11 +491,11 @@ function generateQuoteStyleHTML(data: any): string {
             <div class="annual-grid">
                 <div class="annual-card">
                     <div class="annual-card-title">Annual Savings</div>
-                    <div class="annual-card-amount savings">\${{ANNUAL_SAVINGS}}</div>
+                    <div class="annual-card-amount savings">\${{ANNUAL_SAVINGS_FORMATTED}}</div>
                 </div>
                 <div class="annual-card">
                     <div class="annual-card-title">Processing Volume</div>
-                    <div class="annual-card-amount volume">\${{ANNUAL_VOLUME}}</div>
+                    <div class="annual-card-amount volume">\${{ANNUAL_VOLUME_FORMATTED}}</div>
                 </div>
             </div>
         </div>
@@ -502,6 +512,11 @@ function generateQuoteStyleHTML(data: any): string {
   // Calculate annual volume (12 months of monthly volume)
   const annualVolume = monthlyVolume * 12;
 
+  // Format currency values with commas
+  const formatCurrency = (value: number) => {
+    return Math.abs(value).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+
   // Replace placeholders with actual data
   return template
     .replace(/{{REPORT_NUMBER}}/g, reportNumber)
@@ -509,20 +524,27 @@ function generateQuoteStyleHTML(data: any): string {
     .replace(/{{CURRENT_COST}}/g, currentCost.toFixed(2))
     .replace(/{{NEW_COST}}/g, newCost < 0 ? Math.abs(newCost).toFixed(2) : newCost.toFixed(2))
     .replace(/{{MONTHLY_SAVINGS}}/g, Math.abs(monthlySavings).toFixed(2))
+    .replace(/{{CURRENT_COST_FORMATTED}}/g, formatCurrency(currentCost))
+    .replace(/{{NEW_COST_FORMATTED}}/g, formatCurrency(newCost))
+    .replace(/{{MONTHLY_SAVINGS_FORMATTED}}/g, formatCurrency(monthlySavings))
+    .replace(/{{ANNUAL_SAVINGS_FORMATTED}}/g, formatCurrency(annualSavings))
+    .replace(/{{ANNUAL_VOLUME_FORMATTED}}/g, annualVolume.toLocaleString('en-US'))
     .replace(/{{VOLUME}}/g, monthlyVolume.toLocaleString())
     .replace(/{{CURRENT_RATE}}/g, currentRate.toFixed(2))
     .replace(/{{INTERCHANGE}}/g, interchangeCost.toFixed(2))
     .replace(/{{FLAT_RATE}}/g, flatRate.toFixed(2))
     .replace(/{{PRICE_DIFF}}/g, priceDifferential.toFixed(2))
+    .replace(/{{TAX_RATE}}/g, taxRate.toFixed(2))
+    .replace(/{{TIP_RATE}}/g, tipRate.toFixed(2))
     .replace(/{{BASE_VOLUME}}/g, baseVolume.toLocaleString())
     .replace(/{{ADJUSTED_VOLUME}}/g, adjustedVolume.toLocaleString())
     .replace(/{{ANNUAL_SAVINGS}}/g, annualSavings.toFixed(2))
     .replace(/{{ANNUAL_VOLUME}}/g, annualVolume.toLocaleString())
-    .replace(/{{BUSINESS_NAME}}/g, customerInfo.businessName || 'N/A')
-    .replace(/{{BUSINESS_ADDRESS}}/g, customerInfo.businessAddress || 'N/A')
-    .replace(/{{CONTACT_NAME}}/g, customerInfo.contactName || 'N/A')
-    .replace(/{{CONTACT_EMAIL}}/g, customerInfo.contactEmail || 'N/A')
-    .replace(/{{SALES_REP_NAME}}/g, customerInfo.salesRepName || 'N/A');
+    .replace(/{{BUSINESS_NAME}}/g, customerInfo.businessName || '')
+    .replace(/{{BUSINESS_ADDRESS}}/g, customerInfo.businessAddress || '')
+    .replace(/{{CONTACT_NAME}}/g, customerInfo.contactName || '')
+    .replace(/{{CONTACT_EMAIL}}/g, customerInfo.contactEmail || '')
+    .replace(/{{SALES_REP_NAME}}/g, customerInfo.salesRepName || '');
 }
 
 export { generateQuoteStyleHTML };
