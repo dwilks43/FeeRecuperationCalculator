@@ -65,18 +65,21 @@ function generateQuoteStyleHTML(data: any): string {
             gap: 1rem;
         }
 
-        .logo {
-            width: 60px;
-            height: 40px;
-            background-color: #0ea5e9;
-            color: white;
-            text-align: center;
-            vertical-align: middle;
-            font-weight: bold;
-            font-size: 18px;
-            border: 2px solid #0369a1;
-            border-radius: 4px;
-            line-height: 36px;
+        /* Header styling for maximum DocRaptor compatibility */
+        .header-table {
+            border-bottom: 3px solid #0ea5e9;
+            padding-bottom: 1rem;
+        }
+        
+        .logo-text {
+            font-family: Arial, sans-serif !important;
+            font-size: 24px !important;
+            font-weight: 900 !important;
+            color: #0ea5e9 !important;
+            letter-spacing: 2px !important;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
+            margin: 0 !important;
+            display: block !important;
         }
 
         .company-name {
@@ -300,23 +303,16 @@ function generateQuoteStyleHTML(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Header with table-based logo for DocRaptor compatibility -->
-        <table style="width: 100%; margin-bottom: 2rem; border-collapse: collapse;">
+        <!-- Header - Nuclear Text-Only Option for Maximum DocRaptor Compatibility -->
+        <table class="header-table" style="width: 100%; margin-bottom: 2rem; border-collapse: collapse; border-bottom: 3px solid #0ea5e9; padding-bottom: 1rem;">
             <tr>
                 <td style="vertical-align: top; width: 70%;">
-                    <table style="border-collapse: collapse;">
-                        <tr>
-                            <td style="width: 60px; height: 40px; background-color: #0ea5e9 !important; color: white !important; text-align: center !important; vertical-align: middle !important; font-weight: bold !important; font-size: 18px !important; border: 2px solid #0369a1 !important; border-radius: 4px !important; line-height: 36px !important;">DMP</td>
-                            <td style="padding-left: 1rem; vertical-align: middle;">
-                                <div style="font-size: 18pt; font-weight: 700; color: #0ea5e9;">Dynamic Merchant Processing</div>
-                                <div style="color: #6b7280; font-style: italic;">Dual Pricing Savings Report</div>
-                            </td>
-                        </tr>
-                    </table>
+                    <h1 style="color: #0ea5e9; margin: 0; font-size: 24px; font-weight: 900; font-family: Arial, sans-serif; letter-spacing: 2px;">DYNAMIC MERCHANT PROCESSING</h1>
+                    <p style="color: #666666; margin: 5px 0 0 0; font-size: 14px; font-style: italic;">Dual Pricing Savings Report</p>
                 </td>
                 <td style="text-align: right; vertical-align: top; font-size: 12pt; color: #6b7280;">
-                    <div><strong>Report #:</strong> SAV{{REPORT_NUMBER}}</div>
-                    <div><strong>Date:</strong> {{DATE}}</div>
+                    <div style="font-weight: bold;">Report #: SAV{{REPORT_NUMBER}}</div>
+                    <div style="font-weight: bold;">Date: {{DATE}}</div>
                 </td>
             </tr>
         </table>
