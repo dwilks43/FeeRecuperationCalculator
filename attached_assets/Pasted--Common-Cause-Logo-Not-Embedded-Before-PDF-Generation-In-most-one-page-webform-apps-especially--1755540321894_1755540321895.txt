@@ -1,0 +1,72 @@
+🔍 Common Cause: Logo Not Embedded Before PDF Generation
+
+In most one-page webform apps, especially those generating a PDF immediately from the client or an early server call, the logo is either:
+
+Not fully loaded or embedded (e.g., due to async rendering timing)
+
+Blocked due to URL permissions or missing https
+
+Referenced as a relative or blob URL instead of an absolute URL
+
+✅ Fix: Ensure Logo Embeds Properly in PDF Output
+
+Here are the most reliable solutions:
+
+1. Use a Fully Qualified HTTPS URL
+
+Make sure your <img> tag uses a full HTTPS URL, like this:
+
+<img src="https://yourdomain.com/assets/logo.png" width="200" />
+
+
+Avoid using src="/logo.png" or src="logo.png" unless you're using inline rendering with embedded assets.
+
+2. Use Inline Base64 Encoding for the Logo
+
+This is the most reliable fix.
+
+Convert your logo into a Base64 string and embed it directly:
+
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..." width="200" />
+
+
+Benefits:
+
+Always renders in PDF because no remote call is needed
+
+No permission or timing issues
+
+Works offline and inside DocRaptor, Puppeteer, or jsPDF
+
+You can convert your logo to Base64 at https://www.base64-image.de/ or via command line.
+
+3. Ensure the Logo Loads Before PDF Rendering
+
+If you're using client-side PDF libraries like html2pdf.js, jsPDF, or browser print-to-PDF, make sure to wait for image load:
+
+const img = new Image();
+img.src = 'https://yourdomain.com/logo.png';
+img.onload = () => {
+  // Trigger PDF generation only after the logo loads
+  generatePDF();
+};
+
+4. DocRaptor Users – Use <img> with style="max-width" and HTTPS
+
+If you're using DocRaptor in the one-page app, make sure:
+
+The image is publicly accessible
+
+It’s using HTTPS
+
+Add style="max-width: 200px;" in addition to width="200" if necessary
+
+🧪 Bonus Debug Tip:
+
+If everything looks right but the logo is still not showing, try opening your raw HTML export in a browser and printing to PDF manually. If the logo doesn’t show there either, it confirms it's a loading or referencing issue rather than the PDF engine.
+
+✅ Recommendation
+
+If your app is lightweight and serverless, just embed the logo in Base64 and skip all remote URL headaches. This will match what finally fixed the issue in your quote generator system.
+
+Would you like help converting your existing logo into Base64 and inserting it into your current PDF logic? I can generate a code snippet for that.

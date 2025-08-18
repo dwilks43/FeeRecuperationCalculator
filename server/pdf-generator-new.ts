@@ -313,19 +313,17 @@ function generateQuoteStyleHTML(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Header with Table-Based Logo for Maximum DocRaptor Compatibility -->
-        <table style="width: 100%; margin-bottom: 2rem; border-collapse: collapse;">
+        <!-- Header with Simple Text Logo for DocRaptor Compatibility -->
+        <table style="width: 100%; margin-bottom: 2rem; border-collapse: collapse; border-bottom: 2px solid #0ea5e9; padding-bottom: 1rem;">
             <tr>
                 <td style="vertical-align: middle; width: 70%;">
-                    <table style="border-collapse: collapse;">
-                        <tr>
-                            <td style="width: 60px; height: 30px; background-color: #0ea5e9; color: white; text-align: center; vertical-align: middle; font-weight: bold; font-size: 16px; font-family: serif; border-radius: 4px; padding: 5px;">DMP</td>
-                            <td style="padding-left: 15px; vertical-align: middle;">
-                                <div style="font-size: 20px; font-weight: 700; color: #0ea5e9; margin: 0; font-family: Arial, sans-serif;">Dynamic Merchant Processing</div>
-                                <div style="color: #666666; font-style: italic; margin: 0; font-size: 14px;">Dual Pricing Savings Report</div>
-                            </td>
-                        </tr>
-                    </table>
+                    <div style="display: flex; align-items: center;">
+                        <div style="background-color: #0ea5e9; color: white; padding: 8px 12px; margin-right: 15px; border-radius: 4px; font-weight: bold; font-size: 18px; font-family: Arial, sans-serif;">DMP</div>
+                        <div>
+                            <div style="font-size: 20px; font-weight: 700; color: #0ea5e9; margin: 0; font-family: Arial, sans-serif;">Dynamic Merchant Processing</div>
+                            <div style="color: #666666; font-style: italic; margin: 0; font-size: 14px;">Dual Pricing Savings Report</div>
+                        </div>
+                    </div>
                 </td>
                 <td style="text-align: right; vertical-align: top; font-size: 12pt; color: #6b7280;">
                     <div style="font-weight: bold;">Report #: SAV{{REPORT_NUMBER}}</div>
