@@ -318,9 +318,7 @@ function generateQuoteStyleHTML(data: any): string {
             <tr>
                 <td style="vertical-align: middle; width: 70%;">
                     <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIyNDAiIGhlaWdodD0iODAiIGZpbGw9IiMwZWE1ZTkiLz48dGV4dCB4PSIxMjAiIHk9IjQ1IiBmb250LWZhbWlseT0ic2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RE1QPC90ZXh0Pjwvc3ZnPg==" 
-                             style="width: 60px; height: auto; max-height: 60px;" 
-                             alt="DMP Logo" />
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" class="company-logo" alt="DMP Logo" />
                         <div>
                             <h1 style="color: #0ea5e9; margin: 0; font-size: 20px; font-weight: 700;">Dynamic Merchant Processing</h1>
                             <p style="color: #666666; margin: 0; font-size: 14px; font-style: italic;">Dual Pricing Savings Report</p>
