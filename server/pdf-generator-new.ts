@@ -12,7 +12,8 @@ function generateQuoteStyleHTML(data: any): string {
     currentCost,
     newCost,
     monthlySavings,
-    annualSavings
+    annualSavings,
+    customerInfo = {}
   } = data;
 
   // Generate report number and date
@@ -65,15 +66,16 @@ function generateQuoteStyleHTML(data: any): string {
         .logo {
             width: 50px;
             height: 50px;
-            background: #0ea5e9;
+            background: #004ED3;
             border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-weight: bold;
-            font-size: 16px;
-            border: 2px solid #0369a1;
+            font-size: 14px;
+            border: 2px solid #0B2340;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
         }
 
         .company-name {
@@ -311,7 +313,42 @@ function generateQuoteStyleHTML(data: any): string {
             </div>
         </div>
 
-        <!-- Parameters -->
+        <!-- Customer Information Section -->
+        <div class="section">
+            <h3 class="section-title">Customer Information</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Field</th>
+                        <th>Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Business Name</td>
+                        <td>{{BUSINESS_NAME}}</td>
+                    </tr>
+                    <tr>
+                        <td>Business Address</td>
+                        <td>{{BUSINESS_ADDRESS}}</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Name</td>
+                        <td>{{CONTACT_NAME}}</td>
+                    </tr>
+                    <tr>
+                        <td>Contact Email</td>
+                        <td>{{CONTACT_EMAIL}}</td>
+                    </tr>
+                    <tr>
+                        <td>Sales Representative</td>
+                        <td>{{SALES_REP_NAME}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Input Parameters -->
         <div class="section">
             <h3 class="section-title">Input Parameters</h3>
             <table class="data-table">
@@ -341,29 +378,6 @@ function generateQuoteStyleHTML(data: any): string {
                     <tr>
                         <td>Price Differential</td>
                         <td>{{PRICE_DIFF}}%</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Volume Analysis -->
-        <div class="section">
-            <h3 class="section-title">Volume Analysis</h3>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Breakdown</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Base Volume</td>
-                        <td>\${{BASE_VOLUME}}</td>
-                    </tr>
-                    <tr>
-                        <td>Adjusted Card Volume</td>
-                        <td>\${{ADJUSTED_VOLUME}}</td>
                     </tr>
                 </tbody>
             </table>
@@ -412,6 +426,29 @@ function generateQuoteStyleHTML(data: any): string {
             </div>
         </div>
 
+        <!-- Volume Analysis -->
+        <div class="section">
+            <h3 class="section-title">Volume Analysis</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Breakdown</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Base Volume</td>
+                        <td>\${{BASE_VOLUME}}</td>
+                    </tr>
+                    <tr>
+                        <td>Adjusted Card Volume</td>
+                        <td>\${{ADJUSTED_VOLUME}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
         <!-- Annual Impact - Styled like widget -->
         <div class="annual-impact">
             <div class="annual-impact-title">
@@ -457,7 +494,12 @@ function generateQuoteStyleHTML(data: any): string {
     .replace(/{{BASE_VOLUME}}/g, baseVolume.toLocaleString())
     .replace(/{{ADJUSTED_VOLUME}}/g, adjustedVolume.toLocaleString())
     .replace(/{{ANNUAL_SAVINGS}}/g, annualSavings.toFixed(2))
-    .replace(/{{ANNUAL_VOLUME}}/g, annualVolume.toLocaleString());
+    .replace(/{{ANNUAL_VOLUME}}/g, annualVolume.toLocaleString())
+    .replace(/{{BUSINESS_NAME}}/g, customerInfo.businessName || 'N/A')
+    .replace(/{{BUSINESS_ADDRESS}}/g, customerInfo.businessAddress || 'N/A')
+    .replace(/{{CONTACT_NAME}}/g, customerInfo.contactName || 'N/A')
+    .replace(/{{CONTACT_EMAIL}}/g, customerInfo.contactEmail || 'N/A')
+    .replace(/{{SALES_REP_NAME}}/g, customerInfo.salesRepName || 'N/A');
 }
 
 export { generateQuoteStyleHTML };
