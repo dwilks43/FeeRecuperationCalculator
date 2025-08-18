@@ -66,15 +66,15 @@ function generateQuoteStyleHTML(data: any): string {
         .logo {
             width: 60px;
             height: 40px;
-            background: #0ea5e9;
+            background-color: #0ea5e9;
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
+            vertical-align: middle;
             font-weight: bold;
             font-size: 18px;
-            border-radius: 4px;
             border: 2px solid #0369a1;
+            border-radius: 4px;
+            line-height: 36px;
         }
 
         .company-name {
@@ -298,20 +298,26 @@ function generateQuoteStyleHTML(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Header with improved logo -->
-        <div class="header">
-            <div class="logo-section">
-                <div class="logo">DMP</div>
-                <div>
-                    <div class="company-name">Dynamic Merchant Processing</div>
-                    <div style="color: #6b7280; font-style: italic;">Dual Pricing Savings Report</div>
-                </div>
-            </div>
-            <div class="report-info">
-                <div><strong>Report #:</strong> SAV{{REPORT_NUMBER}}</div>
-                <div><strong>Date:</strong> {{DATE}}</div>
-            </div>
-        </div>
+        <!-- Header with table-based logo for DocRaptor compatibility -->
+        <table style="width: 100%; margin-bottom: 2rem; border-collapse: collapse;">
+            <tr>
+                <td style="vertical-align: top; width: 70%;">
+                    <table style="border-collapse: collapse;">
+                        <tr>
+                            <td class="logo" style="width: 60px; height: 40px; background-color: #0ea5e9; color: white; text-align: center; vertical-align: middle; font-weight: bold; font-size: 18px; border: 2px solid #0369a1; border-radius: 4px;">DMP</td>
+                            <td style="padding-left: 1rem; vertical-align: middle;">
+                                <div style="font-size: 18pt; font-weight: 700; color: #0ea5e9;">Dynamic Merchant Processing</div>
+                                <div style="color: #6b7280; font-style: italic;">Dual Pricing Savings Report</div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+                <td style="text-align: right; vertical-align: top; font-size: 12pt; color: #6b7280;">
+                    <div><strong>Report #:</strong> SAV{{REPORT_NUMBER}}</div>
+                    <div><strong>Date:</strong> {{DATE}}</div>
+                </td>
+            </tr>
+        </table>
 
         <!-- Customer Information Section -->
         <div class="section">
