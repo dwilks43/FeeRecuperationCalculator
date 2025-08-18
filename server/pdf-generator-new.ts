@@ -1,8 +1,6 @@
 
 
 function generateQuoteStyleHTML(data: any): string {
-  console.log('PDF Data received:', JSON.stringify(data, null, 2));
-  
   const {
     monthlyVolume,
     currentRate,
@@ -73,21 +71,11 @@ function generateQuoteStyleHTML(data: any): string {
             gap: 1rem;
         }
 
-        /* Header styling for maximum DocRaptor compatibility */
-        .header-table {
-            border-bottom: 3px solid #0ea5e9;
-            padding-bottom: 1rem;
-        }
-        
-        .logo-text {
-            font-family: Arial, sans-serif !important;
-            font-size: 24px !important;
-            font-weight: 900 !important;
-            color: #0ea5e9 !important;
-            letter-spacing: 2px !important;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1) !important;
-            margin: 0 !important;
-            display: block !important;
+        /* Company logo styling for DocRaptor compatibility */
+        .company-logo {
+            width: 60px;
+            height: auto;
+            max-height: 60px;
         }
 
         .company-name {
@@ -325,12 +313,19 @@ function generateQuoteStyleHTML(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Header - Nuclear Text-Only Option for Maximum DocRaptor Compatibility -->
-        <table class="header-table" style="width: 100%; margin-bottom: 2rem; border-collapse: collapse; border-bottom: 3px solid #0ea5e9; padding-bottom: 1rem;">
+        <!-- Header with Working SVG Logo -->
+        <table style="width: 100%; margin-bottom: 2rem; border-collapse: collapse;">
             <tr>
-                <td style="vertical-align: top; width: 70%;">
-                    <h1 style="color: #0ea5e9; margin: 0; font-size: 24px; font-weight: 900; font-family: Arial, sans-serif; letter-spacing: 2px;">DYNAMIC MERCHANT PROCESSING</h1>
-                    <p style="color: #666666; margin: 5px 0 0 0; font-size: 14px; font-style: italic;">Dual Pricing Savings Report</p>
+                <td style="vertical-align: middle; width: 70%;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHdpZHRoPSIyNDAiIGhlaWdodD0iODAiIGZpbGw9IiMwZWE1ZTkiLz48dGV4dCB4PSIxMjAiIHk9IjQ1IiBmb250LWZhbWlseT0ic2VyaWYiIGZvbnQtc2l6ZT0iMjQiIGZvbnQtd2VpZ2h0PSJib2xkIiBmaWxsPSJ3aGl0ZSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+RE1QPC90ZXh0Pjwvc3ZnPg==" 
+                             style="width: 60px; height: auto; max-height: 60px;" 
+                             alt="DMP Logo" />
+                        <div>
+                            <h1 style="color: #0ea5e9; margin: 0; font-size: 20px; font-weight: 700;">Dynamic Merchant Processing</h1>
+                            <p style="color: #666666; margin: 0; font-size: 14px; font-style: italic;">Dual Pricing Savings Report</p>
+                        </div>
+                    </div>
                 </td>
                 <td style="text-align: right; vertical-align: top; font-size: 12pt; color: #6b7280;">
                     <div style="font-weight: bold;">Report #: SAV{{REPORT_NUMBER}}</div>
