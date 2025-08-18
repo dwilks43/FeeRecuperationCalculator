@@ -1,6 +1,8 @@
 
 
 function generateQuoteStyleHTML(data: any): string {
+  console.log('PDF Data received:', JSON.stringify(data, null, 2));
+  
   const {
     monthlyVolume,
     currentRate,
@@ -15,7 +17,13 @@ function generateQuoteStyleHTML(data: any): string {
     newCost,
     monthlySavings,
     annualSavings,
-    customerInfo = {}
+    customerInfo = {},
+    // Try getting customer data directly from top level
+    businessName,
+    businessAddress,
+    contactName,
+    contactEmail,
+    salesRepName
   } = data;
 
   // Generate report number and date
@@ -113,6 +121,10 @@ function generateQuoteStyleHTML(data: any): string {
             align-items: center;
             gap: 0.5rem;
         }
+        
+        .section-title span {
+            font-size: 24px;
+        }
 
         .data-table {
             width: 100%;
@@ -155,6 +167,10 @@ function generateQuoteStyleHTML(data: any): string {
             align-items: center;
             gap: 0.5rem;
             margin-bottom: 1rem;
+        }
+        
+        .processing-savings-header span {
+            font-size: 32px;
         }
 
         .processing-savings-title {
@@ -206,6 +222,12 @@ function generateQuoteStyleHTML(data: any): string {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            justify-content: space-between;
+        }
+        
+        .card-value-row span:first-child {
+            font-size: 28px;
+            width: 40px;
         }
 
         .card-value.current {
@@ -436,7 +458,7 @@ function generateQuoteStyleHTML(data: any): string {
         </div>
 
         <!-- Monthly Processing Savings - Complete 3-card section matching widget exactly -->
-        <div class="processing-savings-container">
+        <div class="processing-savings-container" style="page-break-before: always;">
             <div class="processing-savings-header">
                 <span>🐷</span>
                 <div class="processing-savings-title">Monthly Processing Savings</div>
@@ -479,7 +501,7 @@ function generateQuoteStyleHTML(data: any): string {
         </div>
 
         <!-- Annual Impact - Styled like other sections -->
-        <div class="section">
+        <div class="section" style="margin-top: 2rem;">
             <h3 class="section-title">
                 <span>📅</span>
                 Annual Impact
@@ -536,11 +558,11 @@ function generateQuoteStyleHTML(data: any): string {
     .replace(/{{ADJUSTED_VOLUME}}/g, adjustedVolume.toLocaleString())
     .replace(/{{ANNUAL_SAVINGS}}/g, annualSavings.toFixed(2))
     .replace(/{{ANNUAL_VOLUME}}/g, annualVolume.toLocaleString())
-    .replace(/{{BUSINESS_NAME}}/g, customerInfo.businessName || '')
-    .replace(/{{BUSINESS_ADDRESS}}/g, customerInfo.businessAddress || '')
-    .replace(/{{CONTACT_NAME}}/g, customerInfo.contactName || '')
-    .replace(/{{CONTACT_EMAIL}}/g, customerInfo.contactEmail || '')
-    .replace(/{{SALES_REP_NAME}}/g, customerInfo.salesRepName || '');
+    .replace(/{{BUSINESS_NAME}}/g, businessName || customerInfo.businessName || 'Not Provided')
+    .replace(/{{BUSINESS_ADDRESS}}/g, businessAddress || customerInfo.businessAddress || 'Not Provided')
+    .replace(/{{CONTACT_NAME}}/g, contactName || customerInfo.contactName || 'Not Provided')
+    .replace(/{{CONTACT_EMAIL}}/g, contactEmail || customerInfo.contactEmail || 'Not Provided')
+    .replace(/{{SALES_REP_NAME}}/g, salesRepName || customerInfo.salesRepName || 'Not Provided');
 }
 
 export { generateQuoteStyleHTML };
