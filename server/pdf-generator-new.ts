@@ -64,20 +64,17 @@ function generateQuoteStyleHTML(data: any): string {
         }
 
         .logo {
-            width: 50px;
-            height: 50px;
-            background: #004ED3;
-            border-radius: 8px;
-            display: inline-flex;
+            width: 60px;
+            height: 40px;
+            background: #0ea5e9;
+            color: white;
+            display: flex;
             align-items: center;
             justify-content: center;
-            color: white !important;
             font-weight: bold;
-            font-size: 14px;
-            border: 2px solid #0B2340;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
-            box-shadow: 0 2px 4px rgba(0,78,211,0.3);
-            vertical-align: middle;
+            font-size: 18px;
+            border-radius: 4px;
+            border: 2px solid #0369a1;
         }
 
         .company-name {
