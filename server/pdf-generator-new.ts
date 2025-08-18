@@ -68,14 +68,16 @@ function generateQuoteStyleHTML(data: any): string {
             height: 50px;
             background: #004ED3;
             border-radius: 8px;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: white !important;
             font-weight: bold;
             font-size: 14px;
             border: 2px solid #0B2340;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            box-shadow: 0 2px 4px rgba(0,78,211,0.3);
+            vertical-align: middle;
         }
 
         .company-name {
@@ -90,39 +92,46 @@ function generateQuoteStyleHTML(data: any): string {
             color: #6b7280;
         }
 
+        /* Unified section styling - all sections match Monthly Processing Savings */
         .section {
-            margin: 2rem 0;
+            background: linear-gradient(to bottom right, #dbeafe, #e0e7ff);
+            border: 1px solid #3b82f6;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(59, 130, 246, 0.1);
         }
 
         .section-title {
-            font-size: 14pt;
+            font-size: 16pt;
             font-weight: 700;
-            color: #0ea5e9;
+            color: #1e40af;
             margin-bottom: 1rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            background: white;
+            background: rgba(255, 255, 255, 0.9);
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .data-table th,
         .data-table td {
             padding: 12px 16px;
             text-align: left;
-            border-bottom: 1px solid #e5e7eb;
+            border-bottom: 1px solid #bfdbfe;
         }
 
         .data-table th {
-            background: #f8fafc;
+            background: rgba(255, 255, 255, 0.95);
             font-weight: 600;
-            color: #374151;
+            color: #1e40af;
         }
 
         .data-table tr:last-child td {
@@ -258,14 +267,8 @@ function generateQuoteStyleHTML(data: any): string {
             text-align: center;
             padding: 1rem;
             border-radius: 8px;
-        }
-
-        .annual-card.savings {
-            background: #f0fdf4;
-        }
-
-        .annual-card.volume {
-            background: #f0f9ff;
+            background: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .annual-card-title {
@@ -315,7 +318,10 @@ function generateQuoteStyleHTML(data: any): string {
 
         <!-- Customer Information Section -->
         <div class="section">
-            <h3 class="section-title">Customer Information</h3>
+            <h3 class="section-title">
+                <span>👤</span>
+                Customer Information
+            </h3>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -350,7 +356,10 @@ function generateQuoteStyleHTML(data: any): string {
 
         <!-- Input Parameters -->
         <div class="section">
-            <h3 class="section-title">Input Parameters</h3>
+            <h3 class="section-title">
+                <span>⚙️</span>
+                Input Parameters
+            </h3>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -426,9 +435,12 @@ function generateQuoteStyleHTML(data: any): string {
             </div>
         </div>
 
-        <!-- Volume Analysis -->
+        <!-- Volume Breakdown -->
         <div class="section">
-            <h3 class="section-title">Volume Analysis</h3>
+            <h3 class="section-title">
+                <span>📊</span>
+                Volume Breakdown
+            </h3>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -445,22 +457,30 @@ function generateQuoteStyleHTML(data: any): string {
                         <td>Adjusted Card Volume</td>
                         <td>\${{ADJUSTED_VOLUME}}</td>
                     </tr>
+                    <tr>
+                        <td>Current Processing Cost</td>
+                        <td>\${{CURRENT_COST}}</td>
+                    </tr>
+                    <tr>
+                        <td>New Processing Cost</td>
+                        <td>\${{NEW_COST}}</td>
+                    </tr>
                 </tbody>
             </table>
         </div>
 
-        <!-- Annual Impact - Styled like widget -->
-        <div class="annual-impact">
-            <div class="annual-impact-title">
+        <!-- Annual Impact - Styled like other sections -->
+        <div class="section">
+            <h3 class="section-title">
                 <span>📅</span>
                 Annual Impact
-            </div>
+            </h3>
             <div class="annual-grid">
-                <div class="annual-card savings">
+                <div class="annual-card">
                     <div class="annual-card-title">Annual Savings</div>
                     <div class="annual-card-amount savings">\${{ANNUAL_SAVINGS}}</div>
                 </div>
-                <div class="annual-card volume">
+                <div class="annual-card">
                     <div class="annual-card-title">Processing Volume</div>
                     <div class="annual-card-amount volume">\${{ANNUAL_VOLUME}}</div>
                 </div>
