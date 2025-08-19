@@ -313,22 +313,25 @@ function generateQuoteStyleHTML(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Header with Working Logo (Exact copy from working application) -->
-        <header class="quote-header">
-            <div class="company-branding">
-                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" class="company-logo" alt="DMP Logo" />
-                <div class="company-text">
-                    <h1 class="company-name">Dynamic Merchant Processing</h1>
-                    <p class="company-tagline">Dual Pricing Savings Report</p>
-                </div>
-            </div>
-            <div class="quote-meta">
-                <div class="quote-details">
-                    <p><strong>Report #:</strong> SAV{{REPORT_NUMBER}}</p>
-                    <p><strong>Date:</strong> {{DATE}}</p>
-                </div>
-            </div>
-        </header>
+        <!-- Header with ACTUAL DMP Logo -->
+        <table style="width: 100%; margin-bottom: 2rem; border-collapse: collapse;">
+            <tr>
+                <td style="vertical-align: middle; width: 70%;">
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCABkAPoEASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0LAOEw5+YoAi8eWKMGpn8Rp6m8TZR5yR+2tWqK2dWSFjEK5aRfDQM4JXIyOKYJXCDGjGAg5UMCCBQ6MZr+j/vAI/R7Vt2jI72jgJaBKNmqfGRaVhLWPNqfF8JCZdxOaHYKgJu8PJGWElmtjnKKKhIKN2sKKyhtg46vYKHbGpLvBJqKzJHfFB1KkFHVmBIyZ/rR" 
+                             style="width: 120px; height: auto; max-height: 40px;" alt="DMP Logo" />
+                        <div>
+                            <h1 style="color: #0ea5e9; margin: 0; font-size: 20px; font-weight: 700; font-family: Arial, sans-serif;">Dynamic Merchant Processing</h1>
+                            <p style="color: #666666; margin: 0; font-size: 14px; font-style: italic;">Dual Pricing Savings Report</p>
+                        </div>
+                    </div>
+                </td>
+                <td style="text-align: right; vertical-align: top; font-size: 12pt; color: #6b7280;">
+                    <div style="font-weight: bold;">Report #: SAV{{REPORT_NUMBER}}</div>
+                    <div style="font-weight: bold;">Date: {{DATE}}</div>
+                </td>
+            </tr>
+        </table>
 
         <!-- Customer Information Section -->
         <div class="section">
