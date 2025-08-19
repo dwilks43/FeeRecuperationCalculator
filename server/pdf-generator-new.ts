@@ -313,24 +313,22 @@ function generateQuoteStyleHTML(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Header with Simple Text Logo for DocRaptor Compatibility -->
-        <table style="width: 100%; margin-bottom: 2rem; border-collapse: collapse; border-bottom: 2px solid #0ea5e9; padding-bottom: 1rem;">
-            <tr>
-                <td style="vertical-align: middle; width: 70%;">
-                    <div style="display: flex; align-items: center;">
-                        <div style="background-color: #0ea5e9; color: white; padding: 8px 12px; margin-right: 15px; border-radius: 4px; font-weight: bold; font-size: 18px; font-family: Arial, sans-serif;">DMP</div>
-                        <div>
-                            <div style="font-size: 20px; font-weight: 700; color: #0ea5e9; margin: 0; font-family: Arial, sans-serif;">Dynamic Merchant Processing</div>
-                            <div style="color: #666666; font-style: italic; margin: 0; font-size: 14px;">Dual Pricing Savings Report</div>
-                        </div>
-                    </div>
-                </td>
-                <td style="text-align: right; vertical-align: top; font-size: 12pt; color: #6b7280;">
-                    <div style="font-weight: bold;">Report #: SAV{{REPORT_NUMBER}}</div>
-                    <div style="font-weight: bold;">Date: {{DATE}}</div>
-                </td>
-            </tr>
-        </table>
+        <!-- Header with Working Logo (Exact copy from working application) -->
+        <header class="quote-header">
+            <div class="company-branding">
+                <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjgwIiB2aWV3Qm94PSIwIDAgMjQwIDgwIiBmaWxsPSJub25lIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPg0KPHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSI4MCIgZmlsbD0iIzBlYTVlOSIvPg0KPHR0ZXh0IHg9IjEyMCIgeT0iNDUiIGZvbnQtZmFtaWx5PSJzZXJpZiIgZm9udC1zaXplPSIyNCIgZm9udC13ZWlnaHQ9ImJvbGQiIGZpbGw9IndoaXRlIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj5ETVAuPC90ZXh0Pg0KPC9zdmc+" class="company-logo" alt="DMP Logo" />
+                <div class="company-text">
+                    <h1 class="company-name">Dynamic Merchant Processing</h1>
+                    <p class="company-tagline">Dual Pricing Savings Report</p>
+                </div>
+            </div>
+            <div class="quote-meta">
+                <div class="quote-details">
+                    <p><strong>Report #:</strong> SAV{{REPORT_NUMBER}}</p>
+                    <p><strong>Date:</strong> {{DATE}}</p>
+                </div>
+            </div>
+        </header>
 
         <!-- Customer Information Section -->
         <div class="section">
