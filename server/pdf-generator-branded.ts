@@ -261,26 +261,40 @@ export function generateBrandedPDF(data: any): string {
             background: rgba(0, 78, 211, 0.01);
         }
 
-        /* Branded Banner */
-        .banner {
-            background: linear-gradient(135deg, rgba(0, 78, 211, 0.05) 0%, rgba(43, 216, 194, 0.05) 100%);
+        /* Enhanced Header Banner */
+        .header-banner {
+            background: linear-gradient(135deg, rgba(0, 78, 211, 0.08) 0%, rgba(43, 216, 194, 0.06) 100%);
             border: 1px solid var(--brand-ultramarine);
-            border-radius: 6px;
-            padding: 12px 20px;
-            margin: 16px 0 24px 0;
-            font-size: 14px;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 0 0 24px 0;
+        }
+
+        .header-banner .header {
+            margin: 0;
+        }
+
+        .header-banner .disclaimer {
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(0, 78, 211, 0.2);
+            border-radius: 4px;
+            padding: 10px 16px;
+            margin-top: 16px;
+            font-size: 13px;
             color: var(--brand-ink);
         }
 
-        .banner b {
+        .header-banner .disclaimer b {
             color: var(--brand-ultramarine);
             font-weight: 700;
         }
 
-        .banner small {
+        .header-banner .disclaimer small {
             color: var(--muted);
             font-size: 12px;
         }
+
+
 
         /* Enhanced Section Styling for Page 2 */
         .page-2 .section {
@@ -320,27 +334,28 @@ export function generateBrandedPDF(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Header with DMP Logo -->
-        <table class="header">
-            <tr>
-                <td class="brand-cell">
-                    <img src="${LOGO_DATA_URL}" alt="DMP Logo" style="width: 140px; height: auto; display: block;" />
-                </td>
-                <td>
-                    <div class="title">Dynamic Merchant Processing</div>
-                    <div class="subtitle">Dual Pricing Savings Report</div>
-                </td>
-                <td style="text-align: right;">
-                    <div class="subtitle">Report #: ${reportNumber}</div>
-                    <div class="subtitle">Date: ${currentDate}</div>
-                </td>
-            </tr>
-        </table>
-
-        <!-- Branded Banner -->
-        <div class="banner">
-            <b>Dual Pricing Savings Report</b> 
-            <small>— estimate based on your current inputs; final terms subject to underwriting and program selection.</small>
+        <!-- Enhanced Header Banner with Logo -->
+        <div class="header-banner">
+            <table class="header">
+                <tr>
+                    <td class="brand-cell">
+                        <img src="${LOGO_DATA_URL}" alt="DMP Logo" style="width: 140px; height: auto; display: block;" />
+                    </td>
+                    <td>
+                        <div class="title">Dynamic Merchant Processing</div>
+                        <div class="subtitle">Dual Pricing Savings Report</div>
+                    </td>
+                    <td style="text-align: right;">
+                        <div class="subtitle">Report #: ${reportNumber}</div>
+                        <div class="subtitle">Date: ${currentDate}</div>
+                    </td>
+                </tr>
+            </table>
+            
+            <div class="disclaimer">
+                <b>Dual Pricing Savings Report</b> 
+                <small>— estimate based on your current inputs; final terms subject to underwriting and program selection.</small>
+            </div>
         </div>
 
         <!-- Customer Information Section -->
