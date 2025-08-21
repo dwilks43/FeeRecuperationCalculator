@@ -46,6 +46,7 @@ export function generateBrandedPDF(data: any): string {
             --muted: #6B7280;              /* Secondary text */
             --border: #E5E7EB;             /* Table borders */
             --bg-soft: #F9FAFB;            /* Section header background */
+            --bg-hero: #0A3FB1;            /* Deeper ultramarine for hero */
         }
 
         html, body {
@@ -66,6 +67,50 @@ export function generateBrandedPDF(data: any): string {
             width: 7.5in;
             margin: 0 auto;
             padding: 0.5in;
+            position: relative;
+        }
+
+        /* Premium KPI Hero Band */
+        .hero-band {
+            background: linear-gradient(135deg, var(--bg-hero) 0%, var(--brand-ultramarine) 100%);
+            color: white;
+            padding: 20px;
+            margin: -0.5in -0.5in 24px -0.5in;
+            text-align: center;
+            border-bottom: 3px solid var(--brand-aqua);
+        }
+
+        .hero-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .hero-amount {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--brand-aqua);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-subtitle {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-top: 4px;
+        }
+
+        /* Subtle brand watermark */
+        .container::before {
+            content: 'DMP';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 120px;
+            font-weight: 100;
+            color: rgba(0, 78, 211, 0.03);
+            z-index: 0;
+            pointer-events: none;
         }
 
         /* Header Styles */
@@ -95,33 +140,40 @@ export function generateBrandedPDF(data: any): string {
 
         /* Section Styles */
         .section {
-            background: var(--bg-soft);
+            background: white;
             border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
+            padding: 0;
+            margin-bottom: 24px;
             border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 78, 211, 0.08);
+            position: relative;
+            z-index: 1;
         }
 
         .section-hd {
-            margin-bottom: 16px;
-            padding: 12px 0;
-            border-bottom: 2px solid var(--brand-ultramarine);
-            background: var(--bg-soft);
+            margin: 0;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, var(--brand-ultramarine) 0%, #1E5EDF 100%);
+            border-radius: 8px 8px 0 0;
+            border-left: 4px solid var(--brand-aqua);
         }
 
         .section-title {
             font-size: 16px;
             font-weight: 700;
-            color: var(--brand-ultramarine);
+            color: white;
             margin: 0;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .section-bd {
             background: white;
-            padding: 16px;
-            border-radius: 6px;
-            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 0 0 8px 8px;
+            border: none;
         }
+
+
 
         /* Key-Value Table */
         .kv {
@@ -178,11 +230,16 @@ export function generateBrandedPDF(data: any): string {
             border-radius: 8px;
             padding: 16px;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-top: 3px solid var(--brand-ultramarine);
         }
 
         .card.highlight {
             background: linear-gradient(135deg, #E0F7F4 0%, #B3F1E9 100%);
             border: 2px solid var(--brand-aqua);
+            border-top: 4px solid var(--brand-spruce);
+            box-shadow: 0 4px 12px rgba(43, 216, 194, 0.2);
+            transform: translateY(-2px);
         }
 
         .metric {
@@ -225,6 +282,13 @@ export function generateBrandedPDF(data: any): string {
 </head>
 <body>
     <div class="container">
+        <!-- Premium KPI Hero Band -->
+        <div class="hero-band">
+            <div class="hero-title">Monthly Savings Opportunity</div>
+            <div class="hero-amount">${formatCurrency(monthlySavings)}</div>
+            <div class="hero-subtitle">Annual Impact: ${formatCurrency(annualSavings)}</div>
+        </div>
+
         <!-- Header with DMP Logo -->
         <table class="header">
             <tr>

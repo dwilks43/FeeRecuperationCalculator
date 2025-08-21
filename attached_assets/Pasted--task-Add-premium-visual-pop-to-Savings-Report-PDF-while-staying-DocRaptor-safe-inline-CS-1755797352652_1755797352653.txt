@@ -1,0 +1,17 @@
+{
+  "task": "Add premium visual 'pop' to Savings Report PDF while staying DocRaptor-safe (inline CSS, simple layout).",
+  "goals": [
+    "Create a bold KPI hero band at the top highlighting Monthly Savings.",
+    "Add a subtle brand watermark for depth (very light opacity).",
+    "Tighten hierarchy/contrast on section headers and tables.",
+    "Make savings cards feel more premium with subtle depth and accent lines.",
+    "Keep current data fields exactly as-is; styling only."
+  ],
+  "constraints": [
+    "One <style> block; no external CSS.",
+    "<img> with Base64 only; no CSS background images for logos.",
+    "Simple tables/blocks; avoid complex flex/grid for critical layout."
+  ],
+  "style_block_patch": {
+    "description": "Replace or merge carefully with existing <style>. Adds hero band, watermark, refined headers, and card accents.",
+    "code": "<style>\n  :root{\n    --brand-ultramarine:#004ED3;\n    --brand-aqua:#2BD8C2;\n    --brand-spruce:#00937B;\n    --brand-ink:#0B2340;\n    --ink-800:#1F2937;\n    --muted:#6B7280;\n    --border:#E5E7EB;\n    --bg-soft:#F9FAFB;\n    --bg-hero:#0A3FB1; /* deeper ultramarine for hero */\n  }\n  html,body{ margin:0; padding:0; }\n  body{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink-800); font-size:12px; }\n  .container{ padding:24px; position:relative; }\n\n  /* Watermark (very subtle) */\n  .wm{ position:absolute; right:24px; bottom:90px; opacity:0.05; }\n  .wm img{ width:180px; height:auto; display:block; }\n\n  /* Header */\n  .header{ width:100%; border-collapse:collapse; margin-bottom:8px; }\n  .brand-cell{ width:180px; vertical-align:middle; }\n  .title{ font-weight:800; font-size:20px; line-height:1.2; color:var(--brand-ink); }\n  .subtitle{ color:var(--muted); font-size:12px; }\n  .rule{ height:3px; background:var(--brand-ultramarine); border-radius:2px; margin:10px 0 14px; }\n\n  /* HERO KPI band */\n  .hero{ border-radius:10px; overflow:hidden; margin:10px 0 16px; border:1px solid rgba(0,0,0,0.04); }\n  .hero-top{ background:linear-gradient(90deg, var(--bg-hero), var(--brand-ultramarine)); color:#fff; padding:12px 16px; display:block; }\n  .hero-kicker{ font-weight:600; letter-spacing:.2px; opacity:.95; font-size:11px; }\n  .hero-value{ font-weight:900; font-size:22px; line-height:1.1; margin-top:2px; }\n  .hero-sub{ font-size:11px; opacity:.9; }\n  .hero-bottom{ padding:10px 16px; background:linear-gradient(90deg, rgba(43,216,194,0.18), rgba(43,216,194,0)); border-top:1px solid var(--brand-aqua); display:block; }\n\n  /* Sections */\n  .section{ margin-top:14px; border:1px solid var(--border); border-radius:10px; overflow:hidden; }\n  .section-hd{ background:var(--bg-soft); padding:9px 12px; border-bottom:1px solid var(--border); position:relative; }\n  .section-hd:before{ content:\"\"; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--brand-ultramarine); }\n  .section-title{ font-weight:750; color:var(--brand-ink); padding-left:2px; }\n  .section-bd{ padding:12px; }\n\n  /* Tables */\n  .kv{ width:100%; border-collapse:collapse; }\n  .kv th,.kv td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); vertical-align:top; }\n  .kv tr:nth-child(odd) t
