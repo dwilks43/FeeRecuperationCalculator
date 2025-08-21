@@ -166,13 +166,13 @@
                     const url = window.URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = 'DMP-Test-Logo-Report.pdf';
+                    a.download = 'DMP-Branded-Savings-Report.pdf';
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                     window.URL.revokeObjectURL(url);
                     
-                    statusDiv.innerHTML = '<div class="success">✅ PDF generated successfully with logo!</div>';
+                    statusDiv.innerHTML = '<div class="success">✅ Branded PDF generated successfully with professional DMP styling!</div>';
                 } else {
                     const errorText = await response.text();
                     statusDiv.innerHTML = '<div class="error">❌ PDF generation failed: ' + errorText + '</div>';

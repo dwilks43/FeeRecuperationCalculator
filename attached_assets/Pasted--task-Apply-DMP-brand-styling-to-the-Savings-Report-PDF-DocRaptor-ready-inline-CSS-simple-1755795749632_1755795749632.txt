@@ -1,0 +1,59 @@
+{
+  "task": "Apply DMP brand styling to the Savings Report PDF (DocRaptor-ready, inline CSS, simple HTML).",
+  "goals": [
+    "Use the existing DMP color palette already defined in the project (Tailwind tokens / CSS variables).",
+    "Replace emoji section markers with styled section headers.",
+    "Improve hierarchy, spacing, and typography for a premium look similar to the first app.",
+    "Keep DocRaptor-friendly markup: simple block/table layout, inline CSS or a single <style> tag, and <img> for images."
+  ],
+  "palette_mapping": {
+    "use_existing_tokens": true,
+    "css_vars_examples": {
+      "--brand-primary": "from current config (e.g., theme.colors.brand[600])",
+      "--brand-accent": "e.g., theme.colors.brand[400]",
+      "--ink": "e.g., theme.colors.slate[900]",
+      "--muted": "e.g., theme.colors.slate[600]",
+      "--border": "e.g., theme.colors.slate[200]",
+      "--bg-soft": "e.g., theme.colors.slate[50]"
+    }
+  },
+  "implementation": {
+    "inject_brand_vars": {
+      "description": "Define CSS variables at the top of the HTML to mirror Tailwind palette. If you already have a mapping step, keep values in sync.",
+      "code": "<style>\n  :root{\n    --brand-primary: #0F766E; /* replace with your brand[600] */\n    --brand-accent:  #2DD4BF; /* brand[400] */\n    --ink:           #0F172A; /* slate[900] */\n    --muted:         #475569; /* slate[600] */\n    --border:        #E2E8F0; /* slate[200] */\n    --bg-soft:       #F8FAFC; /* slate[50] */\n  }\n  body{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color: var(--ink); font-size: 12px; }\n  .container{ padding: 24px; }\n  .header{ width:100%; border-collapse:collapse; margin-bottom: 16px; }\n  .brand-cell{ width:180px; vertical-align:middle; }\n  .title{ font-weight: 700; font-size: 18px; line-height:1.3; }\n  .subtitle{ color: var(--muted); font-size: 12px; }\n  .rule{ height:2px; background: var(--brand-primary); border-radius: 2px; margin: 10px 0 18px; }\n  .section{ margin-top: 18px; border:1px solid var(--border); border-radius: 8px; }\n  .section-hd{ background: var(--bg-soft); padding: 10px 12px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:8px; }\n  .section-bd{ padding: 12px; }\n  .chip{ display:inline-block; padding:2px 8px; border-radius:999px; font-weight:600; font-size:11px; background: var(--brand-accent); color:#00302A; }\n  .kv{ width:100%; border-collapse:collapse; }\n  .kv th, .kv td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); }\n  .kv th{ color: var(--muted); font-weight:600; width: 40%; }\n  .metric{ font-weight:700; font-size:14px; }\n  .cards{ display:block; }\n  .card{ border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-top:10px; }\n  .highlight{ background: linear-gradient(90deg, rgba(45,212,191,0.18), rgba(45,212,191,0)); border:1px solid var(--brand-accent); }\n  .footer{ margin-top: 24px; padding-top: 12px; border-top:1px solid var(--border); font-size: 10px; color: var(--muted); display:flex; justify-content:space-between; }\n</style>"
+    },
+    "header_block": {
+      "description": "Premium header using brand colors and existing Base64 logo.",
+      "code": "<table class=\"header\">\n  <tr>\n    <td class=\"brand-cell\">\n      <img src=\"${LOGO_DATA_URL}\" alt=\"DMP Logo\" style=\"width:140px;height:auto;display:block;\" />\n    </td>\n    <td>\n      <div class=\"title\">Dual Pricing Savings Report</div>\n      <div class=\"subtitle\">Dynamic Merchant Processing</div>\n    </td>\n    <td style=\"text-align:right;\">\n      <div class=\"chip\">Report #: {{reportId}}</div>\n      <div class=\"subtitle\">Date: {{reportDate}}</div>\n    </td>\n  </tr>\n</table>\n<div class=\"rule\"></div>"
+    },
+    "section_components": {
+      "description": "Replace emoji headings with styled sections (DocRaptor-safe).",
+      "customer_info": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"chip\">Customer</div><div style=\"font-weight:700;\">Customer Information</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Business Name</th><td>{{businessName}}</td></tr>\n      <tr><th>Business Address</th><td>{{businessAddress}}</td></tr>\n      <tr><th>Contact Name</th><td>{{contactName}}</td></tr>\n      <tr><th>Contact Email</th><td>{{contactEmail}}</td></tr>\n      <tr><th>Sales Representative</th><td>{{salesRep}}</td></tr>\n    </table>\n  </div>\n</div>",
+      "inputs": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"chip\">Inputs</div><div style=\"font-weight:700;\">Input Parameters</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Monthly Credit Card Volume</th><td>{{monthlyVolumeFormatted}}</td></tr>\n      <tr><th>Current Processing Rate</th><td>{{currentRateFormatted}}</td></tr>\n      <tr><th>Interchange Cost</th><td>{{interchangeFormatted}}</td></tr>\n      <tr><th>Flat Rate Processing</th><td>{{flatRateFormatted}}</td></tr>\n      <tr><th>Price Differential</th><td>{{priceDifferentialFormatted}}</td></tr>\n      <tr><th>Tax Rate</th><td>{{taxRateFormatted}}</td></tr>\n      <tr><th>Tip Rate</th><td>{{tipRateFormatted}}</td></tr>\n    </table>\n  </div>\n</div>",
+      "volume_breakdown": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"chip\">Breakdown</div><div style=\"font-weight:700;\">Volume Breakdown</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Base Volume</th><td class=\"metric\">{{baseVolumeFormatted}}</td></tr>\n      <tr><th>Adjusted Card Volume</th><td class=\"metric\">{{adjustedCardVolumeFormatted}}</td></tr>\n      <tr><th>Current Processing Cost</th><td>{{currentProcessingCostFormatted}}</td></tr>\n      <tr><th>New Processing Cost</th><td>{{newProcessingCostFormatted}}</td></tr>\n    </table>\n  </div>\n</div>",
+      "savings": "<div class=\"cards\">\n  <div class=\"card\">\n    <div style=\"font-weight:700;\">Current Processing Cost</div>\n    <div class=\"metric\">{{currentProcessingCostFormatted}}</div>\n  </div>\n  <div class=\"card\">\n    <div style=\"font-weight:700;\">New Processing Cost</div>\n    <div class=\"metric\">{{newProcessingCostFormatted}}</div>\n  </div>\n  <div class=\"card highlight\">\n    <div style=\"font-weight:700;\">Monthly Savings</div>\n    <div class=\"metric\" style=\"font-size:16px;\">{{monthlySavingsFormatted}} / mo</div>\n  </div>\n</div>",
+      "annual": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"chip\">Annual</div><div style=\"font-weight:700;\">Annual Impact</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Annual Savings</th><td class=\"metric\">{{annualSavingsFormatted}}</td></tr>\n      <tr><th>Processing Volume</th><td>{{annualVolumeFormatted}}</td></tr>\n    </table>\n  </div>\n</div>"
+    },
+    "footer_block": {
+      "description": "Branded footer with contact info and optional page number.",
+      "code": "<div class=\"footer\">\n  <div>Dynamic Merchant Processing • info@dmprocessing.com • (555) 123-4567</div>\n  <div>Page <span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></div>\n</div>"
+    }
+  },
+  "assembly_order": [
+    "container (wrap everything)",
+    "header_block",
+    "section_components.customer_info",
+    "section_components.inputs",
+    "section_components.volume_breakdown",
+    "section_components.savings",
+    "section_components.annual",
+    "footer_block"
+  ],
+  "docraptor_notes": [
+    "Keep images as <img> with data URLs; no CSS background-images.",
+    "Use the single <style> block above; avoid external stylesheets.",
+    "Avoid complex flex/grid for critical layout; the above uses simple blocks/tables.",
+    "Ensure all numeric fields are preformatted strings (e.g., $12,345.67, 2.90%)."
+  ],
+  "deliverable": "Updated HTML template (server-rendered) using the code above, producing a PDF with DMP brand colors, structured section headers (no emojis), premium spacing/typography, and the existing Base64 logo."
+}

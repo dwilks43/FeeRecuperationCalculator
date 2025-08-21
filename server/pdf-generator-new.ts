@@ -29,7 +29,10 @@ function generateQuoteStyleHTML(data: any): string {
   const reportNumber = Date.now().toString().slice(-8);
   const currentDate = new Date().toLocaleDateString();
 
-  // Use the exact simplified template with placeholder replacement - reordered with savings at bottom
+  // Format all numeric values with proper currency/percentage formatting
+  const formatCurrency = (amount: number) => `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  const formatPercentage = (rate: number) => `${rate.toFixed(2)}%`;
+
   const template = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,6 +40,18 @@ function generateQuoteStyleHTML(data: any): string {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DMP Savings Report</title>
     <style>
+        :root {
+            --brand-primary: #1d4ed8;  /* DMP Blue 700 */
+            --brand-accent: #3b82f6;   /* DMP Blue 500 */
+            --brand-light: #dbeafe;    /* DMP Blue 100 */
+            --ink: #0f172a;            /* Slate 900 */
+            --muted: #475569;          /* Slate 600 */
+            --border: #e2e8f0;         /* Slate 200 */
+            --bg-soft: #f8fafc;        /* Slate 50 */
+            --success: #059669;        /* Green 600 */
+            --success-light: #d1fae5;  /* Green 100 */
+        }
+
         * {
             box-sizing: border-box;
             margin: 0;
@@ -44,10 +59,10 @@ function generateQuoteStyleHTML(data: any): string {
         }
 
         body {
-            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 10pt;
-            line-height: 1.4;
-            color: #1f2937;
+            font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            color: var(--ink);
+            font-size: 12px;
+            line-height: 1.5;
             background: white;
         }
 
