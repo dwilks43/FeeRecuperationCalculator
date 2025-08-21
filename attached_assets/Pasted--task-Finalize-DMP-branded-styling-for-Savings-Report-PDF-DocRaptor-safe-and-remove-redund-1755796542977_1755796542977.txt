@@ -1,0 +1,84 @@
+{
+  "task": "Finalize DMP-branded styling for Savings Report PDF (DocRaptor-safe) and remove redundant 'chip' labels.",
+  "context": {
+    "observations": [
+      "Current PDF shows redundant blue label boxes (e.g., 'Inputs') adjacent to titled sections (e.g., 'Input Parameters'). Remove the boxes and keep a single clear section title.",
+      "Apply DMP color palette consistently across header, section headers, rules, and highlights.",
+      "Keep DocRaptor constraints: simple HTML, one <style> block, inline styles for <img>, table/block layout."
+    ],
+    "palette_source": "DMP—Color Palette.pdf",
+    "palette_hex": {
+      "ultramarine": "#004ED3",
+      "aqua": "#2BD8C2",
+      "spruce": "#00937B",
+      "ink": "#0B2340"
+    }
+  },
+  "requirements": [
+    "Remove the small blue 'chip' badges entirely.",
+    "Use Ultramarine for primary headings and rules.",
+    "Use Aqua as the subtle accent/gradient highlight.",
+    "Use Ink for titles/subtitles text color and Spruce for positive/savings emphasis.",
+    "Maintain simple tables; avoid flex/grid for critical layout.",
+    "Keep the Base64 logo via LOGO_DATA_URL in an <img> tag."
+  ],
+  "implementation": {
+    "style_block": {
+      "description": "Single <style> block defining brand variables and typography.",
+      "code": "<style>\n  :root{\n    --brand-ultramarine:#004ED3; /* Primary */\n    --brand-aqua:#2BD8C2;        /* Accent */\n    --brand-spruce:#00937B;      /* Positive emphasis */\n    --brand-ink:#0B2340;         /* Header text */\n    --ink-800:#1F2937;           /* Body text (neutral dark) */\n    --muted:#6B7280;             /* Secondary text */\n    --border:#E5E7EB;            /* Table borders */\n    --bg-soft:#F9FAFB;           /* Section header background */\n  }\n  html,body{ margin:0; padding:0; }\n  body{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink-800); font-size:12px; }\n  .container{ padding:24px; }\n  .header{ width:100%; border-collapse:collapse; margin-bottom:12px; }\n  .brand-cell{ width:180px; vertical-align:middle; }\n  .title{ font-weight:800; font-size:20px; line-height:1.2; color:var(--brand-ink); }\n  .subtitle{ color:var(--muted); font-size:12px; }\n  .rule{ height:3px; background:var(--brand-ultramarine); border-radius:2px; margin:10px 0 18px; }\n  .section{ margin-top:16px; border:1px solid var(--border); border-radius:8px; overflow:hidden; }\n  .section-hd{ background:var(--bg-soft); padding:10px 12px; border-bottom:1px solid var(--border); }\n  .section-title{ font-weight:700; color:var(--brand-ink); }\n  .section-bd{ padding:12px; }\n  .kv{ width:100%; border-collapse:collapse; }\n  .kv th,.kv td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); vertical-align:top; }\n  .kv th{ color:var(--muted); font-weight:600; width:42%; }\n  .metric{ font-weight:800; font-size:14px; color:var(--ink-800); }\n  .cards{ display:block; }\n  .card{ border:1px solid var(--border); border-radius:8px; padding:10px 12px; margin-top:10px; }\n  .highlight{ background:linear-gradient(90deg, rgba(43,216,194,0.18), rgba(43,216,194,0)); border:1px solid var(--brand-aqua); }\n  .metric--positive{ color:var(--brand-spruce); }\n  .footer{ margin-top:24px; padding-top:12px; border-top:1px solid var(--border); font-size:10px; color:var(--muted); display:flex; justify-content:space-between; }\n</style>"
+    },
+    "header_block": {
+      "description": "Use Base64 logo and brand typography.",
+      "code": "<table class=\"header\">\n  <tr>\n    <td class=\"brand-cell\"><img src=\"${LOGO_DATA_URL}\" alt=\"DMP Logo\" style=\"width:140px;height:auto;display:block;\" /></td>\n    <td>\n      <div class=\"title\">Dual Pricing Savings Report</div>\n      <div class=\"subtitle\">Dynamic Merchant Processing</div>\n    </td>\n    <td style=\"text-align:right;\">\n      <div class=\"subtitle\">Report #: {{reportId}}</div>\n      <div class=\"subtitle\">Date: {{reportDate}}</div>\n    </td>\n  </tr>\n</table>\n<div class=\"rule\"></div>"
+    },
+    "sections": {
+      "customer_info": {
+        "description": "No chip; clear title bar only.",
+        "code": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"section-title\">Customer Information</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Business Name</th><td>{{businessName}}</td></tr>\n      <tr><th>Business Address</th><td>{{businessAddress}}</td></tr>\n      <tr><th>Contact Name</th><td>{{contactName}}</td></tr>\n      <tr><th>Contact Email</th><td>{{contactEmail}}</td></tr>\n      <tr><th>Sales Representative</th><td>{{salesRep}}</td></tr>\n    </table>\n  </div>\n</div>"
+      },
+      "inputs": {
+        "description": "Remove 'Inputs' chip; keep 'Input Parameters' title only.",
+        "code": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"section-title\">Input Parameters</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Monthly Credit Card Volume</th><td>{{monthlyVolumeFormatted}}</td></tr>\n      <tr><th>Current Processing Rate</th><td>{{currentRateFormatted}}</td></tr>\n      <tr><th>Interchange Cost</th><td>{{interchangeFormatted}}</td></tr>\n      <tr><th>Flat Rate Processing</th><td>{{flatRateFormatted}}</td></tr>\n      <tr><th>Price Differential</th><td>{{priceDifferentialFormatted}}</td></tr>\n      <tr><th>Tax Rate</th><td>{{taxRateFormatted}}</td></tr>\n      <tr><th>Tip Rate</th><td>{{tipRateFormatted}}</td></tr>\n    </table>\n  </div>\n</div>"
+      },
+      "breakdown": {
+        "description": "No chip; strong metrics with consistent spacing.",
+        "code": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"section-title\">Volume Breakdown</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Base Volume</th><td class=\"metric\">{{baseVolumeFormatted}}</td></tr>\n      <tr><th>Adjusted Card Volume</th><td class=\"metric\">{{adjustedCardVolumeFormatted}}</td></tr>\n      <tr><th>Current Processing Cost</th><td>{{currentProcessingCostFormatted}}</td></tr>\n      <tr><th>New Processing Cost</th><td>{{newProcessingCostFormatted}}</td></tr>\n    </table>\n  </div>\n</div>"
+      },
+      "savings": {
+        "description": "Cards with Aqua highlight and Spruce positive emphasis.",
+        "code": "<div class=\"cards\">\n  <div class=\"card\">\n    <div style=\"font-weight:700;\">Current Processing Cost</div>\n    <div class=\"metric\">{{currentProcessingCostFormatted}}</div>\n  </div>\n  <div class=\"card\">\n    <div style=\"font-weight:700;\">New Processing Cost</div>\n    <div class=\"metric\">{{newProcessingCostFormatted}}</div>\n  </div>\n  <div class=\"card highlight\">\n    <div style=\"font-weight:700;\">Monthly Savings</div>\n    <div class=\"metric metric--positive\" style=\"font-size:16px;\">{{monthlySavingsFormatted}} / mo</div>\n  </div>\n</div>"
+      },
+      "annual": {
+        "description": "Annual impact section with clear emphasis.",
+        "code": "<div class=\"section\">\n  <div class=\"section-hd\"><div class=\"section-title\">Annual Impact</div></div>\n  <div class=\"section-bd\">\n    <table class=\"kv\">\n      <tr><th>Annual Savings</th><td class=\"metric metric--positive\">{{annualSavingsFormatted}}</td></tr>\n      <tr><th>Processing Volume</th><td>{{annualVolumeFormatted}}</td></tr>\n    </table>\n  </div>\n</div>"
+      }
+    },
+    "footer_block": {
+      "description": "Consistent footer; keep neutral styling.",
+      "code": "<div class=\"footer\">\n  <div>Dynamic Merchant Processing • info@dmprocessing.com • (555) 123-4567</div>\n  <div>Page <span class=\"pageNumber\"></span> of <span class=\"totalPages\"></span></div>\n</div>"
+    }
+  },
+  "assembly_order": [
+    "style_block",
+    "header_block",
+    "sections.customer_info",
+    "sections.inputs",
+    "sections.breakdown",
+    "sections.savings",
+    "sections.annual",
+    "footer_block"
+  ],
+  "docraptor_notes": [
+    "Keep the Base64 logo in <img src=\"${LOGO_DATA_URL}\"> with width/height inline.",
+    "Avoid external stylesheets; only this single <style> block.",
+    "Stick to tables and simple block elements for layout.",
+    "All numeric values should be preformatted strings (e.g., $12,345.67, 2.90%)."
+  ],
+  "acceptance_criteria": [
+    "No blue 'chip' boxes remain; only a single section title bar per section.",
+    "Primary bars and rules use Ultramarine (#004ED3).",
+    "Highlights use Aqua (#2BD8C2); positive savings values use Spruce (#00937B).",
+    "Header title/subtitle use Ink (#0B2340) for premium look.",
+    "Output PDF visually aligns with the premium aesthetic from the first app while preserving current data fields."
+  ]
+}

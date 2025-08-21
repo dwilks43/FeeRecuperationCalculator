@@ -38,15 +38,14 @@ export function generateBrandedPDF(data: any): string {
     <title>DMP Savings Report</title>
     <style>
         :root {
-            --brand-primary: #1d4ed8;  /* DMP Blue 700 */
-            --brand-accent: #3b82f6;   /* DMP Blue 500 */
-            --brand-light: #dbeafe;    /* DMP Blue 100 */
-            --ink: #0f172a;            /* Slate 900 */
-            --muted: #475569;          /* Slate 600 */
-            --border: #e2e8f0;         /* Slate 200 */
-            --bg-soft: #f8fafc;        /* Slate 50 */
-            --success: #059669;        /* Green 600 */
-            --success-light: #d1fae5;  /* Green 100 */
+            --brand-ultramarine: #004ED3;  /* Primary */
+            --brand-aqua: #2BD8C2;         /* Accent */
+            --brand-spruce: #00937B;       /* Positive emphasis */
+            --brand-ink: #0B2340;          /* Header text */
+            --ink-800: #1F2937;            /* Body text (neutral dark) */
+            --muted: #6B7280;              /* Secondary text */
+            --border: #E5E7EB;             /* Table borders */
+            --bg-soft: #F9FAFB;            /* Section header background */
         }
 
         * {
@@ -57,7 +56,7 @@ export function generateBrandedPDF(data: any): string {
 
         body {
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
-            color: var(--ink);
+            color: var(--ink-800);
             font-size: 12px;
             line-height: 1.5;
             background: white;
@@ -84,25 +83,14 @@ export function generateBrandedPDF(data: any): string {
         .title {
             font-size: 20px;
             font-weight: 700;
-            color: var(--brand-primary);
+            color: var(--brand-ink);
             margin-bottom: 4px;
         }
 
         .subtitle {
             font-size: 14px;
-            color: var(--muted);
+            color: var(--brand-ink);
             font-style: italic;
-        }
-
-        .chip {
-            background: var(--brand-primary);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: 600;
-            display: inline-block;
-            margin-bottom: 4px;
         }
 
         /* Section Styles */
@@ -115,12 +103,17 @@ export function generateBrandedPDF(data: any): string {
         }
 
         .section-hd {
-            display: flex;
-            align-items: center;
-            gap: 12px;
             margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--brand-light);
+            padding: 12px 0;
+            border-bottom: 2px solid var(--brand-ultramarine);
+            background: var(--bg-soft);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--brand-ultramarine);
+            margin: 0;
         }
 
         .section-bd {
@@ -155,7 +148,11 @@ export function generateBrandedPDF(data: any): string {
 
         .kv .metric {
             font-weight: 700;
-            color: var(--brand-primary);
+            color: var(--brand-ultramarine);
+        }
+
+        .metric--positive {
+            color: var(--brand-spruce) !important;
         }
 
         /* Card Grid */
@@ -175,19 +172,19 @@ export function generateBrandedPDF(data: any): string {
         }
 
         .card.highlight {
-            background: var(--success-light);
-            border: 2px solid var(--success);
+            background: linear-gradient(135deg, #E0F7F4 0%, #B3F1E9 100%);
+            border: 2px solid var(--brand-aqua);
         }
 
         .metric {
             font-size: 20px;
             font-weight: 700;
-            color: var(--brand-primary);
+            color: var(--brand-ultramarine);
             margin-top: 8px;
         }
 
         .card.highlight .metric {
-            color: var(--success);
+            color: var(--brand-spruce);
         }
 
         /* Footer */
@@ -217,7 +214,7 @@ export function generateBrandedPDF(data: any): string {
                     <div class="subtitle">Dual Pricing Savings Report</div>
                 </td>
                 <td style="text-align: right;">
-                    <div class="chip">Report #: ${reportNumber}</div>
+                    <div class="subtitle">Report #: ${reportNumber}</div>
                     <div class="subtitle">Date: ${currentDate}</div>
                 </td>
             </tr>
@@ -226,8 +223,7 @@ export function generateBrandedPDF(data: any): string {
         <!-- Customer Information Section -->
         <div class="section">
             <div class="section-hd">
-                <div class="chip">Customer</div>
-                <div style="font-weight: 700;">Customer Information</div>
+                <div class="section-title">Customer Information</div>
             </div>
             <div class="section-bd">
                 <table class="kv">
@@ -243,8 +239,7 @@ export function generateBrandedPDF(data: any): string {
         <!-- Input Parameters Section -->
         <div class="section">
             <div class="section-hd">
-                <div class="chip">Inputs</div>
-                <div style="font-weight: 700;">Input Parameters</div>
+                <div class="section-title">Input Parameters</div>
             </div>
             <div class="section-bd">
                 <table class="kv">
@@ -262,8 +257,7 @@ export function generateBrandedPDF(data: any): string {
         <!-- Volume Breakdown Section -->
         <div class="section">
             <div class="section-hd">
-                <div class="chip">Breakdown</div>
-                <div style="font-weight: 700;">Volume Breakdown</div>
+                <div class="section-title">Volume Breakdown</div>
             </div>
             <div class="section-bd">
                 <table class="kv">
@@ -278,8 +272,7 @@ export function generateBrandedPDF(data: any): string {
         <!-- Monthly Processing Savings Section -->
         <div class="section">
             <div class="section-hd">
-                <div class="chip">Savings</div>
-                <div style="font-weight: 700;">Monthly Processing Savings</div>
+                <div class="section-title">Monthly Processing Savings</div>
             </div>
             <div class="section-bd">
                 <div class="cards">
@@ -302,12 +295,11 @@ export function generateBrandedPDF(data: any): string {
         <!-- Annual Impact Section -->
         <div class="section">
             <div class="section-hd">
-                <div class="chip">Annual</div>
-                <div style="font-weight: 700;">Annual Impact</div>
+                <div class="section-title">Annual Impact</div>
             </div>
             <div class="section-bd">
                 <table class="kv">
-                    <tr><th>Annual Savings</th><td class="metric">${formatCurrency(annualSavings)}</td></tr>
+                    <tr><th>Annual Savings</th><td class="metric metric--positive">${formatCurrency(annualSavings)}</td></tr>
                     <tr><th>Processing Volume</th><td class="metric">${formatCurrency(monthlyVolume * 12)}</td></tr>
                 </table>
             </div>
