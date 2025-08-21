@@ -72,19 +72,7 @@ export function generateBrandedPDF(data: any): string {
 
 
 
-        /* Subtle brand watermark */
-        .container::before {
-            content: 'DMP';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) rotate(-45deg);
-            font-size: 120px;
-            font-weight: 100;
-            color: rgba(0, 78, 211, 0.03);
-            z-index: 0;
-            pointer-events: none;
-        }
+
 
         /* Header Styles */
         .header {
@@ -116,11 +104,9 @@ export function generateBrandedPDF(data: any): string {
             background: white;
             border-radius: 8px;
             padding: 0;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             border: 1px solid var(--border);
-            box-shadow: 0 2px 8px rgba(0, 78, 211, 0.08);
-            position: relative;
-            z-index: 1;
+            box-shadow: 0 1px 3px rgba(0, 78, 211, 0.1);
         }
 
         .section-hd {
@@ -189,7 +175,7 @@ export function generateBrandedPDF(data: any): string {
         }
 
         .metric-lg {
-            font-size: 18px;
+            font-size: 20px;
             font-weight: 700;
         }
 
@@ -215,8 +201,9 @@ export function generateBrandedPDF(data: any): string {
         }
 
         .card--accent {
-            border-left: 3px solid var(--brand-aqua);
+            border-left: 4px solid var(--brand-aqua);
             background: linear-gradient(135deg, #f0fdfc 0%, #e6fffa 100%);
+            box-shadow: 0 2px 8px rgba(43, 216, 194, 0.15);
         }
 
         .hdr {
@@ -303,15 +290,26 @@ export function generateBrandedPDF(data: any): string {
                 <div class="section-title">Input Parameters</div>
             </div>
             <div class="section-bd">
-                <table class="kv">
-                    <tr><th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(monthlyVolume)}</td></tr>
-                    <tr><th>Current Processing Rate</th><td class="metric">${formatPercentage(currentRate)}</td></tr>
-                    <tr><th>Interchange Cost</th><td class="metric">${formatPercentage(interchangeCost)}</td></tr>
-                    <tr><th>Flat Rate</th><td class="metric">${formatPercentage(flatRate)}</td></tr>
-                    <tr><th>Price Differential</th><td class="metric">${formatPercentage(priceDifferential)}</td></tr>
-                    <tr><th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td></tr>
-                    <tr><th>Tip Rate</th><td class="metric">${formatPercentage(tipRate)}</td></tr>
-                </table>
+                <div style="display: table; width: 100%;">
+                    <div style="display: table-row;">
+                        <div style="display: table-cell; width: 50%; vertical-align: top; padding-right: 12px;">
+                            <table class="kv">
+                                <tr><th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(monthlyVolume)}</td></tr>
+                                <tr><th>Current Processing Rate</th><td class="metric">${formatPercentage(currentRate)}</td></tr>
+                                <tr><th>Interchange Cost</th><td class="metric">${formatPercentage(interchangeCost)}</td></tr>
+                                <tr><th>Flat Rate</th><td class="metric">${formatPercentage(flatRate)}</td></tr>
+                            </table>
+                        </div>
+                        <div style="display: table-cell; width: 50%; vertical-align: top; padding-left: 12px;">
+                            <table class="kv">
+                                <tr><th>Price Differential</th><td class="metric">${formatPercentage(priceDifferential)}</td></tr>
+                                <tr><th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td></tr>
+                                <tr><th>Tip Rate</th><td class="metric">${formatPercentage(tipRate)}</td></tr>
+                                <tr><th>&nbsp;</th><td>&nbsp;</td></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

@@ -1,0 +1,24 @@
+{
+  "task": "Final polish for DMP Savings Report PDF (remove watermark, add subtle brand pop, tighten inputs layout).",
+  "observations": [
+    "Current single-page layout is solid but watermark letters ('DM P') create visual noise.",
+    "Input Parameters read in a long single column; two-column layout will improve scanability.",
+    "Savings cards can carry a touch more emphasis without reintroducing a hero banner."
+  ],
+  "constraints": [
+    "DocRaptor-safe: single <style> block, inline <img> for logo, simple tables/blocks (no grid/flex for critical layout).",
+    "Keep all data fields intact; styling only."
+  ],
+  "remove_components": {
+    "watermark": {
+      "description": "Remove watermark entirely.",
+      "selectors_to_remove": [".wm"],
+      "html_snippets_to_delete": [
+        "<div class=\"wm\">",
+        "</div><!-- end .wm -->"
+      ]
+    }
+  },
+  "style_block_patch": {
+    "description": "Merge or replace to add subtle pop without a hero banner.",
+    "code": "<style>\\n  :root{\\n    --brand-ultramarine:#004ED3; /* primary */\\n    --brand-aqua:#2BD8C2;        /* accent */\\n    --brand-spruce:#00937B;      /* positive */\\n    --brand-ink:#0B2340;         /* headings */\\n    --ink-800:#1F2937;           /* body text */\\n    --muted:#6B7280;             /* secondary */\\n    --border:#E5E7EB;            /* table borders */\\n    --bg-soft:#F9FAFB;           /* section header bg */\\n  }\\n  html,body{ margin:0; padding:0; }\\n  body{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink-800); font-size:12px; }\\n  .container{ padding:24px; }\\n  /* Header */\\n  .header{ width:100%; border-collapse:collapse; margin-bottom:10px; }\\n  .brand-cell{ width:180px; vertical-align:middle; }\\n  .title{ font-weight:800; font-size:20px; line-height:1.2; color:var(--brand-ink); }\\n  .subtitle{ color:var(--muted); font-size:12px; }\\n  .rule{ height:3px; background:var(--brand-ultramarine); border-radius:2px; margin:10px 0 12px; }\\n  /* Sections */\\n  .section{ margin-top:14px; border:1px solid var(--border); border-radius:10px; overflow:hidden; }\\n  .section-hd{ background:var(--bg-soft); padding:9px 12px; border-bottom:1px solid var(--border); position:relative; }\\n  .section-hd:before{ content:\"\"; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--brand-ultramarine); }\\n  .section-title{ font-weight:750; color:var(--brand-ink); padding-left:2px; }\\n  .section-bd{ padding:12px; }\\n  /* Two-column parameter table */\\n  .kv-2col{ width:100%; border-collapse:collapse; }\\n  .kv-2col th,.kv-2col td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); vertical-align:top; }\\n  .kv-2col th{ color:var(--muted); font-weight:600; width:32%; }\\n  .kv-2col td{ width:18%; }\\n  .kv-2col tr:last-child th,.kv-2col tr:last-child td{ border-bo
