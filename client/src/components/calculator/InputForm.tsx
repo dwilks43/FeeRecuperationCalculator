@@ -158,24 +158,19 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
             </div>
             
-            {/* ISO Amp Integration Button */}
+            {/* ISO Amp Integration Link */}
             <div className="mt-3">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="text-xs px-3 py-1 h-7 bg-blue-50 border-blue-200 text-blue-700 hover:bg-blue-100"
-                onClick={() => {
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
                   window.open('/api/iso-amp-quote', '_blank');
                 }}
-                data-testid="button-iso-amp-quote"
+                className="text-blue-600 hover:text-blue-800 underline text-sm font-medium"
+                data-testid="link-interchange-calculator"
               >
-                <Calculator className="w-3 h-3 mr-1" />
-                Get Accurate Interchange Rate
-              </Button>
-              <p className="text-xs text-muted-foreground mt-1">
-                Opens ISO Amp tool for precise interchange cost calculation
-              </p>
+                Interchange Calculator
+              </a>
             </div>
           </div>
 
