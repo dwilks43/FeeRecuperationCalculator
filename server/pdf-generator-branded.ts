@@ -353,8 +353,7 @@ export function generateBrandedPDF(data: any): string {
             </table>
             
             <div class="disclaimer">
-                <b>Dual Pricing Savings Report</b> 
-                <small>— estimate based on your current inputs; final terms subject to underwriting and program selection.</small>
+                <small>— estimates are based on your information provided; final savings are subject to change if actual data differs.</small>
             </div>
         </div>
 
