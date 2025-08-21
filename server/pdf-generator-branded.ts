@@ -247,6 +247,75 @@ export function generateBrandedPDF(data: any): string {
             white-space: nowrap;
             width: 30%;
         }
+
+        /* Page Break Controls */
+        .break-before {
+            page-break-before: always;
+        }
+
+        .avoid-break {
+            page-break-inside: avoid;
+        }
+
+        .page-2 {
+            background: rgba(0, 78, 211, 0.01);
+        }
+
+        /* Branded Banner */
+        .banner {
+            background: linear-gradient(135deg, rgba(0, 78, 211, 0.05) 0%, rgba(43, 216, 194, 0.05) 100%);
+            border: 1px solid var(--brand-ultramarine);
+            border-radius: 6px;
+            padding: 12px 20px;
+            margin: 16px 0 24px 0;
+            font-size: 14px;
+            color: var(--brand-ink);
+        }
+
+        .banner b {
+            color: var(--brand-ultramarine);
+            font-weight: 700;
+        }
+
+        .banner small {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        /* Enhanced Section Styling for Page 2 */
+        .page-2 .section {
+            background: rgba(249, 250, 251, 0.8);
+            border: 1px solid rgba(0, 78, 211, 0.08);
+        }
+
+        .page-2 .card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid rgba(0, 78, 211, 0.1);
+        }
+
+        /* Two-column input table */
+        .kv-2col {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .kv-2col th {
+            text-align: left;
+            padding: 8px 12px;
+            font-weight: 600;
+            color: var(--muted);
+            background: #fbfcfd;
+            border-bottom: 1px solid #f1f3f4;
+            width: 25%;
+        }
+
+        .kv-2col td {
+            padding: 8px 12px;
+            font-weight: 600;
+            color: var(--ink-800);
+            border-bottom: 1px solid #f1f3f4;
+            width: 25%;
+        }
     </style>
 </head>
 <body>
@@ -268,99 +337,106 @@ export function generateBrandedPDF(data: any): string {
             </tr>
         </table>
 
+        <!-- Branded Banner -->
+        <div class="banner">
+            <b>Dual Pricing Savings Report</b> 
+            <small>— estimate based on your current inputs; final terms subject to underwriting and program selection.</small>
+        </div>
+
         <!-- Customer Information Section -->
-        <div class="section">
+        <div class="section avoid-break">
             <div class="section-hd">
                 <div class="section-title">Customer Information</div>
             </div>
             <div class="section-bd">
                 <table class="kv">
                     <tr><th>Business Name</th><td>${businessName}</td></tr>
-                    <tr><th>Business Address</th><td>${businessAddress}</td></tr>
-                    <tr><th>Contact Name</th><td>${contactName}</td></tr>
-                    <tr><th>Contact Email</th><td>${contactEmail}</td></tr>
+                    <tr style="background:rgba(0,78,211,0.04);"><th>Business Address</th><td>${businessAddress}</td></tr>
+                    <tr style="background:rgba(0,78,211,0.04);"><th>Contact Name</th><td>${contactName}</td></tr>
+                    <tr style="background:rgba(0,78,211,0.04);"><th>Contact Email</th><td>${contactEmail}</td></tr>
                     <tr><th>Sales Representative</th><td>${salesRepName}</td></tr>
                 </table>
             </div>
         </div>
 
         <!-- Input Parameters Section -->
-        <div class="section">
+        <div class="section avoid-break">
             <div class="section-hd">
                 <div class="section-title">Input Parameters</div>
             </div>
             <div class="section-bd">
-                <div style="display: table; width: 100%;">
-                    <div style="display: table-row;">
-                        <div style="display: table-cell; width: 50%; vertical-align: top; padding-right: 12px;">
-                            <table class="kv">
-                                <tr><th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(monthlyVolume)}</td></tr>
-                                <tr><th>Current Processing Rate</th><td class="metric">${formatPercentage(currentRate)}</td></tr>
-                                <tr><th>Interchange Cost</th><td class="metric">${formatPercentage(interchangeCost)}</td></tr>
-                                <tr><th>Flat Rate</th><td class="metric">${formatPercentage(flatRate)}</td></tr>
-                            </table>
-                        </div>
-                        <div style="display: table-cell; width: 50%; vertical-align: top; padding-left: 12px;">
-                            <table class="kv">
-                                <tr><th>Price Differential</th><td class="metric">${formatPercentage(priceDifferential)}</td></tr>
-                                <tr><th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td></tr>
-                                <tr><th>Tip Rate</th><td class="metric">${formatPercentage(tipRate)}</td></tr>
-                                <tr><th>&nbsp;</th><td>&nbsp;</td></tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Volume Breakdown Section -->
-        <div class="section">
-            <div class="section-hd">
-                <div class="section-title">Volume Breakdown</div>
-            </div>
-            <div class="section-bd">
-                <table class="kv">
-                    <tr><th>Base Volume</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
-                    <tr><th>Adjusted Card Volume</th><td class="metric">${formatCurrency(adjustedVolume)}</td></tr>
-                    <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(currentCost)}</td></tr>
-                    <tr><th>New Processing Cost</th><td class="metric">${formatCurrency(newCost)}</td></tr>
+                <table class="kv-2col">
+                    <tr>
+                        <th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(monthlyVolume)}</td>
+                        <th>Current Processing Rate</th><td class="metric">${formatPercentage(currentRate)}</td>
+                    </tr>
+                    <tr>
+                        <th>Interchange Cost</th><td class="metric">${formatPercentage(interchangeCost)}</td>
+                        <th>Flat Rate</th><td class="metric">${formatPercentage(flatRate)}</td>
+                    </tr>
+                    <tr>
+                        <th>Price Differential</th><td class="metric">${formatPercentage(priceDifferential)}</td>
+                        <th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td>
+                    </tr>
+                    <tr>
+                        <th>Tip Rate</th><td class="metric">${formatPercentage(tipRate)}</td>
+                        <th>&nbsp;</th><td>&nbsp;</td>
+                    </tr>
                 </table>
             </div>
         </div>
 
-        <!-- Monthly Processing Savings Section -->
-        <div class="section">
-            <div class="section-hd">
-                <div class="section-title">Monthly Processing Savings</div>
+        <!-- Page 2 starts here -->
+        <div class="page-2 break-before">
+            <!-- Volume Breakdown Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Volume Breakdown</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Base Volume</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
+                        <tr><th>Adjusted Card Volume</th><td class="metric">${formatCurrency(adjustedVolume)}</td></tr>
+                        <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(currentCost)}</td></tr>
+                        <tr><th>New Processing Cost</th><td class="metric">${formatCurrency(newCost)}</td></tr>
+                    </table>
+                </div>
             </div>
-            <div class="section-bd">
-                <div class="cards">
-                    <div class="card">
-                        <div class="hdr">Current Processing Cost</div>
-                        <div class="metric">${formatCurrency(currentCost)}</div>
-                    </div>
-                    <div class="card">
-                        <div class="hdr">New Processing Cost</div>
-                        <div class="metric">${formatCurrency(newCost)}</div>
-                    </div>
-                    <div class="card card--accent">
-                        <div class="hdr">Monthly Savings</div>
-                        <div class="metric metric-lg metric-pos">${formatCurrency(monthlySavings)}</div>
+
+            <!-- Monthly Processing Savings Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Monthly Processing Savings</div>
+                </div>
+                <div class="section-bd">
+                    <div class="cards avoid-break">
+                        <div class="card">
+                            <div class="hdr">Current Processing Cost</div>
+                            <div class="metric">${formatCurrency(currentCost)}</div>
+                        </div>
+                        <div class="card">
+                            <div class="hdr">New Processing Cost</div>
+                            <div class="metric">${formatCurrency(newCost)}</div>
+                        </div>
+                        <div class="card card--accent">
+                            <div class="hdr">Monthly Savings</div>
+                            <div class="metric metric-lg metric-pos">${formatCurrency(monthlySavings)}</div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Annual Impact Section -->
-        <div class="section">
-            <div class="section-hd">
-                <div class="section-title">Annual Impact</div>
-            </div>
-            <div class="section-bd">
-                <table class="kv">
-                    <tr><th>Annual Savings</th><td class="metric metric-lg metric-pos">${formatCurrency(annualSavings)}</td></tr>
-                    <tr><th>Processing Volume</th><td class="metric">${formatCurrency(monthlyVolume * 12)}</td></tr>
-                </table>
+            <!-- Annual Impact Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Annual Impact</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Annual Savings</th><td class="metric metric-lg metric-pos">${formatCurrency(annualSavings)}</td></tr>
+                        <tr><th>Processing Volume</th><td class="metric">${formatCurrency(monthlyVolume * 12)}</td></tr>
+                    </table>
+                </div>
             </div>
         </div>
 

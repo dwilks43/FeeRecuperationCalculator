@@ -1,0 +1,49 @@
+{
+  "task": "Enforce clean section page breaks and apply branded banner/box styling (DocRaptor-safe).",
+  "references": {
+    "current_pdf": "Savings Report v39",
+    "style_inspo": "content.pdf (header banner outline + tinted boxes)"
+  },
+  "requirements": [
+    "Force 'Volume Breakdown' to begin on page 2.",
+    "Keep each major section together (no split across pages).",
+    "Add a slim, branded banner under the header with outline (no giant hero).",
+    "Tint contact info inside the first section.",
+    "Lightly shade all boxes on page 2.",
+    "DocRaptor-safe: single <style> block, simple tables/blocks, <img> with Base64 for logo."
+  ],
+  "style_block_patch": {
+    "description": "Add page-break utilities, banner styles, and page-2 shading.",
+    "code": "<style>\\n  :root{\\n    --brand-ultramarine:#004ED3; /* primary */\\n    --brand-aqua:#2BD8C2;        /* accent */\\n    --brand-spruce:#00937B;      /* positive */\\n    --brand-ink:#0B2340;         /* headings */\\n    --ink-800:#1F2937;           /* body text */\\n    --muted:#6B7280;             /* secondary */\\n    --border:#E5E7EB;            /* borders */\\n    --bg-soft:#F9FAFB;           /* section header bg */\\n  }\\n  html,body{ margin:0; padding:0; }\\n  body{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink-800); font-size:12px; }\\n  .container{ padding:24px; }\\n\\n  /* Header */\\n  .header{ width:100%; border-collapse:collapse; margin-bottom:8px; }\\n  .brand-cell{ width:180px; vertical-align:middle; }\\n  .title{ font-weight:800; font-size:20px; line-height:1.2; color:var(--brand-ink); }\\n  .subtitle{ color:var(--muted); font-size:12px; }\\n  .rule{ height:3px; background:var(--brand-ultramarine); border-radius:2px; margin:10px 0 10px; }\\n\\n  /* Branded banner (slim, outlined) */\\n  .banner{ margin:10px 0 12px; padding:10px 12px; border-radius:10px; background:linear-gradient(90deg, rgba(0,78,211,0.06), rgba(0,78,211,0)); border:1px solid rgba(0,78,211,0.25); }\\n  .banner b{ color:var(--brand-ink); }\\n  .banner small{ color:var(--muted); }\\n\\n  /* Sections */\\n  .section{ margin-top:14px; border:1px solid var(--border); border-radius:10px; overflow:hidden; page-break-inside:avoid; break-inside:avoid; }\\n  .section-hd{ background:var(--bg-soft); padding:9px 12px; border-bottom:1px solid var(--border); position:relative; }\\n  .section-hd:before{ content:\\\"\\\"; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--brand-ultramarine); }\\n  .section-title{ font-weight:750; color:var(--brand-ink); padding-left:2px; }\\n  .section-bd{ padding:12px; }\\n\\n  /* Tables */\\n  .kv, .kv-2col{ width:100%; border-collapse:collapse; }\\n  .kv th,.kv td,.kv-2col th,.kv-2col td{ padding:8px 6px; border-bottom:1px solid var(--border); vertical-align:top; }\\n  .kv th{ color:var(--muted); font-weight:600; width:42%; text-align:left; }\\n  .kv td{ text-align:right; font-variant-numeric: tabular-nums; }\\n  .kv tr:last-child th,.kv tr:last-child td{ border-bottom:none; }\\n  .kv-2col th{ color:var(--muted); font-weight:600; width:32%; text-align:left; }\\n  .kv-2col td{ width:18%; text-align:right; font-variant-numeric: tabular-nums; }\\n\\n  /* Cards (savings) */\\n  .cards-row{ width:100%; border-collapse:separate; border-spacing:12px 0; margin-top:6px; page-break-inside:avoid; break-inside:avoid; }\\n  .card{ border:1px solid var(--border); border-radius:10px; padding:10px 12px; }\\n  .card--accent{ background:linear-gradient(90deg, rgba(43,216,194,0.16), rgba(43,216,194,0)); border:1px solid var(--brand-aqua); box-shadow: 0 0 0 1px rgba(43,216,194,0.15) inset; }\\n  .card .hdr{ font-weight:700; margin-bottom:2px; }\\n  .metric{ font-weight:800; font-size:14px; }\\n  .metric-lg{ font-weight:900; font-size:16px; }\\n  .metric-pos{ color:var(--brand-spruce); }\\n\\n  /* Page-break helpers */\\n  .break-before{ page-break-before:always; break-before:page; }\\n  .avoid-break{ page-break-inside:avoid; break-inside:avoid; }\\n\\n  /* Page-2 tinting */\\n  .page-2 .section, .page-2 .card{ background: rgba(0,78,211,0.035); }\\n  .page-2 .section-hd{ background: rgba(0,78,211,0.06); }\\n\\n  /* Footer */\\n  .footer{ margin-top:14px; padding-top:10px; border-top:1px solid var(--border); font-size:10px; color:var(--muted); display:flex; justify-content:space-between; gap:8px; }\\n  .footer-left,.footer-right{ white-space:nowrap; }\\n</style>"
+  },
+  "component_inserts": {
+    "after_header_rule_banner": {
+      "description": "Add a slim, branded banner below the header (outlined like 'content.pdf').",
+      "code": "<div class=\\"banner\\"><b>Dual Pricing Savings Report</b> <small>— estimate based on your current inputs; final terms subject to underwriting and program selection.</small></div>"
+    },
+    "tinted_contact_info": {
+      "description": "Tint the contact rows inside the first section (Customer Information).",
+      "code": "<div class=\\"section\\">\\n  <div class=\\"section-hd\\"><div class=\\"section-title\\">Customer Information</div></div>\\n  <div class=\\"section-bd\\">\\n    <table class=\\"kv\\">\\n      <tr><th>Business Name</th><td>{{businessName}}</td></tr>\\n      <tr style=\\"background:rgba(0,78,211,0.04);\\"><th>Business Address</th><td>{{businessAddress}}</td></tr>\\n      <tr style=\\"background:rgba(0,78,211,0.04);\\"><th>Contact Name</th><td>{{contactName}}</td></tr>\\n      <tr style=\\"background:rgba(0,78,211,0.04);\\"><th>Contact Email</th><td>{{contactEmail}}</td></tr>\\n      <tr><th>Sales Representative</th><td>{{salesRep}}</td></tr>\\n    </table>\\n  </div>\\n</div>"
+    }
+  },
+  "page_breaks": {
+    "instructions": [
+      "Wrap everything AFTER the Customer Information and Input Parameters sections in a <div class='page-2'> ... </div> container.",
+      "Add class 'break-before' to the 'Volume Breakdown' section container so it ALWAYS starts on page 2.",
+      "Add class 'avoid-break' to every major .section and the .cards-row table to keep them intact on a single page."
+    ],
+    "example_markup": "<div class=\\"section avoid-break\\"> ... Customer Information ... </div>\\n<div class=\\"section avoid-break\\"> ... Input Parameters ... </div>\\n\\n<div class=\\"break-before page-2\\">\\n  <div class=\\"section avoid-break\\"> ... Volume Breakdown ... </div>\\n  <table class=\\"cards-row avoid-break\\"> ... Savings Cards ... </table>\\n  <div class=\\"section avoid-break\\"> ... Annual Impact ... </div>\\n</div>"
+  },
+  "inputs_two_column": {
+    "description": "Keep Input Parameters as a compact two-column table.",
+    "code": "<div class=\\"section avoid-break\\">\\n  <div class=\\"section-hd\\"><div class=\\"section-title\\">Input Parameters</div></div>\\n  <div class=\\"section-bd\\">\\n    <table class=\\"kv-2col\\">\\n      <tr><th>Monthly Credit Card Volume</th><td>{{monthlyVolumeFormatted}}</td><th>Current Processing Rate</th><td>{{currentRateFormatted}}</td></tr>\\n      <tr><th>Interchange Cost</th><td>{{interchangeFormatted}}</td><th>Flat Rate Processing</th><td>{{flatRateFormatted}}</td></tr>\\n      <tr><th>Price Differential</th><td>{{priceDifferentialFormatted}}</td><th>Tax Rate</th><td>{{taxRateFormatted}}</td></tr>\\n      <tr><th>Tip Rate</th><td>{{tipRateFormatted}}</td><th></th><td></td></tr>\\n    </table>\\n  </div>\\n</div>"
+  },
+  "acceptance_criteria": [
+    "'Volume Breakdown' begins on page 2 in all renders.",
+    "No section splits across pages.",
+    "A slim, outlined banner appears below the header using Ultramarine outline and soft tint.",
+    "Contact rows in 'Customer Information' are lightly tinted.",
+    "All boxes on page 2 (sections + cards) are lightly shaded to echo the other app's look.",
+    "DocRaptor renders consistently with identical content fields."
+  ]
+}
