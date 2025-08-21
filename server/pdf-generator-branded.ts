@@ -70,34 +70,7 @@ export function generateBrandedPDF(data: any): string {
             position: relative;
         }
 
-        /* Premium KPI Hero Band */
-        .hero-band {
-            background: linear-gradient(135deg, var(--bg-hero) 0%, var(--brand-ultramarine) 100%);
-            color: white;
-            padding: 20px;
-            margin: -0.5in -0.5in 24px -0.5in;
-            text-align: center;
-            border-bottom: 3px solid var(--brand-aqua);
-        }
 
-        .hero-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .hero-amount {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--brand-aqua);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .hero-subtitle {
-            font-size: 14px;
-            opacity: 0.9;
-            margin-top: 4px;
-        }
 
         /* Subtle brand watermark */
         .container::before {
@@ -152,18 +125,18 @@ export function generateBrandedPDF(data: any): string {
 
         .section-hd {
             margin: 0;
-            padding: 16px 20px;
-            background: linear-gradient(135deg, var(--brand-ultramarine) 0%, #1E5EDF 100%);
+            padding: 12px 20px;
+            background: var(--bg-soft);
             border-radius: 8px 8px 0 0;
-            border-left: 4px solid var(--brand-aqua);
+            border-left: 3px solid var(--brand-ultramarine);
+            border-bottom: 1px solid var(--border);
         }
 
         .section-title {
             font-size: 16px;
             font-weight: 700;
-            color: white;
+            color: var(--brand-ultramarine);
             margin: 0;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
         .section-bd {
@@ -183,19 +156,27 @@ export function generateBrandedPDF(data: any): string {
 
         .kv th {
             text-align: left;
-            padding: 8px 12px;
+            padding: 10px 12px;
             font-weight: 600;
             color: var(--muted);
-            background: var(--bg-soft);
-            border-bottom: 1px solid #f3f4f6;
+            background: #fbfcfd;
+            border-bottom: 1px solid #f1f3f4;
             width: 60%;
         }
 
         .kv td {
-            padding: 8px 12px;
+            padding: 10px 12px;
             font-weight: 600;
             color: var(--ink-800);
-            border-bottom: 1px solid #f3f4f6;
+            border-bottom: 1px solid #f1f3f4;
+        }
+
+        .kv tr:nth-child(even) th {
+            background: #f8f9fa;
+        }
+
+        .kv tr:nth-child(even) td {
+            background: #f8f9fa;
         }
 
         .kv .metric {
@@ -227,19 +208,22 @@ export function generateBrandedPDF(data: any): string {
             flex: 1;
             background: white;
             border: 1px solid var(--border);
-            border-radius: 8px;
+            border-radius: 6px;
             padding: 16px;
             text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-            border-top: 3px solid var(--brand-ultramarine);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        .card.highlight {
-            background: linear-gradient(135deg, #E0F7F4 0%, #B3F1E9 100%);
-            border: 2px solid var(--brand-aqua);
-            border-top: 4px solid var(--brand-spruce);
-            box-shadow: 0 4px 12px rgba(43, 216, 194, 0.2);
-            transform: translateY(-2px);
+        .card--accent {
+            border-left: 3px solid var(--brand-aqua);
+            background: linear-gradient(135deg, #f0fdfc 0%, #e6fffa 100%);
+        }
+
+        .hdr {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 8px;
         }
 
         .metric {
@@ -249,10 +233,8 @@ export function generateBrandedPDF(data: any): string {
             margin-top: 8px;
         }
 
-        .card.highlight .metric {
-            color: var(--brand-spruce);
-            font-size: 24px;
-            font-weight: 700;
+        .metric-pos {
+            color: var(--brand-spruce) !important;
         }
 
         /* Footer */
@@ -282,13 +264,6 @@ export function generateBrandedPDF(data: any): string {
 </head>
 <body>
     <div class="container">
-        <!-- Premium KPI Hero Band -->
-        <div class="hero-band">
-            <div class="hero-title">Monthly Savings Opportunity</div>
-            <div class="hero-amount">${formatCurrency(monthlySavings)}</div>
-            <div class="hero-subtitle">Annual Impact: ${formatCurrency(annualSavings)}</div>
-        </div>
-
         <!-- Header with DMP Logo -->
         <table class="header">
             <tr>
@@ -363,16 +338,16 @@ export function generateBrandedPDF(data: any): string {
             <div class="section-bd">
                 <div class="cards">
                     <div class="card">
-                        <div style="font-weight: 700;">Current Processing Cost</div>
+                        <div class="hdr">Current Processing Cost</div>
                         <div class="metric">${formatCurrency(currentCost)}</div>
                     </div>
                     <div class="card">
-                        <div style="font-weight: 700;">New Processing Cost</div>
+                        <div class="hdr">New Processing Cost</div>
                         <div class="metric">${formatCurrency(newCost)}</div>
                     </div>
-                    <div class="card highlight">
-                        <div style="font-weight: 700;">Monthly Savings</div>
-                        <div class="metric">${formatCurrency(monthlySavings)}</div>
+                    <div class="card card--accent">
+                        <div class="hdr">Monthly Savings</div>
+                        <div class="metric metric-lg metric-pos">${formatCurrency(monthlySavings)}</div>
                     </div>
                 </div>
             </div>
@@ -393,7 +368,7 @@ export function generateBrandedPDF(data: any): string {
 
         <!-- Footer -->
         <div class="footer">
-            <div class="footer-left">Dynamic Merchant Processing • info@dmprocessing.com • (555) 123-4567</div>
+            <div class="footer-left">Dynamic Merchant Processing • quotes@dmprocessing.com • (256) 835-6001</div>
             <div class="footer-right">Thank you for considering DMP</div>
         </div>
     </div>

@@ -1,0 +1,52 @@
+{
+  "task": "Remove hero banner and polish aesthetics for DMP Savings Report (DocRaptor-safe).",
+  "goals": [
+    "Remove the top 'Monthly Savings Opportunity' hero/band entirely.",
+    "Keep header minimal and professional.",
+    "Strengthen section headers with a slim brand accent and improved spacing.",
+    "Soften table borders; keep zebra striping very subtle.",
+    "Emphasize the 'Monthly Savings' card modestly (no hero).",
+    "Ensure layout stays DocRaptor-friendly (inline CSS, simple blocks/tables)."
+  ],
+  "constraints": [
+    "Single <style> block in the HTML (no external CSS).",
+    "Use <img src=\"${LOGO_DATA_URL}\"> for the logo; no CSS background images.",
+    "Prefer table/block layout; avoid complex flex/grid for critical layout."
+  ],
+  "remove_components": {
+    "hero_banner": {
+      "description": "Delete the entire hero block and any references to it.",
+      "selectors_to_remove": [".hero", ".hero-top", ".hero-bottom", ".hero-kicker", ".hero-value", ".hero-sub"],
+      "html_snippets_to_delete": [
+        "<div class=\"hero\">",
+        "</div><!-- end .hero -->"
+      ]
+    }
+  },
+  "style_block_patch": {
+    "description": "Replace or merge this style block; it assumes your existing color variables.",
+    "code": "<style>\n  :root{\n    --brand-ultramarine:#004ED3; /* primary */\n    --brand-aqua:#2BD8C2;        /* accent */\n    --brand-spruce:#00937B;      /* positive */\n    --brand-ink:#0B2340;         /* headings */\n    --ink-800:#1F2937;           /* body text */\n    --muted:#6B7280;             /* secondary text */\n    --border:#E5E7EB;            /* table borders */\n    --bg-soft:#F9FAFB;           /* section header bg */\n  }\n  html,body{ margin:0; padding:0; }\n  body{ font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; color:var(--ink-800); font-size:12px; }\n  .container{ padding:24px; }\n\n  /* Header */\n  .header{ width:100%; border-collapse:collapse; margin-bottom:10px; }\n  .brand-cell{ width:180px; vertical-align:middle; }\n  .title{ font-weight:800; font-size:20px; line-height:1.2; color:var(--brand-ink); }\n  .subtitle{ color:var(--muted); font-size:12px; }\n  .rule{ height:3px; background:var(--brand-ultramarine); border-radius:2px; margin:10px 0 12px; }\n\n  /* Sections */\n  .section{ margin-top:14px; border:1px solid var(--border); border-radius:10px; overflow:hidden; }\n  .section-hd{ background:var(--bg-soft); padding:9px 12px; border-bottom:1px solid var(--border); position:relative; }\n  .section-hd:before{ content:\"\"; position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--brand-ultramarine); }\n  .section-title{ font-weight:750; color:var(--brand-ink); padding-left:2px; }\n  .section-bd{ padding:12px; }\n\n  /* Tables */\n  .kv{ width:100%; border-collapse:collapse; }\n  .kv th,.kv td{ text-align:left; padding:8px 6px; border-bottom:1px solid var(--border); vertical-align:top; }\n  .kv tr:nth-child(odd) td, .kv tr:nth-child(odd) th{ background:rgba(0,0,0,0.012); }\n  .kv th{ color:var(--muted); font-weight:600; width:42%; }\n  .kv tr:last-child th,.kv tr:last-child td{ border-bottom:none; }\n\n  /* Cards */\n  .cards{ display:block; }\n  .card{ border:1px solid var(--border); border-radius:10px; padding:10px 12px; margin-top:10px; }\n  .card--accent{ background:linear-gradient(90deg, rgba(43,216,194,0.16), rgba(43,216,194,0)); border:1px solid var(--brand-aqua); }\n  .card .hdr{ font-weight:700; margin-bottom:2px; }\n  .metric{ font-weight:800; font-size:14px; color:var(--ink-800); }\n  .metric-lg{ font-weight:900; font-size:16px; }\n  .metric-pos{ color:var(--brand-spruce); }\n\n  /* Footer */\n  .footer{ margin-top:20px; padding-top:10px; border-top:1px solid var(--border); font-size:10px; color:var(--muted); display:flex; justify-content:space-between; gap:8px; }\n  .footer-left{ white-space:nowrap; }\n  .footer-right{ white-space:nowrap; }\n</style>"
+  },
+  "component_updates": {
+    "header_block": {
+      "description": "Keep as-is; ensure the rule remains Ultramarine.",
+      "code": "<table class=\"header\">\n  <tr>\n    <td class=\"brand-cell\"><img src=\"${LOGO_DATA_URL}\" alt=\"DMP Logo\" style=\"width:140px;height:auto;display:block;\" /></td>\n    <td>\n      <div class=\"title\">Dual Pricing Savings Report</div>\n      <div class=\"subtitle\">Dynamic Merchant Processing</div>\n    </td>\n    <td style=\"text-align:right;\">\n      <div class=\"subtitle\">Report #: {{reportId}}</div>\n      <div class=\"subtitle\">Date: {{reportDate}}</div>\n    </td>\n  </tr>\n</table>\n<div class=\"rule\"></div>"
+    },
+    "savings_cards": {
+      "description": "No hero. Subtle emphasis on Monthly Savings card only.",
+      "code": "<div class=\"cards\">\n  <div class=\"card\">\n    <div class=\"hdr\">Current Processing Cost</div>\n    <div class=\"metric\">{{currentProcessingCostFormatted}}</div>\n  </div>\n  <div class=\"card\">\n    <div class=\"hdr\">New Processing Cost</div>\n    <div class=\"metric\">{{newProcessingCostFormatted}}</div>\n  </div>\n  <div class=\"card card--accent\">\n    <div class=\"hdr\">Monthly Savings</div>\n    <div class=\"metric metric-lg metric-pos\">{{monthlySavingsFormatted}} / mo</div>\n  </div>\n</div>"
+    }
+  },
+  "assembly_notes": [
+    "Delete the hero component and any references to it in the HTML.",
+    "Keep order: header → rule → sections (Customer Info → Input Parameters → Volume Breakdown → Savings Cards → Annual Impact) → footer.",
+    "All numbers should be preformatted strings (e.g., $12,345.67, 2.90%)."
+  ],
+  "acceptance_criteria": [
+    "No hero/large banner present anywhere in the PDF.",
+    "Section headers show a thin Ultramarine left bar and light gray background.",
+    "Tables use very light zebra striping with soft borders.",
+    "Monthly Savings card has modest emphasis (Aqua accent + Spruce value) without dominating the page.",
+    "No layout regressions; DocRaptor renders identically across runs."
+  ]
+}
