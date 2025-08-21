@@ -172,6 +172,8 @@ This report was generated using your provided data and DMP's proven dual pricing
 `;
 }
 
+import { LOGO_DATA_URL } from "./logo-loader.js";
+
 async function generateSavingsReportPDF(data: any): Promise<Buffer> {
   const apiKey = process.env.DOCRAPTOR_API_KEY;
   if (!apiKey) {
@@ -689,6 +691,37 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error generating ISO Amp link:", error);
       res.status(500).send("Error connecting to ISO Amp");
+    }
+  });
+
+  // Logo validation endpoint for testing
+  app.get("/api/validate-logo", async (req, res) => {
+    try {
+      if (!LOGO_DATA_URL) {
+        return res.status(500).json({ 
+          success: false, 
+          error: "Logo not loaded",
+          details: "Logo data URL is empty" 
+        });
+      }
+
+      // Extract base64 data and validate
+      const base64Data = LOGO_DATA_URL.split(',')[1];
+      const buffer = Buffer.from(base64Data, 'base64');
+      
+      res.json({ 
+        success: true, 
+        logoSize: buffer.length,
+        base64Length: base64Data.length,
+        dataUrlPreview: LOGO_DATA_URL.substring(0, 100) + "...",
+        validation: "Logo data loaded and validated successfully"
+      });
+    } catch (error) {
+      res.status(500).json({ 
+        success: false, 
+        error: "Logo validation failed",
+        details: error instanceof Error ? error.message : "Unknown error"
+      });
     }
   });
 
