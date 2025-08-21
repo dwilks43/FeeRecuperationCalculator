@@ -48,18 +48,18 @@ export function generateBrandedPDF(data: any): string {
             --bg-soft: #F9FAFB;            /* Section header background */
         }
 
-        * {
-            box-sizing: border-box;
+        html, body {
             margin: 0;
             padding: 0;
-        }
-
-        body {
             font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
             color: var(--ink-800);
             font-size: 12px;
             line-height: 1.5;
             background: white;
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         .container {
@@ -135,15 +135,15 @@ export function generateBrandedPDF(data: any): string {
             font-weight: 600;
             color: var(--muted);
             background: var(--bg-soft);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #f3f4f6;
             width: 60%;
         }
 
         .kv td {
             padding: 8px 12px;
             font-weight: 600;
-            color: var(--ink);
-            border-bottom: 1px solid var(--border);
+            color: var(--ink-800);
+            border-bottom: 1px solid #f3f4f6;
         }
 
         .kv .metric {
@@ -152,6 +152,15 @@ export function generateBrandedPDF(data: any): string {
         }
 
         .metric--positive {
+            color: var(--brand-spruce) !important;
+        }
+
+        .metric-lg {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .metric-pos {
             color: var(--brand-spruce) !important;
         }
 
@@ -185,6 +194,8 @@ export function generateBrandedPDF(data: any): string {
 
         .card.highlight .metric {
             color: var(--brand-spruce);
+            font-size: 24px;
+            font-weight: 700;
         }
 
         /* Footer */
@@ -192,12 +203,23 @@ export function generateBrandedPDF(data: any): string {
             margin-top: 40px;
             padding-top: 20px;
             border-top: 2px solid var(--border);
-            text-align: center;
             font-size: 11px;
             color: var(--muted);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            display: table;
+            width: 100%;
+        }
+
+        .footer-left {
+            display: table-cell;
+            white-space: nowrap;
+            width: 70%;
+        }
+
+        .footer-right {
+            display: table-cell;
+            text-align: right;
+            white-space: nowrap;
+            width: 30%;
         }
     </style>
 </head>
@@ -299,7 +321,7 @@ export function generateBrandedPDF(data: any): string {
             </div>
             <div class="section-bd">
                 <table class="kv">
-                    <tr><th>Annual Savings</th><td class="metric metric--positive">${formatCurrency(annualSavings)}</td></tr>
+                    <tr><th>Annual Savings</th><td class="metric metric-lg metric-pos">${formatCurrency(annualSavings)}</td></tr>
                     <tr><th>Processing Volume</th><td class="metric">${formatCurrency(monthlyVolume * 12)}</td></tr>
                 </table>
             </div>
@@ -307,8 +329,8 @@ export function generateBrandedPDF(data: any): string {
 
         <!-- Footer -->
         <div class="footer">
-            <div>Dynamic Merchant Processing • info@dmprocessing.com • (555) 123-4567</div>
-            <div>Thank you for considering DMP for your payment processing needs.</div>
+            <div class="footer-left">Dynamic Merchant Processing • info@dmprocessing.com • (555) 123-4567</div>
+            <div class="footer-right">Thank you for considering DMP</div>
         </div>
     </div>
 </body>

@@ -5,14 +5,16 @@ This is a React-based dual pricing savings calculator widget application. The ma
 The calculator takes various merchant parameters (monthly volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under a dual pricing model, along with potential monthly and annual savings.
 
 ## Recent PDF Generation Updates (August 2025)
-- Implemented comprehensive PDF report with customer information capture
-- Applied unified section styling with blue gradient backgrounds and rounded corners
-- Fixed DocRaptor logo rendering issues using table-based layout with inline styles
-- Added proper currency formatting with commas for all monetary values
+- **BREAKTHROUGH**: Implemented server-side logo loading solution reading DMP logo at startup
+- Successfully converted 277,736 byte logo to 370,316 character base64 string with validation
+- Applied official DMP brand color palette: Ultramarine (#004ED3), Aqua (#2BD8C2), Spruce (#00937B), Ink (#0B2340)
+- Replaced emoji section markers with professional styled section headers
+- Removed redundant chip labels for clean, premium hierarchy
+- Enhanced Monthly Savings emphasis with larger type (24px) and Spruce green highlighting
+- Improved Annual Savings display with enhanced positive emphasis
+- Fixed footer layout preventing text wrapping with table-cell approach
+- Maintained DocRaptor-safe markup with simple tables and inline CSS
 - Reordered sections: Customer Info → Input Parameters → Volume Breakdown → Monthly Processing Savings → Annual Impact
-- Enhanced Monthly Processing Savings card sizing consistency
-- Added Tax Rate and Tip Rate to Input Parameters section
-- Resolved customer data display issues (removed N/A fallbacks)
 
 # User Preferences
 
