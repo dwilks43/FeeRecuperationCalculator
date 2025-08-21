@@ -398,7 +398,7 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Base Volume</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
                         <tr><th>Adjusted Card Volume</th><td class="metric">${formatCurrency(adjustedVolume)}</td></tr>
                         <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(currentCost)}</td></tr>
-                        <tr><th>New Processing Cost</th><td class="metric">${formatCurrency(newCost)}</td></tr>
+                        <tr><th>Revenue-Adjusted Processing Cost</th><td class="metric">${formatCurrency(newCost)}</td></tr>
                     </table>
                 </div>
             </div>
@@ -415,7 +415,7 @@ export function generateBrandedPDF(data: any): string {
                             <div class="metric">${formatCurrency(currentCost)}</div>
                         </div>
                         <div class="card">
-                            <div class="hdr">New Processing Cost</div>
+                            <div class="hdr">Revenue-Adjusted Processing Cost</div>
                             <div class="metric">${formatCurrency(newCost)}</div>
                         </div>
                         <div class="card card--accent">

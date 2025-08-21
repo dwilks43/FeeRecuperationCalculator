@@ -63,7 +63,7 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
     content: 'What you currently pay monthly for credit card processing. Calculated as: Credit Card Volume × Current Processing Rate'
   },
   'new-cost': {
-    title: 'New Processing Cost',
+    title: 'Revenue-Adjusted Processing Cost',
     content: 'Your actual out-of-pocket cost with DMP\'s dual pricing system. Calculated as: Processing Fees - Markup Collected. Negative amounts mean you earn money from processing.'
   },
   'monthly-savings': {

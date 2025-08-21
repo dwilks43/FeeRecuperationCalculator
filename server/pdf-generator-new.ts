@@ -457,7 +457,7 @@ function generateQuoteStyleHTML(data: any): string {
                         <td>\${{CURRENT_COST}}</td>
                     </tr>
                     <tr>
-                        <td>New Processing Cost</td>
+                        <td>Revenue-Adjusted Processing Cost</td>
                         <td>\${{NEW_COST}}</td>
                     </tr>
                 </tbody>
@@ -482,10 +482,10 @@ function generateQuoteStyleHTML(data: any): string {
                     </div>
                 </div>
                 
-                <!-- New Processing Cost Card -->
+                <!-- Revenue-Adjusted Processing Cost Card -->
                 <div class="processing-card new">
                     <div class="card-header">
-                        <span class="card-title">New Processing Cost</span>
+                        <span class="card-title">Revenue-Adjusted Processing Cost</span>
                     </div>
                     <div class="card-value-row">
                         <span>✓</span>

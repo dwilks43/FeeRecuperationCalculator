@@ -43,10 +43,10 @@ export default function ProcessingSavings({ results, onTooltip }: ProcessingSavi
           </div>
         </div>
 
-        {/* New Processing Cost */}
+        {/* Revenue-Adjusted Processing Cost */}
         <div className="bg-white rounded-lg p-4 border border-green-200">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-medium text-gray-600">New Processing Cost</span>
+            <span className="text-sm font-medium text-gray-600">Revenue-Adjusted Processing Cost</span>
             <Button
               variant="ghost"
               size="sm"
