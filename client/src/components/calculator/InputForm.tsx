@@ -162,7 +162,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 onChange={(e) => handleProgramTypeChange('DUAL_PRICING')}
                 className="mr-2"
               />
-              <span className="text-sm">Fee Recuperation Program</span>
+              <span className="text-sm">Dual Pricing or Cash Discounting</span>
             </label>
             <label className="flex items-center">
               <input
