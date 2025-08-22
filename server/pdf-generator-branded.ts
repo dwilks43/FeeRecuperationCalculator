@@ -349,7 +349,7 @@ export function generateBrandedPDF(data: any): string {
                     </td>
                     <td>
                         <div class="title">Dynamic Merchant Processing</div>
-                        <div class="subtitle">Dual Pricing Savings Report</div>
+                        <div class="subtitle">Fee Recuperation Analysis</div>
                     </td>
                     <td style="text-align: right;">
                         <div class="subtitle">Report #: ${reportNumber}</div>
