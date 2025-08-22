@@ -15,6 +15,7 @@ import { calculateResults, debounce, formatCurrency, formatLargeNumber } from "@
 
 export default function Calculator() {
   const [inputs, setInputs] = useState<CalculatorInputs>({
+    programType: 'DUAL_PRICING',
     monthlyVolume: 0,
     monthlyCashVolume: 0,
     currentRate: 0,
@@ -46,6 +47,7 @@ export default function Calculator() {
     salesRepName: customerInfo.salesRepName || '',
     salesRepEmail: customerInfo.salesRepEmail || '',
     salesRepPhone: customerInfo.salesRepPhone || '',
+    programType: inputs.programType,
     monthlyVolume: inputs.monthlyVolume,
     monthlyCashVolume: inputs.monthlyCashVolume,
     currentRate: inputs.currentRate,
@@ -54,6 +56,7 @@ export default function Calculator() {
     taxRate: inputs.taxRate,
     tipRate: inputs.tipRate,
     priceDifferential: inputs.priceDifferential,
+    flatRatePct: inputs.flatRatePct,
     baseVolume: results.baseVolume,
     adjustedVolume: results.adjustedVolume,
     processingFees: results.processingFees,
@@ -87,7 +90,8 @@ export default function Calculator() {
   };
 
   const handleReset = () => {
-    setInputs({
+    setInputs(prev => ({
+      programType: prev.programType,
       monthlyVolume: 0,
       monthlyCashVolume: 0,
       currentRate: 0,
@@ -96,7 +100,7 @@ export default function Calculator() {
       taxRate: 0,
       tipRate: 0,
       priceDifferential: 0
-    });
+    }));
     setShowDMPProfit(false);
   };
 
@@ -173,6 +177,7 @@ export default function Calculator() {
             <DualPricingBreakdown
               results={results}
               onTooltip={handleTooltip}
+              programType={inputs.programType}
             />
           </div>
 
@@ -181,6 +186,7 @@ export default function Calculator() {
             <ProcessingSavings
               results={results}
               onTooltip={handleTooltip}
+              programType={inputs.programType}
             />
 
             {/* Annual Summary Card */}

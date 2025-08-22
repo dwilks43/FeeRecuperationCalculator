@@ -7,9 +7,10 @@ import { formatCurrency } from "@/utils/calculations";
 interface ProcessingSavingsProps {
   results: CalculatorResults;
   onTooltip: (key: TooltipKey) => void;
+  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
 }
 
-export default function ProcessingSavings({ results, onTooltip }: ProcessingSavingsProps) {
+export default function ProcessingSavings({ results, onTooltip, programType }: ProcessingSavingsProps) {
   const isNegativeCost = results.newCost < 0;
   
   return (
@@ -17,7 +18,7 @@ export default function ProcessingSavings({ results, onTooltip }: ProcessingSavi
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl text-dmp-blue-800">
           <PiggyBank className="h-5 w-5 text-dmp-blue-600" />
-          Monthly Processing Savings
+          {programType === 'SUPPLEMENTAL_FEE' ? 'Monthly Savings' : 'Monthly Processing Savings'}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -43,53 +44,134 @@ export default function ProcessingSavings({ results, onTooltip }: ProcessingSavi
           </div>
         </div>
 
-        {/* Revenue-Adjusted Processing Cost */}
-        <div className="bg-white rounded-lg p-4 border border-green-200">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-medium text-gray-600">Revenue-Adjusted Processing Cost</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto p-0"
-              onClick={() => onTooltip('new-cost')}
-              data-testid="button-tooltip-new-cost"
-            >
-              <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-green-500" />
-            <span className="text-2xl font-bold text-green-600" data-testid="text-new-cost">
-              {isNegativeCost ? '-' : ''}{formatCurrency(Math.abs(results.newCost))}
-            </span>
-          </div>
-          {isNegativeCost && (
-            <p className="text-xs text-green-600 mt-1">You earn money from processing!</p>
-          )}
-        </div>
+        {/* Supplemental Fee mode - specific rows in order */}
+        {programType === 'SUPPLEMENTAL_FEE' ? (
+          <>
+            {/* Processing Savings (vs. current) */}
+            {results.processingSavings !== undefined && (
+              <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Processing Savings (vs. current)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                  <span className="text-2xl font-bold text-green-600">
+                    {formatCurrency(results.processingSavings)}
+                  </span>
+                </div>
+              </div>
+            )}
 
-        {/* Monthly Savings */}
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-medium text-gray-600">Monthly Savings</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto p-0"
-              onClick={() => onTooltip('monthly-savings')}
-              data-testid="button-tooltip-monthly-savings"
-            >
-              <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Trophy className="h-5 w-5 text-green-600" />
-            <span className="text-3xl font-bold text-green-700" data-testid="text-monthly-savings">
-              {formatCurrency(results.monthlySavings)}
-            </span>
-          </div>
-          <p className="text-sm text-green-600 mt-1">per month saved with DMP</p>
-        </div>
+            {/* Extra Revenue on Cash Sales */}
+            {results.extraRevenueCash !== undefined && results.extraRevenueCash > 0 && (
+              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Extra Revenue on Cash Sales</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-blue-500" />
+                  <span className="text-2xl font-bold text-blue-600">
+                    {formatCurrency(results.extraRevenueCash)}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Card Program Profit (show only if > 0) */}
+            {results.cardProgramProfit !== undefined && results.cardProgramProfit > 0 && (
+              <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Card Program Profit</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Trophy className="h-5 w-5 text-emerald-500" />
+                  <span className="text-2xl font-bold text-emerald-600">
+                    {formatCurrency(results.cardProgramProfit)}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Residual Card Processing Cost (show only if > 0) */}
+            {results.residualCardCost !== undefined && results.residualCardCost > 0 && (
+              <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Residual Card Processing Cost</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MinusCircle className="h-5 w-5 text-orange-500" />
+                  <span className="text-2xl font-bold text-orange-600">
+                    {formatCurrency(results.residualCardCost)}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Total Monthly Savings - highlight */}
+            <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-6 border-2 border-dmp-blue-300">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-lg font-semibold text-gray-800">Total Monthly Savings</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-6 w-6 text-green-600" />
+                <span className="text-3xl font-bold text-green-700">
+                  {formatCurrency(results.monthlySavings)}
+                </span>
+              </div>
+            </div>
+          </>
+        ) : (
+          // Dual Pricing mode - original layout
+          <>
+            {/* Revenue-Adjusted Processing Cost */}
+            <div className="bg-white rounded-lg p-4 border border-green-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Revenue-Adjusted Processing Cost</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('new-cost')}
+                  data-testid="button-tooltip-new-cost"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <span className="text-2xl font-bold text-green-600" data-testid="text-new-cost">
+                  {isNegativeCost ? '-' : ''}{formatCurrency(Math.abs(results.newCost))}
+                </span>
+              </div>
+              {isNegativeCost && (
+                <p className="text-xs text-green-600 mt-1">You earn money from processing!</p>
+              )}
+            </div>
+
+            {/* Monthly Savings */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Monthly Savings</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('monthly-savings')}
+                  data-testid="button-tooltip-monthly-savings"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-green-600" />
+                <span className="text-3xl font-bold text-green-700" data-testid="text-monthly-savings">
+                  {formatCurrency(results.monthlySavings)}
+                </span>
+              </div>
+              <p className="text-sm text-green-600 mt-1">per month saved with DMP</p>
+            </div>
+          </>
+        )}
       </CardContent>
     </Card>
   );

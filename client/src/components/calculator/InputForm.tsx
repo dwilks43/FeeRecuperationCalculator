@@ -15,6 +15,7 @@ interface InputFormProps {
 
 export default function InputForm({ inputs, onInputChange, onTooltip }: InputFormProps) {
   const [inputValues, setInputValues] = useState<Record<keyof CalculatorInputs, string>>({
+    programType: inputs.programType,
     monthlyVolume: formatNumberInput(inputs.monthlyVolume),
     monthlyCashVolume: formatNumberInput(inputs.monthlyCashVolume),
     currentRate: formatNumberInput(inputs.currentRate),
@@ -22,13 +23,71 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     flatRate: formatNumberInput(inputs.flatRate),
     taxRate: formatNumberInput(inputs.taxRate),
     tipRate: formatNumberInput(inputs.tipRate),
-    priceDifferential: formatNumberInput(inputs.priceDifferential)
+    priceDifferential: formatNumberInput(inputs.priceDifferential),
+    flatRatePct: formatNumberInput(inputs.flatRatePct || 0)
   });
 
-  const handleInputChange = (field: keyof CalculatorInputs, value: string) => {
-    setInputValues(prev => ({ ...prev, [field]: value }));
-    const numericValue = parseNumericInput(value);
-    onInputChange(field, numericValue);
+  const [autoSynced, setAutoSynced] = useState(true);
+
+  const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {
+    if (typeof value === 'string') {
+      setInputValues(prev => ({ ...prev, [field]: value }));
+      const numericValue = parseNumericInput(value);
+      onInputChange(field, numericValue);
+    } else {
+      onInputChange(field, value);
+    }
+  };
+
+  const handleProgramTypeChange = (newType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE') => {
+    onInputChange('programType', newType as any);
+    
+    // Auto-calculate flat rate when switching to supplemental fee
+    if (newType === 'SUPPLEMENTAL_FEE' && inputs.priceDifferential > 0) {
+      const fee = inputs.priceDifferential / 100;
+      const flatRate = (fee / (1 + fee)) * 100;
+      onInputChange('flatRatePct', flatRate);
+      setAutoSynced(true);
+    }
+  };
+
+  const handleSupplementalFeeChange = (value: string) => {
+    setInputValues(prev => ({ ...prev, priceDifferential: value }));
+    const fee = parseNumericInput(value) / 100;
+    onInputChange('priceDifferential', parseNumericInput(value));
+    
+    // Auto-update flat rate if still synced
+    if (autoSynced && inputs.programType === 'SUPPLEMENTAL_FEE') {
+      const flatRate = fee > 0 ? (fee / (1 + fee)) * 100 : 0;
+      onInputChange('flatRatePct', flatRate);
+      setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
+    }
+  };
+
+  const handleFlatRateChange = (value: string) => {
+    setInputValues(prev => ({ ...prev, flatRatePct: value }));
+    onInputChange('flatRatePct', parseNumericInput(value));
+    setAutoSynced(false); // User manually edited flat rate
+  };
+
+  const resetFlatRateToOffset = () => {
+    if (inputs.priceDifferential > 0) {
+      const fee = inputs.priceDifferential / 100;
+      const flatRate = (fee / (1 + fee)) * 100;
+      onInputChange('flatRatePct', flatRate);
+      setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
+      setAutoSynced(true);
+    }
+  };
+
+  const computeFeeFromFlatRate = () => {
+    if (inputs.flatRatePct && inputs.flatRatePct > 0) {
+      const fr = inputs.flatRatePct / 100;
+      const fee = (fr / (1 - fr)) * 100;
+      onInputChange('priceDifferential', fee);
+      setInputValues(prev => ({ ...prev, priceDifferential: formatNumberInput(fee) }));
+      setAutoSynced(false);
+    }
   };
 
   const formatVolumeInput = (value: string): string => {
@@ -90,6 +149,35 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Program Type Selection */}
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <Label className="text-sm font-medium text-gray-700 mb-3 block">Program Type</Label>
+          <div className="flex gap-4">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="programType"
+                value="DUAL_PRICING"
+                checked={inputs.programType === 'DUAL_PRICING'}
+                onChange={(e) => handleProgramTypeChange('DUAL_PRICING')}
+                className="mr-2"
+              />
+              <span className="text-sm">Fee Recuperation Program</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="programType"
+                value="SUPPLEMENTAL_FEE"
+                checked={inputs.programType === 'SUPPLEMENTAL_FEE'}
+                onChange={(e) => handleProgramTypeChange('SUPPLEMENTAL_FEE')}
+                className="mr-2"
+              />
+              <span className="text-sm">Supplemental Fee</span>
+            </label>
+          </div>
+        </div>
+
         <div className="grid sm:grid-cols-2 gap-4">
           {/* Monthly Credit Card Volume */}
           <div className="col-span-2">
@@ -174,8 +262,9 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             </div>
           </div>
 
-          {/* Interchange Cost */}
-          <div>
+          {/* Interchange Cost - hide in Supplemental Fee mode */}
+          {inputs.programType === 'DUAL_PRICING' && (
+            <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
               Interchange Cost
               <Button
@@ -215,6 +304,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               </a>
             </div>
           </div>
+          )}
 
           {/* Flat Rate Processing */}
           <div>
@@ -297,15 +387,15 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             </div>
           </div>
 
-          {/* Price Differential */}
+          {/* Price Differential / Supplemental Fee */}
           <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Price Differential
+              {inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Supplemental Fee (%)' : 'Price Differential'}
               <Button
                 variant="ghost"
                 size="sm"
                 className="h-auto p-0"
-                onClick={() => onTooltip('price-differential')}
+                onClick={() => onTooltip(inputs.programType === 'SUPPLEMENTAL_FEE' ? 'supplemental-fee' : 'price-differential')}
                 data-testid="button-tooltip-price-differential"
               >
                 <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
@@ -317,12 +407,61 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="6.00"
                 value={inputValues.priceDifferential}
-                onChange={(e) => handleInputChange('priceDifferential', e.target.value)}
+                onChange={(e) => inputs.programType === 'SUPPLEMENTAL_FEE' ? handleSupplementalFeeChange(e.target.value) : handleInputChange('priceDifferential', e.target.value)}
                 data-testid="input-price-differential"
               />
               <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
             </div>
           </div>
+
+          {/* Flat Rate (%) for Supplemental Fee mode */}
+          {inputs.programType === 'SUPPLEMENTAL_FEE' && (
+            <div>
+              <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                Flat Rate (%) (applied to fee-inclusive card amount)
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('flat-rate-pct')}
+                  data-testid="button-tooltip-flat-rate-pct"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
+              </Label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
+                  placeholder="3.85"
+                  value={inputValues.flatRatePct}
+                  onChange={(e) => handleFlatRateChange(e.target.value)}
+                  data-testid="input-flat-rate-pct"
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+              </div>
+              
+              {/* Helper links */}
+              <div className="mt-2 flex gap-4 text-xs">
+                <button
+                  type="button"
+                  onClick={resetFlatRateToOffset}
+                  className="text-blue-600 hover:text-blue-800 underline"
+                  data-testid="link-reset-flat-rate"
+                >
+                  Reset flat rate to offset
+                </button>
+                <button
+                  type="button"
+                  onClick={computeFeeFromFlatRate}
+                  className="text-blue-600 hover:text-blue-800 underline"
+                  data-testid="link-compute-fee-from-flat-rate"
+                >
+                  Compute fee from flat rate
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
 

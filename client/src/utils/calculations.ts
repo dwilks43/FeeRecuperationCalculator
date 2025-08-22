@@ -85,6 +85,65 @@ export function formatLargeNumber(amount: number): string {
  * Calculate all results from inputs
  */
 export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
+  if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+    return calculateSupplementalFeeResults(inputs);
+  }
+  return calculateDualPricingResults(inputs);
+}
+
+function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorResults {
+  const cc = inputs.monthlyVolume || 0;
+  const cash = inputs.monthlyCashVolume || 0;
+  const fee = (inputs.priceDifferential || 0) / 100; // Supplemental Fee %
+  const fr = (inputs.flatRatePct != null ? inputs.flatRatePct : (fee/(1+fee))*100) / 100; // Flat Rate %
+  const currentCost = cc * ((inputs.currentRate || 0) / 100);
+  
+  // Fee collected
+  const suppFeeCollected = (cc + cash) * fee;
+  const extraRevenueCash = cash * fee;
+  
+  // Processor charges merchant flat rate on the fee-inclusive card total
+  const processorChargeOnCards = cc * (1 + fee) * fr;
+  
+  // Card fee revenue collected on cards
+  const cardFeeCollected = cc * fee;
+  
+  // Net card processing burden (positive = merchant still pays some cost; negative = program profit on cards)
+  const cardNet = processorChargeOnCards - cardFeeCollected;
+  const residualCardCost = Math.max(cardNet, 0);
+  const cardProgramProfit = Math.max(-cardNet, 0);
+  
+  // New out-of-pocket processing cost used for savings comparison
+  const newCost = residualCardCost; // DO NOT clamp profit here; profit is reported separately
+  const processingSavings = currentCost - residualCardCost; // if profit exists, savings > currentCost is shown via the separate profit line
+  const monthlySavings = processingSavings + extraRevenueCash + cardProgramProfit;
+  const annualSavings = monthlySavings * 12;
+
+  return {
+    baseVolume: cc,
+    markedUpVolume: cc,
+    adjustedVolume: cc,
+    markupCollected: suppFeeCollected,
+    processingFees: processorChargeOnCards,
+    currentCost,
+    newCost,
+    processingSavings,
+    extraRevenueCash,
+    cardProgramProfit,
+    residualCardCost,
+    monthlySavings,
+    annualSavings,
+    annualVolume: (cc + cash) * 12,
+    dmpProfit: 0, // Not applicable for supplemental fee
+    skytabBonus: 0,
+    skytabBonusRep: 0,
+    collectedLabel: 'Supplemental Fee Collected',
+    collectedValue: suppFeeCollected,
+    derivedFlatRate: (fee/(1+fee))*100
+  };
+}
+
+function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResults {
   const {
     monthlyVolume,
     currentRate,
@@ -95,54 +154,54 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
     priceDifferential
   } = inputs;
 
-  // Step 1: Calculate base volume (backing out tax and tip)
+  // Original calculations for dual pricing
   const baseVolume = calculateOriginalBaseAmount(monthlyVolume, taxRate, tipRate);
-
-  // Step 2: Calculate marked up volume
-  const markedUpVolume = calculateNewBaseAmount(baseVolume, priceDifferential);
-
-  // Step 3: Calculate adjusted volume (adding back tax and tip to marked up base)
-  const adjustedVolume = calculateNewTotalVolume(markedUpVolume, taxRate, tipRate);
-
-  // Step 4: Calculate markup collected
+  const adjustedVolume = calculateNewTotalVolume(baseVolume, taxRate, tipRate);
+  
   const markupCollected = calculateCorrectMarkupCollected(baseVolume, priceDifferential);
-
-  // Step 5: Calculate processing costs
-  const processingFees = calculateCorrectProcessingFees(adjustedVolume, flatRate);
+  
+  // Calculate processing fees on adjusted volume (volume that includes tip but not tax)
+  const processingFees = calculateCorrectProcessingFees(adjustedVolume, interchangeCost);
+  
+  // Current cost calculation
   const currentCost = monthlyVolume * (currentRate / 100);
-  const netCost = processingFees - markupCollected;
-
-  // Step 6: Calculate savings
-  const monthlySavings = currentCost - netCost;
+  
+  // New cost = interchange fees on adjusted volume + flat rate fees on remaining volume
+  const remainingVolume = monthlyVolume - adjustedVolume;
+  const newCost = processingFees + (remainingVolume * (flatRate / 100));
+  
+  // Calculate savings
+  const monthlySavings = currentCost - newCost;
   const annualSavings = monthlySavings * 12;
+  
+  // DMP profit calculations (from markup collected minus processing costs)
+  const dmpProfit = markupCollected - processingFees;
   const annualVolume = monthlyVolume * 12;
-
-  // Step 7: Calculate DMP profit using the correct formula
-  const dmpProfit = (inputs.flatRate - inputs.interchangeCost) / 100 * adjustedVolume;
-
-  // Step 8: Calculate Skytab Bonus (Gross)
-  const skytabBonusRaw = (inputs.flatRate - inputs.interchangeCost) / 100 * 0.60 * adjustedVolume * 18;
-  const skytabBonus = Math.min(skytabBonusRaw, 10000); // Cap at $10,000
-
-  // Step 9: Calculate Skytab Bonus Rep 50%
-  const skytabBonusRep = skytabBonus * 0.50;
+  
+  // Skytab bonus calculations
+  const skytabBonus = annualVolume >= 2000000 ? annualVolume * 0.0015 : 0;
+  const skytabBonusRep = skytabBonus * 0.5;
 
   return {
-    baseVolume: Number(baseVolume.toFixed(2)),
-    markedUpVolume: Number(markedUpVolume.toFixed(2)),
-    adjustedVolume: Number(adjustedVolume.toFixed(2)),
-    markupCollected: Number(markupCollected.toFixed(2)),
-    processingFees: Number(processingFees.toFixed(2)),
-    currentCost: Number(currentCost.toFixed(2)),
-    newCost: Number(netCost.toFixed(2)),
-    monthlySavings: Number(monthlySavings.toFixed(2)),
-    annualSavings: Number(annualSavings.toFixed(2)),
-    annualVolume: Number(annualVolume.toFixed(2)),
-    dmpProfit: Number(dmpProfit.toFixed(2)),
-    skytabBonus: Number(skytabBonus.toFixed(2)),
-    skytabBonusRep: Number(skytabBonusRep.toFixed(2))
+    baseVolume,
+    markedUpVolume: baseVolume + markupCollected,
+    adjustedVolume,
+    markupCollected,
+    processingFees,
+    currentCost,
+    newCost,
+    monthlySavings,
+    annualSavings,
+    annualVolume,
+    dmpProfit,
+    skytabBonus,
+    skytabBonusRep,
+    collectedLabel: 'Markup Collected',
+    collectedValue: markupCollected
   };
 }
+
+
 
 /**
  * Parse and validate numeric input

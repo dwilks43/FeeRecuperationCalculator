@@ -18,6 +18,14 @@ const tooltipContent: Record<TooltipKey, TooltipContent> = {
     title: 'Monthly Cash Volume',
     content: 'The total dollar amount of cash transactions processed per month. This is your gross credit cash sales volume.'
   },
+  'supplemental-fee': {
+    title: 'Supplemental Fee (%)',
+    content: 'The percentage fee added to both card and cash transactions to offset processing costs.'
+  },
+  'flat-rate-pct': {
+    title: 'Flat Rate (%)',
+    content: 'The flat rate percentage applied to fee-inclusive card transaction amounts by the processor.'
+  },
   'current-rate': {
     title: 'Current Processing Rate (%)',
     content: 'Your current effective rate for processing credit cards, including all fees. Usually between 2-4%.'

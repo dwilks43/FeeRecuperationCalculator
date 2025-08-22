@@ -1,4 +1,5 @@
 export interface CalculatorInputs {
+  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
   monthlyVolume: number;
   monthlyCashVolume: number;
   currentRate: number;
@@ -7,6 +8,7 @@ export interface CalculatorInputs {
   taxRate: number;
   tipRate: number;
   priceDifferential: number;
+  flatRatePct?: number;
 }
 
 export interface CalculatorResults {
@@ -23,6 +25,13 @@ export interface CalculatorResults {
   dmpProfit: number;
   skytabBonus: number;
   skytabBonusRep: number;
+  derivedFlatRate?: number;
+  cardProgramProfit?: number;
+  residualCardCost?: number;
+  extraRevenueCash?: number;
+  collectedLabel: string;
+  collectedValue: number;
+  processingSavings?: number;
 }
 
 export interface TooltipContent {
@@ -50,9 +59,11 @@ export type TooltipKey =
   | 'current-rate'
   | 'interchange-cost'
   | 'flat-rate'
+  | 'flat-rate-pct'
   | 'tax-rate'
   | 'tip-rate'
   | 'price-differential'
+  | 'supplemental-fee'
   | 'base-volume'
   | 'marked-up-volume'
   | 'adjusted-volume'

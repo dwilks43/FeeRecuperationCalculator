@@ -7,9 +7,10 @@ import { formatCurrency } from "@/utils/calculations";
 interface DualPricingBreakdownProps {
   results: CalculatorResults;
   onTooltip: (key: TooltipKey) => void;
+  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
 }
 
-export default function DualPricingBreakdown({ results, onTooltip }: DualPricingBreakdownProps) {
+export default function DualPricingBreakdown({ results, onTooltip, programType }: DualPricingBreakdownProps) {
   return (
     <Card className="shadow-lg border-gray-200">
       <CardHeader>
@@ -76,10 +77,10 @@ export default function DualPricingBreakdown({ results, onTooltip }: DualPricing
           </span>
         </div>
 
-        {/* Card Price Increase Collected */}
+        {/* Dynamic Collected Label */}
         <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-gray-700">Card Price Increase Collected</span>
+            <span className="text-sm font-medium text-gray-700">{results.collectedLabel}</span>
             <Button
               variant="ghost"
               size="sm"
@@ -91,9 +92,23 @@ export default function DualPricingBreakdown({ results, onTooltip }: DualPricing
             </Button>
           </div>
           <span className="text-lg font-bold text-amber-600" data-testid="text-markup-collected">
-            {formatCurrency(results.markupCollected)}
+            {formatCurrency(results.collectedValue)}
           </span>
         </div>
+
+        {/* Supplemental Fee mode specific display */}
+        {programType === 'SUPPLEMENTAL_FEE' && (
+          <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <p className="text-xs text-blue-700">
+              Fee basis: Card + Cash • Processor Flat Rate is applied to fee-inclusive card totals.
+            </p>
+            {results.derivedFlatRate && (
+              <p className="text-xs text-blue-600 mt-1">
+                100% offset pair: FR = fee/(1+fee) ≈ {results.derivedFlatRate.toFixed(4)}%
+              </p>
+            )}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
