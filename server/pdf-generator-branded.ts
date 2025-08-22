@@ -359,6 +359,7 @@ export function generateBrandedPDF(data: any): string {
             </table>
             
             <div class="disclaimer">
+                <div style="color: var(--brand-ultramarine); font-weight: bold; margin-bottom: 8px; font-size: 16px;">Dual Pricing Savings Report</div>
                 <small>— estimates are based on your information provided; final savings are subject to change if actual data differs.</small>
             </div>
         </div>
