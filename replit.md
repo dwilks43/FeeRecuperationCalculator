@@ -1,8 +1,8 @@
 # Overview
 
-This is a React-based dual pricing savings calculator widget application. The main purpose is to help merchants understand their potential cost savings when switching to a dual pricing payment processing model. The application calculates processing fees, markup collections, and demonstrates how dual pricing can reduce or eliminate credit card processing costs for businesses.
+This is a professional React-based **Fee Recuperation Savings Calculator** for Dynamic Merchant Processing (DMP). The main purpose is to help merchants understand their potential cost savings when switching to DMP's Fee Recuperation Program (dual pricing payment processing model). The application calculates processing fees, markup collections, and demonstrates how the program can reduce or eliminate credit card processing costs for businesses.
 
-The calculator takes various merchant parameters (monthly volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under a dual pricing model, along with potential monthly and annual savings.
+The calculator takes various merchant parameters (monthly credit card volume, monthly cash volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under the Fee Recuperation Program, along with potential monthly and annual savings. It generates professional PDF reports with DMP branding for sales presentations.
 
 ## Recent PDF Generation Updates (August 2025)
 - **BREAKTHROUGH**: Implemented server-side logo loading solution reading DMP logo at startup
