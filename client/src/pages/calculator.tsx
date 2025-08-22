@@ -146,7 +146,7 @@ export default function Calculator() {
             Fee Recuperation Savings Calculator
           </h1>
           <p className="text-gray-600 text-lg" data-testid="text-subtitle">
-            Calculate your potential monthly savings with DMP's dual pricing model
+            Calculate your potential monthly savings with DMP's Fee Recuperation Program
           </p>
         </div>
 
