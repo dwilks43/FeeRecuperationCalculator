@@ -16,6 +16,7 @@ import { calculateResults, debounce, formatCurrency, formatLargeNumber } from "@
 export default function Calculator() {
   const [inputs, setInputs] = useState<CalculatorInputs>({
     monthlyVolume: 0,
+    monthlyCashVolume: 0,
     currentRate: 0,
     interchangeCost: 0,
     flatRate: 0,
@@ -46,6 +47,7 @@ export default function Calculator() {
     salesRepEmail: customerInfo.salesRepEmail || '',
     salesRepPhone: customerInfo.salesRepPhone || '',
     monthlyVolume: inputs.monthlyVolume,
+    monthlyCashVolume: inputs.monthlyCashVolume,
     currentRate: inputs.currentRate,
     interchangeCost: inputs.interchangeCost,
     flatRate: inputs.flatRate,
@@ -87,6 +89,7 @@ export default function Calculator() {
   const handleReset = () => {
     setInputs({
       monthlyVolume: 0,
+      monthlyCashVolume: 0,
       currentRate: 0,
       interchangeCost: 0,
       flatRate: 0,

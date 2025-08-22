@@ -3,6 +3,7 @@ import { LOGO_DATA_URL } from './logo-loader.js';
 export function generateBrandedPDF(data: any): string {
   const {
     monthlyVolume,
+    monthlyCashVolume = 0,
     currentRate,
     interchangeCost,
     flatRate,
@@ -389,7 +390,11 @@ export function generateBrandedPDF(data: any): string {
                 <table class="kv-2col">
                     <tr>
                         <th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(monthlyVolume)}</td>
+                        <th>Monthly Cash Volume</th><td class="metric">${formatCurrency(monthlyCashVolume)}</td>
+                    </tr>
+                    <tr>
                         <th>Current Processing Rate</th><td class="metric">${formatPercentage(currentRate)}</td>
+                        <th>&nbsp;</th><td>&nbsp;</td>
                     </tr>
                     <tr>
                         <th>Interchange Cost</th><td class="metric">${formatPercentage(interchangeCost)}</td>

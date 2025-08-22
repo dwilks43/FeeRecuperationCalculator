@@ -1,5 +1,6 @@
 export interface CalculatorInputs {
   monthlyVolume: number;
+  monthlyCashVolume: number;
   currentRate: number;
   interchangeCost: number;
   flatRate: number;
@@ -45,6 +46,7 @@ export interface CustomerInfo {
 
 export type TooltipKey = 
   | 'monthly-volume'
+  | 'monthly-cash-volume'
   | 'current-rate'
   | 'interchange-cost'
   | 'flat-rate'

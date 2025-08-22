@@ -16,6 +16,7 @@ interface InputFormProps {
 export default function InputForm({ inputs, onInputChange, onTooltip }: InputFormProps) {
   const [inputValues, setInputValues] = useState<Record<keyof CalculatorInputs, string>>({
     monthlyVolume: formatNumberInput(inputs.monthlyVolume),
+    monthlyCashVolume: formatNumberInput(inputs.monthlyCashVolume),
     currentRate: formatNumberInput(inputs.currentRate),
     interchangeCost: formatNumberInput(inputs.interchangeCost),
     flatRate: formatNumberInput(inputs.flatRate),
@@ -49,9 +50,22 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     setInputValues(prev => ({ ...prev, monthlyVolume: formatted }));
   };
 
+  const handleCashVolumeChange = (value: string) => {
+    // Allow user to type freely, but format on blur
+    setInputValues(prev => ({ ...prev, monthlyCashVolume: value }));
+    const numericValue = parseNumericInput(value);
+    onInputChange('monthlyCashVolume', numericValue);
+  };
+
+  const handleCashVolumeBlur = () => {
+    const formatted = formatVolumeInput(inputValues.monthlyCashVolume);
+    setInputValues(prev => ({ ...prev, monthlyCashVolume: formatted }));
+  };
+
   const loadDemoValues = () => {
     const demoValues = {
       monthlyVolume: 100000,
+      monthlyCashVolume: 25000,
       currentRate: 2.45,
       interchangeCost: 2.25,
       flatRate: 4.00,
@@ -101,6 +115,34 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 onChange={(e) => handleVolumeChange(e.target.value)}
                 onBlur={handleVolumeBlur}
                 data-testid="input-monthly-volume"
+              />
+            </div>
+          </div>
+
+          {/* Monthly Cash Volume */}
+          <div className="col-span-2">
+            <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+              Monthly Cash Volume
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-auto p-0"
+                onClick={() => onTooltip('monthly-cash-volume')}
+                data-testid="button-tooltip-monthly-cash-volume"
+              >
+                <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+              </Button>
+            </Label>
+            <div className="relative">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">$</span>
+              <Input
+                type="text"
+                className="pl-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
+                placeholder="25,000.00"
+                value={inputValues.monthlyCashVolume}
+                onChange={(e) => handleCashVolumeChange(e.target.value)}
+                onBlur={handleCashVolumeBlur}
+                data-testid="input-monthly-cash-volume"
               />
             </div>
           </div>
