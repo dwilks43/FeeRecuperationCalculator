@@ -9,6 +9,7 @@ export interface CalculatorInputs {
   tipRate: number;
   priceDifferential: number;
   flatRatePct?: number;
+  tipBasis?: 'fee_inclusive' | 'pre_fee';
 }
 
 export interface CalculatorResults {
@@ -32,6 +33,8 @@ export interface CalculatorResults {
   collectedLabel: string;
   collectedValue: number;
   processingSavings?: number;
+  tipAdjustmentResidual?: number;
+  tipAssumptionNote?: string;
 }
 
 export interface TooltipContent {

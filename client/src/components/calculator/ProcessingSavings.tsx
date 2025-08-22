@@ -92,7 +92,22 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Residual Card Processing Cost (show only if > 0) */}
+            {/* Tip Adjustment (Residual Card Cost) - show if tipAdjustmentResidual > 0 */}
+            {results.tipAdjustmentResidual !== undefined && results.tipAdjustmentResidual > 0 && (
+              <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Tip Adjustment (Residual Card Cost)</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MinusCircle className="h-5 w-5 text-yellow-500" />
+                  <span className="text-2xl font-bold text-yellow-600">
+                    {formatCurrency(results.tipAdjustmentResidual)}
+                  </span>
+                </div>
+              </div>
+            )}
+
+            {/* Residual Card Processing Cost (total) - show if > 0 */}
             {results.residualCardCost !== undefined && results.residualCardCost > 0 && (
               <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
                 <div className="flex items-center gap-2 mb-2">
@@ -119,6 +134,15 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 </span>
               </div>
             </div>
+
+            {/* Tip assumption note */}
+            {results.tipAssumptionNote && (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500 italic">
+                  {results.tipAssumptionNote}
+                </p>
+              </div>
+            )}
           </>
         ) : (
           // Dual Pricing mode - original layout

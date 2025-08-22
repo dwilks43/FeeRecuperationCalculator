@@ -100,7 +100,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
         {programType === 'SUPPLEMENTAL_FEE' && (
           <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-xs text-blue-700">
-              Fee basis: Card + Cash • Processor Flat Rate is applied to fee-inclusive card totals.
+              Fee basis: Card + Cash • Processor FR applies to fee-inclusive + tip card totals.
             </p>
             {results.derivedFlatRate && (
               <p className="text-xs text-blue-600 mt-1">

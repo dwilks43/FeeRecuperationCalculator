@@ -92,32 +92,48 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
 }
 
 function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorResults {
-  const cc = inputs.monthlyVolume || 0;
-  const cash = inputs.monthlyCashVolume || 0;
-  const fee = (inputs.priceDifferential || 0) / 100; // Supplemental Fee %
-  const fr = (inputs.flatRatePct != null ? inputs.flatRatePct : (fee/(1+fee))*100) / 100; // Flat Rate %
-  const currentCost = cc * ((inputs.currentRate || 0) / 100);
+  // Inputs
+  const cc = inputs.monthlyVolume || 0; // card purchase volume (pre-fee)
+  const cash = inputs.monthlyCashVolume || 0; // cash purchase volume (pre-fee)
+  const fee = (inputs.priceDifferential || 0) / 100; // supplemental fee %
+  const fr = (inputs.flatRatePct != null ? inputs.flatRatePct : (fee/(1+fee))*100) / 100; // flat rate %
+  const tipRate = (inputs.tipRate || 0) / 100; // tip %
   
   // Fee collected
-  const suppFeeCollected = (cc + cash) * fee;
-  const extraRevenueCash = cash * fee;
-  
-  // Processor charges merchant flat rate on the fee-inclusive card total
-  const processorChargeOnCards = cc * (1 + fee) * fr;
-  
-  // Card fee revenue collected on cards
   const cardFeeCollected = cc * fee;
+  const cashFeeCollected = cash * fee;
+  const suppFeeCollected = cardFeeCollected + cashFeeCollected;
+  const extraRevenueCash = cashFeeCollected;
   
-  // Net card processing burden (positive = merchant still pays some cost; negative = program profit on cards)
+  // Tip math based on tip basis assumption
+  const tipBasis = inputs.tipBasis || 'fee_inclusive';
+  const cardProcessedTotal = tipBasis === 'fee_inclusive'
+    ? cc * (1 + fee) * (1 + tipRate) // Tips applied on fee-inclusive amount
+    : cc * (1 + fee) + cc * tipRate; // Tips applied on pre-fee amount
+  
+  // Processor charges flat rate on the processed card total
+  const processorChargeOnCards = cardProcessedTotal * fr;
+  
+  // Net burden on cards after fee collected on cards
   const cardNet = processorChargeOnCards - cardFeeCollected;
   const residualCardCost = Math.max(cardNet, 0);
   const cardProgramProfit = Math.max(-cardNet, 0);
   
-  // New out-of-pocket processing cost used for savings comparison
-  const newCost = residualCardCost; // DO NOT clamp profit here; profit is reported separately
-  const processingSavings = currentCost - residualCardCost; // if profit exists, savings > currentCost is shown via the separate profit line
+  // Record the portion attributable to tips as a 'tip adjustment' residual
+  const tipPortion = tipBasis === 'fee_inclusive'
+    ? (cc * (1 + fee) * tipRate) // Tip portion of fee-inclusive amount
+    : (cc * tipRate); // Tip portion of pre-fee amount
+  const tipAdjustmentResidual = Math.max(tipPortion * fr, 0);
+  
+  // Savings math
+  const currentCost = cc * ((inputs.currentRate || 0) / 100);
+  const processingSavings = currentCost - residualCardCost; // if profit exists, it's reported separately
   const monthlySavings = processingSavings + extraRevenueCash + cardProgramProfit;
   const annualSavings = monthlySavings * 12;
+  
+  const tipAssumptionNote = tipBasis === 'fee_inclusive' 
+    ? 'Tip % applied on fee-inclusive amount' 
+    : 'Tip % applied on pre-fee amount';
 
   return {
     baseVolume: cc,
@@ -126,11 +142,12 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     markupCollected: suppFeeCollected,
     processingFees: processorChargeOnCards,
     currentCost,
-    newCost,
+    newCost: residualCardCost,
     processingSavings,
     extraRevenueCash,
     cardProgramProfit,
     residualCardCost,
+    tipAdjustmentResidual,
     monthlySavings,
     annualSavings,
     annualVolume: (cc + cash) * 12,
@@ -139,7 +156,8 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     skytabBonusRep: 0,
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue: suppFeeCollected,
-    derivedFlatRate: (fee/(1+fee))*100
+    derivedFlatRate: (fee/(1+fee))*100,
+    tipAssumptionNote
   };
 }
 

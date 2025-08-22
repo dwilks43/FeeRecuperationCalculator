@@ -23,7 +23,8 @@ export default function Calculator() {
     flatRate: 0,
     taxRate: 0,
     tipRate: 0,
-    priceDifferential: 0
+    priceDifferential: 0,
+    tipBasis: 'fee_inclusive'
   });
 
   const [showDMPProfit, setShowDMPProfit] = useState(false);
@@ -57,6 +58,7 @@ export default function Calculator() {
     tipRate: inputs.tipRate,
     priceDifferential: inputs.priceDifferential,
     flatRatePct: inputs.flatRatePct,
+    tipBasis: inputs.tipBasis,
     baseVolume: results.baseVolume,
     adjustedVolume: results.adjustedVolume,
     processingFees: results.processingFees,
