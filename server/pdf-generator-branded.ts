@@ -15,16 +15,22 @@ export function generateBrandedPDF(data: any): string {
     newCost,
     monthlySavings,
     annualSavings,
-    businessName = 'N/A',
-    businessAddress = 'N/A',
-    contactName = 'N/A',
-    contactEmail = 'N/A',
-    salesRepName = 'N/A'
+    businessName = '',
+    streetAddress = '',
+    city = '',
+    state = '',
+    zipCode = '',
+    contactName = '',
+    contactEmail = '',
+    salesRepName = ''
   } = data;
 
   // Generate report number and date
   const reportNumber = Date.now().toString().slice(-8);
   const currentDate = new Date().toLocaleDateString();
+  
+  // Format complete business address
+  const businessAddress = [streetAddress, city, state, zipCode].filter(Boolean).join(', ');
 
   // Format all numeric values with proper currency/percentage formatting
   const formatCurrency = (amount: number) => `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;

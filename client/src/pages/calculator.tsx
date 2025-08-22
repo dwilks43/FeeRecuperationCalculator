@@ -34,7 +34,17 @@ export default function Calculator() {
   
   // Prepare calculator data for PDF and email
   const calculatorData = {
-    ...customerInfo,
+    businessName: customerInfo.businessName || '',
+    streetAddress: customerInfo.streetAddress || '',
+    city: customerInfo.city || '',
+    state: customerInfo.state || '',
+    zipCode: customerInfo.zipCode || '',
+    contactName: customerInfo.contactName || '',
+    contactTitle: customerInfo.contactTitle || '',
+    contactEmail: customerInfo.contactEmail || '',
+    salesRepName: customerInfo.salesRepName || '',
+    salesRepEmail: customerInfo.salesRepEmail || '',
+    salesRepPhone: customerInfo.salesRepPhone || '',
     monthlyVolume: inputs.monthlyVolume,
     currentRate: inputs.currentRate,
     interchangeCost: inputs.interchangeCost,

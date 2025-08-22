@@ -4,18 +4,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { CustomerInfo } from "@/types/calculator";
 
 const customerInfoSchema = z.object({
-  businessName: z.string().min(1, "Business name is required"),
-  businessAddress: z.string().min(1, "Business address is required"),
-  contactName: z.string().min(1, "Contact name is required"),
+  businessName: z.string().optional(),
+  streetAddress: z.string().optional(),
+  city: z.string().optional(),
+  state: z.string().optional(),
+  zipCode: z.string().optional(),
+  contactName: z.string().optional(),
   contactTitle: z.string().optional(),
-  contactEmail: z.string().email("Please enter a valid email address"),
-  salesRepName: z.string().min(1, "Sales rep name is required"),
-  salesRepEmail: z.string().email("Please enter a valid sales rep email"),
-  salesRepPhone: z.string().min(10, "Please enter a valid phone number")
+  contactEmail: z.string().optional(),
+  salesRepName: z.string().optional(),
+  salesRepEmail: z.string().optional(),
+  salesRepPhone: z.string().optional()
 });
 
 interface CustomerInfoFormProps {
@@ -33,7 +37,10 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
     resolver: zodResolver(customerInfoSchema),
     defaultValues: {
       businessName: initialData?.businessName || "",
-      businessAddress: initialData?.businessAddress || "",
+      streetAddress: initialData?.streetAddress || "",
+      city: initialData?.city || "",
+      state: initialData?.state || "",
+      zipCode: initialData?.zipCode || "",
       contactName: initialData?.contactName || "",
       contactTitle: initialData?.contactTitle || "",
       contactEmail: initialData?.contactEmail || "",
@@ -90,50 +97,127 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
           <div className="space-y-4">
             <div>
               <Label htmlFor="businessName" className="text-sm font-medium text-gray-700">
-                Business Name *
+                Business Name
               </Label>
               <Input
                 id="businessName"
                 data-testid="input-business-name"
                 {...register("businessName")}
                 placeholder="Enter business name"
-                className={errors.businessName ? "border-red-500" : ""}
               />
-              {errors.businessName && (
-                <p className="text-sm text-red-500 mt-1">{errors.businessName.message}</p>
-              )}
             </div>
 
             <div>
-              <Label htmlFor="businessAddress" className="text-sm font-medium text-gray-700">
-                Business Address *
+              <Label htmlFor="streetAddress" className="text-sm font-medium text-gray-700">
+                Street Address
               </Label>
               <Input
-                id="businessAddress"
-                data-testid="input-business-address"
-                {...register("businessAddress")}
-                placeholder="123 Main St, City, State 12345"
-                className={errors.businessAddress ? "border-red-500" : ""}
+                id="streetAddress"
+                data-testid="input-street-address"
+                {...register("streetAddress")}
+                placeholder="123 Main Street"
               />
-              {errors.businessAddress && (
-                <p className="text-sm text-red-500 mt-1">{errors.businessAddress.message}</p>
-              )}
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="city" className="text-sm font-medium text-gray-700">
+                  City
+                </Label>
+                <Input
+                  id="city"
+                  data-testid="input-city"
+                  {...register("city")}
+                  placeholder="City"
+                />
+              </div>
+              <div>
+                <Label htmlFor="zipCode" className="text-sm font-medium text-gray-700">
+                  ZIP Code
+                </Label>
+                <Input
+                  id="zipCode"
+                  data-testid="input-zip-code"
+                  {...register("zipCode")}
+                  placeholder="12345"
+                />
+              </div>
+            </div>
+
+            <div>
+              <Label htmlFor="state" className="text-sm font-medium text-gray-700">
+                State
+              </Label>
+              <Select onValueChange={(value) => setValue("state", value)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select state" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="AL">Alabama</SelectItem>
+                  <SelectItem value="AK">Alaska</SelectItem>
+                  <SelectItem value="AZ">Arizona</SelectItem>
+                  <SelectItem value="AR">Arkansas</SelectItem>
+                  <SelectItem value="CA">California</SelectItem>
+                  <SelectItem value="CO">Colorado</SelectItem>
+                  <SelectItem value="CT">Connecticut</SelectItem>
+                  <SelectItem value="DE">Delaware</SelectItem>
+                  <SelectItem value="FL">Florida</SelectItem>
+                  <SelectItem value="GA">Georgia</SelectItem>
+                  <SelectItem value="HI">Hawaii</SelectItem>
+                  <SelectItem value="ID">Idaho</SelectItem>
+                  <SelectItem value="IL">Illinois</SelectItem>
+                  <SelectItem value="IN">Indiana</SelectItem>
+                  <SelectItem value="IA">Iowa</SelectItem>
+                  <SelectItem value="KS">Kansas</SelectItem>
+                  <SelectItem value="KY">Kentucky</SelectItem>
+                  <SelectItem value="LA">Louisiana</SelectItem>
+                  <SelectItem value="ME">Maine</SelectItem>
+                  <SelectItem value="MD">Maryland</SelectItem>
+                  <SelectItem value="MA">Massachusetts</SelectItem>
+                  <SelectItem value="MI">Michigan</SelectItem>
+                  <SelectItem value="MN">Minnesota</SelectItem>
+                  <SelectItem value="MS">Mississippi</SelectItem>
+                  <SelectItem value="MO">Missouri</SelectItem>
+                  <SelectItem value="MT">Montana</SelectItem>
+                  <SelectItem value="NE">Nebraska</SelectItem>
+                  <SelectItem value="NV">Nevada</SelectItem>
+                  <SelectItem value="NH">New Hampshire</SelectItem>
+                  <SelectItem value="NJ">New Jersey</SelectItem>
+                  <SelectItem value="NM">New Mexico</SelectItem>
+                  <SelectItem value="NY">New York</SelectItem>
+                  <SelectItem value="NC">North Carolina</SelectItem>
+                  <SelectItem value="ND">North Dakota</SelectItem>
+                  <SelectItem value="OH">Ohio</SelectItem>
+                  <SelectItem value="OK">Oklahoma</SelectItem>
+                  <SelectItem value="OR">Oregon</SelectItem>
+                  <SelectItem value="PA">Pennsylvania</SelectItem>
+                  <SelectItem value="RI">Rhode Island</SelectItem>
+                  <SelectItem value="SC">South Carolina</SelectItem>
+                  <SelectItem value="SD">South Dakota</SelectItem>
+                  <SelectItem value="TN">Tennessee</SelectItem>
+                  <SelectItem value="TX">Texas</SelectItem>
+                  <SelectItem value="UT">Utah</SelectItem>
+                  <SelectItem value="VT">Vermont</SelectItem>
+                  <SelectItem value="VA">Virginia</SelectItem>
+                  <SelectItem value="WA">Washington</SelectItem>
+                  <SelectItem value="WV">West Virginia</SelectItem>
+                  <SelectItem value="WI">Wisconsin</SelectItem>
+                  <SelectItem value="WY">Wyoming</SelectItem>
+                  <SelectItem value="DC">District of Columbia</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div>
               <Label htmlFor="contactName" className="text-sm font-medium text-gray-700">
-                Contact Name *
+                Contact Name
               </Label>
               <Input
                 id="contactName"
                 data-testid="input-contact-name"
                 {...register("contactName")}
                 placeholder="Enter contact name"
-                className={errors.contactName ? "border-red-500" : ""}
               />
-              {errors.contactName && (
-                <p className="text-sm text-red-500 mt-1">{errors.contactName.message}</p>
-              )}
             </div>
 
             <div>
@@ -151,7 +235,7 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
 
             <div>
               <Label htmlFor="contactEmail" className="text-sm font-medium text-gray-700">
-                Contact Email *
+                Contact Email
               </Label>
               <Input
                 id="contactEmail"
@@ -159,11 +243,7 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
                 type="email"
                 {...register("contactEmail")}
                 placeholder="contact@business.com"
-                className={errors.contactEmail ? "border-red-500" : ""}
               />
-              {errors.contactEmail && (
-                <p className="text-sm text-red-500 mt-1">{errors.contactEmail.message}</p>
-              )}
             </div>
           </div>
 
@@ -171,18 +251,14 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
           <div className="space-y-4">
             <div>
               <Label htmlFor="salesRepName" className="text-sm font-medium text-gray-700">
-                Sales Rep Name *
+                Sales Rep Name
               </Label>
               <Input
                 id="salesRepName"
                 data-testid="input-sales-rep-name"
                 {...register("salesRepName")}
                 placeholder="Enter sales rep name"
-                className={errors.salesRepName ? "border-red-500" : ""}
               />
-              {errors.salesRepName && (
-                <p className="text-sm text-red-500 mt-1">{errors.salesRepName.message}</p>
-              )}
             </div>
 
             <div>
@@ -204,7 +280,7 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
 
             <div>
               <Label htmlFor="salesRepPhone" className="text-sm font-medium text-gray-700">
-                Sales Rep Phone *
+                Sales Rep Phone
               </Label>
               <Input
                 id="salesRepPhone"
@@ -213,11 +289,7 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
                 onChange={handlePhoneChange}
                 placeholder="(555) 123-4567"
                 maxLength={14}
-                className={errors.salesRepPhone ? "border-red-500" : ""}
               />
-              {errors.salesRepPhone && (
-                <p className="text-sm text-red-500 mt-1">{errors.salesRepPhone.message}</p>
-              )}
             </div>
           </div>
         </div>

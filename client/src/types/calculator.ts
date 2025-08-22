@@ -31,7 +31,10 @@ export interface TooltipContent {
 
 export interface CustomerInfo {
   businessName: string;
-  businessAddress: string;
+  streetAddress: string;
+  city: string;
+  state: string;
+  zipCode: string;
   contactName: string;
   contactTitle?: string;
   contactEmail: string;
