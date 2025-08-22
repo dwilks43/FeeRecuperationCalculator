@@ -144,9 +144,7 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
                   />
                 </div>
               </div>
-            </div>
 
-            <div className="space-y-4">
               <div>
                 <Label htmlFor="state" className="text-sm font-medium text-gray-700">
                   State
@@ -210,7 +208,9 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
                   </SelectContent>
                 </Select>
               </div>
+            </div>
 
+            <div className="space-y-4">
               <div>
                 <Label htmlFor="contactName" className="text-sm font-medium text-gray-700">
                   Contact Name
