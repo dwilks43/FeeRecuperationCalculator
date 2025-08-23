@@ -96,7 +96,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   const cc = inputs.monthlyVolume || 0; // card purchase volume (pre-fee)
   const cash = inputs.monthlyCashVolume || 0; // cash purchase volume (pre-fee)
   const fee = (inputs.priceDifferential || 0) / 100; // supplemental fee %
-  const fr = (inputs.flatRatePct != null ? inputs.flatRatePct : (fee/(1+fee))*100) / 100; // flat rate %
+  const fr = (inputs.flatRatePct != null ? inputs.flatRatePct : Math.round((fee/(1+fee))*100 * 1000) / 1000) / 100; // flat rate %
   const tipRate = (inputs.tipRate || 0) / 100; // tip %
   
   // Fee collected
@@ -156,7 +156,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     skytabBonusRep: 0,
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue: suppFeeCollected,
-    derivedFlatRate: (fee/(1+fee))*100,
+    derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
     tipAssumptionNote
   };
 }
