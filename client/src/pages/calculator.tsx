@@ -49,6 +49,8 @@ export default function Calculator() {
     salesRepEmail: customerInfo.salesRepEmail || '',
     salesRepPhone: customerInfo.salesRepPhone || '',
     programType: inputs.programType,
+    inputs: inputs, // Full inputs object for dual-mode support
+    results: results, // Full results object for dual-mode support
     monthlyVolume: inputs.monthlyVolume,
     monthlyCashVolume: inputs.monthlyCashVolume,
     currentRate: inputs.currentRate,

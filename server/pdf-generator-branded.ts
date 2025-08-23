@@ -2,6 +2,9 @@ import { LOGO_DATA_URL } from './logo-loader.js';
 
 export function generateBrandedPDF(data: any): string {
   const {
+    programType,
+    inputs = {},
+    results = {},
     monthlyVolume,
     monthlyCashVolume = 0,
     currentRate,
@@ -25,6 +28,9 @@ export function generateBrandedPDF(data: any): string {
     contactEmail = '',
     salesRepName = ''
   } = data;
+
+  // Helper for program type detection
+  const isSF = programType === 'SUPPLEMENTAL_FEE';
 
   // Generate report number and date
   const reportNumber = Date.now().toString().slice(-8);
@@ -360,7 +366,7 @@ export function generateBrandedPDF(data: any): string {
             </table>
             
             <div class="disclaimer">
-                <div style="color: var(--brand-ultramarine); font-weight: bold; margin-bottom: 8px; font-size: 16px;">Dual Pricing Savings Report</div>
+                <div style="color: var(--brand-ultramarine); font-weight: bold; margin-bottom: 8px; font-size: 16px;">${isSF ? 'Supplemental Fee Savings Report' : 'Dual Pricing Savings Report'}</div>
                 <small>— estimates are based on your information provided; final savings are subject to change if actual data differs.</small>
             </div>
         </div>
@@ -389,13 +395,27 @@ export function generateBrandedPDF(data: any): string {
             <div class="section-bd">
                 <table class="kv-2col">
                     <tr>
+                        <th>Program Type</th><td class="metric">${isSF ? 'Supplemental Fee' : 'Dual Pricing or Cash Discounting'}</td>
                         <th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(monthlyVolume)}</td>
-                        <th>Monthly Cash Volume</th><td class="metric">${formatCurrency(monthlyCashVolume)}</td>
                     </tr>
                     <tr>
+                        <th>Monthly Cash Volume</th><td class="metric">${formatCurrency(monthlyCashVolume)}</td>
                         <th>Current Processing Rate</th><td class="metric">${formatPercentage(currentRate)}</td>
+                    </tr>
+                    ${isSF ? `
+                    <tr>
+                        <th>Supplemental Fee (%)</th><td class="metric">${formatPercentage(priceDifferential)}</td>
+                        <th>Flat Rate (%)</th><td class="metric">${formatPercentage(inputs.flatRatePct || results.derivedFlatRate || flatRate)}${Math.abs((inputs.flatRatePct || flatRate) - (results.derivedFlatRate || 0)) < 0.0001 ? ' (auto-set for 100% offset)' : ' (custom)'}</td>
+                    </tr>
+                    <tr>
+                        <th>Tip (%)</th><td class="metric">${formatPercentage(tipRate)}</td>
+                        <th>Tip Basis</th><td class="metric">${inputs.tipBasis === 'pre_fee' ? 'Before fee' : 'After fee'}</td>
+                    </tr>
+                    <tr>
+                        <th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td>
                         <th>&nbsp;</th><td>&nbsp;</td>
                     </tr>
+                    ` : `
                     <tr>
                         <th>Interchange Cost</th><td class="metric">${formatPercentage(interchangeCost)}</td>
                         <th>Flat Rate</th><td class="metric">${formatPercentage(flatRate)}</td>
@@ -408,6 +428,7 @@ export function generateBrandedPDF(data: any): string {
                         <th>Tip Rate</th><td class="metric">${formatPercentage(tipRate)}</td>
                         <th>&nbsp;</th><td>&nbsp;</td>
                     </tr>
+                    `}
                 </table>
             </div>
         </div>
@@ -420,6 +441,13 @@ export function generateBrandedPDF(data: any): string {
                     <div class="section-title">Volume Breakdown</div>
                 </div>
                 <div class="section-bd">
+                    <div class="cards avoid-break">
+                        <div class="card card--accent">
+                            <div class="hdr">${results.collectedLabel || (isSF ? 'Supplemental Fee Collected' : 'Markup Collected')}</div>
+                            <div class="metric metric-lg">${formatCurrency(results.collectedValue || (results.markupCollected || 0))}</div>
+                            ${isSF ? '<div style="font-size: 11px; color: var(--muted); margin-top: 8px;">Fee basis: Card + Cash</div>' : ''}
+                        </div>
+                    </div>
                     <table class="kv">
                         <tr><th>Base Volume</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
                         <tr><th>Adjusted Card Volume</th><td class="metric">${formatCurrency(adjustedVolume)}</td></tr>
@@ -429,12 +457,24 @@ export function generateBrandedPDF(data: any): string {
                 </div>
             </div>
 
-            <!-- Monthly Processing Savings Section -->
+            <!-- Monthly Savings Section -->
             <div class="section avoid-break">
                 <div class="section-hd">
-                    <div class="section-title">Monthly Processing Savings</div>
+                    <div class="section-title">${isSF ? 'Monthly Savings' : 'Monthly Processing Savings'}</div>
                 </div>
                 <div class="section-bd">
+                    ${isSF ? `
+                    <table class="kv">
+                        <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
+                        <tr><th>Processing Savings</th><td class="metric metric--positive">${formatCurrency(results.processingSavings || 0)}</td></tr>
+                        <tr><th>Extra Revenue on Cash Sales</th><td class="metric metric--positive">${formatCurrency(results.extraRevenueCash || 0)}</td></tr>
+                        ${(results.cardProgramProfit || 0) > 0 ? `<tr><th>Card Program Profit</th><td class="metric metric--positive">${formatCurrency(results.cardProgramProfit)}</td></tr>` : ''}
+                        ${(results.tipAdjustmentResidual || 0) > 0 ? `<tr><th>Tip Adjustment (Residual Card Cost)</th><td class="metric">${formatCurrency(results.tipAdjustmentResidual)}</td></tr>` : ''}
+                        ${(results.residualCardCost || 0) > 0 ? `<tr><th>Residual Card Processing Cost</th><td class="metric">${formatCurrency(results.residualCardCost)}</td></tr>` : ''}
+                        <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Total Monthly Savings</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.monthlySavings || monthlySavings)}</td></tr>
+                    </table>
+                    ${results.tipAssumptionNote ? `<div style="color: var(--muted); font-size: 11px; margin-top: 12px; font-style: italic;">${results.tipAssumptionNote}</div>` : ''}
+                    ` : `
                     <div class="cards avoid-break">
                         <div class="card">
                             <div class="hdr">Current Processing Cost</div>
@@ -449,6 +489,7 @@ export function generateBrandedPDF(data: any): string {
                             <div class="metric metric-lg metric-pos">${formatCurrency(monthlySavings)}</div>
                         </div>
                     </div>
+                    `}
                 </div>
             </div>
 
@@ -459,7 +500,7 @@ export function generateBrandedPDF(data: any): string {
                 </div>
                 <div class="section-bd">
                     <table class="kv">
-                        <tr><th>Annual Savings</th><td class="metric metric-lg metric-pos">${formatCurrency(annualSavings)}</td></tr>
+                        <tr><th>Annual Savings</th><td class="metric metric-lg metric-pos">${formatCurrency(results.annualSavings || annualSavings)}</td></tr>
                         <tr><th>Processing Volume</th><td class="metric">${formatCurrency(monthlyVolume * 12)}</td></tr>
                     </table>
                 </div>

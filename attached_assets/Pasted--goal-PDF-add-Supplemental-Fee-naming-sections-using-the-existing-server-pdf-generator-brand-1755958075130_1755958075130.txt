@@ -1,0 +1,61 @@
+{
+  "goal": "PDF: add Supplemental Fee naming/sections using the existing server/pdf-generator-branded.ts template without breaking Dual Pricing.",
+  "files_to_edit": [
+    "server/pdf-generator-branded.ts",
+    "server/routes.ts",
+    "client/src/components/report/EmailReportDialog.tsx"
+  ],
+  "instructions": [
+    "server/pdf-generator-branded.ts:",
+    "  1) Accept `programType` in the data payload. Create a helper:",
+    "     const isSF = data.programType === 'SUPPLEMENTAL_FEE';",
+    "  2) Dynamic header/disclaimer badge:",
+    "     - Replace the hardcoded 'Dual Pricing Savings Report' string with:",
+    "       isSF ? 'Supplemental Fee Savings Report' : 'Dual Pricing Savings Report'.",
+    "  3) Input Parameters table:",
+    "     - Always include 'Program Type' with value as above.",
+    "     - If isSF:",
+    "         • Show 'Supplemental Fee (%)' (from priceDifferential).",
+    "         • Show 'Flat Rate (%)' (from flatRatePct if provided, else derived; append ' (auto-set for 100% offset)' if |flatRatePct - derived| < 0.0001, otherwise ' (custom)').",
+    "         • Show 'Tip (%)' and 'Tip Basis' ('After fee' when 'fee_inclusive', 'Before fee' when 'pre_fee').",
+    "         • Hide Interchange Cost and Price Differential (card markup) rows (they are Dual Pricing concepts).",
+    "     - If !isSF (Dual Pricing): keep the table exactly as it is today.",
+    "  4) Collections/Breakdown card:",
+    "     - Where you currently label the collection box, replace the hardcoded label with the already-computed `results.collectedLabel` and display `results.collectedValue`.",
+    "     - If isSF, add a small subtext under that metric: 'Fee basis: Card + Cash'.",
+    "  5) Savings section:",
+    "     - If isSF:",
+    "         • Change the section header from 'Monthly Processing Savings' to 'Monthly Savings'.",
+    "         • Render rows in this order (using values already computed client/server side):",
+    "             1) Current Processing Cost = results.currentCost",
+    "             2) Processing Savings = results.processingSavings",
+    "             3) Extra Revenue on Cash Sales = results.extraRevenueCash",
+    "             4) Card Program Profit = results.cardProgramProfit (only if > 0)",
+    "             5) Tip Adjustment (Residual Card Cost) = results.tipAdjustmentResidual (only if > 0)",
+    "             6) Residual Card Processing Cost = results.residualCardCost (only if > 0)",
+    "             7) Total Monthly Savings (accent/highlight) = results.monthlySavings",
+    "         • Keep 'Annual Impact' section as-is, using results.annualSavings.",
+    "         • Add a faint note below: results.tipAssumptionNote.",
+    "     - If !isSF: leave the current 'Monthly Processing Savings' card exactly as-is.",
+    "  6) Page breaks:",
+    "     - You already have a 'page-2 break-before' wrapper before 'Volume Breakdown'. Keep that behavior; no structural change needed.",
+    "",
+    "server/routes.ts:",
+    "  - Ensure the PDF endpoint now forwards `programType`, `inputs` (including flatRatePct, tipRate, tipBasis), and the full `results` object (collectedLabel/Value, extraRevenueCash, cardProgramProfit, residualCardCost, tipAdjustmentResidual, derivedFlatRate, tipAssumptionNote).",
+    "",
+    "client/src/components/report/EmailReportDialog.tsx:",
+    "  - Include `programType`, `inputs`, and `results` in the body you POST to the PDF endpoint (these are already available after the new calculations branch)."
+  ],
+  "tests": [
+    "Dual Pricing: Generated PDF still shows 'Dual Pricing Savings Report', the existing Input Parameters (including Interchange & Price Differential), 'Monthly Processing Savings' card, and unchanged metrics.",
+    "Supplemental Fee: Generated PDF shows 'Supplemental Fee Savings Report'; Input Parameters shows Program Type, Supplemental Fee (%), Flat Rate (%), Tip (%) & Basis, and hides Interchange/Price Differential; the savings section is titled 'Monthly Savings' and lists the 7 rows with conditional lines and the tip note; the collection label reads 'Supplemental Fee Collected'.",
+    "Volume Breakdown still begins on page 2, as before.",
+    "All numeric values match the UI exactly (identical rounding/formatting)."
+  ],
+  "success_criteria": [
+    "One template serves both programs with correct labels and sections.",
+    "No regressions to the Dual Pricing PDF.",
+    "Supplemental Fee PDFs reflect the new naming, rows, and notes precisely.",
+    "Page structure (header, page 2 break, footer) remains unchanged."
+  ]
+}

@@ -730,8 +730,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const calculatorData = req.body;
       
+      // Ensure we forward programType, inputs, and results for dual-mode support
+      const pdfData = {
+        ...calculatorData,
+        programType: calculatorData.programType,
+        inputs: calculatorData.inputs || {},
+        results: calculatorData.results || {}
+      };
+      
       // Generate PDF using DocRaptor
-      const pdfBuffer = await generateSavingsReportPDF(calculatorData);
+      const pdfBuffer = await generateSavingsReportPDF(pdfData);
       
       // Send PDF as download
       res.setHeader('Content-Type', 'application/pdf');
@@ -759,8 +767,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).json({ error: 'Invalid email address' });
       }
       
+      // Ensure we forward programType, inputs, and results for dual-mode support
+      const emailData = {
+        ...calculatorData,
+        programType: calculatorData.programType,
+        inputs: calculatorData.inputs || {},
+        results: calculatorData.results || {}
+      };
+      
       // Send email with PDF attachment
-      const result = await sendSavingsReportEmail(email, name, calculatorData);
+      const result = await sendSavingsReportEmail(email, name, emailData);
       
       res.json({ 
         success: true, 
