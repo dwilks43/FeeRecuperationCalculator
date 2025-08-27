@@ -35,6 +35,11 @@ export interface CalculatorResults {
   processingSavings?: number;
   tipAdjustmentResidual?: number;
   tipAssumptionNote?: string;
+  // Additional fields for Supplemental Fee display
+  cardFeeCollected?: number;
+  cashFeeCollected?: number;
+  cardProcessedTotal?: number;
+  processorChargeOnCards?: number;
 }
 
 export interface TooltipContent {

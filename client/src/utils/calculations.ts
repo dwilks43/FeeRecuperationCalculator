@@ -157,7 +157,12 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue: suppFeeCollected,
     derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
-    tipAssumptionNote
+    tipAssumptionNote,
+    // Additional fields for UI display
+    cardFeeCollected,
+    cashFeeCollected,
+    cardProcessedTotal,
+    processorChargeOnCards
   };
 }
 

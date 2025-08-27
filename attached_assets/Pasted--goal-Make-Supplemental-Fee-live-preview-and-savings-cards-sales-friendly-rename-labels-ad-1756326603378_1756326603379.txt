@@ -1,0 +1,63 @@
+{
+  "goal": "Make Supplemental Fee live preview and savings cards sales-friendly: rename labels, add coverage framing, and hide technical lines behind a 'Show details' toggle. Keep Dual Pricing unchanged.",
+  "files_to_edit": [
+    "client/src/components/calculator/DualPricingBreakdown.tsx",
+    "client/src/components/calculator/ProcessingSavings.tsx",
+    "server/pdf-generator-branded.ts"
+  ],
+  "instructions": [
+    "DualPricingBreakdown.tsx (branch when programType === 'SUPPLEMENTAL_FEE'):",
+    "  - Change card title to 'How This Works For You (Live Preview)'.",
+    "  - Render rows in this order using existing computed values:",
+    "    1) 'Fee set aside from card payments' = results.cardFeeCollected",
+    "    2) 'Fee captured on cash payments' = results.cashFeeCollected (append a small badge 'pure extra revenue')",
+    "    3) 'Total fee set aside' = results.collectedValue (existing total) or results.cardFeeCollected + results.cashFeeCollected",
+    "    4) 'Card totals with fee & tips' = results.cardProcessedTotal, with a small right-aligned chip: tipAssumptionNote ('Tip basis: After fee' / 'Before fee')",
+    "    5) 'Coverage on card costs' (composite row):",
+    "       - Primary line shows nothing numeric; instead show two sub-lines beneath:",
+    "         • 'Covered' = Math.min(results.processorChargeOnCards, results.cardFeeCollected)",
+    "         • If results.residualCardCost > 0: show 'Uncovered (mostly tips)' = results.residualCardCost in amber color",
+    "         • If results.cardProgramProfit > 0: show 'Extra coverage on cards' = results.cardProgramProfit in green color",
+    "    6) Add a small 'Show details' disclosure (collapsed by default). Inside, show:",
+    "         • 'Card costs at your rate' = results.processorChargeOnCards",
+    "         • 'Card fee set aside (cards)' = results.cardFeeCollected",
+    "  - Use existing currency/percent formatters; do not change any calculations.",
+    "",
+    "ProcessingSavings.tsx (when programType === 'SUPPLEMENTAL_FEE'):",
+    "  - Keep header 'Monthly Savings'. Rename/Order lines to:",
+    "    • 'Current processing cost (before program)' = results.currentCost",
+    "    • 'Savings on card costs' = results.processingSavings",
+    "    • 'Extra revenue on cash payments' = results.extraRevenueCash",
+    "    • If results.cardProgramProfit > 0: 'Extra coverage on cards' = results.cardProgramProfit",
+    "    • If results.tipAdjustmentResidual > 0: 'Tip-driven uncovered amount' = results.tipAdjustmentResidual (small text style)",
+    "    • If results.residualCardCost > 0: 'Uncovered due to tips' = results.residualCardCost",
+    "    • Highlight 'Total monthly savings' = results.monthlySavings",
+    "    • Show 'Annual savings' = results.annualSavings below, unchanged.",
+    "",
+    "server/pdf-generator-branded.ts:",
+    "  - When programType === 'SUPPLEMENTAL_FEE', mirror the same naming in the PDF:",
+    "    • Replace 'Supplemental Fee Collected' label with 'Fee set aside (card + cash)' where you show the total.",
+    "    • In the Supplemental Fee 'Live Preview/Breakdown' area of the PDF, use the same sequence/labels as above.",
+    "    • In the savings section, use the same labels: 'Savings on card costs', 'Extra revenue on cash payments', 'Extra coverage on cards', 'Uncovered due to tips', 'Total monthly savings'.",
+    "  - Keep Dual Pricing wording exactly as-is today.",
+    "  - Retain the page break before 'Volume Breakdown'."
+  ],
+  "tests": [
+    "With example: Card 100k, Cash 25k, Fee 4%, FR auto 3.846%, Tip 18% fee-inclusive, Current 3.5%:",
+    "  - Live Preview shows:",
+    "    Fee set aside from card payments: $4,000;",
+    "    Fee captured on cash payments: $1,000 (pure extra revenue);",
+    "    Total fee set aside: $5,000;",
+    "    Card totals with fee & tips: $122,720 (chip: 'Tip basis: After fee');",
+    "    Coverage on card costs: under it, 'Covered' $4,000 and 'Uncovered (mostly tips)' ~$720; 'Show details' reveals 'Card costs at your rate' ~$4,720 and 'Card fee set aside (cards)' $4,000.",
+    "  - Monthly Savings card reads with renamed lines and totals match prior math.",
+    "Dual Pricing path remains visually and textually unchanged."
+  ],
+  "success_criteria": [
+    "No merchant-facing line uses the word 'processor' by default.",
+    "Coverage framing clearly communicates value without technical jargon.",
+    "Details are available but collapsed by default.",
+    "PDF mirrors the same sales-friendly language for Supplemental Fee only.",
+    "All numbers remain identical to current math."
+  ]
+}
