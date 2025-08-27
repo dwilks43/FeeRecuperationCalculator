@@ -46,7 +46,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     // Auto-calculate flat rate when switching to supplemental fee
     if (newType === 'SUPPLEMENTAL_FEE' && inputs.priceDifferential > 0) {
       const fee = inputs.priceDifferential / 100;
-      const flatRate = (fee / (1 + fee)) * 100;
+      const flatRate = Math.round((fee / (1 + fee)) * 100 * 100) / 100; // Round to 2 decimal places
       onInputChange('flatRatePct', flatRate);
       setAutoSynced(true);
     }
@@ -59,7 +59,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     
     // Auto-update flat rate if still synced
     if (autoSynced && inputs.programType === 'SUPPLEMENTAL_FEE') {
-      const flatRate = fee > 0 ? (fee / (1 + fee)) * 100 : 0;
+      const flatRate = fee > 0 ? Math.round((fee / (1 + fee)) * 100 * 100) / 100 : 0; // Round to 2 decimal places
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
     }
@@ -74,7 +74,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const resetFlatRateToOffset = () => {
     if (inputs.priceDifferential > 0) {
       const fee = inputs.priceDifferential / 100;
-      const flatRate = (fee / (1 + fee)) * 100;
+      const flatRate = Math.round((fee / (1 + fee)) * 100 * 100) / 100; // Round to 2 decimal places
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
       setAutoSynced(true);
