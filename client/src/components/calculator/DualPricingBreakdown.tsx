@@ -19,44 +19,44 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl text-gray-900">
           <TrendingUp className="h-5 w-5 text-green-600" />
-          {programType === 'SUPPLEMENTAL_FEE' ? 'How This Works For You (Live Preview)' : 'Live Volume Breakdown'}
+          {programType === 'SUPPLEMENTAL_FEE' ? 'Live Calculations' : 'Live Volume Breakdown'}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {programType === 'SUPPLEMENTAL_FEE' ? (
           // Supplemental Fee sales-friendly display
           <>
-            {/* Fee set aside from card payments */}
+            {/* Fee collected on card sales */}
             <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Fee set aside from card payments</span>
+              <span className="text-sm font-medium text-gray-700">Fee collected on card sales</span>
               <span className="text-lg font-bold text-blue-600" data-testid="text-card-fee-collected">
                 {formatCurrency(results.cardFeeCollected || 0)}
               </span>
             </div>
 
-            {/* Fee captured on cash payments */}
+            {/* Fee collected on cash sales */}
             <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Fee captured on cash payments</span>
-                <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">pure extra revenue</span>
+                <span className="text-sm font-medium text-gray-700">Fee collected on cash sales</span>
+                <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">no processing cost</span>
               </div>
               <span className="text-lg font-bold text-green-600" data-testid="text-cash-fee-collected">
                 {formatCurrency(results.cashFeeCollected || 0)}
               </span>
             </div>
 
-            {/* Total fee set aside */}
+            {/* Total fee collected (card + cash) */}
             <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <span className="text-sm font-medium text-gray-700">Total fee set aside</span>
+              <span className="text-sm font-medium text-gray-700">Total fee collected (card + cash)</span>
               <span className="text-lg font-bold text-amber-600" data-testid="text-total-fee-collected">
                 {formatCurrency(results.collectedValue)}
               </span>
             </div>
 
-            {/* Card totals with fee & tips */}
+            {/* Card amount processed (incl. fee & tips) */}
             <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Card totals with fee & tips</span>
+                <span className="text-sm font-medium text-gray-700">Card amount processed (incl. fee & tips)</span>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-lg font-bold text-purple-600" data-testid="text-card-processed-total">
@@ -68,20 +68,14 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               </div>
             </div>
 
-            {/* Coverage on card costs */}
+            {/* Net effect on card costs */}
             <div className="bg-gray-50 rounded-lg border border-gray-200">
               <div className="p-4">
-                <span className="text-sm font-medium text-gray-700">Coverage on card costs</span>
+                <span className="text-sm font-medium text-gray-700">Net effect on card costs</span>
                 <div className="mt-3 space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600 ml-4">• Covered</span>
-                    <span className="font-semibold text-green-600">
-                      {formatCurrency(Math.min(results.processorChargeOnCards || 0, results.cardFeeCollected || 0))}
-                    </span>
-                  </div>
                   {results.residualCardCost && results.residualCardCost > 0 && (
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600 ml-4">• Uncovered (mostly tips)</span>
+                      <span className="text-gray-600 ml-4">• Shortfall from tips</span>
                       <span className="font-semibold text-amber-600">
                         {formatCurrency(results.residualCardCost)}
                       </span>
@@ -89,7 +83,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   )}
                   {results.cardProgramProfit && results.cardProgramProfit > 0 && (
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600 ml-4">• Extra coverage on cards</span>
+                      <span className="text-gray-600 ml-4">• Surplus (excess fee)</span>
                       <span className="font-semibold text-green-600">
                         {formatCurrency(results.cardProgramProfit)}
                       </span>
@@ -112,13 +106,13 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               {showDetails && (
                 <div className="border-t border-gray-200 p-4 space-y-2">
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Card costs at your rate</span>
+                    <span className="text-gray-600">Card costs at flat rate</span>
                     <span className="font-medium text-gray-900">
                       {formatCurrency(results.processorChargeOnCards || 0)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Card fee set aside (cards)</span>
+                    <span className="text-gray-600">Fee collected on card sales</span>
                     <span className="font-medium text-gray-900">
                       {formatCurrency(results.cardFeeCollected || 0)}
                     </span>

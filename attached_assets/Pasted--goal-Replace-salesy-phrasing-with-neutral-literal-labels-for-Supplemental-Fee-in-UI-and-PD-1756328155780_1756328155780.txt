@@ -1,0 +1,56 @@
+{
+  "goal": "Replace salesy phrasing with neutral, literal labels for Supplemental Fee in UI and PDF. Keep Dual Pricing unchanged.",
+  "files_to_edit": [
+    "client/src/components/calculator/DualPricingBreakdown.tsx",
+    "client/src/components/calculator/ProcessingSavings.tsx",
+    "server/pdf-generator-branded.ts"
+  ],
+  "instructions": [
+    "DualPricingBreakdown.tsx (when programType === 'SUPPLEMENTAL_FEE'):",
+    "  - Card title: 'Live Calculations'.",
+    "  - Row labels:",
+    "    • 'Fee collected on card sales' (use results.cardFeeCollected).",
+    "    • 'Fee collected on cash sales' (results.cashFeeCollected) with a small 'no processing cost' badge.",
+    "    • 'Total fee collected (card + cash)' (results.collectedValue).",
+    "    • 'Card amount processed (incl. fee & tips)' (results.cardProcessedTotal) with right-aligned chip using results.tipAssumptionNote rendered as 'Tip basis: After fee' or 'Tip basis: Before fee'.",
+    "    • 'Net effect on card costs' — render sub-lines:",
+    "        - If results.residualCardCost > 0: 'Shortfall from tips' = results.residualCardCost (amber).",
+    "        - If results.cardProgramProfit > 0: 'Surplus (excess fee)' = results.cardProgramProfit (green).",
+    "      Add a collapsed 'Show details' that reveals:",
+    "        - 'Card costs at flat rate' = results.processorChargeOnCards.",
+    "        - 'Fee collected on card sales' = results.cardFeeCollected.",
+    "  - Remove/rename any prior 'coverage'/'set aside' wording.",
+    "",
+    "ProcessingSavings.tsx (when programType === 'SUPPLEMENTAL_FEE'):",
+    "  - Keep section title 'Monthly Savings'.",
+    "  - Row labels/order:",
+    "    • 'Current processing cost' = results.currentCost.",
+    "    • 'Savings on card costs' = results.processingSavings.",
+    "    • 'Fee collected on cash sales' = results.extraRevenueCash.",
+    "    • If results.cardProgramProfit > 0: 'Surplus from card fee' = results.cardProgramProfit.",
+    "    • If results.tipAdjustmentResidual > 0: 'Shortfall from tips (tip-driven)' = results.tipAdjustmentResidual (small text style).",
+    "    • If results.residualCardCost > 0: 'Shortfall from tips' = results.residualCardCost.",
+    "    • Highlight 'Total monthly savings' = results.monthlySavings.",
+    "    • 'Annual savings' = results.annualSavings.",
+    "",
+    "server/pdf-generator-branded.ts (branch by programType):",
+    "  - When SUPPLEMENTAL_FEE:",
+    "    • Replace any 'Supplemental Fee Collected' label with 'Total fee collected (card + cash)'.",
+    "    • In the live/breakdown section, mirror the UI labels listed above.",
+    "    • In the savings section, mirror the UI labels listed above.",
+    "  - Leave Dual Pricing wording exactly as-is."
+  ],
+  "tests": [
+    "UI shows 'Total fee collected (card + cash)' (not 'Total fee set aside').",
+    "No line contains 'processor' or 'coverage' wording in the default view.",
+    "Collapsed details reveal 'Card costs at flat rate' and 'Fee collected on card sales'.",
+    "PDF for Supplemental Fee uses the same neutral labels; Dual Pricing PDF unchanged.",
+    "All values remain identical to pre-change math."
+  ],
+  "success_criteria": [
+    "Neutral, literal wording throughout Supplemental Fee.",
+    "Owner-friendly: nothing reads salesy or confusing.",
+    "Dual Pricing path unchanged.",
+    "UI and PDF labels match 1:1."
+  ]
+}

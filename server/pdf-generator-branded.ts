@@ -443,7 +443,7 @@ export function generateBrandedPDF(data: any): string {
                 <div class="section-bd">
                     <div class="cards avoid-break">
                         <div class="card card--accent">
-                            <div class="hdr">${isSF ? 'Fee set aside (card + cash)' : (results.collectedLabel || 'Markup Collected')}</div>
+                            <div class="hdr">${isSF ? 'Total fee collected (card + cash)' : (results.collectedLabel || 'Markup Collected')}</div>
                             <div class="metric metric-lg">${formatCurrency(results.collectedValue || (results.markupCollected || 0))}</div>
                             ${isSF ? '<div style="font-size: 11px; color: var(--muted); margin-top: 8px;">Fee basis: Card + Cash</div>' : ''}
                         </div>
@@ -465,12 +465,12 @@ export function generateBrandedPDF(data: any): string {
                 <div class="section-bd">
                     ${isSF ? `
                     <table class="kv">
-                        <tr><th>Current processing cost (before program)</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
+                        <tr><th>Current processing cost</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
                         <tr><th>Savings on card costs</th><td class="metric metric--positive">${formatCurrency(results.processingSavings || 0)}</td></tr>
-                        <tr><th>Extra revenue on cash payments</th><td class="metric metric--positive">${formatCurrency(results.extraRevenueCash || 0)}</td></tr>
-                        ${(results.cardProgramProfit || 0) > 0 ? `<tr><th>Extra coverage on cards</th><td class="metric metric--positive">${formatCurrency(results.cardProgramProfit)}</td></tr>` : ''}
-                        ${(results.tipAdjustmentResidual || 0) > 0 ? `<tr><th style="font-size: 10px;">Tip-driven uncovered amount</th><td class="metric" style="font-size: 14px;">${formatCurrency(results.tipAdjustmentResidual)}</td></tr>` : ''}
-                        ${(results.residualCardCost || 0) > 0 ? `<tr><th>Uncovered due to tips</th><td class="metric">${formatCurrency(results.residualCardCost)}</td></tr>` : ''}
+                        <tr><th>Fee collected on cash sales</th><td class="metric metric--positive">${formatCurrency(results.extraRevenueCash || 0)}</td></tr>
+                        ${(results.cardProgramProfit || 0) > 0 ? `<tr><th>Surplus from card fee</th><td class="metric metric--positive">${formatCurrency(results.cardProgramProfit)}</td></tr>` : ''}
+                        ${(results.tipAdjustmentResidual || 0) > 0 ? `<tr><th style="font-size: 10px;">Shortfall from tips (tip-driven)</th><td class="metric" style="font-size: 14px;">${formatCurrency(results.tipAdjustmentResidual)}</td></tr>` : ''}
+                        ${(results.residualCardCost || 0) > 0 ? `<tr><th>Shortfall from tips</th><td class="metric">${formatCurrency(results.residualCardCost)}</td></tr>` : ''}
                         <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Total monthly savings</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.monthlySavings || monthlySavings)}</td></tr>
                     </table>
                     ${results.tipAssumptionNote ? `<div style="color: var(--muted); font-size: 11px; margin-top: 12px; font-style: italic;">${results.tipAssumptionNote}</div>` : ''}

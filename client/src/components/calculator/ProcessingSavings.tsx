@@ -25,7 +25,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         {/* Current Processing Cost */}
         <div className="bg-white rounded-lg p-4 border border-red-200">
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-medium text-gray-600">{programType === 'SUPPLEMENTAL_FEE' ? 'Current processing cost (before program)' : 'Current Processing Cost'}</span>
+            <span className="text-sm font-medium text-gray-600">Current processing cost</span>
             <Button
               variant="ghost"
               size="sm"
@@ -62,11 +62,11 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Extra revenue on cash payments */}
+            {/* Fee collected on cash sales */}
             {results.extraRevenueCash !== undefined && results.extraRevenueCash > 0 && (
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Extra revenue on cash payments</span>
+                  <span className="text-sm font-medium text-gray-600">Fee collected on cash sales</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-blue-500" />
@@ -77,11 +77,11 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Extra coverage on cards (show only if > 0) */}
+            {/* Surplus from card fee (show only if > 0) */}
             {results.cardProgramProfit !== undefined && results.cardProgramProfit > 0 && (
               <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Extra coverage on cards</span>
+                  <span className="text-sm font-medium text-gray-600">Surplus from card fee</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Trophy className="h-5 w-5 text-emerald-500" />
@@ -92,11 +92,11 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Tip-driven uncovered amount - show if tipAdjustmentResidual > 0 */}
+            {/* Shortfall from tips (tip-driven) - show if tipAdjustmentResidual > 0 */}
             {results.tipAdjustmentResidual !== undefined && results.tipAdjustmentResidual > 0 && (
               <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium text-gray-500">Tip-driven uncovered amount</span>
+                  <span className="text-xs font-medium text-gray-500">Shortfall from tips (tip-driven)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MinusCircle className="h-4 w-4 text-yellow-500" />
@@ -107,11 +107,11 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Uncovered due to tips - show if > 0 */}
+            {/* Shortfall from tips - show if > 0 */}
             {results.residualCardCost !== undefined && results.residualCardCost > 0 && (
               <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Uncovered due to tips</span>
+                  <span className="text-sm font-medium text-gray-600">Shortfall from tips</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MinusCircle className="h-5 w-5 text-orange-500" />
