@@ -307,32 +307,34 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           </div>
           )}
 
-          {/* Flat Rate Processing */}
-          <div>
-            <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Flat Rate Processing
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-auto p-0"
-                onClick={() => onTooltip('flat-rate')}
-                data-testid="button-tooltip-flat-rate"
-              >
-                <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-              </Button>
-            </Label>
-            <div className="relative">
-              <Input
-                type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
-                placeholder="4.00"
-                value={inputValues.flatRate}
-                onChange={(e) => handleInputChange('flatRate', e.target.value)}
-                data-testid="input-flat-rate"
-              />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+          {/* Flat Rate Processing - only show for Dual Pricing */}
+          {inputs.programType !== 'SUPPLEMENTAL_FEE' && (
+            <div>
+              <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                Flat Rate Processing
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('flat-rate')}
+                  data-testid="button-tooltip-flat-rate"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
+              </Label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
+                  placeholder="4.00"
+                  value={inputValues.flatRate}
+                  onChange={(e) => handleInputChange('flatRate', e.target.value)}
+                  data-testid="input-flat-rate"
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Tax Rate */}
           <div>
