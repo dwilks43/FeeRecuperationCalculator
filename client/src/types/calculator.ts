@@ -10,6 +10,7 @@ export interface CalculatorInputs {
   priceDifferential: number;
   flatRatePct?: number;
   tipBasis?: 'fee_inclusive' | 'pre_fee';
+  feeTiming?: 'FEE_BEFORE_TIP' | 'FEE_AFTER_TIP';
 }
 
 export interface CalculatorResults {
@@ -40,6 +41,7 @@ export interface CalculatorResults {
   cashFeeCollected?: number;
   cardProcessedTotal?: number;
   processorChargeOnCards?: number;
+  netCostForProcessingCards?: number;
 }
 
 export interface TooltipContent {

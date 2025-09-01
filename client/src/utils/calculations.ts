@@ -93,47 +93,43 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
 
 function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorResults {
   // Inputs
-  const cc = inputs.monthlyVolume || 0; // card purchase volume (pre-fee)
-  const cash = inputs.monthlyCashVolume || 0; // cash purchase volume (pre-fee)
-  const fee = (inputs.priceDifferential || 0) / 100; // supplemental fee %
-  const fr = (inputs.flatRatePct != null ? inputs.flatRatePct : Math.round((fee/(1+fee))*100 * 1000) / 1000) / 100; // flat rate %
-  const tipRate = (inputs.tipRate || 0) / 100; // tip %
+  const cc = inputs.monthlyVolume || 0; // pre-tax, pre-fee, pre-tip card volume
+  const cash = inputs.monthlyCashVolume || 0;
+  const tax = (inputs.taxRate || 0) / 100;
+  const tip = (inputs.tipRate || 0) / 100;
+  const fee = (inputs.priceDifferential || 0) / 100; // Supplemental Fee %
+  const fr = ((inputs.flatRatePct ?? (fee/(1+fee)*100)) / 100); // Flat Rate %
   
-  // Fee collected
-  const cardFeeCollected = cc * fee;
-  const cashFeeCollected = cash * fee;
-  const suppFeeCollected = cardFeeCollected + cashFeeCollected;
-  const extraRevenueCash = cashFeeCollected;
+  const taxed = cc * (1 + tax);
+  let cardFeeCollected, cardProcessedTotal;
   
-  // Tip math based on tip basis assumption
-  const tipBasis = inputs.tipBasis || 'fee_inclusive';
-  const cardProcessedTotal = tipBasis === 'fee_inclusive'
-    ? cc * (1 + fee) * (1 + tipRate) // Tips applied on fee-inclusive amount
-    : cc * (1 + fee) + cc * tipRate; // Tips applied on pre-fee amount
+  if (inputs.feeTiming === 'FEE_AFTER_TIP') {
+    // Fee is applied last → fee base includes tip
+    cardProcessedTotal = taxed * (1 + tip) * (1 + fee);
+    cardFeeCollected = taxed * (1 + tip) * fee;
+  } else {
+    // Fee is applied before tips (current/default)
+    cardProcessedTotal = taxed * (1 + fee) * (1 + tip);
+    cardFeeCollected = taxed * fee; // fee is post-tax, pre-tip
+  }
   
-  // Processor charges flat rate on the processed card total
-  const processorChargeOnCards = cardProcessedTotal * fr;
+  const cashFeeCollected = cash * fee; // keep as-is per current app
+  const suppFeeCollected = cardFeeCollected + cashFeeCollected; // Total Fee Collected (Card + Cash)
+  const processorChargeOnCards = cardProcessedTotal * fr; // Total Cost for Processing Cards (new)
   
-  // Net burden on cards after fee collected on cards
-  const cardNet = processorChargeOnCards - cardFeeCollected;
-  const residualCardCost = Math.max(cardNet, 0);
-  const cardProgramProfit = Math.max(-cardNet, 0);
+  // Net Cost for Processing Cards (can be negative)
+  const netCostForProcessingCards = cardFeeCollected - processorChargeOnCards;
   
-  // Record the portion attributable to tips as a 'tip adjustment' residual
-  const tipPortion = tipBasis === 'fee_inclusive'
-    ? (cc * (1 + fee) * tipRate) // Tip portion of fee-inclusive amount
-    : (cc * tipRate); // Tip portion of pre-fee amount
-  const tipAdjustmentResidual = Math.max(tipPortion * fr, 0);
-  
-  // Savings math
+  // For savings math (unchanged)
   const currentCost = cc * ((inputs.currentRate || 0) / 100);
-  const processingSavings = currentCost - residualCardCost; // if profit exists, it's reported separately
-  const monthlySavings = processingSavings + extraRevenueCash + cardProgramProfit;
+  const residualCardCost = Math.max(processorChargeOnCards - cardFeeCollected, 0); // card fees left
+  const cardProgramProfit = Math.max(cardFeeCollected - processorChargeOnCards, 0); // extra fee retained
+  const processingSavings = currentCost - residualCardCost;
+  const monthlySavings = processingSavings + cashFeeCollected + cardProgramProfit;
   const annualSavings = monthlySavings * 12;
   
-  const tipAssumptionNote = tipBasis === 'fee_inclusive' 
-    ? 'Tip % applied on fee-inclusive amount' 
-    : 'Tip % applied on pre-fee amount';
+  const extraRevenueCash = cashFeeCollected;
+  const tipAdjustmentResidual = 0; // Not used in new calculation
 
   return {
     baseVolume: cc,
@@ -157,12 +153,13 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue: suppFeeCollected,
     derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
-    tipAssumptionNote,
+    tipAssumptionNote: inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Fee added after tips' : 'Fee added before tips',
     // Additional fields for UI display
     cardFeeCollected,
     cashFeeCollected,
     cardProcessedTotal,
-    processorChargeOnCards
+    processorChargeOnCards,
+    netCostForProcessingCards
   };
 }
 

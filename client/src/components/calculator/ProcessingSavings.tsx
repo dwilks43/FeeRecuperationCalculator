@@ -47,26 +47,28 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         {/* Supplemental Fee mode - specific rows in order */}
         {programType === 'SUPPLEMENTAL_FEE' ? (
           <>
-            {/* Savings on card costs */}
-            {results.processingSavings !== undefined && (
-              <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Savings on card costs</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-green-500" />
-                  <span className="text-2xl font-bold text-green-600">
-                    {formatCurrency(results.processingSavings)}
-                  </span>
-                </div>
+            {/* Net Cost for Processing Cards (include tax + tips) */}
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Net Cost for Processing Cards (include tax + tips)</span>
               </div>
-            )}
+              <div className="flex items-center gap-2">
+                {(results.netCostForProcessingCards || 0) < 0 ? (
+                  <CheckCircle className="h-5 w-5 text-green-500" />
+                ) : (
+                  <MinusCircle className="h-5 w-5 text-red-500" />
+                )}
+                <span className={`text-2xl font-bold ${(results.netCostForProcessingCards || 0) < 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  {formatCurrency(results.netCostForProcessingCards || 0)}
+                </span>
+              </div>
+            </div>
 
-            {/* Fee collected on cash sales */}
+            {/* Fee Collected on Cash */}
             {results.extraRevenueCash !== undefined && results.extraRevenueCash > 0 && (
               <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
                 <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Fee collected on cash sales</span>
+                  <span className="text-sm font-medium text-gray-600">Fee Collected on Cash</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-blue-500" />
@@ -77,61 +79,25 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Surplus from card fee (show only if > 0) */}
-            {results.cardProgramProfit !== undefined && results.cardProgramProfit > 0 && (
-              <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Surplus from card fee</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Trophy className="h-5 w-5 text-emerald-500" />
-                  <span className="text-2xl font-bold text-emerald-600">
-                    {formatCurrency(results.cardProgramProfit)}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Shortfall from tips (tip-driven) - show if tipAdjustmentResidual > 0 */}
-            {results.tipAdjustmentResidual !== undefined && results.tipAdjustmentResidual > 0 && (
-              <div className="bg-yellow-50 rounded-lg p-3 border border-yellow-200">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xs font-medium text-gray-500">Shortfall from tips (tip-driven)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MinusCircle className="h-4 w-4 text-yellow-500" />
-                  <span className="text-lg font-bold text-yellow-600">
-                    {formatCurrency(results.tipAdjustmentResidual)}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Shortfall from tips - show if > 0 */}
-            {results.residualCardCost !== undefined && results.residualCardCost > 0 && (
-              <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Shortfall from tips</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <MinusCircle className="h-5 w-5 text-orange-500" />
-                  <span className="text-2xl font-bold text-orange-600">
-                    {formatCurrency(results.residualCardCost)}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Total Monthly Savings - highlight */}
+            {/* Savings - highlight */}
             <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-6 border-2 border-dmp-blue-300">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg font-semibold text-gray-800">Total Monthly Savings</span>
+                <span className="text-lg font-semibold text-gray-800">Savings</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-6 w-6 text-green-600" />
                 <span className="text-3xl font-bold text-green-700">
                   {formatCurrency(results.monthlySavings)}
                 </span>
+              </div>
+              {/* Annual Savings directly underneath */}
+              <div className="mt-3 pt-3 border-t border-green-200">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-medium text-gray-600">Annual Savings</span>
+                  <span className="text-lg font-bold text-green-600">
+                    {formatCurrency(results.annualSavings)}
+                  </span>
+                </div>
               </div>
             </div>
 

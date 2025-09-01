@@ -26,99 +26,60 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
         {programType === 'SUPPLEMENTAL_FEE' ? (
           // Supplemental Fee sales-friendly display
           <>
-            {/* Fee collected on card sales */}
+            {/* Fee Collected on Cards */}
             <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Fee collected on card sales</span>
+              <span className="text-sm font-medium text-gray-700">Fee Collected on Cards</span>
               <span className="text-lg font-bold text-blue-600" data-testid="text-card-fee-collected">
                 {formatCurrency(results.cardFeeCollected || 0)}
               </span>
             </div>
 
-            {/* Fee collected on cash sales */}
+            {/* Fee Collected on Cash */}
             <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Fee collected on cash sales</span>
-                <span className="bg-green-100 text-green-700 text-xs font-semibold px-2 py-1 rounded-full">no processing cost</span>
-              </div>
+              <span className="text-sm font-medium text-gray-700">Fee Collected on Cash</span>
               <span className="text-lg font-bold text-green-600" data-testid="text-cash-fee-collected">
                 {formatCurrency(results.cashFeeCollected || 0)}
               </span>
             </div>
 
-            {/* Total fee collected (card + cash) */}
+            {/* Total Fee Collected (Card + Cash) */}
             <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <span className="text-sm font-medium text-gray-700">Total fee collected (card + cash)</span>
+              <span className="text-sm font-medium text-gray-700">Total Fee Collected (Card + Cash)</span>
               <span className="text-lg font-bold text-amber-600" data-testid="text-total-fee-collected">
                 {formatCurrency(results.collectedValue)}
               </span>
             </div>
 
-            {/* Card amount processed (incl. fee & tips) */}
+            {/* Total Cards Processed (incl fees & tips) */}
             <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Card amount processed (incl. fee & tips)</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-lg font-bold text-purple-600" data-testid="text-card-processed-total">
-                  {formatCurrency(results.cardProcessedTotal || 0)}
-                </span>
-                <span className="bg-purple-100 text-purple-700 text-xs font-medium px-2 py-1 rounded-full">
-                  {results.tipAssumptionNote === 'Tip % applied on pre-fee amount' ? 'Tip basis: Before fee' : 'Tip basis: After fee'}
-                </span>
-              </div>
+              <span className="text-sm font-medium text-gray-700">Total Cards Processed (incl fees & tips)</span>
+              <span className="text-lg font-bold text-purple-600" data-testid="text-card-processed-total">
+                {formatCurrency(results.cardProcessedTotal || 0)}
+              </span>
             </div>
 
-            {/* Net effect on card costs */}
-            <div className="bg-gray-50 rounded-lg border border-gray-200">
-              <div className="p-4">
-                <span className="text-sm font-medium text-gray-700">Net effect on card costs</span>
-                <div className="mt-3 space-y-2">
-                  {results.residualCardCost && results.residualCardCost > 0 && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600 ml-4">• Shortfall from tips</span>
-                      <span className="font-semibold text-amber-600">
-                        {formatCurrency(results.residualCardCost)}
-                      </span>
-                    </div>
-                  )}
-                  {results.cardProgramProfit && results.cardProgramProfit > 0 && (
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-gray-600 ml-4">• Surplus (excess fee)</span>
-                      <span className="font-semibold text-green-600">
-                        {formatCurrency(results.cardProgramProfit)}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
+            {/* Total Cost for Processing Cards (new) */}
+            <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg">
+              <span className="text-sm font-medium text-gray-700">Total Cost for Processing Cards (new)</span>
+              <span className="text-lg font-bold text-red-600" data-testid="text-processor-charge">
+                {formatCurrency(results.processorChargeOnCards || 0)}
+              </span>
             </div>
 
-            {/* Show details toggle */}
-            <div className="border border-gray-200 rounded-lg">
-              <Button
-                variant="ghost"
-                onClick={() => setShowDetails(!showDetails)}
-                className="w-full flex items-center justify-between p-4 text-sm text-gray-600 hover:bg-gray-50"
-              >
-                <span>Show details</span>
-                {showDetails ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
-              </Button>
-              {showDetails && (
-                <div className="border-t border-gray-200 p-4 space-y-2">
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Card costs at flat rate</span>
-                    <span className="font-medium text-gray-900">
-                      {formatCurrency(results.processorChargeOnCards || 0)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-center text-sm">
-                    <span className="text-gray-600">Fee collected on card sales</span>
-                    <span className="font-medium text-gray-900">
-                      {formatCurrency(results.cardFeeCollected || 0)}
-                    </span>
-                  </div>
-                </div>
-              )}
+            {/* Net Cost for Processing Cards (include tax + tips) */}
+            <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
+              <span className="text-sm font-medium text-gray-700">Net Cost for Processing Cards (include tax + tips)</span>
+              <span className={`text-lg font-bold ${(results.netCostForProcessingCards || 0) < 0 ? 'text-green-600' : 'text-red-600'}`} data-testid="text-net-cost-cards">
+                {formatCurrency(results.netCostForProcessingCards || 0)}
+              </span>
+            </div>
+
+            {/* Total Net Gain Rev (include fee collected on cash) */}
+            <div className="flex justify-between items-center p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+              <span className="text-sm font-medium text-gray-700">Total Net Gain Rev (include fee collected on cash)</span>
+              <span className="text-lg font-bold text-emerald-600" data-testid="text-total-net-gain">
+                {formatCurrency((results.netCostForProcessingCards || 0) + (results.cashFeeCollected || 0))}
+              </span>
             </div>
           </>
         ) : (

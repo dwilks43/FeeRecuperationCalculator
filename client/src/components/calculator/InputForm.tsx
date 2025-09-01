@@ -25,7 +25,8 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     tipRate: formatNumberInput(inputs.tipRate),
     priceDifferential: formatNumberInput(inputs.priceDifferential),
     flatRatePct: formatNumberInput(inputs.flatRatePct || 0),
-    tipBasis: inputs.tipBasis || 'fee_inclusive'
+    tipBasis: inputs.tipBasis || 'fee_inclusive',
+    feeTiming: inputs.feeTiming || 'FEE_BEFORE_TIP'
   });
 
   const [autoSynced, setAutoSynced] = useState(true);
@@ -389,35 +390,34 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
             </div>
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
-              <div className="mt-2 space-y-2">
-                <Label className="text-xs font-medium text-gray-600">Tip Basis</Label>
-                <div className="space-y-1">
-                  <label className="flex items-center text-xs">
-                    <input
-                      type="radio"
-                      name="tipBasis"
-                      value="fee_inclusive"
-                      checked={(inputs.tipBasis || 'fee_inclusive') === 'fee_inclusive'}
-                      onChange={(e) => handleInputChange('tipBasis', 'fee_inclusive')}
-                      className="mr-2"
-                    />
-                    <span>Tip % of amount after fee</span>
-                  </label>
-                  <label className="flex items-center text-xs">
-                    <input
-                      type="radio"
-                      name="tipBasis"
-                      value="pre_fee"
-                      checked={inputs.tipBasis === 'pre_fee'}
-                      onChange={(e) => handleInputChange('tipBasis', 'pre_fee')}
-                      className="mr-2"
-                    />
-                    <span>Tip % of amount before fee</span>
-                  </label>
+              <div className="mt-2 space-y-3">
+                <div>
+                  <Label className="text-xs font-medium text-gray-600">Fee timing</Label>
+                  <div className="space-y-1 mt-1">
+                    <label className="flex items-center text-xs">
+                      <input
+                        type="radio"
+                        name="feeTiming"
+                        value="FEE_BEFORE_TIP"
+                        checked={(inputs.feeTiming || 'FEE_BEFORE_TIP') === 'FEE_BEFORE_TIP'}
+                        onChange={(e) => handleInputChange('feeTiming', 'FEE_BEFORE_TIP')}
+                        className="mr-2"
+                      />
+                      <span>Fee added before tips</span>
+                    </label>
+                    <label className="flex items-center text-xs">
+                      <input
+                        type="radio"
+                        name="feeTiming"
+                        value="FEE_AFTER_TIP"
+                        checked={inputs.feeTiming === 'FEE_AFTER_TIP'}
+                        onChange={(e) => handleInputChange('feeTiming', 'FEE_AFTER_TIP')}
+                        className="mr-2"
+                      />
+                      <span>Fee added after tips</span>
+                    </label>
+                  </div>
                 </div>
-                <p className="text-xs text-blue-600 mt-1">
-                  Tips are added after the fee. The processor flat rate applies to fee-inclusive + tip card totals.
-                </p>
               </div>
             )}
           </div>
