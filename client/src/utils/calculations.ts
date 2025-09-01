@@ -110,7 +110,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   } else {
     // Fee is applied before tips (current/default)
     cardProcessedTotal = taxed * (1 + fee) * (1 + tip);
-    cardFeeCollected = taxed * fee; // fee is post-tax, pre-tip
+    cardFeeCollected = cc * fee; // fee applied to base volume (pre-tax, pre-tip)
   }
   
   const cashFeeCollected = cash * fee; // keep as-is per current app
