@@ -472,7 +472,7 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Total Cards Processed (incl fees & tips)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
                         <tr><th>Total Cost for Processing Cards (new)</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
                         <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
-                        <tr><th>Total Net Gain Rev (include fee collected on cash)</th><td class="metric metric--positive">${formatCurrency((results.netCostForProcessingCards || 0) + (results.cashFeeCollected || 0))}</td></tr>
+                        <tr><th>Total Net Gain Rev (include fee collected on cash)</th><td class="metric metric--positive">${formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}</td></tr>
                     </table>
                     
                     <div class="section-hdr">Monthly Savings</div>

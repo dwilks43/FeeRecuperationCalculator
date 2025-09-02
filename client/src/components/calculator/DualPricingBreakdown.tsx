@@ -78,7 +78,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
             <div className="flex justify-between items-center p-4 bg-emerald-50 rounded-lg border border-emerald-200">
               <span className="text-sm font-medium text-gray-700">Total Net Gain Rev (include fee collected on cash)</span>
               <span className="text-lg font-bold text-emerald-600" data-testid="text-total-net-gain">
-                {formatCurrency((results.netCostForProcessingCards || 0) + (results.cashFeeCollected || 0))}
+                {formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}
               </span>
             </div>
           </>
