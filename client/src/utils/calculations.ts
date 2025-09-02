@@ -145,21 +145,9 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   // Calculate correct monthly savings (Total Fee Collected - |Net Cost|)
   const correctMonthlySavings = suppFeeCollected - Math.abs(netCostForProcessingCards);
 
-  // Gross Profit and Skytab bonus calculations
-  let grossProfitBase = 0;
-  switch (GP_BASIS) {
-    case 'totalNetGainRev':
-      // Same as correctMonthlySavings 
-      grossProfitBase = correctMonthlySavings;
-      break;
-    case 'processingSavings':
-      grossProfitBase = processingSavings;
-      break;
-    default:
-      grossProfitBase = correctMonthlySavings; // 'savings' basis (default)
-  }
-  
-  const grossProfit = grossProfitBase;
+  // Gross Profit calculation: (flat rate % - interchange cost %) × total cards processed
+  const interchangeRate = (inputs.interchangeCost || 0) / 100;
+  const grossProfit = (fr - interchangeRate) * cardProcessedTotal;
   
   // Apply Skytab bonus formula: (gross profit × 60% × 18) capped at $10,000; Rep 50% based on capped amount
   const bonusBase = GROSS_PROFIT_ALREADY_INCLUDES_60 ? grossProfit : grossProfit * SKYTAB_BONUS_SPLIT;
