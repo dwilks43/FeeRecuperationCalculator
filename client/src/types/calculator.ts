@@ -42,6 +42,9 @@ export interface CalculatorResults {
   cardProcessedTotal?: number;
   processorChargeOnCards?: number;
   netCostForProcessingCards?: number;
+  // Gross Profit and Skytab bonus calculations
+  grossProfit?: number;
+  skytabBonusGross?: number;
 }
 
 export interface TooltipContent {
@@ -74,6 +77,15 @@ export type TooltipKey =
   | 'tip-rate'
   | 'price-differential'
   | 'supplemental-fee'
+  | 'fee-timing'
+  | 'fee-on-cards'
+  | 'fee-on-cash'
+  | 'total-fee-collected'
+  | 'total-cards-processed'
+  | 'total-processing-cost-new'
+  | 'net-cost-for-processing-cards'
+  | 'total-net-gain-rev'
+  | 'current-processing-cost'
   | 'base-volume'
   | 'marked-up-volume'
   | 'adjusted-volume'
@@ -86,4 +98,5 @@ export type TooltipKey =
   | 'annual-volume'
   | 'dmp-profit'
   | 'skytab-bonus'
-  | 'skytab-bonus-rep';
+  | 'skytab-bonus-rep'
+  | 'gross-profit';

@@ -1,5 +1,10 @@
 import { CalculatorInputs, CalculatorResults } from '@/types/calculator';
 
+// Configurable constants for gross profit and Skytab bonus calculations
+const GP_BASIS: 'savings' | 'totalNetGainRev' | 'processingSavings' = 'savings';
+const SKYTAB_BONUS_MULTIPLIER = 18;   // months
+const SKYTAB_REP_SPLIT = 0.50;       // 50%
+
 /**
  * Calculate the original base amount from total volume (backing out tax and tip)
  */
@@ -131,6 +136,27 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   const extraRevenueCash = cashFeeCollected;
   const tipAdjustmentResidual = 0; // Not used in new calculation
 
+  // Calculate correct monthly savings (Total Fee Collected - |Net Cost|)
+  const correctMonthlySavings = suppFeeCollected - Math.abs(netCostForProcessingCards);
+
+  // Gross Profit and Skytab bonus calculations
+  let grossProfitBase = 0;
+  switch (GP_BASIS) {
+    case 'totalNetGainRev':
+      // Same as correctMonthlySavings 
+      grossProfitBase = correctMonthlySavings;
+      break;
+    case 'processingSavings':
+      grossProfitBase = processingSavings;
+      break;
+    default:
+      grossProfitBase = correctMonthlySavings; // 'savings' basis (default)
+  }
+  
+  const grossProfit = grossProfitBase;
+  const skytabBonusGross = grossProfit * SKYTAB_BONUS_MULTIPLIER;
+  const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
+
   return {
     baseVolume: cc,
     markedUpVolume: cc,
@@ -144,12 +170,12 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     cardProgramProfit,
     residualCardCost,
     tipAdjustmentResidual,
-    monthlySavings,
-    annualSavings,
+    monthlySavings: correctMonthlySavings,
+    annualSavings: correctMonthlySavings * 12,
     annualVolume: (cc + cash) * 12,
     dmpProfit: 0, // Not applicable for supplemental fee
     skytabBonus: 0,
-    skytabBonusRep: 0,
+    skytabBonusRep: skytabBonusRep,
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue: suppFeeCollected,
     derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
@@ -159,7 +185,10 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     cashFeeCollected,
     cardProcessedTotal,
     processorChargeOnCards,
-    netCostForProcessingCards
+    netCostForProcessingCards,
+    // Gross Profit and Skytab bonus calculations
+    grossProfit,
+    skytabBonusGross
   };
 }
 

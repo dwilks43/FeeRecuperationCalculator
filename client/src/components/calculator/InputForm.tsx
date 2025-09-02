@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Calculator, HelpCircle, Zap } from "lucide-react";
 import { CalculatorInputs, TooltipKey } from "@/types/calculator";
 import { parseNumericInput, formatNumberInput } from "@/utils/calculations";
+import { TOOLTIPS } from "@/utils/tooltips";
 
 interface InputFormProps {
   inputs: CalculatorInputs;

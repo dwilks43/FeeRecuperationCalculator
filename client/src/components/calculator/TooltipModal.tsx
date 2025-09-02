@@ -2,6 +2,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { TooltipKey, TooltipContent } from "@/types/calculator";
+import { TOOLTIPS } from "@/utils/tooltips";
 
 interface TooltipModalProps {
   isOpen: boolean;
@@ -9,100 +10,34 @@ interface TooltipModalProps {
   tooltipKey: TooltipKey | null;
 }
 
-const tooltipContent: Record<TooltipKey, TooltipContent> = {
-  'monthly-volume': {
-    title: 'Monthly Credit Card Volume',
-    content: 'The total dollar amount of credit card transactions processed per month. This is your gross credit card sales volume.'
-  },
-  'monthly-cash-volume': {
-    title: 'Monthly Cash Volume',
-    content: 'The total dollar amount of cash transactions processed per month. This is your gross credit cash sales volume.'
-  },
-  'supplemental-fee': {
-    title: 'Supplemental Fee (%)',
-    content: 'The percentage fee added to both card and cash transactions to offset processing costs.'
-  },
-  'flat-rate-pct': {
-    title: 'Flat Rate (%)',
-    content: 'The flat rate percentage applied to fee-inclusive card transaction amounts by the processor.'
-  },
-  'current-rate': {
-    title: 'Current Processing Rate (%)',
-    content: 'Your current effective rate for processing credit cards, including all fees. Usually between 2-4%.'
-  },
-  'interchange-cost': {
-    title: 'Interchange Cost (%)',
-    content: 'The wholesale cost charged by card networks (Visa/Mastercard). Typically 1.8-2.5% depending on card types.'
-  },
-  'flat-rate': {
-    title: 'Flat Rate Processing (%)',
-    content: 'DMP\'s flat processing rate that will be charged on the adjusted volume. This covers all processing costs.'
-  },
-  'tax-rate': {
-    title: 'Tax Rate (%)',
-    content: 'Local sales tax percentage that increases transaction totals. Enter 0 if not applicable.'
-  },
-  'tip-rate': {
-    title: 'Tip Rate (%)',
-    content: 'Average tip percentage that increases transaction totals. Common in restaurants (15-25%). Enter 0 if not applicable.'
-  },
-  'price-differential': {
-    title: 'Price Differential (%)',
-    content: 'The markup percentage added to cash prices when customers pay with cards. This covers your processing costs.'
-  },
-  'base-volume': {
-    title: 'Base Volume',
-    content: 'Your actual sales volume before taxes and tips are added. Calculated as: Credit Card Volume ÷ (1 + Tax Rate + Tip Rate)'
-  },
-  'marked-up-volume': {
-    title: 'Marked Up Volume',
-    content: 'Base volume after applying the price differential. Calculated as: Base Volume × (1 + Price Differential)'
-  },
-  'adjusted-volume': {
-    title: 'Adjusted Volume',
-    content: 'Final transaction volume after adding back taxes and tips. This is what gets processed through DMP.'
-  },
-  'markup-collected': {
-    title: 'Markup Collected',
-    content: 'Total monthly revenue collected from the price differential. Calculated as: Base Volume × Price Differential'
-  },
-  'processing-fees': {
-    title: 'Processing Fees',
-    content: 'Total monthly fees paid to DMP for processing. Calculated as: Adjusted Volume × Flat Rate'
-  },
-  'current-cost': {
-    title: 'Current Processing Cost',
-    content: 'What you currently pay monthly for credit card processing. Calculated as: Credit Card Volume × Current Processing Rate'
-  },
-  'new-cost': {
-    title: 'Revenue-Adjusted Processing Cost',
-    content: 'Your actual out-of-pocket cost with DMP\'s dual pricing system. Calculated as: Processing Fees - Markup Collected. Negative amounts mean you earn money from processing.'
-  },
-  'monthly-savings': {
-    title: 'Monthly Savings',
-    content: 'The difference between your current processing cost and your new processing cost. Calculated as: Current Cost - New Cost'
-  },
-  'annual-savings': {
-    title: 'Annual Savings',
-    content: 'Your total savings projected over 12 months. Calculated as: Monthly Savings × 12'
-  },
-  'annual-volume': {
-    title: 'Annual Processing Volume',
-    content: 'Your total credit card processing volume projected over 12 months. Calculated as: Monthly Volume × 12'
-  },
-  'dmp-profit': {
-    title: 'Gross Profit',
-    content: 'The profit DMP earns from your account each month (without removal of schedule A or ISO % charged). Calculated as: (Flat Rate Processing % - Interchange Cost %) × Monthly Credit Card Volume'
-  },
-  'skytab-bonus': {
-    title: 'Skytab Bonus Calculation (Gross)',
-    content: 'A bonus calculation for Skytab merchants over 18 months with a 60% factor applied. Formula: (Flat Rate % - Interchange Cost %) × 60% × Monthly Credit Card Volume × 18. Maximum bonus is capped at $10,000.'
-  },
-  'skytab-bonus-rep': {
-    title: 'Skytab Bonus Calculation (Rep 50%)',
-    content: 'Representative commission calculation based on 50% of the gross Skytab bonus amount. This is calculated after applying the $10,000 maximum cap to the gross bonus.'
-  }
-};
+// Convert TOOLTIPS to match TooltipContent interface
+const tooltipContent: Record<string, TooltipContent> = Object.fromEntries(
+  Object.entries(TOOLTIPS).map(([key, value]) => [
+    key === 'monthlyCardVolume' ? 'monthly-volume' :
+    key === 'monthlyCashVolume' ? 'monthly-cash-volume' :
+    key === 'currentRate' ? 'current-rate' :
+    key === 'taxRate' ? 'tax-rate' :
+    key === 'tipRate' ? 'tip-rate' :
+    key === 'feeTiming' ? 'fee-timing' :
+    key === 'supplementalFee' ? 'supplemental-fee' :
+    key === 'flatRate' ? 'flat-rate-pct' :
+    key === 'feeOnCards' ? 'fee-on-cards' :
+    key === 'feeOnCash' ? 'fee-on-cash' :
+    key === 'totalFeeCollected' ? 'total-fee-collected' :
+    key === 'totalCardsProcessed' ? 'total-cards-processed' :
+    key === 'totalProcessingCostNew' ? 'total-processing-cost-new' :
+    key === 'netCostForProcessingCards' ? 'net-cost-for-processing-cards' :
+    key === 'totalNetGainRev' ? 'total-net-gain-rev' :
+    key === 'currentProcessingCost' ? 'current-processing-cost' :
+    key === 'savingsTotal' ? 'monthly-savings' :
+    key === 'annualSavings' ? 'annual-savings' :
+    key === 'grossProfit' ? 'gross-profit' :
+    key === 'skytabBonusGross' ? 'skytab-bonus' :
+    key === 'skytabBonusRep' ? 'skytab-bonus-rep' :
+    key,
+    { title: value.title, content: value.body }
+  ])
+);
 
 export default function TooltipModal({ isOpen, onClose, tooltipKey }: TooltipModalProps) {
   const content = tooltipKey ? tooltipContent[tooltipKey] : null;
