@@ -135,10 +135,10 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-500" />
                 <span className="text-2xl font-bold text-green-600" data-testid="text-new-cost">
-                  {isNegativeCost ? '-' : ''}{formatCurrency(Math.abs(results.newCost))}
+                  {formatCurrency(results.netCostForProcessingCards || results.newCost)}
                 </span>
               </div>
-              {isNegativeCost && (
+              {(results.netCostForProcessingCards || results.newCost) < 0 && (
                 <p className="text-xs text-green-600 mt-1">You earn money from processing!</p>
               )}
             </div>
