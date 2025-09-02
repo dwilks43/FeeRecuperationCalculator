@@ -504,8 +504,7 @@ export function generateBrandedPDF(data: any): string {
             </div>
 
 
-            ${isSF ? `
-            <!-- DMP Section -->
+            <!-- DMP Section - Show for both program types -->
             <div class="section avoid-break">
                 <div class="section-hd">
                     <div class="section-title">DMP</div>
@@ -518,7 +517,6 @@ export function generateBrandedPDF(data: any): string {
                     </table>
                 </div>
             </div>
-            ` : ''}
         </div>
 
         <!-- Footer -->

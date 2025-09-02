@@ -223,11 +223,18 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const monthlySavings = currentCost + netCostForProcessingCards + feeCollectedOnCash;
   const annualSavings  = monthlySavings * 12;
 
+  // Gross Profit calculation: (flat rate % - interchange cost %) × adjusted card volume
+  const interchangeRate = (inputs.interchangeCost || 0) / 100;
+  const grossProfit = (fr - interchangeRate) * adjustedCardVolume;
+  
+  // Apply Skytab bonus formula: Gross Profit × 18 × 60% capped at $10,000; Rep 50% based on capped amount
+  const skytabBonusGross = Math.min(grossProfit * SKYTAB_BONUS_MULT * SKYTAB_BONUS_SPLIT, SKYTAB_BONUS_CAP);
+  const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
+
   // Legacy fields for compatibility
   const annualVolume = cc * 12;
   const dmpProfit = cardPriceIncreaseCollected - programCardFees;
-  const skytabBonus = annualVolume >= 2000000 ? annualVolume * 0.0015 : 0;
-  const skytabBonusRep = skytabBonus * 0.5;
+  const skytabBonus = skytabBonusGross; // Use new calculation
 
   return {
     baseVolume: base,
@@ -251,7 +258,10 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     programCardFees,
     feeCollectedOnCards: cardPriceIncreaseCollected,
     netCostForProcessingCards,
-    feeCollectedOnCash
+    feeCollectedOnCash,
+    // Gross Profit and Skytab bonus calculations
+    grossProfit,
+    skytabBonusGross
   };
 }
 
