@@ -149,9 +149,8 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   const interchangeRate = (inputs.interchangeCost || 0) / 100;
   const grossProfit = (fr - interchangeRate) * cardProcessedTotal;
   
-  // Apply Skytab bonus formula: (gross profit × 60% × 18) capped at $10,000; Rep 50% based on capped amount
-  const bonusBase = GROSS_PROFIT_ALREADY_INCLUDES_60 ? grossProfit : grossProfit * SKYTAB_BONUS_SPLIT;
-  const skytabBonusGross = Math.min(bonusBase * SKYTAB_BONUS_MULT, SKYTAB_BONUS_CAP);
+  // Apply Skytab bonus formula: Gross Profit × 18 × 60% capped at $10,000; Rep 50% based on capped amount
+  const skytabBonusGross = Math.min(grossProfit * SKYTAB_BONUS_MULT * SKYTAB_BONUS_SPLIT, SKYTAB_BONUS_CAP);
   const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
 
   return {
