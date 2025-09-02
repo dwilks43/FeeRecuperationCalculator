@@ -79,15 +79,15 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Monthly Savings */}
+            {/* Savings */}
             <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-4 border-2 border-dmp-blue-300">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Monthly Savings</span>
+                <span className="text-sm font-medium text-gray-600">Savings</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-600" />
                 <span className="text-2xl font-bold text-green-700">
-                  {formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}
+                  {formatCurrency(results.monthlySavings)}
                 </span>
               </div>
             </div>
@@ -143,10 +143,10 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               )}
             </div>
 
-            {/* Monthly Savings */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border-2 border-green-300">
+            {/* Savings */}
+            <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-4 border-2 border-dmp-blue-300">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Monthly Savings</span>
+                <span className="text-sm font-medium text-gray-600">Savings</span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -158,12 +158,24 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 </Button>
               </div>
               <div className="flex items-center gap-2">
-                <Trophy className="h-5 w-5 text-green-600" />
-                <span className="text-3xl font-bold text-green-700" data-testid="text-monthly-savings">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <span className="text-2xl font-bold text-green-700" data-testid="text-monthly-savings">
                   {formatCurrency(results.monthlySavings)}
                 </span>
               </div>
-              <p className="text-sm text-green-600 mt-1">per month saved with DMP</p>
+            </div>
+
+            {/* Annual Savings */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-300">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Annual Savings</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <span className="text-2xl font-bold text-green-600">
+                  {formatCurrency(results.annualSavings)}
+                </span>
+              </div>
             </div>
           </>
         )}

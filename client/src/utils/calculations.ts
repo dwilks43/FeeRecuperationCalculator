@@ -131,19 +131,21 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   // Net Cost for Processing Cards (can be negative)
   const netCostForProcessingCards = cardFeeCollected - processorChargeOnCards;
   
-  // For savings math (unchanged)
+  // Canonical fields for unified savings calculation
   const currentCost = cc * ((inputs.currentRate || 0) / 100);
-  const residualCardCost = Math.max(processorChargeOnCards - cardFeeCollected, 0); // card fees left
-  const cardProgramProfit = Math.max(cardFeeCollected - processorChargeOnCards, 0); // extra fee retained
-  const processingSavings = currentCost - residualCardCost;
-  const monthlySavings = processingSavings + cashFeeCollected + cardProgramProfit;
+  const programCardFees = processorChargeOnCards;
+  const feeCollectedOnCash = cashFeeCollected;
+  
+  // Unified savings formula: Savings = Current Processing Cost + Net Cost for Processing Cards + Fee Collected on Cash
+  const monthlySavings = currentCost + netCostForProcessingCards + feeCollectedOnCash;
   const annualSavings = monthlySavings * 12;
   
+  // Legacy fields for compatibility
   const extraRevenueCash = cashFeeCollected;
-  const tipAdjustmentResidual = 0; // Not used in new calculation
-
-  // Calculate correct monthly savings (Total Fee Collected - |Net Cost|)
-  const correctMonthlySavings = suppFeeCollected - Math.abs(netCostForProcessingCards);
+  const residualCardCost = Math.max(processorChargeOnCards - cardFeeCollected, 0);
+  const cardProgramProfit = Math.max(cardFeeCollected - processorChargeOnCards, 0);
+  const processingSavings = currentCost - residualCardCost;
+  const tipAdjustmentResidual = 0;
 
   // Gross Profit calculation: (flat rate % - interchange cost %) × total cards processed
   const interchangeRate = (inputs.interchangeCost || 0) / 100;
@@ -166,8 +168,11 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     cardProgramProfit,
     residualCardCost,
     tipAdjustmentResidual,
-    monthlySavings: correctMonthlySavings,
-    annualSavings: correctMonthlySavings * 12,
+    monthlySavings,
+    annualSavings,
+    // Canonical fields
+    programCardFees,
+    feeCollectedOnCash,
     annualVolume: (cc + cash) * 12,
     dmpProfit: 0, // Not applicable for supplemental fee
     skytabBonus: 0,
@@ -215,8 +220,14 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const remainingVolume = monthlyVolume - adjustedVolume;
   const newCost = processingFees + (remainingVolume * (flatRate / 100));
   
-  // Calculate savings
-  const monthlySavings = currentCost - newCost;
+  // Canonical fields for unified savings calculation
+  const programCardFees = newCost; // revenue-adjusted processing cost
+  const feeCollectedOnCards = markupCollected; // card price increase collected
+  const netCostForProcessingCards = feeCollectedOnCards - programCardFees; // signed
+  const feeCollectedOnCash = 0; // DP/CD has no cash fee
+  
+  // Unified savings formula: Savings = Current Processing Cost + Net Cost for Processing Cards + Fee Collected on Cash
+  const monthlySavings = currentCost + netCostForProcessingCards + feeCollectedOnCash;
   const annualSavings = monthlySavings * 12;
   
   // DMP profit calculations (from markup collected minus processing costs)
@@ -242,7 +253,12 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     skytabBonus,
     skytabBonusRep,
     collectedLabel: 'Markup Collected',
-    collectedValue: markupCollected
+    collectedValue: markupCollected,
+    // Canonical fields
+    programCardFees,
+    feeCollectedOnCards,
+    netCostForProcessingCards,
+    feeCollectedOnCash
   };
 }
 

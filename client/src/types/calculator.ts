@@ -45,6 +45,10 @@ export interface CalculatorResults {
   // Gross Profit and Skytab bonus calculations
   grossProfit?: number;
   skytabBonusGross?: number;
+  // Canonical fields for unified savings calculation
+  programCardFees?: number;
+  feeCollectedOnCards?: number;
+  feeCollectedOnCash?: number;
 }
 
 export interface TooltipContent {
