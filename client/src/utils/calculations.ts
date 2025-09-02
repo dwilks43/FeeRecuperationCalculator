@@ -199,7 +199,7 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const tax  = (inputs.taxRate || 0) / 100;
   const tip  = (inputs.tipRate || 0) / 100;
   const pd   = (inputs.priceDifferential || 0) / 100;
-  const fr   = (inputs.flatRatePct || 0) / 100;     // what DMP charges merchant under DP
+  const fr   = (inputs.flatRate || 0) / 100;     // what DMP charges merchant under DP
   const curr = (inputs.currentRate || 0) / 100;
 
   // 1) Recover base (pre-tax, pre-tip) using the additive model used elsewhere in the app
