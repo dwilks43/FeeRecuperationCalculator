@@ -482,9 +482,6 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Fee Collected on Cash</th><td class="metric metric--positive">${formatCurrency(results.extraRevenueCash || 0)}</td></tr>
                         <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Monthly Savings</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}</td></tr>
                         <tr><th style="font-size: 14px; color: var(--muted);">Annual Savings</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualSavings || annualSavings)}</td></tr>
-                        <tr><th>Gross Profit</th><td class="metric metric--positive">${formatCurrency(results.grossProfit || 0)}</td></tr>
-                        <tr><th>Skytab Bonus Calculation (Gross)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusGross || 0)}</td></tr>
-                        <tr><th>Skytab Bonus Calculation (Rep 50%)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusRep || 0)}</td></tr>
                     </table>
                     ${results.tipAssumptionNote ? `<div style="color: var(--muted); font-size: 11px; margin-top: 12px; font-style: italic;">${results.tipAssumptionNote}</div>` : ''}
                     ` : `
@@ -518,6 +515,22 @@ export function generateBrandedPDF(data: any): string {
                     </table>
                 </div>
             </div>
+
+            ${isSF ? `
+            <!-- DMP Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">DMP</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Gross Profit</th><td class="metric metric--positive">${formatCurrency(results.grossProfit || 0)}</td></tr>
+                        <tr><th>Skytab Bonus Calculation (Gross)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusGross || 0)}</td></tr>
+                        <tr><th>Skytab Bonus Calculation (Rep 50%)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusRep || 0)}</td></tr>
+                    </table>
+                </div>
+            </div>
+            ` : ''}
         </div>
 
         <!-- Footer -->

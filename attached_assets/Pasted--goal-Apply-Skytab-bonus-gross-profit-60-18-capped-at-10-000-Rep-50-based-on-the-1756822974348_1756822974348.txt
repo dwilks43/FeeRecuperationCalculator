@@ -1,0 +1,52 @@
+{
+  "goal": "Apply Skytab bonus = (gross profit × 60% × 18) capped at $10,000; Rep 50% based on the capped amount. Keep payout rows only in the DMP panel.",
+  "files_to_edit": [
+    "client/src/utils/calculations.ts",
+    "client/src/components/calculator/DMPPanel.tsx",
+    "server/pdf-generator-branded.ts"
+  ],
+  "instructions": [
+    "utils/calculations.ts:",
+    "  // 1) Add/update constants near the other payout constants",
+    "  const SKYTAB_BONUS_MULT = 18;      // 18 months",
+    "  const SKYTAB_BONUS_SPLIT = 0.60;   // 60%",
+    "  const SKYTAB_BONUS_CAP = 10000;    // $10k cap",
+    "  const SKYTAB_REP_SPLIT = 0.50;     // 50%",
+    "",
+    "  // 2) If your current grossProfit already includes the 60% share, set this to true to avoid double-counting.",
+    "  //    If grossProfit is pre-split, leave as false (default) to apply 60% here.",
+    "  const GROSS_PROFIT_ALREADY_INCLUDES_60 = true;",
+    "",
+    "  // 3) After you compute `grossProfit` (leave that formula as-is), replace the Skytab math with:",
+    "  const bonusBase = GROSS_PROFIT_ALREADY_INCLUDES_60 ? grossProfit : grossProfit * SKYTAB_BONUS_SPLIT;",
+    "  const skytabBonusGross = Math.min(bonusBase * SKYTAB_BONUS_MULT, SKYTAB_BONUS_CAP);",
+    "  const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;",
+    "",
+    "  // 4) Return skytabBonusGross and skytabBonusRep in the results (unchanged keys).",
+    "",
+    "client/src/components/calculator/DMPPanel.tsx:",
+    "  - No UI changes besides ensuring the panel renders ONLY:",
+    "      • Gross Profit (results.grossProfit)",
+    "      • Skytab Bonus Calculation (Gross) (results.skytabBonusGross)",
+    "      • Skytab Bonus Calculation (Rep 50%) (results.skytabBonusRep)",
+    "    and that nothing is duplicated in Monthly Savings.",
+    "",
+    "server/pdf-generator-branded.ts:",
+    "  - Ensure the PDF uses the same `skytabBonusGross` (capped) and `skytabBonusRep` values in the DMP section only."
+  ],
+  "tests": [
+    "Example inputs from your screenshot (Card 20,000; Cash 5,000; Tax 10%; Tip 20%; Fee 4%; FR 3.85%; Current 2%; fee-before-tips):",
+    "  - With GROSS_PROFIT_ALREADY_INCLUDES_60 = true (your previous setup produced Gross Profit ≈ 263.58):",
+    "      Skytab Bonus (Gross) = 263.58 × 18 = 4,744.44 → capped? no → ≈ 4,744.40 after display rounding.",
+    "      Skytab Bonus (Rep 50%) = 4,744.40 × 0.50 = 2,372.20.",
+    "  - If later you redefine grossProfit as pre-split (no 60% inside it), set GROSS_PROFIT_ALREADY_INCLUDES_60 = false:",
+    "      Skytab Bonus (Gross) = grossProfit × 0.60 × 18 (then cap at $10,000).",
+    "  - Verify that the DMP panel shows these values; Monthly Savings has none of the payout lines."
+  ],
+  "success_criteria": [
+    "Skytab Bonus (Gross) applies 60% and 18-month multiple, then caps at $10,000.",
+    "Skytab Bonus (Rep 50%) is computed from the **capped** gross bonus.",
+    "No duplicate payout lines in Monthly Savings; they appear only in the DMP panel and in the DMP section of the PDF.",
+    "Existing tooltips remain unchanged."
+  ]
+}

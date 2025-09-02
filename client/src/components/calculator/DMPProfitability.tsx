@@ -46,7 +46,7 @@ export default function DMPProfitability({
           <div className="flex items-center gap-2">
             <Building className="h-5 w-5 text-dmp-blue-600" />
             <span className="text-2xl font-bold text-dmp-blue-600" data-testid="text-dmp-profit">
-              {formatCurrency(results.dmpProfit)}
+              {formatCurrency(results.grossProfit || 0)}
             </span>
           </div>
           <p className="text-xs text-dmp-blue-600 mt-1">Monthly gross profit from dual pricing</p>
@@ -75,7 +75,7 @@ export default function DMPProfitability({
           <div className="flex items-center gap-2">
             <PieChart className="h-5 w-5 text-green-600" />
             <span className="text-2xl font-bold text-green-600" data-testid="text-skytab-bonus">
-              {formatCurrency(results.skytabBonus)}
+              {formatCurrency(results.skytabBonusGross || 0)}
             </span>
           </div>
           <p className="text-xs text-green-600 mt-1">18-month bonus calculation with 60% factor</p>

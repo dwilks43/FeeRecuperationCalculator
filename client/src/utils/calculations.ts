@@ -2,8 +2,14 @@ import { CalculatorInputs, CalculatorResults } from '@/types/calculator';
 
 // Configurable constants for gross profit and Skytab bonus calculations
 const GP_BASIS: 'savings' | 'totalNetGainRev' | 'processingSavings' = 'savings';
-const SKYTAB_BONUS_MULTIPLIER = 18;   // months
-const SKYTAB_REP_SPLIT = 0.50;       // 50%
+const SKYTAB_BONUS_MULT = 18;      // 18 months
+const SKYTAB_BONUS_SPLIT = 0.60;   // 60%
+const SKYTAB_BONUS_CAP = 10000;    // $10k cap
+const SKYTAB_REP_SPLIT = 0.50;     // 50%
+
+// If your current grossProfit already includes the 60% share, set this to true to avoid double-counting.
+// If grossProfit is pre-split, leave as false (default) to apply 60% here.
+const GROSS_PROFIT_ALREADY_INCLUDES_60 = true;
 
 /**
  * Calculate the original base amount from total volume (backing out tax and tip)
@@ -154,7 +160,10 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   }
   
   const grossProfit = grossProfitBase;
-  const skytabBonusGross = grossProfit * SKYTAB_BONUS_MULTIPLIER;
+  
+  // Apply Skytab bonus formula: (gross profit × 60% × 18) capped at $10,000; Rep 50% based on capped amount
+  const bonusBase = GROSS_PROFIT_ALREADY_INCLUDES_60 ? grossProfit : grossProfit * SKYTAB_BONUS_SPLIT;
+  const skytabBonusGross = Math.min(bonusBase * SKYTAB_BONUS_MULT, SKYTAB_BONUS_CAP);
   const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
 
   return {
