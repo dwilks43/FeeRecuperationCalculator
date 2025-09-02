@@ -472,7 +472,7 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Total Cards Processed (incl fees & tips)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
                         <tr><th>Total Cost for Processing Cards (new)</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
                         <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
-                        <tr><th>Total Net Gain Rev (include fee collected on cash)</th><td class="metric metric--positive">${formatCurrency(results.monthlySavings || 0)}</td></tr>
+                        <tr><th>Total Net Gain Rev (include fee collected on cash)</th><td class="metric metric--positive">${formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}</td></tr>
                     </table>
                     
                     <div class="section-hdr">Monthly Savings</div>
@@ -480,7 +480,7 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
                         <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
                         <tr><th>Fee Collected on Cash</th><td class="metric metric--positive">${formatCurrency(results.extraRevenueCash || 0)}</td></tr>
-                        <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Savings</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.monthlySavings || monthlySavings)}</td></tr>
+                        <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Monthly Savings</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}</td></tr>
                         <tr><th style="font-size: 14px; color: var(--muted);">Annual Savings</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualSavings || annualSavings)}</td></tr>
                     </table>
                     ${results.tipAssumptionNote ? `<div style="color: var(--muted); font-size: 11px; margin-top: 12px; font-style: italic;">${results.tipAssumptionNote}</div>` : ''}

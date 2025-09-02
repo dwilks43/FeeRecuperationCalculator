@@ -79,15 +79,15 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             )}
 
-            {/* Savings - highlight */}
+            {/* Monthly Savings - highlight */}
             <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-6 border-2 border-dmp-blue-300">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-lg font-semibold text-gray-800">Savings</span>
+                <span className="text-lg font-semibold text-gray-800">Monthly Savings</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-6 w-6 text-green-600" />
                 <span className="text-3xl font-bold text-green-700">
-                  {formatCurrency(results.monthlySavings)}
+                  {formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}
                 </span>
               </div>
               {/* Annual Savings directly underneath */}
