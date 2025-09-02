@@ -265,9 +265,8 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             </div>
           </div>
 
-          {/* Interchange Cost - hide in Supplemental Fee mode */}
-          {inputs.programType === 'DUAL_PRICING' && (
-            <div>
+          {/* Interchange Cost */}
+          <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
               Interchange Cost
               <Button
@@ -307,7 +306,6 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               </a>
             </div>
           </div>
-          )}
 
           {/* Flat Rate Processing - only show for Dual Pricing */}
           {inputs.programType !== 'SUPPLEMENTAL_FEE' && (
