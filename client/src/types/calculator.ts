@@ -49,6 +49,9 @@ export interface CalculatorResults {
   programCardFees?: number;
   feeCollectedOnCards?: number;
   feeCollectedOnCash?: number;
+  // New dual pricing fields
+  adjustedCardVolume?: number;
+  cardPriceIncreaseCollected?: number;
 }
 
 export interface TooltipContent {

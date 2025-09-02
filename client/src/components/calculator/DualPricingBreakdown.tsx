@@ -119,7 +119,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </Button>
               </div>
               <span className="text-lg font-bold text-dmp-blue-600" data-testid="text-adjusted-volume">
-                {formatCurrency(results.adjustedVolume)}
+                {formatCurrency(results.adjustedCardVolume || results.adjustedVolume)}
               </span>
             </div>
 
@@ -138,7 +138,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </Button>
               </div>
               <span className="text-lg font-bold text-green-600" data-testid="text-processing-fees">
-                {formatCurrency(results.processingFees)}
+                {formatCurrency(results.programCardFees || results.processingFees)}
               </span>
             </div>
 

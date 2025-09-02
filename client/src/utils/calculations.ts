@@ -194,58 +194,51 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
 }
 
 function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResults {
-  const {
-    monthlyVolume,
-    currentRate,
-    interchangeCost,
-    flatRate,
-    taxRate,
-    tipRate,
-    priceDifferential
-  } = inputs;
+  // Read inputs
+  const cc   = inputs.monthlyVolume || 0;           // monthly card volume (current world)
+  const tax  = (inputs.taxRate || 0) / 100;
+  const tip  = (inputs.tipRate || 0) / 100;
+  const pd   = (inputs.priceDifferential || 0) / 100;
+  const fr   = (inputs.flatRatePct || 0) / 100;     // what DMP charges merchant under DP
+  const curr = (inputs.currentRate || 0) / 100;
 
-  // Original calculations for dual pricing
-  const baseVolume = calculateOriginalBaseAmount(monthlyVolume, taxRate, tipRate);
-  const adjustedVolume = calculateNewTotalVolume(baseVolume, taxRate, tipRate);
-  
-  const markupCollected = calculateCorrectMarkupCollected(baseVolume, priceDifferential);
-  
-  // Calculate processing fees on adjusted volume (volume that includes tip but not tax)
-  const processingFees = calculateCorrectProcessingFees(adjustedVolume, interchangeCost);
-  
-  // Current cost calculation
-  const currentCost = monthlyVolume * (currentRate / 100);
-  
-  // New cost = interchange fees on adjusted volume + flat rate fees on remaining volume
-  const remainingVolume = monthlyVolume - adjustedVolume;
-  const newCost = processingFees + (remainingVolume * (flatRate / 100));
-  
-  // Canonical fields for unified savings calculation
-  const programCardFees = newCost; // revenue-adjusted processing cost
-  const feeCollectedOnCards = markupCollected; // card price increase collected
-  const netCostForProcessingCards = feeCollectedOnCards - programCardFees; // signed
+  // 1) Recover base (pre-tax, pre-tip) using the additive model used elsewhere in the app
+  const base = cc / (1 + tax + tip);
+
+  // 2) Adjusted Card Volume includes markup, tax, and tip (your requested definition)
+  const adjustedCardVolume = base * (1 + pd) * (1 + tax) * (1 + tip);
+
+  // 3) Program card fees (new cost)
+  const programCardFees = adjustedCardVolume * fr;
+
+  // 4) Markup collected on cards
+  const cardPriceIncreaseCollected = base * pd;
+
+  // 5) Baseline current processing cost
+  const currentCost = cc * curr;
+
+  // 6) Signed net on cards and Savings
+  const netCostForProcessingCards = cardPriceIncreaseCollected - programCardFees; // can be negative
   const feeCollectedOnCash = 0; // DP/CD has no cash fee
-  
-  // Unified savings formula: Savings = Current Processing Cost + Net Cost for Processing Cards + Fee Collected on Cash
   const monthlySavings = currentCost + netCostForProcessingCards + feeCollectedOnCash;
-  const annualSavings = monthlySavings * 12;
-  
-  // DMP profit calculations (from markup collected minus processing costs)
-  const dmpProfit = markupCollected - processingFees;
-  const annualVolume = monthlyVolume * 12;
-  
-  // Skytab bonus calculations
+  const annualSavings  = monthlySavings * 12;
+
+  // Legacy fields for compatibility
+  const annualVolume = cc * 12;
+  const dmpProfit = cardPriceIncreaseCollected - programCardFees;
   const skytabBonus = annualVolume >= 2000000 ? annualVolume * 0.0015 : 0;
   const skytabBonusRep = skytabBonus * 0.5;
 
   return {
-    baseVolume,
-    markedUpVolume: baseVolume + markupCollected,
-    adjustedVolume,
-    markupCollected,
-    processingFees,
+    baseVolume: base,
+    markedUpVolume: base + cardPriceIncreaseCollected,
+    adjustedVolume: adjustedCardVolume,
+    adjustedCardVolume,
+    cardPriceIncreaseCollected,
+    markupCollected: cardPriceIncreaseCollected, // legacy alias
+    processingFees: programCardFees, // legacy alias
     currentCost,
-    newCost,
+    newCost: programCardFees, // legacy alias
     monthlySavings,
     annualSavings,
     annualVolume,
@@ -253,10 +246,10 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     skytabBonus,
     skytabBonusRep,
     collectedLabel: 'Markup Collected',
-    collectedValue: markupCollected,
+    collectedValue: cardPriceIncreaseCollected,
     // Canonical fields
     programCardFees,
-    feeCollectedOnCards,
+    feeCollectedOnCards: cardPriceIncreaseCollected,
     netCostForProcessingCards,
     feeCollectedOnCash
   };
