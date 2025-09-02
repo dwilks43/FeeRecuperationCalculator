@@ -195,54 +195,6 @@ export default function Calculator() {
               programType={inputs.programType}
             />
 
-            {/* Annual Summary Card - only show for Dual Pricing */}
-            {inputs.programType !== 'SUPPLEMENTAL_FEE' && (
-              <Card className="shadow-lg border-gray-200">
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-2 mb-4">
-                    <Calendar className="h-5 w-5 text-purple-600" />
-                    <h3 className="text-xl font-semibold text-gray-900">Annual Impact</h3>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-4 bg-green-50 rounded-lg">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <p className="text-sm text-gray-600">Annual Savings</p>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-auto p-0"
-                          onClick={() => handleTooltip('annual-savings')}
-                          data-testid="button-tooltip-annual-savings"
-                        >
-                          <HelpCircle className="h-3 w-3 text-gray-400 hover:text-dmp-blue-500" />
-                        </Button>
-                      </div>
-                      <p className="text-2xl font-bold text-green-600" data-testid="text-annual-savings">
-                        {formatCurrency(results.annualSavings)}
-                      </p>
-                    </div>
-                    <div className="text-center p-4 bg-blue-50 rounded-lg">
-                      <div className="flex items-center justify-center gap-1 mb-1">
-                        <p className="text-sm text-gray-600">Processing Volume</p>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-auto p-0"
-                          onClick={() => handleTooltip('annual-volume')}
-                          data-testid="button-tooltip-annual-volume"
-                        >
-                          <HelpCircle className="h-3 w-3 text-gray-400 hover:text-dmp-blue-500" />
-                        </Button>
-                      </div>
-                      <p className="text-xl font-bold text-dmp-blue-600" data-testid="text-annual-volume">
-                        {formatLargeNumber(results.annualVolume)}
-                      </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
           </div>
         </div>
 

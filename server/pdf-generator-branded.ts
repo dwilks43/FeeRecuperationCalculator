@@ -495,7 +495,7 @@ export function generateBrandedPDF(data: any): string {
                             <div class="metric">${formatCurrency(newCost)}</div>
                         </div>
                         <div class="card card--accent">
-                            <div class="hdr">Savings</div>
+                            <div class="hdr">Monthly Savings</div>
                             <div class="metric metric-lg metric-pos">${formatCurrency(results.monthlySavings || monthlySavings)}</div>
                         </div>
                     </div>
@@ -503,18 +503,6 @@ export function generateBrandedPDF(data: any): string {
                 </div>
             </div>
 
-            <!-- Annual Impact Section -->
-            <div class="section avoid-break">
-                <div class="section-hd">
-                    <div class="section-title">Annual Impact</div>
-                </div>
-                <div class="section-bd">
-                    <table class="kv">
-                        <tr><th>Annual Savings</th><td class="metric metric-lg metric-pos">${formatCurrency(results.annualSavings || annualSavings)}</td></tr>
-                        <tr><th>Processing Volume</th><td class="metric">${formatCurrency(monthlyVolume * 12)}</td></tr>
-                    </table>
-                </div>
-            </div>
 
             ${isSF ? `
             <!-- DMP Section -->
