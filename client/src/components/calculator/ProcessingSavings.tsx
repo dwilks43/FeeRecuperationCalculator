@@ -1,6 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PiggyBank, HelpCircle, MinusCircle, CheckCircle, Trophy } from "lucide-react";
+import { PiggyBank, HelpCircle, MinusCircle, CheckCircle, Trophy, AlertTriangle } from "lucide-react";
 import { CalculatorResults, TooltipKey } from "@/types/calculator";
 import { formatCurrency } from "@/utils/calculations";
 
@@ -118,30 +118,71 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         ) : (
           // Dual Pricing mode - original layout
           <>
-            {/* Revenue-Adjusted Processing Cost */}
-            <div className="bg-white rounded-lg p-4 border border-green-200">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Revenue-Adjusted Processing Cost</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('new-cost')}
-                  data-testid="button-tooltip-new-cost"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
+            {/* Conditional Neutral Row */}
+            {(results.residualAfterMarkup || 0) > 0 ? (
+              <div className="bg-amber-50 rounded-lg p-4 border border-amber-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Residual cost after markup</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto p-0"
+                    onClick={() => onTooltip('new-cost')}
+                    data-testid="button-tooltip-new-cost"
+                  >
+                    <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600" />
+                  <span className="text-2xl font-bold text-amber-700" data-testid="text-new-cost">
+                    {formatCurrency(results.residualAfterMarkup || 0)}
+                  </span>
+                </div>
               </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-500" />
-                <span className="text-2xl font-bold text-green-600" data-testid="text-new-cost">
-                  {formatCurrency(results.netCostForProcessingCards || results.newCost)}
-                </span>
+            ) : (results.overageRetained || 0) > 0 ? (
+              <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Overage retained after markup</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto p-0"
+                    onClick={() => onTooltip('new-cost')}
+                    data-testid="button-tooltip-new-cost"
+                  >
+                    <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <CheckCircle className="h-5 w-5 text-green-600" />
+                  <span className="text-2xl font-bold text-green-700" data-testid="text-new-cost">
+                    {formatCurrency(results.overageRetained || 0)}
+                  </span>
+                </div>
               </div>
-              {(results.netCostForProcessingCards || results.newCost) < 0 && (
-                <p className="text-xs text-green-600 mt-1">You earn money from processing!</p>
-              )}
-            </div>
+            ) : (
+              <div className="bg-amber-50 rounded-lg p-4 border border-amber-300">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-sm font-medium text-gray-600">Residual cost after markup</span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-auto p-0"
+                    onClick={() => onTooltip('new-cost')}
+                    data-testid="button-tooltip-new-cost"
+                  >
+                    <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                  </Button>
+                </div>
+                <div className="flex items-center gap-2">
+                  <AlertTriangle className="h-5 w-5 text-amber-600" />
+                  <span className="text-2xl font-bold text-amber-700" data-testid="text-new-cost">
+                    {formatCurrency(0)}
+                  </span>
+                </div>
+              </div>
+            )}
 
             {/* Monthly Savings */}
             <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-4 border-2 border-dmp-blue-300">

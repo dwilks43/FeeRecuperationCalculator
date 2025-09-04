@@ -52,6 +52,9 @@ export interface CalculatorResults {
   // New dual pricing fields
   adjustedCardVolume?: number;
   cardPriceIncreaseCollected?: number;
+  // UX-specific fields for neutral row display
+  residualAfterMarkup?: number;
+  overageRetained?: number;
 }
 
 export interface TooltipContent {

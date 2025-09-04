@@ -231,6 +231,11 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const skytabBonusGross = Math.min(grossProfit * SKYTAB_BONUS_MULT * SKYTAB_BONUS_SPLIT, SKYTAB_BONUS_CAP);
   const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
 
+  // UX-specific derived fields for neutral row display
+  const feesDP = programCardFees; // Total Processing Fees Charged
+  const residualAfterMarkup = Math.max(feesDP - cardPriceIncreaseCollected, 0);
+  const overageRetained = Math.max(cardPriceIncreaseCollected - feesDP, 0);
+
   // Legacy fields for compatibility
   const annualVolume = cc * 12;
   const dmpProfit = cardPriceIncreaseCollected - programCardFees;
@@ -261,7 +266,10 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     feeCollectedOnCash,
     // Gross Profit and Skytab bonus calculations
     grossProfit,
-    skytabBonusGross
+    skytabBonusGross,
+    // UX-specific fields for neutral row display
+    residualAfterMarkup,
+    overageRetained
   };
 }
 

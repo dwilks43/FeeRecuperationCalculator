@@ -1,0 +1,54 @@
+{
+  "goal": "Dual Pricing UX tweak: replace 'Revenue-Adjusted Processing Cost' with a neutral row that shows either 'Residual cost after markup' (if fees > markup) or 'Overage retained after markup' (if markup > fees). Keep all calculations unchanged.",
+  "files_to_edit": [
+    "client/src/utils/calculations.ts",
+    "client/src/components/calculator/ProcessingSavings.tsx",
+    "server/pdf-generator-branded.ts"
+  ],
+  "instructions": [
+    "utils/calculations.ts (DUAL_PRICING branch only): After you compute markupCollected and the program's new processing fees (whatever variable you currently use to render 'Total Processing Fees Charged' in Live Breakdown), add two derived fields to the returned results WITHOUT changing monthlySavings logic:",
+    "  const feesDP = newProcessingFees ?? totalProcessingFeesCharged ?? newCost; // use your existing var",
+    "  const residualAfterMarkup = Math.max(feesDP - markupCollected, 0);",
+    "  const overageRetained = Math.max(markupCollected - feesDP, 0);",
+    "  return { ...existing, residualAfterMarkup, overageRetained };",
+    "",
+    "ProcessingSavings.tsx (when programType === 'DUAL_PRICING'):",
+    "  - Find the row labeled 'Revenue-Adjusted Processing Cost'. Replace it with a conditional block:",
+    "      If results.residualAfterMarkup > 0:",
+    "        • label: 'Residual cost after markup'",
+    "        • value: results.residualAfterMarkup (currency)",
+    "        • style: neutral/warning (amber), NOT negative/green",
+    "      Else if results.overageRetained > 0:",
+    "        • label: 'Overage retained after markup'",
+    "        • value: results.overageRetained (currency)",
+    "        • style: success/green",
+    "      Else:",
+    "        • label: 'Residual cost after markup'",
+    "        • value: $0.00",
+    "  - Do NOT change how 'Monthly Savings' is computed or displayed.",
+    "",
+    "server/pdf-generator-branded.ts (Dual Pricing path only):",
+    "  - In the savings card where you currently render 'Revenue-Adjusted Processing Cost', mirror the same conditional labels/values used in the UI:",
+    "      • 'Residual cost after markup' with results.residualAfterMarkup, OR",
+    "      • 'Overage retained after markup' with results.overageRetained.",
+    "  - Keep all other labels/sections identical."
+  ],
+  "tests": [
+    "Inputs: Card $20,000; Cash $5,000; Current 2.25%; Interchange 2%; Flat 4%; Tax 10%; Tip 20%; Price Differential 4%.",
+    "  - Base Volume ≈ $15,384.62; Adjusted Card Volume ≈ $21,120.00; Markup Collected ≈ $615.38; Total Processing Fees Charged ≈ $844.80.",
+    "  - residualAfterMarkup = 844.80 - 615.38 = $229.42; overageRetained = $0.00.",
+    "  - UI/PDF row shows 'Residual cost after markup' $229.42 (amber).",
+    "  - Monthly Savings remains $220.58, Annual Savings unchanged.",
+    "Over-recovery check: increase Price Differential to 6%.",
+    "  - Markup Collected grows; residualAfterMarkup becomes $0; overageRetained > 0.",
+    "  - UI/PDF row switches label to 'Overage retained after markup' and shows the positive amount (green).",
+    "Regression: Supplemental Fee and other Dual Pricing rows unaffected."
+  ],
+  "success_criteria": [
+    "The 'Revenue-Adjusted Processing Cost' row is replaced by a neutral conditional row without changing underlying math.",
+    "When markup < fees: shows 'Residual cost after markup' as a positive currency value.",
+    "When markup > fees: shows 'Overage retained after markup' as a positive currency value.",
+    "Monthly/Annual savings values do not change.",
+    "PDF mirrors UI wording and values for this row."
+  ]
+}
