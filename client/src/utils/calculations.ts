@@ -104,48 +104,58 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
 
 function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorResults {
   // Inputs
-  const cc = inputs.monthlyVolume || 0; // pre-tax, pre-fee, pre-tip card volume
+  const cc = inputs.monthlyVolume || 0;
   const cash = inputs.monthlyCashVolume || 0;
   const tax = (inputs.taxRate || 0) / 100;
   const tip = (inputs.tipRate || 0) / 100;
-  const fee = (inputs.priceDifferential || 0) / 100; // Supplemental Fee %
-  const fr = ((inputs.flatRatePct ?? (fee/(1+fee)*100)) / 100); // Flat Rate %
-  
-  const taxed = cc * (1 + tax);
-  let cardFeeCollected, cardProcessedTotal;
-  
-  if (inputs.feeTiming === 'FEE_AFTER_TIP') {
-    // Fee is applied last → fee base includes tip
-    cardProcessedTotal = taxed * (1 + tip) * (1 + fee);
-    cardFeeCollected = taxed * (1 + tip) * fee;
+  const fee = (inputs.priceDifferential || 0) / 100;  // Supplemental Fee %
+  const fr = ((inputs.flatRatePct ?? (fee/(1+fee)*100)) / 100); // Program flat rate %
+  const feeTaxBasis = inputs.feeTaxBasis || 'POST_TAX';
+  const feeTiming = inputs.feeTiming || 'FEE_BEFORE_TIP';
+
+  // Common: total card amount that actually runs (always tax + tip + fee in some order)
+  // 'Before tip' means fee is added before tip; 'After tip' means after tip.
+  const taxedCard = cc * (1 + tax);
+  const cardProcessedTotal = feeTiming === 'FEE_BEFORE_TIP'
+    ? taxedCard * (1 + fee) * (1 + tip)   // Tip Handwritten – Post Sale
+    : taxedCard * (1 + tip) * (1 + fee);  // Tip at Time of Sale
+
+  // Fee collected on cards depends on BOTH feeTaxBasis and feeTiming:
+  // Base for fee when POST_TAX includes tax; when PRE_TAX excludes tax.
+  let feeBaseForCards: number;
+  if (feeTiming === 'FEE_BEFORE_TIP') {
+    // Fee before tip: tip is NOT part of fee base
+    feeBaseForCards = (feeTaxBasis === 'POST_TAX') ? taxedCard : cc;
   } else {
-    // Fee is applied before tips (current/default)
-    cardProcessedTotal = taxed * (1 + fee) * (1 + tip);
-    cardFeeCollected = cc * fee; // fee applied to base volume (pre-tax, pre-tip)
+    // Fee after tip: tip IS part of fee base
+    feeBaseForCards = (feeTaxBasis === 'POST_TAX') ? (taxedCard * (1 + tip)) : (cc * (1 + tip));
   }
+  const cardFeeCollected = feeBaseForCards * fee;
+
+  // Fee collected on cash (always based on pre-tax cash volume)
+  const cashFeeCollected = cash * fee;
+  const suppFeeCollected = cardFeeCollected + cashFeeCollected;
+
+  // Program cost on cards (flat rate on the full processed total)
+  const processorChargeOnCards = cardProcessedTotal * fr;
   
-  const cashFeeCollected = cash * fee; // keep as-is per current app
-  const suppFeeCollected = cardFeeCollected + cashFeeCollected; // Total Fee Collected (Card + Cash)
-  const processorChargeOnCards = cardProcessedTotal * fr; // Total Cost for Processing Cards (new)
-  
-  // Net Cost for Processing Cards (can be negative)
-  const netCostForProcessingCards = cardFeeCollected - processorChargeOnCards;
-  
-  // Canonical fields for unified savings calculation
+  // Residuals/profit for savings math (unchanged logic)
+  const residualCardCost = Math.max(processorChargeOnCards - cardFeeCollected, 0);
+  const cardProgramProfit = Math.max(cardFeeCollected - processorChargeOnCards, 0);
   const currentCost = cc * ((inputs.currentRate || 0) / 100);
-  const programCardFees = processorChargeOnCards;
-  const feeCollectedOnCash = cashFeeCollected;
-  
-  // Unified savings formula: Savings = Current Processing Cost + Net Cost for Processing Cards + Fee Collected on Cash
-  const monthlySavings = currentCost + netCostForProcessingCards + feeCollectedOnCash;
+  const processingSavings = currentCost - residualCardCost;
+  const monthlySavings = processingSavings + cashFeeCollected + cardProgramProfit;
   const annualSavings = monthlySavings * 12;
+
+  // Keep 'Net Cost for Processing Cards (include tax + tips)' per your UI as fee_on_cards − program_cost (can be negative):
+  const netCostForProcessingCards = cardFeeCollected - processorChargeOnCards;
   
   // Legacy fields for compatibility
   const extraRevenueCash = cashFeeCollected;
-  const residualCardCost = Math.max(processorChargeOnCards - cardFeeCollected, 0);
-  const cardProgramProfit = Math.max(cardFeeCollected - processorChargeOnCards, 0);
-  const processingSavings = currentCost - residualCardCost;
   const tipAdjustmentResidual = 0;
+  // Canonical fields for unified savings calculation
+  const programCardFees = processorChargeOnCards;
+  const feeCollectedOnCash = cashFeeCollected;
 
   // Gross Profit calculation: (flat rate % - interchange cost %) × total cards processed
   const interchangeRate = (inputs.interchangeCost || 0) / 100;
@@ -180,7 +190,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue: suppFeeCollected,
     derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
-    tipAssumptionNote: inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten - Post Sale',
+    tipAssumptionNote: inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale',
     // Additional fields for UI display
     cardFeeCollected,
     cashFeeCollected,

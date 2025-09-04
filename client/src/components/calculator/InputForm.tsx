@@ -27,7 +27,8 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     priceDifferential: formatNumberInput(inputs.priceDifferential),
     flatRatePct: formatNumberInput(inputs.flatRatePct || 0),
     tipBasis: inputs.tipBasis || 'fee_inclusive',
-    feeTiming: inputs.feeTiming || 'FEE_BEFORE_TIP'
+    feeTiming: inputs.feeTiming || 'FEE_BEFORE_TIP',
+    feeTaxBasis: inputs.feeTaxBasis || 'POST_TAX'
   });
 
   const [autoSynced, setAutoSynced] = useState(true);
@@ -391,6 +392,33 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
               <div className="mt-2 space-y-3">
                 <div>
+                  <Label className="text-xs font-medium text-gray-600">Apply fee</Label>
+                  <div className="space-y-1 mt-1">
+                    <label className="flex items-center text-xs">
+                      <input
+                        type="radio"
+                        name="feeTaxBasis"
+                        value="POST_TAX"
+                        checked={(inputs.feeTaxBasis || 'POST_TAX') === 'POST_TAX'}
+                        onChange={(e) => handleInputChange('feeTaxBasis', 'POST_TAX')}
+                        className="mr-2"
+                      />
+                      <span>Post tax</span>
+                    </label>
+                    <label className="flex items-center text-xs">
+                      <input
+                        type="radio"
+                        name="feeTaxBasis"
+                        value="PRE_TAX"
+                        checked={inputs.feeTaxBasis === 'PRE_TAX'}
+                        onChange={(e) => handleInputChange('feeTaxBasis', 'PRE_TAX')}
+                        className="mr-2"
+                      />
+                      <span>Pre-tax</span>
+                    </label>
+                  </div>
+                </div>
+                <div>
                   <Label className="text-xs font-medium text-gray-600">Fee timing</Label>
                   <div className="space-y-1 mt-1">
                     <label className="flex items-center text-xs">
@@ -402,7 +430,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                         onChange={(e) => handleInputChange('feeTiming', 'FEE_BEFORE_TIP')}
                         className="mr-2"
                       />
-                      <span>Tip Handwritten - Post Sale</span>
+                      <span>Tip Handwritten – Post Sale</span>
                     </label>
                     <label className="flex items-center text-xs">
                       <input
@@ -416,6 +444,9 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                       <span>Tip at Time of Sale</span>
                     </label>
                   </div>
+                </div>
+                <div className="text-xs text-gray-500 italic">
+                  These settings change how the fee is calculated on card transactions.
                 </div>
               </div>
             )}

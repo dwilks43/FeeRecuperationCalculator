@@ -11,6 +11,7 @@ export interface CalculatorInputs {
   flatRatePct?: number;
   tipBasis?: 'fee_inclusive' | 'pre_fee';
   feeTiming?: 'FEE_BEFORE_TIP' | 'FEE_AFTER_TIP';
+  feeTaxBasis?: 'POST_TAX' | 'PRE_TAX';
 }
 
 export interface CalculatorResults {

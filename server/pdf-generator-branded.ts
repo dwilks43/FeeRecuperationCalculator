@@ -409,7 +409,11 @@ export function generateBrandedPDF(data: any): string {
                     </tr>
                     <tr>
                         <th>Tip (%)</th><td class="metric">${formatPercentage(tipRate)}</td>
-                        <th>Tip Basis</th><td class="metric">${inputs.tipBasis === 'pre_fee' ? 'Before fee' : 'After fee'}</td>
+                        <th>Apply fee</th><td class="metric">${inputs.feeTaxBasis === 'PRE_TAX' ? 'Pre-tax' : 'Post tax'}</td>
+                    </tr>
+                    <tr>
+                        <th>Fee timing</th><td class="metric">${inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale'}</td>
+                        <th>&nbsp;</th><td>&nbsp;</td>
                     </tr>
                     <tr>
                         <th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td>

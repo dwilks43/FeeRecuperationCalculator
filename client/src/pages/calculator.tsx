@@ -25,7 +25,8 @@ export default function Calculator() {
     tipRate: 0,
     priceDifferential: 0,
     tipBasis: 'fee_inclusive',
-    feeTiming: 'FEE_BEFORE_TIP'
+    feeTiming: 'FEE_BEFORE_TIP',
+    feeTaxBasis: 'POST_TAX'
   });
 
   const [showDMPProfit, setShowDMPProfit] = useState(false);
