@@ -390,59 +390,61 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
             </div>
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
-              <div className="mt-2 space-y-3">
-                <div>
-                  <Label className="text-xs font-medium text-gray-600">Apply fee</Label>
-                  <div className="space-y-1 mt-1">
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="feeTaxBasis"
-                        value="POST_TAX"
-                        checked={(inputs.feeTaxBasis || 'POST_TAX') === 'POST_TAX'}
-                        onChange={(e) => handleInputChange('feeTaxBasis', 'POST_TAX')}
-                        className="mr-2"
-                      />
-                      <span>Post tax</span>
-                    </label>
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="feeTaxBasis"
-                        value="PRE_TAX"
-                        checked={inputs.feeTaxBasis === 'PRE_TAX'}
-                        onChange={(e) => handleInputChange('feeTaxBasis', 'PRE_TAX')}
-                        className="mr-2"
-                      />
-                      <span>Pre-tax</span>
-                    </label>
+              <div className="mt-2 space-y-2">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label className="text-xs font-medium text-gray-600">Fee timing</Label>
+                    <div className="space-y-1 mt-1">
+                      <label className="flex items-center text-xs">
+                        <input
+                          type="radio"
+                          name="feeTiming"
+                          value="FEE_BEFORE_TIP"
+                          checked={(inputs.feeTiming || 'FEE_BEFORE_TIP') === 'FEE_BEFORE_TIP'}
+                          onChange={(e) => handleInputChange('feeTiming', 'FEE_BEFORE_TIP')}
+                          className="mr-2"
+                        />
+                        <span>Tip Handwritten – Post Sale</span>
+                      </label>
+                      <label className="flex items-center text-xs">
+                        <input
+                          type="radio"
+                          name="feeTiming"
+                          value="FEE_AFTER_TIP"
+                          checked={inputs.feeTiming === 'FEE_AFTER_TIP'}
+                          onChange={(e) => handleInputChange('feeTiming', 'FEE_AFTER_TIP')}
+                          className="mr-2"
+                        />
+                        <span>Tip at Time of Sale</span>
+                      </label>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <Label className="text-xs font-medium text-gray-600">Fee timing</Label>
-                  <div className="space-y-1 mt-1">
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="feeTiming"
-                        value="FEE_BEFORE_TIP"
-                        checked={(inputs.feeTiming || 'FEE_BEFORE_TIP') === 'FEE_BEFORE_TIP'}
-                        onChange={(e) => handleInputChange('feeTiming', 'FEE_BEFORE_TIP')}
-                        className="mr-2"
-                      />
-                      <span>Tip Handwritten – Post Sale</span>
-                    </label>
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="feeTiming"
-                        value="FEE_AFTER_TIP"
-                        checked={inputs.feeTiming === 'FEE_AFTER_TIP'}
-                        onChange={(e) => handleInputChange('feeTiming', 'FEE_AFTER_TIP')}
-                        className="mr-2"
-                      />
-                      <span>Tip at Time of Sale</span>
-                    </label>
+                  <div>
+                    <Label className="text-xs font-medium text-gray-600">Apply fee</Label>
+                    <div className="space-y-1 mt-1">
+                      <label className="flex items-center text-xs">
+                        <input
+                          type="radio"
+                          name="feeTaxBasis"
+                          value="POST_TAX"
+                          checked={(inputs.feeTaxBasis || 'POST_TAX') === 'POST_TAX'}
+                          onChange={(e) => handleInputChange('feeTaxBasis', 'POST_TAX')}
+                          className="mr-2"
+                        />
+                        <span>Post tax</span>
+                      </label>
+                      <label className="flex items-center text-xs">
+                        <input
+                          type="radio"
+                          name="feeTaxBasis"
+                          value="PRE_TAX"
+                          checked={inputs.feeTaxBasis === 'PRE_TAX'}
+                          onChange={(e) => handleInputChange('feeTaxBasis', 'PRE_TAX')}
+                          className="mr-2"
+                        />
+                        <span>Pre-tax</span>
+                      </label>
+                    </div>
                   </div>
                 </div>
                 <div className="text-xs text-gray-500 italic">
