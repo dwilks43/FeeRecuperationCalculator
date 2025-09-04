@@ -402,7 +402,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                         onChange={(e) => handleInputChange('feeTiming', 'FEE_BEFORE_TIP')}
                         className="mr-2"
                       />
-                      <span>Fee added before tips</span>
+                      <span>Tip Handwritten - Post Sale</span>
                     </label>
                     <label className="flex items-center text-xs">
                       <input
@@ -413,7 +413,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                         onChange={(e) => handleInputChange('feeTiming', 'FEE_AFTER_TIP')}
                         className="mr-2"
                       />
-                      <span>Fee added after tips</span>
+                      <span>Tip at Time of Sale</span>
                     </label>
                   </div>
                 </div>

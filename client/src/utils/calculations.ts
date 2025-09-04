@@ -180,7 +180,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue: suppFeeCollected,
     derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
-    tipAssumptionNote: inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Fee added after tips' : 'Fee added before tips',
+    tipAssumptionNote: inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten - Post Sale',
     // Additional fields for UI display
     cardFeeCollected,
     cashFeeCollected,
