@@ -103,57 +103,60 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
 }
 
 function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorResults {
-  // Inputs
+  // Read inputs with defaults
   const cc = inputs.monthlyVolume || 0;
   const cash = inputs.monthlyCashVolume || 0;
   const tax = (inputs.taxRate || 0) / 100;
   const tip = (inputs.tipRate || 0) / 100;
   const fee = (inputs.priceDifferential || 0) / 100;  // Supplemental Fee %
   const fr = ((inputs.flatRatePct ?? (fee/(1+fee)*100)) / 100); // Program flat rate %
-  const feeTaxBasis = inputs.feeTaxBasis || 'POST_TAX';
-  const feeTiming = inputs.feeTiming || 'FEE_BEFORE_TIP';
+  const basis = inputs.cardVolumeBasis || 'PRE_TAX';
+  const feeBasis = inputs.feeTaxBasis || 'POST_TAX';
+  const timing = inputs.feeTiming || 'FEE_BEFORE_TIP';
 
-  // Common: total card amount that actually runs (always tax + tip + fee in some order)
-  // 'Before tip' means fee is added before tip; 'After tip' means after tip.
-  const taxedCard = cc * (1 + tax);
-  const cardProcessedTotal = feeTiming === 'FEE_BEFORE_TIP'
-    ? taxedCard * (1 + fee) * (1 + tip)   // Tip Handwritten – Post Sale
-    : taxedCard * (1 + tip) * (1 + fee);  // Tip at Time of Sale
+  // Derive base volumes for display (used in every Supplemental variation)
+  const basePreTaxPreTip = (basis === 'GROSS') ? (cc / (1 + tax + tip)) : cc;
+  const baseTaxedPreTip = basePreTaxPreTip * (1 + tax);
 
-  // Fee collected on cards depends on BOTH feeTaxBasis and feeTiming:
-  // Base for fee when POST_TAX includes tax; when PRE_TAX excludes tax.
+  // Card processed total (processor basis)
+  const cardProcessedTotal = timing === 'FEE_BEFORE_TIP'
+    ? baseTaxedPreTip * (1 + fee) * (1 + tip)   // Tip Handwritten – Post Sale (fee before tip)
+    : baseTaxedPreTip * (1 + tip) * (1 + fee);  // Tip at Time of Sale (fee after tip)
+
+  // Fee base on cards (driven by feeBasis × timing × cardVolumeBasis)
   let feeBaseForCards: number;
-  if (feeTiming === 'FEE_BEFORE_TIP') {
-    // Fee before tip: tip is NOT part of fee base
-    feeBaseForCards = (feeTaxBasis === 'POST_TAX') ? taxedCard : cc;
+  if (timing === 'FEE_BEFORE_TIP') {
+    feeBaseForCards = (feeBasis === 'POST_TAX') ? baseTaxedPreTip : basePreTaxPreTip;
   } else {
-    // Fee after tip: tip IS part of fee base
-    feeBaseForCards = (feeTaxBasis === 'POST_TAX') ? (taxedCard * (1 + tip)) : (cc * (1 + tip));
+    feeBaseForCards = ((feeBasis === 'POST_TAX') ? baseTaxedPreTip : basePreTaxPreTip) * (1 + tip);
   }
   const cardFeeCollected = feeBaseForCards * fee;
+  const cashFeeCollected = cash * fee; // cash fee stays on pre-tax cash volume
+  const collectedValue = cardFeeCollected + cashFeeCollected;
 
-  // Fee collected on cash (always based on pre-tax cash volume)
-  const cashFeeCollected = cash * fee;
-  const suppFeeCollected = cardFeeCollected + cashFeeCollected;
-
-  // Program cost on cards (flat rate on the full processed total)
+  // Program card fees and signed row
   const processorChargeOnCards = cardProcessedTotal * fr;
-  
-  // Residuals/profit for savings math (unchanged logic)
+  const netCostForProcessingCards = cardFeeCollected - processorChargeOnCards; // signed; can be negative
+
+  // Residual/overage for savings math (unchanged)
   const residualCardCost = Math.max(processorChargeOnCards - cardFeeCollected, 0);
   const cardProgramProfit = Math.max(cardFeeCollected - processorChargeOnCards, 0);
-  const currentCost = cc * ((inputs.currentRate || 0) / 100);
-  const processingSavings = currentCost - residualCardCost;
-  const monthlySavings = processingSavings + cashFeeCollected + cardProgramProfit;
-  const annualSavings = monthlySavings * 12;
-
-  // Keep 'Net Cost for Processing Cards (include tax + tips)' per your UI as fee_on_cards − program_cost (can be negative):
-  const netCostForProcessingCards = cardFeeCollected - processorChargeOnCards;
   
-  // Legacy fields for compatibility
+  // Current cost calculation
+  const currentCost = basePreTaxPreTip * ((inputs.currentRate || 0) / 100);
+
+  // Savings pieces matching Excel layout (computed for all variations)
+  const processingCostSavingsOnly = currentCost - residualCardCost;
+  const processingCostSavingsPct = currentCost > 0 ? processingCostSavingsOnly / currentCost : 0;
+  const totalNetGainRevenue = processingCostSavingsOnly + cashFeeCollected;
+  const annualNetGainRevenue = totalNetGainRevenue * 12;
+  
+  // Legacy calculations for compatibility
+  const processingSavings = processingCostSavingsOnly;
+  const monthlySavings = totalNetGainRevenue;
+  const annualSavings = annualNetGainRevenue;
   const extraRevenueCash = cashFeeCollected;
   const tipAdjustmentResidual = 0;
-  // Canonical fields for unified savings calculation
   const programCardFees = processorChargeOnCards;
   const feeCollectedOnCash = cashFeeCollected;
 
@@ -166,10 +169,10 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
 
   return {
-    baseVolume: cc,
-    markedUpVolume: cc,
-    adjustedVolume: cc,
-    markupCollected: suppFeeCollected,
+    baseVolume: basePreTaxPreTip,
+    markedUpVolume: basePreTaxPreTip,
+    adjustedVolume: basePreTaxPreTip,
+    markupCollected: collectedValue,
     processingFees: processorChargeOnCards,
     currentCost,
     newCost: residualCardCost,
@@ -183,12 +186,12 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     // Canonical fields
     programCardFees,
     feeCollectedOnCash,
-    annualVolume: (cc + cash) * 12,
+    annualVolume: (basePreTaxPreTip + cash) * 12,
     dmpProfit: 0, // Not applicable for supplemental fee
     skytabBonus: 0,
     skytabBonusRep: skytabBonusRep,
     collectedLabel: 'Supplemental Fee Collected',
-    collectedValue: suppFeeCollected,
+    collectedValue,
     derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
     tipAssumptionNote: inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale',
     // Additional fields for UI display
@@ -197,6 +200,13 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     cardProcessedTotal,
     processorChargeOnCards,
     netCostForProcessingCards,
+    // Excel-style standardized fields
+    baseVolumePreTaxPreTip: basePreTaxPreTip,
+    baseVolumeTaxedPreTip: baseTaxedPreTip,
+    processingCostSavingsOnly,
+    processingCostSavingsPct,
+    totalNetGainRevenue,
+    annualNetGainRevenue,
     // Gross Profit and Skytab bonus calculations
     grossProfit,
     skytabBonusGross

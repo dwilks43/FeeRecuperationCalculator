@@ -47,6 +47,19 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         {/* Supplemental Fee mode - specific rows in order */}
         {programType === 'SUPPLEMENTAL_FEE' ? (
           <>
+            {/* Current Processing Cost */}
+            <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Current Processing Cost</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MinusCircle className="h-5 w-5 text-red-500" />
+                <span className="text-2xl font-bold text-red-600">
+                  {formatCurrency(results.currentCost)}
+                </span>
+              </div>
+            </div>
+
             {/* Net Cost for Processing Cards (include tax + tips) */}
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
@@ -59,48 +72,75 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   <MinusCircle className="h-5 w-5 text-red-500" />
                 )}
                 <span className={`text-2xl font-bold ${(results.netCostForProcessingCards || 0) < 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {formatCurrency(results.netCostForProcessingCards || 0)}
+                  {(results.netCostForProcessingCards || 0) < 0 
+                    ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` 
+                    : formatCurrency(results.netCostForProcessingCards || 0)
+                  }
+                </span>
+              </div>
+            </div>
+
+            {/* Processing Cost Savings (Only) */}
+            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Processing Cost Savings (Only)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-blue-500" />
+                <span className="text-2xl font-bold text-blue-600">
+                  {formatCurrency(results.processingCostSavingsOnly || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* Processing Cost Savings % */}
+            <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Processing Cost Savings %</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-indigo-500" />
+                <span className="text-2xl font-bold text-indigo-600">
+                  {((results.processingCostSavingsPct || 0) * 100).toFixed(1)}%
                 </span>
               </div>
             </div>
 
             {/* Fee Collected on Cash */}
-            {results.extraRevenueCash !== undefined && results.extraRevenueCash > 0 && (
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                <div className="flex items-center gap-2 mb-2">
-                  <span className="text-sm font-medium text-gray-600">Fee Collected on Cash</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle className="h-5 w-5 text-blue-500" />
-                  <span className="text-2xl font-bold text-blue-600">
-                    {formatCurrency(results.extraRevenueCash)}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Savings */}
-            <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-4 border-2 border-dmp-blue-300">
+            <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Monthly Savings</span>
+                <span className="text-sm font-medium text-gray-600">Fee Collected on Cash</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <span className="text-2xl font-bold text-green-700">
-                  {formatCurrency(results.monthlySavings)}
+                <CheckCircle className="h-5 w-5 text-emerald-500" />
+                <span className="text-2xl font-bold text-emerald-600">
+                  {formatCurrency(results.cashFeeCollected || 0)}
                 </span>
               </div>
             </div>
 
-            {/* Annual Savings */}
+            {/* Total Net Gain Revenue */}
+            <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-4 border-2 border-dmp-blue-300">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Total Net Gain Revenue</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-600" />
+                <span className="text-2xl font-bold text-green-700">
+                  {formatCurrency(results.totalNetGainRevenue || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* Annual Net Gain Revenue */}
             <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-300">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Annual Savings</span>
+                <span className="text-sm font-medium text-gray-600">Annual Net Gain Revenue</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-600" />
                 <span className="text-2xl font-bold text-green-600">
-                  {formatCurrency(results.annualSavings)}
+                  {formatCurrency(results.annualNetGainRevenue || 0)}
                 </span>
               </div>
             </div>

@@ -1,3 +1,7 @@
+export type FeeTiming = 'FEE_BEFORE_TIP' | 'FEE_AFTER_TIP';
+export type FeeTaxBasis = 'POST_TAX' | 'PRE_TAX';
+export type CardVolumeBasis = 'PRE_TAX' | 'GROSS';
+
 export interface CalculatorInputs {
   programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
   monthlyVolume: number;
@@ -10,8 +14,9 @@ export interface CalculatorInputs {
   priceDifferential: number;
   flatRatePct?: number;
   tipBasis?: 'fee_inclusive' | 'pre_fee';
-  feeTiming?: 'FEE_BEFORE_TIP' | 'FEE_AFTER_TIP';
-  feeTaxBasis?: 'POST_TAX' | 'PRE_TAX';
+  feeTiming?: FeeTiming;
+  feeTaxBasis?: FeeTaxBasis;
+  cardVolumeBasis?: CardVolumeBasis;
 }
 
 export interface CalculatorResults {
@@ -39,6 +44,12 @@ export interface CalculatorResults {
   tipAssumptionNote?: string;
   // Additional fields for Supplemental Fee display
   cardFeeCollected?: number;
+  baseVolumePreTaxPreTip?: number;
+  baseVolumeTaxedPreTip?: number;
+  processingCostSavingsOnly?: number;
+  processingCostSavingsPct?: number;
+  totalNetGainRevenue?: number;
+  annualNetGainRevenue?: number;
   cashFeeCollected?: number;
   cardProcessedTotal?: number;
   processorChargeOnCards?: number;

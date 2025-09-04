@@ -24,20 +24,36 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
       </CardHeader>
       <CardContent className="space-y-4">
         {programType === 'SUPPLEMENTAL_FEE' ? (
-          // Supplemental Fee sales-friendly display
+          // Standardized Excel-style layout for all Supplemental Fee variations
           <>
-            {/* Fee Collected on Cards */}
+            {/* Base Volume (pre-tax & pre-tip) */}
             <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
+              <span className="text-sm font-medium text-gray-700">Base Volume (pre-tax & pre-tip)</span>
+              <span className="text-lg font-bold text-blue-600" data-testid="text-base-volume-pretax-pretip">
+                {formatCurrency(results.baseVolumePreTaxPreTip || 0)}
+              </span>
+            </div>
+
+            {/* Base Volume (with tax but pre-tip) */}
+            <div className="flex justify-between items-center p-4 bg-indigo-50 rounded-lg">
+              <span className="text-sm font-medium text-gray-700">Base Volume (with tax but pre-tip)</span>
+              <span className="text-lg font-bold text-indigo-600" data-testid="text-base-volume-taxed-pretip">
+                {formatCurrency(results.baseVolumeTaxedPreTip || 0)}
+              </span>
+            </div>
+
+            {/* Fee Collected on Cards */}
+            <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
               <span className="text-sm font-medium text-gray-700">Fee Collected on Cards</span>
-              <span className="text-lg font-bold text-blue-600" data-testid="text-card-fee-collected">
+              <span className="text-lg font-bold text-green-600" data-testid="text-card-fee-collected">
                 {formatCurrency(results.cardFeeCollected || 0)}
               </span>
             </div>
 
             {/* Fee Collected on Cash */}
-            <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
+            <div className="flex justify-between items-center p-4 bg-emerald-50 rounded-lg">
               <span className="text-sm font-medium text-gray-700">Fee Collected on Cash</span>
-              <span className="text-lg font-bold text-green-600" data-testid="text-cash-fee-collected">
+              <span className="text-lg font-bold text-emerald-600" data-testid="text-cash-fee-collected">
                 {formatCurrency(results.cashFeeCollected || 0)}
               </span>
             </div>
@@ -50,9 +66,9 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               </span>
             </div>
 
-            {/* Total Cards Processed (incl fees & tips) */}
+            {/* Total Cards Processed (incl tax, supp fee, & tips) */}
             <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Total Cards Processed (incl fees & tips)</span>
+              <span className="text-sm font-medium text-gray-700">Total Cards Processed (incl tax, supp fee, & tips)</span>
               <span className="text-lg font-bold text-purple-600" data-testid="text-card-processed-total">
                 {formatCurrency(results.cardProcessedTotal || 0)}
               </span>
@@ -70,15 +86,10 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
             <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
               <span className="text-sm font-medium text-gray-700">Net Cost for Processing Cards (include tax + tips)</span>
               <span className={`text-lg font-bold ${(results.netCostForProcessingCards || 0) < 0 ? 'text-green-600' : 'text-red-600'}`} data-testid="text-net-cost-cards">
-                {formatCurrency(results.netCostForProcessingCards || 0)}
-              </span>
-            </div>
-
-            {/* Total Net Gain Rev (include fee collected on cash) */}
-            <div className="flex justify-between items-center p-4 bg-emerald-50 rounded-lg border border-emerald-200">
-              <span className="text-sm font-medium text-gray-700">Total Net Gain Rev (include fee collected on cash)</span>
-              <span className="text-lg font-bold text-emerald-600" data-testid="text-total-net-gain">
-                {formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}
+                {(results.netCostForProcessingCards || 0) < 0 
+                  ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` 
+                  : formatCurrency(results.netCostForProcessingCards || 0)
+                }
               </span>
             </div>
           </>

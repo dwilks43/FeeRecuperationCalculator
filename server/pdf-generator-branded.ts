@@ -409,11 +409,11 @@ export function generateBrandedPDF(data: any): string {
                     </tr>
                     <tr>
                         <th>Tip (%)</th><td class="metric">${formatPercentage(tipRate)}</td>
-                        <th>Apply fee</th><td class="metric">${inputs.feeTaxBasis === 'PRE_TAX' ? 'Pre-tax' : 'Post tax'}</td>
+                        <th>Card volume is</th><td class="metric">${inputs.cardVolumeBasis === 'GROSS' ? 'Gross (includes tax & tip)' : 'Pre-tax'}</td>
                     </tr>
                     <tr>
-                        <th>Fee timing</th><td class="metric">${inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale'}</td>
-                        <th>&nbsp;</th><td>&nbsp;</td>
+                        <th>Apply fee</th><td class="metric">${inputs.feeTaxBasis === 'PRE_TAX' ? 'Pre-tax' : 'Post tax'}</td>
+                        <th>Tip mode</th><td class="metric">${inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale'}</td>
                     </tr>
                     <tr>
                         <th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td>
@@ -453,6 +453,16 @@ export function generateBrandedPDF(data: any): string {
                         </div>
                     </div>
                     <table class="kv">
+                        ${isSF ? `
+                        <tr><th>Base Volume (pre-tax & pre-tip)</th><td class="metric">${formatCurrency(results.baseVolumePreTaxPreTip || baseVolume)}</td></tr>
+                        <tr><th>Base Volume (with tax but pre-tip)</th><td class="metric">${formatCurrency(results.baseVolumeTaxedPreTip || baseVolume)}</td></tr>
+                        <tr><th>Fee Collected on Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+                        <tr><th>Fee Collected on Cash</th><td class="metric">${formatCurrency(results.cashFeeCollected || 0)}</td></tr>
+                        <tr><th>Total Fee Collected (Card + Cash)</th><td class="metric">${formatCurrency(results.collectedValue || 0)}</td></tr>
+                        <tr><th>Total Cards Processed (incl tax, supp fee, & tips)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+                        <tr><th>Total Cost for Processing Cards (new)</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
+                        <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${(results.netCostForProcessingCards || 0) < 0 ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` : formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
+                        ` : `
                         <tr><th>Base Volume</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
                         <tr><th>Adjusted Card Volume</th><td class="metric">${formatCurrency(results.adjustedCardVolume || adjustedVolume)}</td></tr>
                         <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(currentCost)}</td></tr>
@@ -462,6 +472,7 @@ export function generateBrandedPDF(data: any): string {
                             `<tr><th>Overage retained after markup</th><td class="metric">${formatCurrency(results.overageRetained || 0)}</td></tr>` :
                             `<tr><th>Residual cost after markup</th><td class="metric">${formatCurrency(0)}</td></tr>`
                         }
+                        `}
                     </table>
                 </div>
             </div>
@@ -473,24 +484,15 @@ export function generateBrandedPDF(data: any): string {
                 </div>
                 <div class="section-bd">
                     ${isSF ? `
-                    <div class="section-hdr">Live Preview</div>
-                    <table class="kv">
-                        <tr><th>Fee Collected on Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
-                        <tr><th>Fee Collected on Cash</th><td class="metric">${formatCurrency(results.cashFeeCollected || 0)}</td></tr>
-                        <tr><th>Total Fee Collected (Card + Cash)</th><td class="metric">${formatCurrency(results.collectedValue || 0)}</td></tr>
-                        <tr><th>Total Cards Processed (incl fees & tips)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
-                        <tr><th>Total Cost for Processing Cards (new)</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
-                        <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
-                        <tr><th>Total Net Gain Rev (include fee collected on cash)</th><td class="metric metric--positive">${formatCurrency((results.collectedValue || 0) - Math.abs(results.netCostForProcessingCards || 0))}</td></tr>
-                    </table>
-                    
                     <div class="section-hdr">Savings</div>
                     <table class="kv">
                         <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
-                        <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
-                        <tr><th>Fee Collected on Cash</th><td class="metric metric--positive">${formatCurrency(results.extraRevenueCash || 0)}</td></tr>
-                        <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Savings</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.monthlySavings || 0)}</td></tr>
-                        <tr><th style="font-size: 14px; color: var(--muted);">Annual Savings</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualSavings || annualSavings)}</td></tr>
+                        <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${(results.netCostForProcessingCards || 0) < 0 ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` : formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
+                        <tr><th>Processing Cost Savings (Only)</th><td class="metric metric--positive">${formatCurrency(results.processingCostSavingsOnly || 0)}</td></tr>
+                        <tr><th>Processing Cost Savings %</th><td class="metric">${((results.processingCostSavingsPct || 0) * 100).toFixed(1)}%</td></tr>
+                        <tr><th>Fee Collected on Cash</th><td class="metric metric--positive">${formatCurrency(results.cashFeeCollected || 0)}</td></tr>
+                        <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Total Net Gain Revenue</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.totalNetGainRevenue || 0)}</td></tr>
+                        <tr><th style="font-size: 14px; color: var(--muted);">Annual Net Gain Revenue</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualNetGainRevenue || 0)}</td></tr>
                     </table>
                     ${results.tipAssumptionNote ? `<div style="color: var(--muted); font-size: 11px; margin-top: 12px; font-style: italic;">${results.tipAssumptionNote}</div>` : ''}
                     ` : `
