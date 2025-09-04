@@ -82,7 +82,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             {/* Savings */}
             <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-4 border-2 border-dmp-blue-300">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Savings</span>
+                <span className="text-sm font-medium text-gray-600">Monthly Savings</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-600" />
