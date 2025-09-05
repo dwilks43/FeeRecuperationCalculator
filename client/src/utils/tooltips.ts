@@ -4,90 +4,120 @@ export const TOOLTIPS = {
     body: 'Choose the pricing model to show the merchant. Dual Pricing raises card price only. Supplemental Fee adds a post-tax fee to card and cash.'
   },
   monthlyCardVolume: {
-    title: 'Monthly Credit Card Volume',
-    body: 'Total pre-tax card sales for a typical month. Example: $20,000.'
+    title: 'Monthly Card Volume (Gross)',
+    body: 'v1.0.1: Total gross card sales including all taxes and tips. This is the full amount customers pay on cards. Example: $30,000.'
   },
   monthlyCashVolume: {
     title: 'Monthly Cash Volume',
-    body: 'Total pre-tax cash sales for a typical month. Example: $5,000.'
+    body: 'Total cash sales for a typical month. In Supplemental Fee mode, cash customers also pay the fee. Example: $5,000.'
   },
   currentRate: {
     title: 'Current Processing Rate',
-    body: 'What the merchant pays today on card sales. Example: Current Cost = $20,000 × 2% = $400.00.'
+    body: 'What the merchant pays today on card sales. Example: Current Cost = Base Volume × 2.5% = $400.00.'
   },
   taxRate: {
     title: 'Tax Rate',
-    body: 'Sales tax is applied before fee and tip. Example pre-tax→taxed: $20,000 × 1.10 = $22,000.'
+    body: 'Sales tax percentage. Used to derive the pre-tax base from gross card volume. Example: 10% tax rate.'
   },
   tipRate: {
     title: 'Tip Rate',
-    body: 'Average tip customers add. Example value: 20%.'
+    body: 'Average tip percentage customers add. Used in calculations based on tip timing. Example: 20%.'
   },
   feeTiming: {
     title: 'Fee Timing',
-    body: 'Controls whether the fee is added before or after tips. In "before tips": Card Processed = Card × (1+Tax) × (1+Fee) × (1+Tip). Example: $20,000 × 1.10 × 1.04 × 1.20 = $27,456.00.'
+    body: 'v1.0.1: Controls when the fee is applied in the calculation chain. Before Tip: fee added before tip calculation. After Tip: fee added after tip calculation.'
+  },
+  feeTaxBasis: {
+    title: 'Fee Tax Basis',
+    body: 'v1.0.1: Determines if the fee is applied to the pre-tax amount or post-tax amount. Affects the fee base calculation.'
+  },
+  tipTiming: {
+    title: 'Tip Timing',
+    body: 'v1.0.1: Controls when tips are calculated. Before Tip: tip calculated before fee. After Tip: tip calculated after fee.'
   },
   supplementalFee: {
     title: 'Supplemental Fee',
-    body: 'Fee shown to customers; collected on card and cash. Example fee on cash: $5,000 × 4% = $200.00.'
+    body: 'Fee percentage shown to customers; collected on both card and cash transactions. Example: 4% fee.'
   },
   flatRate: {
-    title: 'Flat Rate Processing',
-    body: 'Program\'s processing rate applied to fee-inclusive (and tip-inclusive) card totals. Example card cost: $27,456 × 3.85% = $1,057.06.'
+    title: 'Flat Rate % (Bank Mapping)',
+    body: 'v1.0.1: Processing rate applied to the full card processed amount. Auto-calculated as Fee ÷ (1+Fee) or manually overridden. Example: 3.85%.'
   },
-  // Live Calculations
-  feeOnCards: {
-    title: 'Fee Collected on Cards',
-    body: 'Fee dollars collected from card sales. With fee-before-tips: $20,000 × 4% = $800.00.'
+  // v1.0.1 Derived Panels
+  baseVolumePreTaxPreTip: {
+    title: 'Pre-Tax Base (from Gross)',
+    body: 'v1.0.1: The pre-tax, pre-tip base volume derived from the gross card amount using combo-based calculations.'
   },
-  feeOnCash: {
-    title: 'Fee Collected on Cash',
-    body: 'Fee dollars collected from cash sales. Extra revenue; no processing cost. Example: $5,000 × 4% = $200.00.'
+  feeBaseCards: {
+    title: 'Fee Base — Cards',
+    body: 'v1.0.1: The amount on which the supplemental fee is calculated for cards, determined by Fee Tax Basis setting.'
   },
-  totalFeeCollected: {
-    title: 'Total Fee Collected (Card + Cash)',
-    body: 'Combined fee collected. Example: $800.00 + $200.00 = $1,000.00.'
+  cardFeeCollected: {
+    title: 'Supplemental Fee Collected — Cards',
+    body: 'v1.0.1: Fee dollars collected from card transactions based on the fee base and supplemental fee percentage.'
   },
-  totalCardsProcessed: {
-    title: 'Total Cards Processed (incl fees & tips)',
-    body: 'Amount that actually runs through the processor. Example: $27,456.00.'
+  tipBase: {
+    title: 'Tip Base',
+    body: 'v1.0.1: The amount on which tips are calculated, determined by the tip timing and fee timing combination.'
   },
-  totalProcessingCostNew: {
-    title: 'Total Cost for Processing Cards (new)',
-    body: 'Your card processing cost under this program. Example: $27,456 × 3.85% = $1,057.06.'
+  tipAmount: {
+    title: 'Tip Amount',
+    body: 'v1.0.1: Total tip amount calculated based on the tip base and tip rate percentage.'
   },
-  netCostForProcessingCards: {
-    title: 'Net Cost for Processing Cards (include tax + tips)',
-    body: 'Fee on cards minus your new card cost (can be negative or positive). Example: $800.00 − $1,057.06 = $(257.06).'
+  cardProcessedTotal: {
+    title: 'Card Processed Total',
+    body: 'v1.0.1: Final amount that runs through the card processor, including all taxes, fees, and tips.'
   },
-  totalNetGainRev: {
-    title: 'Total Net Gain Rev (include fee collected on cash)',
-    body: 'Total fee collected minus processing costs. Example: $1,000.00 − $257.06 = $742.94.'
+  processorChargeOnCards: {
+    title: 'Processor Charge on Cards',
+    body: 'v1.0.1: Your card processing cost calculated as Card Processed Total × Flat Rate %.'
   },
-  // Monthly Savings
-  currentProcessingCost: {
-    title: 'Current Processing Cost',
-    body: 'What the merchant pays today: Card × Current Rate. Example: $20,000 × 2% = $400.00.'
+  recovery: {
+    title: 'Card Under/Over-Recovery',
+    body: 'v1.0.1: Difference between Supplemental Fee collected on cards and processor charges. Positive = over-recovery, Negative = under-recovery.'
   },
-  savingsTotal: {
-    title: 'Monthly Savings',
-    body: 'Total fee collected minus processing costs. Example: $1,000.00 − $257.06 = $742.94.'
+  coveragePct: {
+    title: 'Coverage %',
+    body: 'v1.0.1: Percentage of processor charges covered by supplemental fee collected on cards. 100% = full coverage.'
   },
-  annualSavings: {
-    title: 'Annual Savings',
-    body: '12× monthly Savings. Example: $742.94 × 12 = $8,915.28.'
+  currentCost: {
+    title: 'Current Processing Cost (Today)',
+    body: 'v1.0.1: What the merchant pays today for card processing using their current rate and base volume.'
   },
-  // Payout lines
+  savingsCardsOnly: {
+    title: 'Processing Cost Savings (Cards Only)',
+    body: 'v1.0.1: Current processing cost minus new processing cost. Shows the savings on card processing alone.'
+  },
+  supplementalFeeCash: {
+    title: 'Supplemental Fee Collected — Cash',
+    body: 'v1.0.1: Fee collected from cash transactions. Pure additional revenue with no processing costs.'
+  },
+  totalNetGainRevenue: {
+    title: 'Total Net Gain (Monthly)',
+    body: 'v1.0.1: Combined savings from card processing cost reduction plus supplemental fee collected on cash transactions.'
+  },
+  annualNetGainRevenue: {
+    title: 'Annual Net Gain',
+    body: 'v1.0.1: Total Net Gain (Monthly) × 12 months. Shows the full-year financial impact.'
+  },
   grossProfit: {
-    title: 'Gross Profit',
-    body: 'Internal monthly gross profit used for bonus math. Default basis here = Savings. Example: $742.94.'
+    title: 'Gross Profit (Cards)',
+    body: 'v1.0.1: Internal monthly gross profit calculation used for DMP profitability and bonus calculations.'
+  },
+  'flat-rate-pct': {
+    title: 'Flat Rate % (Bank Mapping)',
+    body: 'v1.0.1: Processing rate applied to card processed total. Auto-calculated using Fee ÷ (1+Fee) formula, or manually overridden.'
   },
   skytabBonusGross: {
     title: 'Skytab Bonus Calculation (Gross)',
-    body: 'Gross bonus estimate = Gross Profit × 18 months. Example: $742.94 × 18 = $13,372.92.'
+    body: 'Gross bonus estimate = Gross Profit × 18 months, capped at $10,000 maximum.'
   },
   skytabBonusRep: {
     title: 'Skytab Bonus Calculation (Rep 50%)',
-    body: 'Rep share = Skytab Bonus (Gross) × 50%. Example: $13,372.92 × 50% = $6,686.46.'
+    body: 'Rep share = Skytab Bonus (Gross) × 50%. Example: $10,000 × 50% = $5,000.'
+  },
+  'dmp-profit': {
+    title: 'DMP Gross Profit',
+    body: 'Monthly gross profit calculation used for internal DMP profitability analysis and bonus calculations.'
   }
 };

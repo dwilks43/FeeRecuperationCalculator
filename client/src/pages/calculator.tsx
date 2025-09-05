@@ -5,7 +5,7 @@ import { FileText, RotateCcw, Calendar, HelpCircle, Download, Mail } from "lucid
 import InputForm from "@/components/calculator/InputForm";
 import ProcessingSavings from "@/components/calculator/ProcessingSavings";
 import DualPricingBreakdown from "@/components/calculator/DualPricingBreakdown";
-import DMPProfitability from "@/components/calculator/DMPProfitability";
+import GrossProfit from "@/components/calculator/GrossProfit";
 import TooltipModal from "@/components/calculator/TooltipModal";
 import EmailReportDialog from "@/components/calculator/EmailReportDialog";
 import { CustomerInfoForm } from "@/components/calculator/CustomerInfoForm";
@@ -231,7 +231,7 @@ export default function Calculator() {
           {showDMPProfit && (
             <div className="flex justify-center">
               <div className="w-full max-w-md">
-                <DMPProfitability
+                <GrossProfit
                   results={results}
                   showDMPProfit={showDMPProfit}
                   onToggle={setShowDMPProfit}

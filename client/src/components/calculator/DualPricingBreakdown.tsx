@@ -24,73 +24,105 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
       </CardHeader>
       <CardContent className="space-y-4">
         {programType === 'SUPPLEMENTAL_FEE' ? (
-          // Standardized Excel-style layout for all Supplemental Fee variations
+          // v1.0.1 Derived Panels Structure
           <>
-            {/* Base Volume (pre-tax & pre-tip) */}
-            <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Base Volume (pre-tax & pre-tip)</span>
-              <span className="text-lg font-bold text-blue-600" data-testid="text-base-volume-pretax-pretip">
-                {formatCurrency(results.baseVolumePreTaxPreTip || 0)}
-              </span>
+            {/* Order of Operations Ribbon */}
+            {results.orderOfOperations && (
+              <div className="mb-4 p-3 bg-gradient-to-r from-dmp-blue-50 to-blue-100 rounded-lg border border-dmp-blue-200">
+                <div className="text-xs font-medium text-dmp-blue-700 mb-1">Order of Operations</div>
+                <div className="text-sm text-dmp-blue-600 font-mono">
+                  {results.orderOfOperations}
+                </div>
+              </div>
+            )}
+
+            {/* Panel 1: Derived Bases & Totals */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Derived Bases & Totals</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Pre-Tax Base (from Gross)</span>
+                  <span className="font-medium">{formatCurrency(results.baseVolumePreTaxPreTip || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Fee Base — Cards</span>
+                  <span className="font-medium">{formatCurrency(results.feeBaseCards || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
+                  <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Tip Base</span>
+                  <span className="font-medium">{formatCurrency(results.tipBase || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Tip Amount</span>
+                  <span className="font-medium">{formatCurrency(results.tipAmount || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center border-t pt-2 mt-2">
+                  <span className="text-sm font-medium text-gray-700">Card Processed Total</span>
+                  <span className="font-bold">{formatCurrency(results.cardProcessedTotal || 0)}</span>
+                </div>
+              </div>
             </div>
 
-            {/* Base Volume (with tax but pre-tip) */}
-            <div className="flex justify-between items-center p-4 bg-indigo-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Base Volume (with tax but pre-tip)</span>
-              <span className="text-lg font-bold text-indigo-600" data-testid="text-base-volume-taxed-pretip">
-                {formatCurrency(results.baseVolumeTaxedPreTip || 0)}
-              </span>
+            {/* Panel 2: Processor Charges & Recovery */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Processor Charges & Recovery</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Processor Charge on Cards</span>
+                  <span className="font-medium text-red-600">{formatCurrency(results.processorChargeOnCards || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Card Under/Over-Recovery</span>
+                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {formatCurrency(results.recovery || 0)}
+                  </span>
+                </div>
+                <div className="text-xs text-gray-500 italic mb-2">Under/Over = Supplemental Fee (Cards) − Processor Charge</div>
+                <div className="flex justify-between items-center border-t pt-2">
+                  <span className="text-sm font-medium text-gray-700">Coverage %</span>
+                  <span className="font-bold">{((results.coveragePct || 0) * 100).toFixed(1)}%</span>
+                </div>
+              </div>
             </div>
 
-            {/* Fee Collected on Cards */}
-            <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Fee Collected on Cards</span>
-              <span className="text-lg font-bold text-green-600" data-testid="text-card-fee-collected">
-                {formatCurrency(results.cardFeeCollected || 0)}
-              </span>
+            {/* Panel 3: Savings & Net */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Savings & Net</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                  <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
+                  <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cash</span>
+                  <span className="font-medium text-green-600">{formatCurrency(results.supplementalFeeCash || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
+                  <span className="text-sm font-medium text-gray-700">Total Net Gain (Monthly)</span>
+                  <span className="font-bold text-green-700">{formatCurrency(results.totalNetGainRevenue || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
+                  <span className="font-bold text-green-600">{formatCurrency(results.annualNetGainRevenue || 0)}</span>
+                </div>
+              </div>
             </div>
 
-            {/* Fee Collected on Cash */}
-            <div className="flex justify-between items-center p-4 bg-emerald-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Fee Collected on Cash</span>
-              <span className="text-lg font-bold text-emerald-600" data-testid="text-cash-fee-collected">
-                {formatCurrency(results.cashFeeCollected || 0)}
-              </span>
-            </div>
-
-            {/* Total Fee Collected (Card + Cash) */}
-            <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <span className="text-sm font-medium text-gray-700">Total Fee Collected (Card + Cash)</span>
-              <span className="text-lg font-bold text-amber-600" data-testid="text-total-fee-collected">
-                {formatCurrency(results.collectedValue)}
-              </span>
-            </div>
-
-            {/* Total Cards Processed (incl tax, supp fee, & tips) */}
-            <div className="flex justify-between items-center p-4 bg-purple-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Total Cards Processed (incl tax, supp fee, & tips)</span>
-              <span className="text-lg font-bold text-purple-600" data-testid="text-card-processed-total">
-                {formatCurrency(results.cardProcessedTotal || 0)}
-              </span>
-            </div>
-
-            {/* Total Cost for Processing Cards (new) */}
-            <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg">
-              <span className="text-sm font-medium text-gray-700">Total Cost for Processing Cards (new)</span>
-              <span className="text-lg font-bold text-red-600" data-testid="text-processor-charge">
-                {formatCurrency(results.processorChargeOnCards || 0)}
-              </span>
-            </div>
-
-            {/* Net Cost for Processing Cards (include tax + tips) */}
-            <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <span className="text-sm font-medium text-gray-700">Net Cost for Processing Cards (include tax + tips)</span>
-              <span className={`text-lg font-bold ${(results.netCostForProcessingCards || 0) < 0 ? 'text-green-600' : 'text-red-600'}`} data-testid="text-net-cost-cards">
-                {(results.netCostForProcessingCards || 0) < 0 
-                  ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` 
-                  : formatCurrency(results.netCostForProcessingCards || 0)
-                }
-              </span>
+            {/* Panel 4: Gross Profit */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Gross Profit</h3>
+              <div className="flex justify-between items-center">
+                <span className="text-sm font-medium text-gray-700">Gross Profit (Cards)</span>
+                <span className="font-bold text-dmp-blue-600">{formatCurrency(results.grossProfit || 0)}</span>
+              </div>
             </div>
           </>
         ) : (

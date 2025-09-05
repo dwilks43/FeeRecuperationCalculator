@@ -4,17 +4,17 @@ import { PieChart, HelpCircle, Building } from "lucide-react";
 import { CalculatorResults, TooltipKey } from "@/types/calculator";
 import { formatCurrency } from "@/utils/calculations";
 
-interface DMPProfitabilityProps {
+interface GrossProfitProps {
   results: CalculatorResults;
   showDMPProfit: boolean;
   onToggle: (show: boolean) => void;
   onTooltip: (key: TooltipKey) => void;
 }
 
-export default function DMPProfitability({ 
+export default function GrossProfit({ 
   results, 
   onTooltip 
-}: DMPProfitabilityProps) {
+}: GrossProfitProps) {
   return (
     <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 shadow-lg">
       <CardContent className="p-6">
@@ -73,41 +73,41 @@ export default function DMPProfitability({
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <PieChart className="h-5 w-5 text-green-600" />
-            <span className="text-2xl font-bold text-green-600" data-testid="text-skytab-bonus">
-              {formatCurrency(results.skytabBonusGross || 0)}
+            <Building className="h-5 w-5 text-amber-600" />
+            <span className="text-2xl font-bold text-amber-600" data-testid="text-skytab-bonus">
+              {formatCurrency(Math.min(results.grossProfit || 0, 10000))}
             </span>
           </div>
-          <p className="text-xs text-green-600 mt-1">18-month bonus calculation with 60% factor</p>
+          <p className="text-xs text-amber-600 mt-1">Skytab bonus (capped at $10K)</p>
         </div>
 
-        {/* Skytab Bonus Rep 50% */}
+        {/* Net Profit */}
         <div className="bg-white rounded-lg p-4 border border-blue-100">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-gray-600">
-              Skytab Bonus Calculation (Rep 50%)
+              Net Profit
               <br />
               <span className="text-xs text-gray-500">
-                50% of gross bonus amount
+                After schedule A and ISO % removal
               </span>
             </span>
             <Button
               variant="ghost"
               size="sm"
               className="h-auto p-0"
-              onClick={() => onTooltip('skytab-bonus-rep')}
-              data-testid="button-tooltip-skytab-bonus-rep"
+              onClick={() => onTooltip('dmp-profit')}
+              data-testid="button-tooltip-net-profit"
             >
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
             </Button>
           </div>
           <div className="flex items-center gap-2">
-            <Building className="h-5 w-5 text-purple-600" />
-            <span className="text-2xl font-bold text-purple-600" data-testid="text-skytab-bonus-rep">
-              {formatCurrency(results.skytabBonusRep)}
+            <Building className="h-5 w-5 text-green-600" />
+            <span className="text-2xl font-bold text-green-600" data-testid="text-net-profit">
+              {formatCurrency((results.grossProfit || 0) * 0.75)}
             </span>
           </div>
-          <p className="text-xs text-purple-600 mt-1">Rep commission at 50% of gross bonus</p>
+          <p className="text-xs text-green-600 mt-1">Net profit (estimated 75% after costs)</p>
         </div>
       </CardContent>
     </Card>

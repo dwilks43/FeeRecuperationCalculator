@@ -103,113 +103,171 @@ export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
 }
 
 function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorResults {
-  // Read inputs with defaults
-  const cc = inputs.monthlyVolume || 0;
-  const cash = inputs.monthlyCashVolume || 0;
+  // v1.0.1 - New input model with Gross Cards and combo-based calculations
+  const grossCards = inputs.monthlyVolume || 0;  // Monthly Card Volume (Gross)
+  const cashVol = inputs.monthlyCashVolume || 0;
+  const currRate = (inputs.currentRate || 0) / 100;
+  const interchange = (inputs.interchangeCost || 0) / 100;
   const tax = (inputs.taxRate || 0) / 100;
   const tip = (inputs.tipRate || 0) / 100;
   const fee = (inputs.priceDifferential || 0) / 100;  // Supplemental Fee %
-  const fr = ((inputs.flatRatePct ?? (fee/(1+fee)*100)) / 100); // Program flat rate %
-  const basis = inputs.cardVolumeBasis || 'PRE_TAX';
-  const feeBasis = inputs.feeTaxBasis || 'POST_TAX';
-  const timing = inputs.feeTiming || 'FEE_BEFORE_TIP';
+  
+  // Flat Rate logic with auto-calculation and override support
+  const flatRateAuto = fee / (1 + fee);
+  const flatRate = inputs.flatRateOverride !== undefined ? 
+    inputs.flatRateOverride / 100 : 
+    (inputs.flatRatePct !== undefined ? inputs.flatRatePct / 100 : flatRateAuto);
 
-  // Derive base volumes for display (used in every Supplemental variation)
-  const basePreTaxPreTip = (basis === 'GROSS') ? (cc / (1 + tax + tip)) : cc;
-  const baseTaxedPreTip = basePreTaxPreTip * (1 + tax);
+  // New v1.0.1 timing approach - map legacy to new types
+  const tipTiming = inputs.tipTiming || 
+    (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP');
+  const feeTaxBasis = inputs.feeTaxBasis || 'POST_TAX';
 
-  // Card processed total (processor basis)
-  const cardProcessedTotal = timing === 'FEE_BEFORE_TIP'
-    ? baseTaxedPreTip * (1 + fee) * (1 + tip)   // Tip Handwritten – Post Sale (fee before tip)
-    : baseTaxedPreTip * (1 + tip) * (1 + fee);  // Tip at Time of Sale (fee after tip)
+  // Build combo key for formula selection
+  const comboKey = `${tipTiming}__${feeTaxBasis}`;
 
-  // Fee base on cards (driven by feeBasis × timing × cardVolumeBasis)
-  let feeBaseForCards: number;
-  if (timing === 'FEE_BEFORE_TIP') {
-    feeBaseForCards = (feeBasis === 'POST_TAX') ? baseTaxedPreTip : basePreTaxPreTip;
-  } else {
-    feeBaseForCards = ((feeBasis === 'POST_TAX') ? baseTaxedPreTip : basePreTaxPreTip) * (1 + tip);
+  // Order of operations display text
+  const orderOfOperationsMap: Record<string, string> = {
+    'BEFORE_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Supplemental Fee → +Tip',
+    'BEFORE_TIP__PRE_TAX': 'Pre-Tax Base → +Supplemental Fee → +Tax → +Tip',
+    'AFTER_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Tip → +Supplemental Fee',
+    'AFTER_TIP__PRE_TAX': 'Pre-Tax Base → +Tax → +Tip → +Supplemental Fee'
+  };
+
+  // Shared pre-calculations (always Gross input model)
+  const base = grossCards / (1 + tax + tip);
+  const postTaxPreTip = base * (1 + tax);
+
+  // Combo-specific calculations
+  let feeBaseCards: number;
+  let supplementalFeeCards: number;
+  let tipBase: number;
+  let tipAmount: number;
+  let cardsProcessed: number;
+
+  switch (comboKey) {
+    case 'BEFORE_TIP__POST_TAX':
+      feeBaseCards = postTaxPreTip;
+      supplementalFeeCards = feeBaseCards * fee;
+      tipBase = postTaxPreTip * (1 + fee);
+      tipAmount = tipBase * tip;
+      cardsProcessed = postTaxPreTip * (1 + fee) * (1 + tip);
+      break;
+
+    case 'BEFORE_TIP__PRE_TAX':
+      feeBaseCards = base;
+      supplementalFeeCards = feeBaseCards * fee;
+      tipBase = base * (1 + fee) * (1 + tax);
+      tipAmount = tipBase * tip;
+      cardsProcessed = base * (1 + fee) * (1 + tax) * (1 + tip);
+      break;
+
+    case 'AFTER_TIP__POST_TAX':
+      feeBaseCards = postTaxPreTip * (1 + tip);
+      supplementalFeeCards = feeBaseCards * fee;
+      tipBase = postTaxPreTip;
+      tipAmount = tipBase * tip;
+      cardsProcessed = postTaxPreTip * (1 + tip) * (1 + fee);
+      break;
+
+    case 'AFTER_TIP__PRE_TAX':
+      feeBaseCards = base * (1 + tip);
+      supplementalFeeCards = feeBaseCards * fee;
+      tipBase = postTaxPreTip;
+      tipAmount = tipBase * tip;
+      cardsProcessed = (postTaxPreTip * (1 + tip)) + (fee * feeBaseCards);
+      break;
+
+    default:
+      // Fallback to BEFORE_TIP__POST_TAX
+      feeBaseCards = postTaxPreTip;
+      supplementalFeeCards = feeBaseCards * fee;
+      tipBase = postTaxPreTip * (1 + fee);
+      tipAmount = tipBase * tip;
+      cardsProcessed = postTaxPreTip * (1 + fee) * (1 + tip);
   }
-  const cardFeeCollected = feeBaseForCards * fee;
-  const cashFeeCollected = cash * fee; // cash fee stays on pre-tax cash volume
-  const collectedValue = cardFeeCollected + cashFeeCollected;
 
-  // Program card fees and signed row
-  const processorChargeOnCards = cardProcessedTotal * fr;
-  const netCostForProcessingCards = cardFeeCollected - processorChargeOnCards; // signed; can be negative
+  // Processor charges and recovery
+  const procCharge = cardsProcessed * flatRate;
+  const recovery = supplementalFeeCards - procCharge;
+  const coveragePct = procCharge === 0 ? 0 : supplementalFeeCards / procCharge;
 
-  // Residual/overage for savings math (unchanged)
-  const residualCardCost = Math.max(processorChargeOnCards - cardFeeCollected, 0);
-  const cardProgramProfit = Math.max(cardFeeCollected - processorChargeOnCards, 0);
-  
-  // Current cost calculation
-  const currentCost = basePreTaxPreTip * ((inputs.currentRate || 0) / 100);
+  // Savings calculations
+  const currentCost = grossCards * currRate;
+  const savingsCardsOnly = currentCost - (procCharge - supplementalFeeCards);
+  const supplementalFeeCash = cashVol * fee;
+  const netMonthly = savingsCardsOnly + supplementalFeeCash;
+  const netAnnual = netMonthly * 12;
 
-  // Savings pieces matching Excel layout (computed for all variations)
-  const processingCostSavingsOnly = currentCost - residualCardCost;
-  const processingCostSavingsPct = currentCost > 0 ? processingCostSavingsOnly / currentCost : 0;
-  const totalNetGainRevenue = processingCostSavingsOnly + cashFeeCollected;
-  const annualNetGainRevenue = totalNetGainRevenue * 12;
-  
-  // Legacy calculations for compatibility
-  const processingSavings = processingCostSavingsOnly;
-  const monthlySavings = totalNetGainRevenue;
-  const annualSavings = annualNetGainRevenue;
-  const extraRevenueCash = cashFeeCollected;
-  const tipAdjustmentResidual = 0;
-  const programCardFees = processorChargeOnCards;
-  const feeCollectedOnCash = cashFeeCollected;
+  // Gross profit calculation
+  const grossProfit = (flatRate - interchange) * cardsProcessed;
 
-  // Gross Profit calculation: (flat rate % - interchange cost %) × total cards processed
-  const interchangeRate = (inputs.interchangeCost || 0) / 100;
-  const grossProfit = (fr - interchangeRate) * cardProcessedTotal;
-  
-  // Apply Skytab bonus formula: Gross Profit × 18 × 60% capped at $10,000; Rep 50% based on capped amount
+  // Skytab bonus calculations
   const skytabBonusGross = Math.min(grossProfit * SKYTAB_BONUS_MULT * SKYTAB_BONUS_SPLIT, SKYTAB_BONUS_CAP);
   const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
 
+  // Legacy field compatibility
+  const collectedValue = supplementalFeeCards + supplementalFeeCash;
+  const processingCostSavingsOnly = savingsCardsOnly;
+  const processingCostSavingsPct = currentCost > 0 ? processingCostSavingsOnly / currentCost : 0;
+  
   return {
-    baseVolume: basePreTaxPreTip,
-    markedUpVolume: basePreTaxPreTip,
-    adjustedVolume: basePreTaxPreTip,
+    // Legacy compatibility fields
+    baseVolume: base,
+    markedUpVolume: base,
+    adjustedVolume: base,
     markupCollected: collectedValue,
-    processingFees: processorChargeOnCards,
+    processingFees: procCharge,
     currentCost,
-    newCost: residualCardCost,
-    processingSavings,
-    extraRevenueCash,
-    cardProgramProfit,
-    residualCardCost,
-    tipAdjustmentResidual,
-    monthlySavings,
-    annualSavings,
-    // Canonical fields
-    programCardFees,
-    feeCollectedOnCash,
-    annualVolume: (basePreTaxPreTip + cash) * 12,
-    dmpProfit: 0, // Not applicable for supplemental fee
+    newCost: Math.max(procCharge - supplementalFeeCards, 0),
+    processingSavings: processingCostSavingsOnly,
+    extraRevenueCash: supplementalFeeCash,
+    monthlySavings: netMonthly,
+    annualSavings: netAnnual,
+    annualVolume: (base + cashVol) * 12,
+    dmpProfit: 0,
     skytabBonus: 0,
-    skytabBonusRep: skytabBonusRep,
+    skytabBonusRep,
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue,
-    derivedFlatRate: Math.round((fee/(1+fee))*100 * 1000) / 1000,
-    tipAssumptionNote: inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale',
-    // Additional fields for UI display
-    cardFeeCollected,
-    cashFeeCollected,
-    cardProcessedTotal,
-    processorChargeOnCards,
-    netCostForProcessingCards,
-    // Excel-style standardized fields
-    baseVolumePreTaxPreTip: basePreTaxPreTip,
-    baseVolumeTaxedPreTip: baseTaxedPreTip,
+    derivedFlatRate: flatRateAuto,
+    tipAssumptionNote: tipTiming === 'AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale',
+    
+    // Display fields
+    cardFeeCollected: supplementalFeeCards,
+    cashFeeCollected: supplementalFeeCash,
+    cardProcessedTotal: cardsProcessed,
+    processorChargeOnCards: procCharge,
+    netCostForProcessingCards: recovery,
+    baseVolumePreTaxPreTip: base,
+    baseVolumeTaxedPreTip: postTaxPreTip,
     processingCostSavingsOnly,
     processingCostSavingsPct,
-    totalNetGainRevenue,
-    annualNetGainRevenue,
-    // Gross Profit and Skytab bonus calculations
+    totalNetGainRevenue: netMonthly,
+    annualNetGainRevenue: netAnnual,
     grossProfit,
-    skytabBonusGross
+    skytabBonusGross,
+    
+    // Canonical fields
+    programCardFees: procCharge,
+    feeCollectedOnCards: supplementalFeeCards,
+    feeCollectedOnCash: supplementalFeeCash,
+    
+    // v1.0.1 new fields
+    feeBaseCards,
+    tipBase,
+    tipAmount,
+    recovery,
+    coveragePct,
+    savingsCardsOnly,
+    supplementalFeeCash,
+    comboKey,
+    orderOfOperations: orderOfOperationsMap[comboKey] || '',
+    
+    // Legacy residual/overage handling
+    residualCardCost: Math.max(procCharge - supplementalFeeCards, 0),
+    cardProgramProfit: Math.max(supplementalFeeCards - procCharge, 0),
+    tipAdjustmentResidual: 0
   };
 }
 

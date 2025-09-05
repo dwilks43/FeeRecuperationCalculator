@@ -29,10 +29,15 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     tipBasis: inputs.tipBasis || 'fee_inclusive',
     feeTiming: inputs.feeTiming || 'FEE_BEFORE_TIP',
     feeTaxBasis: inputs.feeTaxBasis || 'POST_TAX',
-    cardVolumeBasis: inputs.cardVolumeBasis || 'PRE_TAX'
+    cardVolumeBasis: inputs.cardVolumeBasis || 'PRE_TAX',
+    // v1.0.1 fields
+    tipTiming: inputs.tipTiming || 'BEFORE_TIP',
+    flatRateOverride: formatNumberInput(inputs.flatRateOverride || 0),
+    isAutoFlatRate: (inputs.isAutoFlatRate !== false).toString()
   });
 
   const [autoSynced, setAutoSynced] = useState(true);
+  const [isAutoFlatRate, setIsAutoFlatRate] = useState(inputs.isAutoFlatRate !== false);
 
   const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {
     if (typeof value === 'string') {
@@ -72,7 +77,9 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const handleFlatRateChange = (value: string) => {
     setInputValues(prev => ({ ...prev, flatRatePct: value }));
     onInputChange('flatRatePct', parseNumericInput(value));
+    onInputChange('flatRateOverride', parseNumericInput(value));
     setAutoSynced(false); // User manually edited flat rate
+    setIsAutoFlatRate(false); // Mark as manual override
   };
 
   const resetFlatRateToOffset = () => {
@@ -187,7 +194,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           {/* Monthly Credit Card Volume */}
           <div className="col-span-2">
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Monthly Credit Card Volume
+              {inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Monthly Card Volume (Gross)' : 'Monthly Credit Card Volume'}
               <Button
                 variant="ghost"
                 size="sm"
@@ -366,29 +373,35 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
               <div className="mt-2 flex justify-center">
                 <div>
-                  <Label className="text-xs font-medium text-gray-600">Fee timing</Label>
-                  <div className="space-y-1 mt-1">
-                    <label className="flex items-center text-xs">
+                  <Label className="text-xs font-medium text-gray-600">Tip Timing</Label>
+                  <div className="space-y-2 mt-1">
+                    <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
-                        name="feeTiming"
-                        value="FEE_BEFORE_TIP"
-                        checked={(inputs.feeTiming || 'FEE_BEFORE_TIP') === 'FEE_BEFORE_TIP'}
-                        onChange={(e) => handleInputChange('feeTiming', 'FEE_BEFORE_TIP')}
-                        className="mr-2"
+                        name="tipTiming"
+                        value="BEFORE_TIP"
+                        checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP')) === 'BEFORE_TIP'}
+                        onChange={(e) => handleInputChange('tipTiming', 'BEFORE_TIP')}
+                        className="mr-2 mt-0.5"
                       />
-                      <span>Tip Handwritten – Post Sale</span>
+                      <div>
+                        <div className="font-medium">Tip handwritten (fee before tip)</div>
+                        <div className="text-gray-500 text-xs">Tip is added after the card is processed; fee is calculated before tip.</div>
+                      </div>
                     </label>
-                    <label className="flex items-center text-xs">
+                    <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
-                        name="feeTiming"
-                        value="FEE_AFTER_TIP"
-                        checked={inputs.feeTiming === 'FEE_AFTER_TIP'}
-                        onChange={(e) => handleInputChange('feeTiming', 'FEE_AFTER_TIP')}
-                        className="mr-2"
+                        name="tipTiming"
+                        value="AFTER_TIP"
+                        checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_AFTER_TIP' ? 'AFTER_TIP' : 'BEFORE_TIP')) === 'AFTER_TIP'}
+                        onChange={(e) => handleInputChange('tipTiming', 'AFTER_TIP')}
+                        className="mr-2 mt-0.5"
                       />
-                      <span>Tip at Time of Sale</span>
+                      <div>
+                        <div className="font-medium">Tip at time of sale (fee after tip)</div>
+                        <div className="text-gray-500 text-xs">Tip is part of the transaction when the fee is calculated.</div>
+                      </div>
                     </label>
                   </div>
                 </div>
@@ -424,29 +437,35 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
               <div className="mt-2 flex justify-center">
                 <div>
-                  <Label className="text-xs font-medium text-gray-600">Apply fee</Label>
-                  <div className="space-y-1 mt-1">
-                    <label className="flex items-center text-xs">
+                  <Label className="text-xs font-medium text-gray-600">Fee Tax Basis</Label>
+                  <div className="space-y-2 mt-1">
+                    <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
                         name="feeTaxBasis"
                         value="POST_TAX"
                         checked={(inputs.feeTaxBasis || 'POST_TAX') === 'POST_TAX'}
                         onChange={(e) => handleInputChange('feeTaxBasis', 'POST_TAX')}
-                        className="mr-2"
+                        className="mr-2 mt-0.5"
                       />
-                      <span>Post tax</span>
+                      <div>
+                        <div className="font-medium">Apply fee to post-tax amount</div>
+                        <div className="text-gray-500 text-xs">Tax is added before fee.</div>
+                      </div>
                     </label>
-                    <label className="flex items-center text-xs">
+                    <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
                         name="feeTaxBasis"
                         value="PRE_TAX"
                         checked={inputs.feeTaxBasis === 'PRE_TAX'}
                         onChange={(e) => handleInputChange('feeTaxBasis', 'PRE_TAX')}
-                        className="mr-2"
+                        className="mr-2 mt-0.5"
                       />
-                      <span>Pre-tax</span>
+                      <div>
+                        <div className="font-medium">Apply fee to pre-tax amount</div>
+                        <div className="text-gray-500 text-xs">Fee is calculated before tax.</div>
+                      </div>
                     </label>
                   </div>
                 </div>
@@ -481,61 +500,16 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             </div>
           </div>
 
-          {/* Card Volume Basis for Supplemental Fee mode */}
-          {inputs.programType === 'SUPPLEMENTAL_FEE' && (
-            <div>
-              <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                Card Volume Basis
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('supplemental-fee')}
-                  data-testid="button-tooltip-card-volume-basis"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
-              </Label>
-              <div className="mt-2 flex justify-center">
-                <div>
-                  <Label className="text-xs font-medium text-gray-600">Card volume is</Label>
-                  <div className="space-y-1 mt-1">
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="cardVolumeBasis"
-                        value="PRE_TAX"
-                        checked={(inputs.cardVolumeBasis || 'PRE_TAX') === 'PRE_TAX'}
-                        onChange={(e) => handleInputChange('cardVolumeBasis', 'PRE_TAX')}
-                        className="mr-2"
-                      />
-                      <span>Pre-tax</span>
-                    </label>
-                    <label className="flex items-center text-xs">
-                      <input
-                        type="radio"
-                        name="cardVolumeBasis"
-                        value="GROSS"
-                        checked={inputs.cardVolumeBasis === 'GROSS'}
-                        onChange={(e) => handleInputChange('cardVolumeBasis', 'GROSS')}
-                        className="mr-2"
-                      />
-                      <span>Gross (includes tax & tip)</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div className="mt-2 text-xs text-gray-500 italic text-center">
-                These settings change how the fee is calculated on card transactions.
-              </div>
-            </div>
-          )}
+          {/* Card Volume Basis control removed per v1.0.1 spec - always Gross */}
 
           {/* Flat Rate (%) for Supplemental Fee mode */}
           {inputs.programType === 'SUPPLEMENTAL_FEE' && (
             <div>
               <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                Flat Rate (%) (applied to fee-inclusive card amount)
+                Flat Rate % (Bank Mapping)
+                {!isAutoFlatRate && (
+                  <span className="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">Manual</span>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -562,20 +536,18 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               <div className="mt-2 flex gap-4 text-xs">
                 <button
                   type="button"
-                  onClick={resetFlatRateToOffset}
+                  onClick={() => {
+                    resetFlatRateToOffset();
+                    setIsAutoFlatRate(true);
+                  }}
                   className="text-blue-600 hover:text-blue-800 underline"
                   data-testid="link-reset-flat-rate"
                 >
-                  Reset flat rate to offset
+                  Reset to auto
                 </button>
-                <button
-                  type="button"
-                  onClick={computeFeeFromFlatRate}
-                  className="text-blue-600 hover:text-blue-800 underline"
-                  data-testid="link-compute-fee-from-flat-rate"
-                >
-                  Compute fee from flat rate
-                </button>
+                <div className="text-xs text-gray-500">
+                  Bank mapping: Fee ÷ (1+Fee)
+                </div>
               </div>
             </div>
           )}

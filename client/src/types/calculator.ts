@@ -1,6 +1,7 @@
 export type FeeTiming = 'FEE_BEFORE_TIP' | 'FEE_AFTER_TIP';
 export type FeeTaxBasis = 'POST_TAX' | 'PRE_TAX';
 export type CardVolumeBasis = 'PRE_TAX' | 'GROSS';
+export type TipTiming = 'BEFORE_TIP' | 'AFTER_TIP';
 
 export interface CalculatorInputs {
   programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
@@ -17,6 +18,10 @@ export interface CalculatorInputs {
   feeTiming?: FeeTiming;
   feeTaxBasis?: FeeTaxBasis;
   cardVolumeBasis?: CardVolumeBasis;
+  // New v1.0.1 fields
+  tipTiming?: TipTiming;
+  flatRateOverride?: number;
+  isAutoFlatRate?: boolean;
 }
 
 export interface CalculatorResults {
@@ -67,6 +72,16 @@ export interface CalculatorResults {
   // UX-specific fields for neutral row display
   residualAfterMarkup?: number;
   overageRetained?: number;
+  // v1.0.1 Supplemental Fee fields
+  feeBaseCards?: number;
+  tipBase?: number;
+  tipAmount?: number;
+  recovery?: number;
+  coveragePct?: number;
+  savingsCardsOnly?: number;
+  supplementalFeeCash?: number;
+  comboKey?: string;
+  orderOfOperations?: string;
 }
 
 export interface TooltipContent {

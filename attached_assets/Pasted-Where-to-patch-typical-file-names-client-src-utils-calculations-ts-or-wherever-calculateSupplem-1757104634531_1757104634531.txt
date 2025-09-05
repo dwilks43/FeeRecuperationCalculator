@@ -1,0 +1,84 @@
+Where to patch (typical file names):
+
+client/src/utils/calculations.ts (or wherever calculateSupplementalFeeResults lives)
+
+client/src/components/InputForm.tsx (labels, radios, flat-rate input behavior)
+
+client/src/components/TooltipModal.tsx or tooltips map (new copy)
+
+client/src/components/... panels showing Derived, Processor/Recovery, Savings/Net, Profit
+
+Remove the “Card Volume Basis” control in the Supplemental Fee view
+
+1) Types & enums (TS)
+
+type TipTiming = 'BEFORE_TIP' | 'AFTER_TIP';
+type FeeTaxBasis = 'POST_TAX' | 'PRE_TAX';
+
+interface SupInputs {
+  grossCards: number; cashVol: number;
+  currRate: number; interchange: number;
+  tax: number; tip: number; fee: number;
+  flatRate: number; // if overridden; else compute auto
+  tipTiming: TipTiming; feeTaxBasis: FeeTaxBasis;
+}
+
+
+2) Flat Rate % logic
+
+Default (auto): flatRate = fee/(1+fee)
+
+If user edits the field, persist the override until “Reset to auto” is clicked.
+
+Display a subtle “Manual” pill when overridden.
+
+3) Shared pre-calcs (always)
+
+const base = grossCards / (1 + tax + tip);
+const postTaxPreTip = base * (1 + tax);
+
+
+4) Combo switch (math.combos)
+
+Build key as ${tipTiming}__${feeTaxBasis} and select the formula set from math.combos.
+
+Compute in order: feeBaseCards → supplementalFeeCards → tipBase → tipAmount → cardsProcessed.
+
+5) Charges, recovery, savings (no clamp)
+
+const procCharge = cardsProcessed * flatRate;
+const recovery   = supplementalFeeCards - procCharge;
+const coveragePct = procCharge === 0 ? 0 : supplementalFeeCards / procCharge;
+
+const currentCost = grossCards * currRate;
+const savingsCardsOnly = currentCost - (procCharge - supplementalFeeCards);
+
+const supplementalFeeCash = cashVol * fee;
+const netMonthly = savingsCardsOnly + supplementalFeeCash;
+const netAnnual  = netMonthly * 12;
+
+
+6) Profit (renamed)
+
+const grossProfit = (flatRate - interchange) * cardsProcessed; // no ×0.6
+
+
+7) UI wiring
+
+Radios: keep two groups; update labels/subtext per JSON.
+
+Order-of-operations ribbon: render ui.orderOfOperationsTextByCombo[comboKey].
+
+Dynamic bases: replace any fixed “Post-Tax, Pre-Tip” field with Fee Base — Cards and Tip Base (values + small caption text derived from combo).
+
+Recovery card: include inline math line (Under/Over = Fee − Processor) and Coverage %.
+
+Rounding: compute at full precision; format to 2 decimals for display.
+
+8) Remove this control
+
+“Card Volume Basis” (cards are always Gross).
+
+9) QA
+
+Add unit tests (or a quick dev console check) for all 4 qaExamples above. Values should match to within display rounding (±$0.01).
