@@ -106,7 +106,7 @@ export const TOOLTIPS = {
   },
   'flat-rate-pct': {
     title: 'Flat Rate % (Bank Mapping)',
-    body: 'v1.0.1: Processing rate applied to card processed total. Auto-calculated using Fee ÷ (1+Fee) formula, or manually overridden.'
+    body: 'v1.0.1-patch: Processing rate applied to card processed total. Auto-calculated using Fee ÷ (1+Fee) formula with HALF_UP rounding to 2 decimals. The rounded value is used in all calculations.'
   },
   skytabBonusGross: {
     title: 'Skytab Bonus Calculation (Gross)',

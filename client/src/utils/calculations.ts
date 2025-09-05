@@ -93,6 +93,22 @@ export function formatLargeNumber(amount: number): string {
 }
 
 /**
+ * HALF_UP rounding function (v1.0.1-patch-roundedFlatRate)
+ */
+export function roundHalfUp(value: number, decimals: number): number {
+  const factor = Math.pow(10, decimals);
+  return Math.round(value * factor) / factor;
+}
+
+/**
+ * Calculate auto flat rate with HALF_UP rounding to 2 decimals
+ */
+export function calculateAutoFlatRate(fee: number): number {
+  if (fee <= 0) return 0;
+  return roundHalfUp(fee / (1 + fee), 2);
+}
+
+/**
  * Calculate all results from inputs
  */
 export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
@@ -112,8 +128,8 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   const tip = (inputs.tipRate || 0) / 100;
   const fee = (inputs.priceDifferential || 0) / 100;  // Supplemental Fee %
   
-  // Flat Rate logic with auto-calculation and override support
-  const flatRateAuto = fee / (1 + fee);
+  // Flat Rate logic with auto-calculation and override support (v1.0.1-patch-roundedFlatRate)
+  const flatRateAuto = calculateAutoFlatRate(fee);
   const flatRate = inputs.flatRateOverride !== undefined ? 
     inputs.flatRateOverride / 100 : 
     (inputs.flatRatePct !== undefined ? inputs.flatRatePct / 100 : flatRateAuto);

@@ -39,6 +39,18 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const [autoSynced, setAutoSynced] = useState(true);
   const [isAutoFlatRate, setIsAutoFlatRate] = useState(inputs.isAutoFlatRate !== false);
 
+  // HALF_UP rounding function for flat rate calculation (v1.0.1-patch-roundedFlatRate)
+  const roundHalfUp = (value: number, decimals: number): number => {
+    const factor = Math.pow(10, decimals);
+    return Math.round(value * factor) / factor;
+  };
+
+  // Auto flat rate calculation with HALF_UP rounding to 2 decimals
+  const calculateAutoFlatRate = (fee: number): number => {
+    if (fee <= 0) return 0;
+    return roundHalfUp(fee / (1 + fee), 2);
+  };
+
   const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {
     if (typeof value === 'string') {
       setInputValues(prev => ({ ...prev, [field]: value }));
@@ -60,7 +72,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     // Auto-calculate flat rate when switching to supplemental fee
     if (newType === 'SUPPLEMENTAL_FEE' && inputs.priceDifferential > 0) {
       const fee = inputs.priceDifferential / 100;
-      const flatRate = Math.round((fee / (1 + fee)) * 100 * 100) / 100; // Round to 2 decimal places
+      const flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
       onInputChange('flatRatePct', flatRate);
       setAutoSynced(true);
     }
@@ -73,7 +85,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     
     // Auto-update flat rate if still synced
     if (autoSynced && inputs.programType === 'SUPPLEMENTAL_FEE') {
-      const flatRate = fee > 0 ? Math.round((fee / (1 + fee)) * 100 * 100) / 100 : 0; // Round to 2 decimal places
+      const flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
     }
@@ -90,10 +102,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const resetFlatRateToOffset = () => {
     if (inputs.priceDifferential > 0) {
       const fee = inputs.priceDifferential / 100;
-      const flatRate = Math.round((fee / (1 + fee)) * 100 * 100) / 100; // Round to 2 decimal places
+      const flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
       setAutoSynced(true);
+      setIsAutoFlatRate(true);
     }
   };
 
@@ -551,7 +564,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                   Reset to auto
                 </button>
                 <div className="text-xs text-gray-500">
-                  Bank mapping: Fee ÷ (1+Fee)
+                  Bank mapping: Fee ÷ (1+Fee) — rounded to 2 decimals and used in all calculations.
                 </div>
               </div>
             </div>
