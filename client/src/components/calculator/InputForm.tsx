@@ -49,6 +49,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     }
   };
 
+  const handleRadioChange = (field: keyof CalculatorInputs, value: string) => {
+    setInputValues(prev => ({ ...prev, [field]: value }));
+    onInputChange(field, value as any);
+  };
+
   const handleProgramTypeChange = (newType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE') => {
     onInputChange('programType', newType as any);
     
@@ -381,7 +386,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                         name="tipTiming"
                         value="BEFORE_TIP"
                         checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP')) === 'BEFORE_TIP'}
-                        onChange={(e) => handleInputChange('tipTiming', 'BEFORE_TIP')}
+                        onChange={(e) => handleRadioChange('tipTiming', 'BEFORE_TIP')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
@@ -395,7 +400,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                         name="tipTiming"
                         value="AFTER_TIP"
                         checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_AFTER_TIP' ? 'AFTER_TIP' : 'BEFORE_TIP')) === 'AFTER_TIP'}
-                        onChange={(e) => handleInputChange('tipTiming', 'AFTER_TIP')}
+                        onChange={(e) => handleRadioChange('tipTiming', 'AFTER_TIP')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
@@ -445,7 +450,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                         name="feeTaxBasis"
                         value="POST_TAX"
                         checked={(inputs.feeTaxBasis || 'POST_TAX') === 'POST_TAX'}
-                        onChange={(e) => handleInputChange('feeTaxBasis', 'POST_TAX')}
+                        onChange={(e) => handleRadioChange('feeTaxBasis', 'POST_TAX')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
@@ -459,7 +464,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                         name="feeTaxBasis"
                         value="PRE_TAX"
                         checked={inputs.feeTaxBasis === 'PRE_TAX'}
-                        onChange={(e) => handleInputChange('feeTaxBasis', 'PRE_TAX')}
+                        onChange={(e) => handleRadioChange('feeTaxBasis', 'PRE_TAX')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
