@@ -41,7 +41,7 @@ export const TOOLTIPS = {
   },
   flatRate: {
     title: 'Flat Rate % (Bank Mapping)',
-    body: 'v1.0.1: Processing rate applied to the full card processed amount. Auto-calculated as Fee ÷ (1+Fee) or manually overridden. Example: 3.85%.'
+    body: 'Calculated as Fee ÷ (1+Fee), rounded to 2-dp percent and used in all calculations. Editable; click Reset to auto to restore.'
   },
   // v1.0.1 Derived Panels
   baseVolumePreTaxPreTip: {
@@ -54,7 +54,7 @@ export const TOOLTIPS = {
   },
   cardFeeCollected: {
     title: 'Supplemental Fee Collected — Cards',
-    body: 'v1.0.1: Fee dollars collected from card transactions based on the fee base and supplemental fee percentage.'
+    body: 'Fee is applied to the Fee Base for the selected options.'
   },
   tipBase: {
     title: 'Tip Base',
@@ -62,11 +62,11 @@ export const TOOLTIPS = {
   },
   tipAmount: {
     title: 'Tip Amount',
-    body: 'v1.0.1: Total tip amount calculated based on the tip base and tip rate percentage.'
+    body: 'Tip is calculated on the Tip Base shown.'
   },
   cardProcessedTotal: {
     title: 'Card Processed Total',
-    body: 'v1.0.1: Final amount that runs through the card processor, including all taxes, fees, and tips.'
+    body: 'Amount the processor charges on (after fee and after tip).'
   },
   processorChargeOnCards: {
     title: 'Processor Charge on Cards',
@@ -74,7 +74,7 @@ export const TOOLTIPS = {
   },
   recovery: {
     title: 'Card Under/Over-Recovery',
-    body: 'v1.0.1: Difference between Supplemental Fee collected on cards and processor charges. Positive = over-recovery, Negative = under-recovery.'
+    body: 'Under/Over = Supplemental Fee (Cards) − Processor Charge.'
   },
   coveragePct: {
     title: 'Coverage %',
@@ -86,7 +86,7 @@ export const TOOLTIPS = {
   },
   savingsCardsOnly: {
     title: 'Processing Cost Savings (Cards Only)',
-    body: 'v1.0.1: Current processing cost minus new processing cost. Shows the savings on card processing alone.'
+    body: 'Savings (Cards Only) = Current Cost − (Processor Charge − Fee on Cards).'
   },
   supplementalFeeCash: {
     title: 'Supplemental Fee Collected — Cash',
