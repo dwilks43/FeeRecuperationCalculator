@@ -214,6 +214,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   // Savings calculations
   const currentCost = grossCards * currRate;
   const savingsCardsOnly = currentCost - netChangeCards;
+  const procSavingsPct = currentCost === 0 ? 0 : savingsCardsOnly / currentCost;
   const supplementalFeeCash = cashVol * fee;
   const netMonthly = savingsCardsOnly + supplementalFeeCash;
   const netAnnual = netMonthly * 12;
@@ -279,6 +280,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     recovery,
     coveragePct,
     savingsCardsOnly,
+    procSavingsPct,
     supplementalFeeCash,
     netChangeCards,
     comboKey,

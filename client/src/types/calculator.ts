@@ -79,6 +79,7 @@ export interface CalculatorResults {
   recovery?: number;
   coveragePct?: number;
   savingsCardsOnly?: number;
+  procSavingsPct?: number;
   supplementalFeeCash?: number;
   netChangeCards?: number;
   comboKey?: string;
