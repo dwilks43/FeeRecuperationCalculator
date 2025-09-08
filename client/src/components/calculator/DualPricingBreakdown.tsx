@@ -86,7 +86,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Processed Total (after fee & tip)</span>
+                  <span className="text-sm text-gray-600">Card Processed Total (after fee, tip, & tax)</span>
                   <span className="font-bold">{formatCurrency(results.cardProcessedTotal || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">

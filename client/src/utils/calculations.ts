@@ -191,7 +191,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
       supplementalFeeCards = feeBaseCards * fee;
       tipBase = base;
       tipAmount = tipBase * tip;
-      cardsProcessed = (postTaxPreTip * (1 + tip)) + (fee * feeBaseCards);
+      cardsProcessed = base * (1 + tax) * (1 + tip) * (1 + fee);
       break;
 
     default:
