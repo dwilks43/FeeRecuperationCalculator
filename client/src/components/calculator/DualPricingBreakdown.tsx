@@ -162,14 +162,6 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               </div>
             </div>
 
-            {/* Panel 4: Gross Profit */}
-            <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Gross Profit</h3>
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-700">Gross Profit (Cards)</span>
-                <span className="font-bold text-dmp-blue-600">{formatCurrency(results.grossProfit || 0)}</span>
-              </div>
-            </div>
           </>
         ) : (
           // Dual Pricing - keep original layout
