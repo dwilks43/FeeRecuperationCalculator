@@ -13,6 +13,18 @@ interface DualPricingBreakdownProps {
 
 export default function DualPricingBreakdown({ results, onTooltip, programType }: DualPricingBreakdownProps) {
   const [showDetails, setShowDetails] = useState(false);
+
+  // Dynamic captions based on combo key
+  const getDynamicCaption = (field: 'feeBaseCards' | 'tipBase'): string => {
+    const comboKey = results.comboKey || 'BEFORE_TIP__POST_TAX';
+    const captionMap: Record<string, Record<string, string>> = {
+      'BEFORE_TIP__POST_TAX': { feeBaseCards: 'post-tax, pre-tip', tipBase: 'post-tax + fee' },
+      'BEFORE_TIP__PRE_TAX':  { feeBaseCards: 'pre-tax', tipBase: 'pre-tax + fee + tax' },
+      'AFTER_TIP__POST_TAX':  { feeBaseCards: 'post-tax + tip', tipBase: 'post-tax' },
+      'AFTER_TIP__PRE_TAX':   { feeBaseCards: 'pre-tax + tip', tipBase: 'post-tax' }
+    };
+    return captionMap[comboKey]?.[field] || '';
+  };
   
   return (
     <Card className="shadow-lg border-gray-200">
@@ -41,11 +53,14 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Derived Bases & Totals</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Pre-Tax Base (from Gross)</span>
+                  <span className="text-sm text-gray-600">Base Card Volume (pre-tax, pre-tip)</span>
                   <span className="font-medium">{formatCurrency(results.baseVolumePreTaxPreTip || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Fee Base — Cards</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Fee Base — Cards</span>
+                    <span className="text-xs text-gray-400 italic">({getDynamicCaption('feeBaseCards')})</span>
+                  </div>
                   <span className="font-medium">{formatCurrency(results.feeBaseCards || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -53,64 +68,95 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Tip Base</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Tip Base</span>
+                    <span className="text-xs text-gray-400 italic">({getDynamicCaption('tipBase')})</span>
+                  </div>
                   <span className="font-medium">{formatCurrency(results.tipBase || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Tip Amount</span>
                   <span className="font-medium">{formatCurrency(results.tipAmount || 0)}</span>
                 </div>
-                <div className="flex justify-between items-center border-t pt-2 mt-2">
-                  <span className="text-sm font-medium text-gray-700">Card Processed Total</span>
-                  <span className="font-bold">{formatCurrency(results.cardProcessedTotal || 0)}</span>
-                </div>
               </div>
             </div>
 
-            {/* Panel 2: Processor Charges & Recovery */}
+            {/* Panel 2: Processing on Cards (New Program) */}
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Processor Charges & Recovery</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Processor Charge on Cards</span>
+                  <span className="text-sm text-gray-600">Card Processed Total (after fee & tip)</span>
+                  <span className="font-bold">{formatCurrency(results.cardProcessedTotal || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Flat Rate %</span>
+                  <span className="font-medium">{((results.derivedFlatRate || 0) * 100).toFixed(4)}%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Processor Charge</span>
+                    <span className="text-xs text-gray-400 italic">Processor Charge = Card Processed Total × Flat Rate</span>
+                  </div>
                   <span className="font-medium text-red-600">{formatCurrency(results.processorChargeOnCards || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Under/Over-Recovery</span>
+                  <span className="text-sm text-gray-600">Supplemental Fee (Cards)</span>
+                  <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Under/Over-Recovery</span>
+                    <span className="text-xs text-gray-400 italic">Under/Over-Recovery = Fee (Cards) − Processor</span>
+                  </div>
                   <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(results.recovery || 0)}
                   </span>
                 </div>
-                <div className="text-xs text-gray-500 italic mb-2">Under/Over = Supplemental Fee (Cards) − Processor Charge</div>
                 <div className="flex justify-between items-center border-t pt-2">
-                  <span className="text-sm font-medium text-gray-700">Coverage %</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-700">Coverage %</span>
+                    <span className="text-xs text-gray-400 italic">Coverage % = Fee (Cards) ÷ Processor</span>
+                  </div>
                   <span className="font-bold">{((results.coveragePct || 0) * 100).toFixed(1)}%</span>
                 </div>
               </div>
             </div>
 
-            {/* Panel 3: Savings & Net */}
+            {/* Panel 3: Savings vs Today */}
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
-              <h3 className="text-lg font-semibold text-gray-900 mb-3">Savings & Net</h3>
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Savings vs Today</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
                   <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Net Change in Card Processing</span>
+                    <span className="text-xs text-gray-400 italic">Net Change in Card Processing = Processor Charge − Fee (Cards)</span>
+                  </div>
+                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {formatCurrency(results.netChangeCards || 0)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Savings (Cards Only)</span>
+                    <span className="text-xs text-gray-400 italic">Savings (Cards Only) = Current Cost − Net Change</span>
+                  </div>
                   <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cash</span>
+                  <span className="text-sm text-gray-600">Supplemental Fee — Cash</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.supplementalFeeCash || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
-                  <span className="text-sm font-medium text-gray-700">Total Net Gain (Monthly)</span>
+                  <span className="text-sm font-medium text-gray-700">Net Monthly</span>
                   <span className="font-bold text-green-700">{formatCurrency(results.totalNetGainRevenue || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
+                  <span className="text-sm font-medium text-gray-700">Net Annual</span>
                   <span className="font-bold text-green-600">{formatCurrency(results.annualNetGainRevenue || 0)}</span>
                 </div>
               </div>
