@@ -141,4 +141,6 @@ export type TooltipKey =
   | 'gross-profit'
   | 'recovery'
   | 'savingsCardsOnly'
-  | 'procSavingsPct';
+  | 'procSavingsPct'
+  | 'skytabBonusGross'
+  | 'skytabBonusRep';

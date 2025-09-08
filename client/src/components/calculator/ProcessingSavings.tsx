@@ -18,7 +18,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-xl text-dmp-blue-800">
           <PiggyBank className="h-5 w-5 text-dmp-blue-600" />
-          {programType === 'SUPPLEMENTAL_FEE' ? 'Monthly Savings' : 'Monthly Processing Savings'}
+          {programType === 'SUPPLEMENTAL_FEE' ? 'Savings Summary' : 'Monthly Processing Savings'}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

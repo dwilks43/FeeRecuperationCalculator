@@ -114,7 +114,7 @@ export const TOOLTIPS = {
   },
   skytabBonusGross: {
     title: 'Skytab Bonus Calculation (Gross)',
-    body: 'Gross bonus estimate = Gross Profit × 18 months, capped at $10,000 maximum.'
+    body: 'Gross bonus estimate = Gross Profit × 18 months × 60%, capped at $10,000 maximum.'
   },
   skytabBonusRep: {
     title: 'Skytab Bonus Calculation (Rep 50%)',

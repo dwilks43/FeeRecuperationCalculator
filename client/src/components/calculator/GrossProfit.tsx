@@ -49,65 +49,65 @@ export default function GrossProfit({
               {formatCurrency(results.grossProfit || 0)}
             </span>
           </div>
-          <p className="text-xs text-dmp-blue-600 mt-1">Monthly gross profit from dual pricing</p>
+          <p className="text-xs text-dmp-blue-600 mt-1">Card Processed Total × (Flat Rate - Interchange Cost)</p>
         </div>
 
-        {/* Skytab Bonus Calculation */}
+        {/* Skytab Bonus Calculation (Gross) */}
         <div className="bg-white rounded-lg p-4 border border-blue-100 mb-4">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-gray-600">
               Skytab Bonus Calculation (Gross)
               <br />
               <span className="text-xs text-gray-500">
-                Capped at $10,000 maximum
+                Gross Profit × 18 × 60%, capped at $10,000 maximum
               </span>
             </span>
             <Button
               variant="ghost"
               size="sm"
               className="h-auto p-0"
-              onClick={() => onTooltip('skytab-bonus')}
-              data-testid="button-tooltip-skytab-bonus"
+              onClick={() => onTooltip('skytabBonusGross')}
+              data-testid="button-tooltip-skytab-bonus-gross"
             >
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
             </Button>
           </div>
           <div className="flex items-center gap-2">
             <Building className="h-5 w-5 text-amber-600" />
-            <span className="text-2xl font-bold text-amber-600" data-testid="text-skytab-bonus">
-              {formatCurrency(Math.min(results.grossProfit || 0, 10000))}
+            <span className="text-2xl font-bold text-amber-600" data-testid="text-skytab-bonus-gross">
+              {formatCurrency(results.skytabBonusGross || 0)}
             </span>
           </div>
           <p className="text-xs text-amber-600 mt-1">Skytab bonus (capped at $10K)</p>
         </div>
 
-        {/* Net Profit */}
+        {/* Skytab Bonus Calculation (Rep 50%) */}
         <div className="bg-white rounded-lg p-4 border border-blue-100">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-sm font-medium text-gray-600">
-              Net Profit
+              Skytab Bonus Calculation (Rep 50%)
               <br />
               <span className="text-xs text-gray-500">
-                After schedule A and ISO % removal
+                50% of Skytab Bonus Calculation (Gross)
               </span>
             </span>
             <Button
               variant="ghost"
               size="sm"
               className="h-auto p-0"
-              onClick={() => onTooltip('dmp-profit')}
-              data-testid="button-tooltip-net-profit"
+              onClick={() => onTooltip('skytabBonusRep')}
+              data-testid="button-tooltip-skytab-bonus-rep"
             >
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
             </Button>
           </div>
           <div className="flex items-center gap-2">
             <Building className="h-5 w-5 text-green-600" />
-            <span className="text-2xl font-bold text-green-600" data-testid="text-net-profit">
-              {formatCurrency((results.grossProfit || 0) * 0.75)}
+            <span className="text-2xl font-bold text-green-600" data-testid="text-skytab-bonus-rep">
+              {formatCurrency(results.skytabBonusRep || 0)}
             </span>
           </div>
-          <p className="text-xs text-green-600 mt-1">Net profit (estimated 75% after costs)</p>
+          <p className="text-xs text-green-600 mt-1">Rep 50% share</p>
         </div>
       </CardContent>
     </Card>
