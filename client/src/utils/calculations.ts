@@ -147,7 +147,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     'BEFORE_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Supplemental Fee → +Tip',
     'BEFORE_TIP__PRE_TAX': 'Pre-Tax Base → +Supplemental Fee → +Tax → +Tip',
     'AFTER_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Tip → +Supplemental Fee',
-    'AFTER_TIP__PRE_TAX': 'Pre-Tax Base → +Tax → +Tip → +Supplemental Fee'
+    'AFTER_TIP__PRE_TAX': 'Pre-Tax Base → +Tip → +Fee → +Supplemental Fee'
   };
 
   // Shared pre-calculations (always Gross input model)
