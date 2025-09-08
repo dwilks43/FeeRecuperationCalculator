@@ -138,4 +138,6 @@ export type TooltipKey =
   | 'dmp-profit'
   | 'skytab-bonus'
   | 'skytab-bonus-rep'
-  | 'gross-profit';
+  | 'gross-profit'
+  | 'recovery'
+  | 'savingsCardsOnly';
