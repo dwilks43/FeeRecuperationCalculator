@@ -143,21 +143,29 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             </div>
 
-            {/* Total Net Gain (Monthly) - TEAL with Annual subtext */}
+            {/* Total Net Gain (Monthly) - TEAL */}
             <div className="bg-gradient-to-r from-teal-100 to-teal-50 rounded-lg p-4 border-2 border-teal-300">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Total Net Gain (Monthly)</span>
               </div>
               <div className="flex items-center gap-2">
                 <Trophy className="h-5 w-5 text-teal-600" />
-                <div className="flex flex-col">
-                  <span className="text-2xl font-bold text-teal-700">
-                    {formatCurrency(results.totalNetGainRevenue || 0)}
-                  </span>
-                  <span className="text-sm text-teal-600 font-medium">
-                    Annual Net Gain: {formatCurrency(results.annualNetGainRevenue || 0)}
-                  </span>
-                </div>
+                <span className="text-2xl font-bold text-teal-700">
+                  {formatCurrency(results.totalNetGainRevenue || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* Annual Net Gain - TEAL */}
+            <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Annual Net Gain</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-teal-500" />
+                <span className="text-2xl font-bold text-teal-600">
+                  {formatCurrency(results.annualNetGainRevenue || 0)}
+                </span>
               </div>
             </div>
 
