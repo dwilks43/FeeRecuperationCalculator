@@ -58,7 +58,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Fee Base — Cards</span>
+                    <span className="text-sm text-gray-600">Fee-Eligible Volume (Cards)</span>
                     <span className="text-xs text-gray-400 italic">({getDynamicCaption('feeBaseCards')})</span>
                   </div>
                   <span className="font-medium">{formatCurrency(results.feeBaseCards || 0)}</span>
@@ -69,7 +69,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Tip Base</span>
+                    <span className="text-sm text-gray-600">Tip-Eligible Volume (Cards)</span>
                     <span className="text-xs text-gray-400 italic">({getDynamicCaption('tipBase')})</span>
                   </div>
                   <span className="font-medium">{formatCurrency(results.tipBase || 0)}</span>

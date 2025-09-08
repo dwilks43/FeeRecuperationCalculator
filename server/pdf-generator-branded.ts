@@ -515,11 +515,11 @@ export function generateBrandedPDF(data: any): string {
                 <div class="section-bd">
                     <table class="kv">
                         <tr><th>Base Card Volume (pre-tax, pre-tip)</th><td class="metric">${formatCurrency(results.baseVolumePreTaxPreTip || baseVolume)}</td></tr>
-                        <tr><th>Fee Base — Cards</th><td class="metric">${formatCurrency(results.feeBaseCards || 0)}</td></tr>
+                        <tr><th>Fee-Eligible Volume (Cards)</th><td class="metric">${formatCurrency(results.feeBaseCards || 0)}</td></tr>
                         <tr><th>Supplemental Fee Collected — Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
-                        <tr><th>Tip Base</th><td class="metric">${formatCurrency(results.tipBase || 0)}</td></tr>
+                        <tr><th>Tip-Eligible Volume (Cards)</th><td class="metric">${formatCurrency(results.tipBase || 0)}</td></tr>
                         <tr><th>Tip Amount</th><td class="metric">${formatCurrency(results.tipAmount || 0)}</td></tr>
-                        <tr><th>Card Processed Total (after fee & tip)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+                        <tr><th>Card Processed Total (after fee, tip, & tax)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
                     </table>
                 </div>
             </div>
@@ -531,7 +531,7 @@ export function generateBrandedPDF(data: any): string {
                 </div>
                 <div class="section-bd">
                     <table class="kv">
-                        <tr><th>Card Processed Total (after fee & tip)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+                        <tr><th>Card Processed Total (after fee, tip, & tax)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
                         <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(inputs.flatRatePct || results.derivedFlatRate || flatRate)}</td></tr>
                         <tr><th>Processor Charge on Cards</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
                         <tr><th>Supplemental Fee Collected — Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>

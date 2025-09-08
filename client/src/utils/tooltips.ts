@@ -49,16 +49,16 @@ export const TOOLTIPS = {
     body: 'v1.0.1: The pre-tax, pre-tip base volume derived from the gross card amount using combo-based calculations.'
   },
   feeBaseCards: {
-    title: 'Fee Base — Cards',
-    body: 'v1.0.1: The amount on which the supplemental fee is calculated for cards, determined by Fee Tax Basis setting.'
+    title: 'Fee-Eligible Volume (Cards)',
+    body: 'Dollar volume of card sales that the supplemental fee is applied to, based on your fee/tip timing.'
   },
   cardFeeCollected: {
     title: 'Supplemental Fee Collected — Cards',
     body: 'Fee is applied to the Fee Base for the selected options.'
   },
   tipBase: {
-    title: 'Tip Base',
-    body: 'v1.0.1: The amount on which tips are calculated, determined by the tip timing and fee timing combination.'
+    title: 'Tip-Eligible Volume (Cards)',
+    body: 'Dollar volume of card sales that the tip is applied to, based on your fee/tax/tip timing.'
   },
   tipAmount: {
     title: 'Tip Amount',
