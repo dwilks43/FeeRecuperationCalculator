@@ -80,6 +80,7 @@ export interface CalculatorResults {
   coveragePct?: number;
   savingsCardsOnly?: number;
   supplementalFeeCash?: number;
+  netChangeCards?: number;
   comboKey?: string;
   orderOfOperations?: string;
 }

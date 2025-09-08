@@ -1,0 +1,56 @@
+{
+  "ui": {
+    "renameFields": {
+      "base": "Base Card Volume (pre-tax, pre-tip)",
+      "feeBaseCards": "Fee Base — Cards",
+      "cardsProcessed": "Card Processed Total (after fee & tip)"
+    },
+    "dynamicCaptions": {
+      "BEFORE_TIP__POST_TAX": { "feeBaseCards": "post-tax, pre-tip", "tipBase": "post-tax + fee" },
+      "BEFORE_TIP__PRE_TAX":  { "feeBaseCards": "pre-tax",          "tipBase": "pre-tax + fee + tax" },
+      "AFTER_TIP__POST_TAX":  { "feeBaseCards": "post-tax + tip",   "tipBase": "post-tax" },
+      "AFTER_TIP__PRE_TAX":   { "feeBaseCards": "pre-tax + tip",    "tipBase": "post-tax" }
+    },
+    "panels": {
+      "processingOnCards": {
+        "title": "Processing on Cards (New Program)",
+        "fieldsOrder": [
+          "cardsProcessed",
+          "flatRate",
+          "procCharge",
+          "supplementalFeeCards",
+          "recovery",
+          "coveragePct"
+        ],
+        "inlineFormulas": {
+          "procCharge": "Processor Charge = Card Processed Total × Flat Rate",
+          "recovery": "Under/Over-Recovery = Fee (Cards) − Processor",
+          "coveragePct": "Coverage % = Fee (Cards) ÷ Processor"
+        }
+      },
+      "savingsVsToday": {
+        "title": "Savings vs Today",
+        "fieldsOrder": [
+          "currentCost",
+          "netChangeCards", 
+          "savingsCardsOnly",
+          "supplementalFeeCash",
+          "netMonthly",
+          "netAnnual"
+        ],
+        "inlineFormulas": {
+          "netChangeCards": "Net Change in Card Processing = Processor Charge − Fee (Cards)",
+          "savingsCardsOnly": "Savings (Cards Only) = Current Cost − Net Change"
+        }
+      }
+    }
+  },
+  "math": {
+    "flatRateSource": "ROUND_HALF_UP(fee/(1+fee), 4)",  // 0.0385 for 4%
+    "procCharge": "cardsProcessed * flatRate",          // base must be after fee & tip
+    "recovery": "supplementalFeeCards - procCharge",
+    "coveragePct": "IF(procCharge==0,0,supplementalFeeCards/procCharge)",
+    "netChangeCards": "procCharge - supplementalFeeCards",
+    "savingsCardsOnly": "currentCost - netChangeCards"
+  }
+}

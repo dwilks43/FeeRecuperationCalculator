@@ -101,11 +101,11 @@ export function roundHalfUp(value: number, decimals: number): number {
 }
 
 /**
- * Calculate auto flat rate with HALF_UP rounding to 2 decimals
+ * Calculate auto flat rate with HALF_UP rounding to 4 decimals (updated spec)
  */
 export function calculateAutoFlatRate(fee: number): number {
   if (fee <= 0) return 0;
-  return roundHalfUp(fee / (1 + fee), 2);
+  return roundHalfUp(fee / (1 + fee), 4);
 }
 
 /**
@@ -208,9 +208,12 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   const recovery = supplementalFeeCards - procCharge;
   const coveragePct = procCharge === 0 ? 0 : supplementalFeeCards / procCharge;
 
+  // New calculations per specification
+  const netChangeCards = procCharge - supplementalFeeCards;
+  
   // Savings calculations
   const currentCost = grossCards * currRate;
-  const savingsCardsOnly = currentCost - (procCharge - supplementalFeeCards);
+  const savingsCardsOnly = currentCost - netChangeCards;
   const supplementalFeeCash = cashVol * fee;
   const netMonthly = savingsCardsOnly + supplementalFeeCash;
   const netAnnual = netMonthly * 12;
@@ -277,6 +280,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     coveragePct,
     savingsCardsOnly,
     supplementalFeeCash,
+    netChangeCards,
     comboKey,
     orderOfOperations: orderOfOperationsMap[comboKey] || '',
     
