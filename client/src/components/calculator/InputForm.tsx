@@ -45,10 +45,10 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     return Math.round(value * factor) / factor;
   };
 
-  // Auto flat rate calculation with HALF_UP rounding to 2 decimals
+  // Auto flat rate calculation with HALF_UP rounding to 4 decimals
   const calculateAutoFlatRate = (fee: number): number => {
     if (fee <= 0) return 0;
-    return roundHalfUp(fee / (1 + fee), 2);
+    return roundHalfUp(fee / (1 + fee), 4);
   };
 
   const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {
@@ -83,26 +83,12 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     const fee = parseNumericInput(value) / 100;
     onInputChange('priceDifferential', parseNumericInput(value));
     
-    // Debug logging
-    if (value === '4' || value === '4.0' || value === '4.00') {
-      console.log('🔍 DEBUG: 4% Supplemental Fee Processing');
-      console.log('Input value:', value);
-      console.log('Parsed fee (decimal):', fee);
-      console.log('Price differential stored:', parseNumericInput(value));
-    }
     
     // Auto-update flat rate if still synced
     if (autoSynced && inputs.programType === 'SUPPLEMENTAL_FEE') {
       const flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
-      
-      // Debug logging for 4% case
-      if (value === '4' || value === '4.0' || value === '4.00') {
-        console.log('Auto flat rate (decimal):', calculateAutoFlatRate(fee));
-        console.log('Auto flat rate (percentage):', flatRate);
-        console.log('Formatted flat rate:', formatNumberInput(flatRate));
-      }
     }
   };
 
