@@ -140,4 +140,5 @@ export type TooltipKey =
   | 'skytab-bonus-rep'
   | 'gross-profit'
   | 'recovery'
-  | 'savingsCardsOnly';
+  | 'savingsCardsOnly'
+  | 'procSavingsPct';

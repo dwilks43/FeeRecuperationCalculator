@@ -1,0 +1,71 @@
+{
+  "version": "1.2.2-hotfix-monthly-savings-annual",
+  "module": "SUPPLEMENTAL_FEE",
+
+  "ui": {
+    "monthlySavings": {
+      "enabled": true,
+      "sourceOfTruth": "results",
+      "items": [
+        { "key": "currentCost",          "label": "Current Processing Cost (Today)",            "style": "cost",          "format": "currency" },
+        { "key": "procCharge",           "label": "Processor Charge on Cards",                  "style": "cost",          "format": "currency" },
+        { "key": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards",         "style": "feesCollected", "format": "currency" },
+        { "key": "recovery",             "label": "Card Under/Over-Recovery (Fee − Processor)", "style": "bases",         "format": "currency",
+          "tooltip": "Under/Over = Fee (Cards) − Processor Charge. Positive = fee covers processor; negative = fee falls short." },
+        { "key": "savingsCardsOnly",     "label": "Processing Cost Savings (Cards Only)",       "style": "net",           "format": "currency",
+          "tooltip": "Savings = Current Cost − (Processor Charge − Fee on Cards)." },
+        { "key": "procSavingsPct",       "label": "Processing Cost Savings %",                  "style": "bases",         "format": "percent",
+          "tooltip": "Savings % = Savings (Cards Only) ÷ Current Cost." },
+        { "key": "netMonthly",           "label": "Total Net Gain (Monthly)",                   "style": "net",           "format": "currency" },
+        { "key": "netAnnual",            "label": "Annual Net Gain",                            "style": "net",           "format": "currency" }
+      ],
+      "labelOverrides": {
+        "Current processing cost": "Current Processing Cost (Today)",
+        "Net Cost for Processing Cards (include tax + tips)": "Card Under/Over-Recovery (Fee − Processor)",
+        "Processing Cost Savings (Only)": "Processing Cost Savings (Cards Only)",
+        "Total Net Gain Revenue": "Total Net Gain (Monthly)",
+        "Annual Net Gain Revenue": "Annual Net Gain"
+      },
+      "rounding": {
+        "currencyDecimals": 2,
+        "percentDecimals": 2,
+        "negativeStyle": "leadingMinus"
+      },
+      "colors": {
+        "cost": "red",
+        "feesCollected": "green",
+        "bases": "neutral",
+        "net": "teal"
+      }
+    }
+  },
+
+  "pdf": {
+    "summary": {
+      "enabled": true,
+      "showModeAndLedger": true,
+      "kpis": [
+        { "key": "currentCost",          "label": "Current Processing Cost (Today)" },
+        { "key": "procCharge",           "label": "Processor Charge on Cards" },
+        { "key": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards" },
+        { "key": "recovery",             "label": "Card Under/Over-Recovery (Fee − Processor)" },
+        { "key": "savingsCardsOnly",     "label": "Processing Cost Savings (Cards Only)" },
+        { "key": "procSavingsPct",       "label": "Processing Cost Savings %" },
+        { "key": "netMonthly",           "label": "Total Net Gain (Monthly)" },
+        { "key": "netAnnual",            "label": "Annual Net Gain" }
+      ],
+      "labelOverrides": {
+        "Current processing cost": "Current Processing Cost (Today)",
+        "Net Cost for Processing Cards (include tax + tips)": "Card Under/Over-Recovery (Fee − Processor)",
+        "Processing Cost Savings (Only)": "Processing Cost Savings (Cards Only)",
+        "Total Net Gain Revenue": "Total Net Gain (Monthly)",
+        "Annual Net Gain Revenue": "Annual Net Gain"
+      },
+      "footnotes": [
+        "Flat Rate = Fee ÷ (1+Fee), rounded to 2-dp percent and used in calculations.",
+        "Card volume assumed Gross (tax + tip included).",
+        "Savings can be negative if processor charges exceed the fee collected on cards."
+      ]
+    }
+  }
+}

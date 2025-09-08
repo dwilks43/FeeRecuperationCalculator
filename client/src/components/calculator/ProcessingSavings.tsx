@@ -22,39 +22,26 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Current Processing Cost */}
-        <div className="bg-white rounded-lg p-4 border border-red-200">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-sm font-medium text-gray-600">Current processing cost</span>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-auto p-0"
-              onClick={() => onTooltip('current-cost')}
-              data-testid="button-tooltip-current-cost"
-            >
-              <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <MinusCircle className="h-5 w-5 text-red-500" />
-            <span className="text-2xl font-bold text-red-600" data-testid="text-current-cost">
-              {formatCurrency(results.currentCost)}
-            </span>
-          </div>
-        </div>
-
-        {/* Supplemental Fee mode - v1.2.1 Monthly Savings UI */}
+        {/* Supplemental Fee mode - v1.2.2-hotfix Monthly Savings UI */}
         {programType === 'SUPPLEMENTAL_FEE' ? (
           <>
             {/* Current Processing Cost (Today) - RED */}
             <div className="bg-red-50 rounded-lg p-4 border border-red-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Current Processing Cost (Today)</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('current-cost')}
+                  data-testid="button-tooltip-current-cost"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
               </div>
               <div className="flex items-center gap-2">
                 <MinusCircle className="h-5 w-5 text-red-500" />
-                <span className="text-2xl font-bold text-red-600">
+                <span className="text-2xl font-bold text-red-600" data-testid="text-current-cost">
                   {formatCurrency(results.currentCost || 0)}
                 </span>
               </div>
@@ -142,7 +129,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   variant="ghost"
                   size="sm"
                   className="h-auto p-0"
-                  onClick={() => onTooltip('savingsCardsOnly')}
+                  onClick={() => onTooltip('procSavingsPct')}
                   data-testid="button-tooltip-proc-savings-pct"
                 >
                   <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
@@ -186,6 +173,28 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         ) : (
           // Dual Pricing mode - original layout
           <>
+            {/* Current Processing Cost */}
+            <div className="bg-white rounded-lg p-4 border border-red-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Current processing cost</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('current-cost')}
+                  data-testid="button-tooltip-current-cost"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
+              </div>
+              <div className="flex items-center gap-2">
+                <MinusCircle className="h-5 w-5 text-red-500" />
+                <span className="text-2xl font-bold text-red-600" data-testid="text-current-cost">
+                  {formatCurrency(results.currentCost)}
+                </span>
+              </div>
+            </div>
+
             {/* Conditional Neutral Row */}
             {(results.residualAfterMarkup || 0) > 0 ? (
               <div className="bg-amber-50 rounded-lg p-4 border border-amber-300">

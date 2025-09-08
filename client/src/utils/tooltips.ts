@@ -88,6 +88,10 @@ export const TOOLTIPS = {
     title: 'Processing Cost Savings (Cards Only)',
     body: 'Savings (Cards Only) = Current Cost − (Processor Charge − Fee on Cards).'
   },
+  procSavingsPct: {
+    title: 'Processing Cost Savings %',
+    body: 'Savings % = Savings (Cards Only) ÷ Current Cost.'
+  },
   supplementalFeeCash: {
     title: 'Supplemental Fee Collected — Cash',
     body: 'v1.0.1: Fee collected from cash transactions. Pure additional revenue with no processing costs.'
