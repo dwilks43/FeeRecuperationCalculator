@@ -19,7 +19,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
     const comboKey = results.comboKey || 'BEFORE_TIP__POST_TAX';
     const captionMap: Record<string, Record<string, string>> = {
       'BEFORE_TIP__POST_TAX': { feeBaseCards: 'post-tax, pre-tip', tipBase: 'post-tax + fee' },
-      'BEFORE_TIP__PRE_TAX':  { feeBaseCards: 'pre-tax', tipBase: 'pre-tax + fee + tax' },
+      'BEFORE_TIP__PRE_TAX':  { feeBaseCards: 'pre-tax', tipBase: 'base card + fee + tax' },
       'AFTER_TIP__POST_TAX':  { feeBaseCards: 'post-tax + tip', tipBase: 'post-tax' },
       'AFTER_TIP__PRE_TAX':   { feeBaseCards: 'pre-tax + tip', tipBase: 'post-tax' }
     };
