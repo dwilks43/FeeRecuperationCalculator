@@ -1,0 +1,85 @@
+{
+  "version": "1.2.2",
+  "module": "SUPPLEMENTAL_FEE",
+  "pdf": {
+    "layout": { "page1": "SUMMARY", "page2": "DETAILS" },
+
+    "summary": {
+      "enabled": true,
+      "title": "Supplemental Fee Savings Report",
+      "showModeAndLedger": true,
+      "ledgerTextByComboRef": "ui.orderOfOperationsTextByCombo",
+      "kpis": [
+        { "key": "currentCost",          "label": "Current Processing Cost (Today)" },
+        { "key": "procCharge",           "label": "Processor Charge on Cards" },
+        { "key": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards" },
+        { "key": "recovery",             "label": "Card Under/Over-Recovery (Fee − Processor)" },
+        { "key": "savingsCardsOnly",     "label": "Processing Cost Savings (Cards Only)" },
+        { "key": "procSavingsPct",       "label": "Processing Cost Savings %" },
+        { "key": "netMonthly",           "label": "Total Net Gain (Monthly)", "subtextKey": "netAnnual", "subtextLabel": "Annual Net Gain" }
+      ],
+      "footnotes": [
+        "Flat Rate = Fee ÷ (1+Fee), rounded to 2-dp percent and used in calculations.",
+        "Card volume assumed Gross (tax + tip included).",
+        "Savings can be negative if processor charges exceed the fee collected on cards."
+      ]
+    },
+
+    "details": {
+      "sectionsOrder": ["inputs", "derivedTotals", "processingOnCards", "savingsVsToday", "profit", "skytab"],
+      "sections": {
+        "inputs": [
+          { "key": "programType",  "label": "Program Type" },
+          { "key": "grossCards",   "label": "Monthly Card Volume (Gross)" },
+          { "key": "cashVol",      "label": "Monthly Cash Volume" },
+          { "key": "currRate",     "label": "Current Processing Rate (%)" },
+          { "key": "tax",          "label": "Tax Rate (%)" },
+          { "key": "tip",          "label": "Tip Rate (%)" },
+          { "key": "fee",          "label": "Supplemental Fee (%)" },
+          { "key": "flatRate",     "label": "Flat Rate % (Bank Mapping)" },
+          { "key": "tipTiming",    "label": "Tip Timing" },
+          { "key": "feeTaxBasis",  "label": "Apply Fee To" }
+        ],
+        "derivedTotals": [
+          { "key": "base",                 "label": "Base Card Volume (pre-tax, pre-tip)" },
+          { "key": "feeBaseCards",         "label": "Fee Base — Cards" },
+          { "key": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards" },
+          { "key": "tipBase",              "label": "Tip Base" },
+          { "key": "tipAmount",            "label": "Tip Amount" },
+          { "key": "cardsProcessed",       "label": "Card Processed Total (after fee & tip)" }
+        ],
+        "processingOnCards": [
+          { "key": "cardsProcessed",       "label": "Card Processed Total (after fee & tip)" },
+          { "key": "flatRate",             "label": "Flat Rate %" },
+          { "key": "procCharge",           "label": "Processor Charge on Cards" },
+          { "key": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards" },
+          { "key": "recovery",             "label": "Card Under/Over-Recovery" },
+          { "key": "coveragePct",          "label": "Coverage %" }
+        ],
+        "savingsVsToday": [
+          { "key": "currentCost",         "label": "Current Processing Cost (Today)" },
+          { "key": "netChangeCards",      "label": "Net Change in Card Processing" },
+          { "key": "savingsCardsOnly",    "label": "Processing Cost Savings (Cards Only)" },
+          { "key": "supplementalFeeCash", "label": "Supplemental Fee Collected — Cash" },
+          { "key": "netMonthly",          "label": "Total Net Gain (Monthly)" },
+          { "key": "netAnnual",           "label": "Annual Net Gain" }
+        ],
+        "profit": [
+          { "key": "grossProfit", "label": "Gross Profit (Cards)" }
+        ],
+        "skytab": [
+          { "key": "skytabBonusGross", "label": "Skytab Bonus (Gross)" },
+          { "key": "skytabBonusRep",   "label": "Skytab Bonus (Rep 50%)" }
+        ]
+      }
+    },
+
+    "labelOverrides": {
+      "Net Cost for Processing Cards (include tax + tips)": "Card Under/Over-Recovery (Fee − Processor)",
+      "Processing Cost Savings (Only)": "Processing Cost Savings (Cards Only)",
+      "Total Net Gain Revenue": "Total Net Gain (Monthly)",
+      "Annual Net Gain Revenue": "Annual Net Gain",
+      "Card volume is Pre-tax": "Card volume is Gross (tax + tip included)"
+    }
+  }
+}

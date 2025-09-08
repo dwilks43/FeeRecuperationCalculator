@@ -437,7 +437,154 @@ export function generateBrandedPDF(data: any): string {
             </div>
         </div>
 
-        <!-- Page 2 starts here -->
+        ${isSF ? `
+        <!-- Page 2: SUMMARY for Supplemental Fee (v1.2.2) -->
+        <div class="page-2 break-before">
+            <!-- Summary Title and Mode Display -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title" style="font-size: 18px; color: var(--brand-ultramarine);">Summary</div>
+                </div>
+                <div class="section-bd">
+                    ${results.comboKey ? `
+                    <div style="margin-bottom: 12px; padding: 8px; background: var(--bg-soft); border-radius: 4px;">
+                        <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Order of Operations:</div>
+                        <div style="font-size: 13px; font-weight: 600; color: var(--ink-800);">${results.orderOfOperations || ''}</div>
+                    </div>
+                    ` : ''}
+                </div>
+            </div>
+
+            <!-- Summary KPIs -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Key Performance Indicators</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Current Processing Cost (Today)</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
+                        <tr><th>Processor Charge on Cards</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
+                        <tr><th>Supplemental Fee Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+                        <tr><th>Card Under/Over-Recovery (Fee − Processor)</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : ''}">${formatCurrency(results.recovery || 0)}</td></tr>
+                        <tr><th>Processing Cost Savings (Cards Only)</th><td class="metric metric--positive">${formatCurrency(results.savingsCardsOnly || 0)}</td></tr>
+                        <tr><th>Processing Cost Savings %</th><td class="metric">${((results.procSavingsPct || 0) * 100).toFixed(2)}%</td></tr>
+                        <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">Total Net Gain (Monthly)</th><td class="metric metric-lg" style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.totalNetGainRevenue || 0)}</td></tr>
+                        <tr><th style="font-size: 14px; color: var(--muted);">Annual Net Gain</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualNetGainRevenue || 0)}</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footnotes -->
+            <div style="margin-top: 24px; padding: 16px; background: var(--bg-soft); border-radius: 6px; border-left: 3px solid var(--brand-ultramarine);">
+                <div style="font-size: 11px; color: var(--muted); line-height: 1.4;">
+                    <div>• Flat Rate = Fee ÷ (1+Fee), rounded to 2-dp percent and used in calculations.</div>
+                    <div>• Card volume assumed Gross (tax + tip included).</div>
+                    <div>• Savings can be negative if processor charges exceed the fee collected on cards.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 3: DETAILS for Supplemental Fee (v1.2.2) -->
+        <div class="page-3 break-before">
+            <!-- Inputs Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Input Parameters</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Program Type</th><td class="metric">Supplemental Fee</td></tr>
+                        <tr><th>Monthly Card Volume (Gross)</th><td class="metric">${formatCurrency(monthlyVolume)}</td></tr>
+                        <tr><th>Monthly Cash Volume</th><td class="metric">${formatCurrency(monthlyCashVolume)}</td></tr>
+                        <tr><th>Current Processing Rate (%)</th><td class="metric">${formatPercentage(currentRate)}</td></tr>
+                        <tr><th>Tax Rate (%)</th><td class="metric">${formatPercentage(taxRate)}</td></tr>
+                        <tr><th>Tip Rate (%)</th><td class="metric">${formatPercentage(tipRate)}</td></tr>
+                        <tr><th>Supplemental Fee (%)</th><td class="metric">${formatPercentage(priceDifferential)}</td></tr>
+                        <tr><th>Flat Rate % (Bank Mapping)</th><td class="metric">${formatPercentage(inputs.flatRatePct || results.derivedFlatRate || flatRate)}</td></tr>
+                        <tr><th>Tip Timing</th><td class="metric">${inputs.tipTiming === 'AFTER_TIP' ? 'Tip at time of sale (fee after tip)' : 'Tip handwritten (fee before tip)'}</td></tr>
+                        <tr><th>Apply Fee To</th><td class="metric">${inputs.feeTaxBasis === 'PRE_TAX' ? 'Apply fee to pre-tax amount' : 'Apply fee to post-tax amount'}</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Derived Totals Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Derived Bases & Totals</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Base Card Volume (pre-tax, pre-tip)</th><td class="metric">${formatCurrency(results.baseVolumePreTaxPreTip || baseVolume)}</td></tr>
+                        <tr><th>Fee Base — Cards</th><td class="metric">${formatCurrency(results.feeBaseCards || 0)}</td></tr>
+                        <tr><th>Supplemental Fee Collected — Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+                        <tr><th>Tip Base</th><td class="metric">${formatCurrency(results.tipBase || 0)}</td></tr>
+                        <tr><th>Tip Amount</th><td class="metric">${formatCurrency(results.tipAmount || 0)}</td></tr>
+                        <tr><th>Card Processed Total (after fee & tip)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Processing on Cards Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Processing on Cards (New Program)</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Card Processed Total (after fee & tip)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+                        <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(inputs.flatRatePct || results.derivedFlatRate || flatRate)}</td></tr>
+                        <tr><th>Processor Charge on Cards</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
+                        <tr><th>Supplemental Fee Collected — Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+                        <tr><th>Card Under/Over-Recovery</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : ''}">${formatCurrency(results.recovery || 0)}</td></tr>
+                        <tr><th>Coverage %</th><td class="metric">${((results.coveragePct || 0) * 100).toFixed(1)}%</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Savings vs Today Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Savings vs Today</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Current Processing Cost (Today)</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
+                        <tr><th>Net Change in Card Processing</th><td class="metric ${(results.netChangeCards || 0) <= 0 ? 'metric--positive' : ''}">${formatCurrency(results.netChangeCards || 0)}</td></tr>
+                        <tr><th>Processing Cost Savings (Cards Only)</th><td class="metric metric--positive">${formatCurrency(results.savingsCardsOnly || 0)}</td></tr>
+                        <tr><th>Supplemental Fee Collected — Cash</th><td class="metric metric--positive">${formatCurrency(results.supplementalFeeCash || 0)}</td></tr>
+                        <tr><th>Total Net Gain (Monthly)</th><td class="metric metric--positive">${formatCurrency(results.totalNetGainRevenue || 0)}</td></tr>
+                        <tr><th>Annual Net Gain</th><td class="metric metric--positive">${formatCurrency(results.annualNetGainRevenue || 0)}</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Profit Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Gross Profit</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Gross Profit (Cards)</th><td class="metric metric--positive">${formatCurrency(results.grossProfit || 0)}</td></tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Skytab Section -->
+            <div class="section avoid-break">
+                <div class="section-hd">
+                    <div class="section-title">Skytab Bonus</div>
+                </div>
+                <div class="section-bd">
+                    <table class="kv">
+                        <tr><th>Skytab Bonus (Gross)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusGross || 0)}</td></tr>
+                        <tr><th>Skytab Bonus (Rep 50%)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusRep || 0)}</td></tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+        ` : `
+        <!-- Page 2: Original Dual Pricing Layout -->
         <div class="page-2 break-before">
             <!-- Volume Breakdown Section -->
             <div class="section avoid-break">
@@ -447,22 +594,11 @@ export function generateBrandedPDF(data: any): string {
                 <div class="section-bd">
                     <div class="cards avoid-break">
                         <div class="card card--accent">
-                            <div class="hdr">${isSF ? 'Total fee collected (card + cash)' : (results.collectedLabel || 'Markup Collected')}</div>
-                            <div class="metric metric-lg">${formatCurrency(results.collectedValue || (results.markupCollected || 0))}</div>
-                            ${isSF ? '<div style="font-size: 11px; color: var(--muted); margin-top: 8px;">Fee basis: Card + Cash</div>' : ''}
+                            <div class="hdr">${results.collectedLabel || 'Markup Collected'}</div>
+                            <div class="metric metric-lg">${formatCurrency(results.markupCollected || 0)}</div>
                         </div>
                     </div>
                     <table class="kv">
-                        ${isSF ? `
-                        <tr><th>Base Volume (pre-tax & pre-tip)</th><td class="metric">${formatCurrency(results.baseVolumePreTaxPreTip || baseVolume)}</td></tr>
-                        <tr><th>Base Volume (with tax but pre-tip)</th><td class="metric">${formatCurrency(results.baseVolumeTaxedPreTip || baseVolume)}</td></tr>
-                        <tr><th>Fee Collected on Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
-                        <tr><th>Fee Collected on Cash</th><td class="metric">${formatCurrency(results.cashFeeCollected || 0)}</td></tr>
-                        <tr><th>Total Fee Collected (Card + Cash)</th><td class="metric">${formatCurrency(results.collectedValue || 0)}</td></tr>
-                        <tr><th>Total Cards Processed (incl tax, supp fee, & tips)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
-                        <tr><th>Total Cost for Processing Cards (new)</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
-                        <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${(results.netCostForProcessingCards || 0) < 0 ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` : formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
-                        ` : `
                         <tr><th>Base Volume</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
                         <tr><th>Adjusted Card Volume</th><td class="metric">${formatCurrency(results.adjustedCardVolume || adjustedVolume)}</td></tr>
                         <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(currentCost)}</td></tr>
@@ -472,7 +608,6 @@ export function generateBrandedPDF(data: any): string {
                             `<tr><th>Overage retained after markup</th><td class="metric">${formatCurrency(results.overageRetained || 0)}</td></tr>` :
                             `<tr><th>Residual cost after markup</th><td class="metric">${formatCurrency(0)}</td></tr>`
                         }
-                        `}
                     </table>
                 </div>
             </div>
@@ -480,22 +615,9 @@ export function generateBrandedPDF(data: any): string {
             <!-- Monthly Savings Section -->
             <div class="section avoid-break">
                 <div class="section-hd">
-                    <div class="section-title">${isSF ? 'Monthly Savings' : 'Monthly Processing Savings'}</div>
+                    <div class="section-title">Monthly Processing Savings</div>
                 </div>
                 <div class="section-bd">
-                    ${isSF ? `
-                    <div class="section-hdr">Savings</div>
-                    <table class="kv">
-                        <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
-                        <tr><th>Net Cost for Processing Cards (include tax + tips)</th><td class="metric ${(results.netCostForProcessingCards || 0) < 0 ? 'metric--positive' : ''}">${(results.netCostForProcessingCards || 0) < 0 ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` : formatCurrency(results.netCostForProcessingCards || 0)}</td></tr>
-                        <tr><th>Processing Cost Savings (Only)</th><td class="metric metric--positive">${formatCurrency(results.processingCostSavingsOnly || 0)}</td></tr>
-                        <tr><th>Processing Cost Savings %</th><td class="metric">${((results.processingCostSavingsPct || 0) * 100).toFixed(1)}%</td></tr>
-                        <tr><th>Fee Collected on Cash</th><td class="metric metric--positive">${formatCurrency(results.cashFeeCollected || 0)}</td></tr>
-                        <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">Total Net Gain Revenue</th><td class="metric metric-lg" style="font-size: 24px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.totalNetGainRevenue || 0)}</td></tr>
-                        <tr><th style="font-size: 14px; color: var(--muted);">Annual Net Gain Revenue</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualNetGainRevenue || 0)}</td></tr>
-                    </table>
-                    ${results.tipAssumptionNote ? `<div style="color: var(--muted); font-size: 11px; margin-top: 12px; font-style: italic;">${results.tipAssumptionNote}</div>` : ''}
-                    ` : `
                     <div class="cards avoid-break">
                         <div class="card">
                             <div class="hdr">Current Processing Cost</div>
@@ -521,10 +643,8 @@ export function generateBrandedPDF(data: any): string {
                             <div class="metric metric-lg metric-pos">${formatCurrency(results.monthlySavings || monthlySavings)}</div>
                         </div>
                     </div>
-                    `}
                 </div>
             </div>
-
 
             <!-- DMP Section - Show for both program types -->
             <div class="section avoid-break">
@@ -540,6 +660,7 @@ export function generateBrandedPDF(data: any): string {
                 </div>
             </div>
         </div>
+        `}
 
         <!-- Footer -->
         <div class="footer">
