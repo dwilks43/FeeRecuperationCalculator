@@ -44,107 +44,135 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           </div>
         </div>
 
-        {/* Supplemental Fee mode - specific rows in order */}
+        {/* Supplemental Fee mode - v1.2.1 Monthly Savings UI */}
         {programType === 'SUPPLEMENTAL_FEE' ? (
           <>
-            {/* Current Processing Cost */}
+            {/* Current Processing Cost (Today) - RED */}
             <div className="bg-red-50 rounded-lg p-4 border border-red-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Current Processing Cost</span>
+                <span className="text-sm font-medium text-gray-600">Current Processing Cost (Today)</span>
               </div>
               <div className="flex items-center gap-2">
                 <MinusCircle className="h-5 w-5 text-red-500" />
                 <span className="text-2xl font-bold text-red-600">
-                  {formatCurrency(results.currentCost)}
+                  {formatCurrency(results.currentCost || 0)}
                 </span>
               </div>
             </div>
 
-            {/* Net Cost for Processing Cards (include tax + tips) */}
+            {/* Processor Charge on Cards - RED */}
+            <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Processor Charge on Cards</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MinusCircle className="h-5 w-5 text-red-500" />
+                <span className="text-2xl font-bold text-red-600">
+                  {formatCurrency(results.processorChargeOnCards || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* Supplemental Fee Collected — Cards - GREEN */}
+            <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Supplemental Fee Collected — Cards</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <span className="text-2xl font-bold text-green-600">
+                  {formatCurrency(results.cardFeeCollected || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* Card Under/Over-Recovery (Fee − Processor) - NEUTRAL */}
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Net Cost for Processing Cards (include tax + tips)</span>
+                <span className="text-sm font-medium text-gray-600">Card Under/Over-Recovery (Fee − Processor)</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('recovery')}
+                  data-testid="button-tooltip-recovery"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
               </div>
               <div className="flex items-center gap-2">
-                {(results.netCostForProcessingCards || 0) < 0 ? (
-                  <CheckCircle className="h-5 w-5 text-green-500" />
+                {(results.recovery || 0) >= 0 ? (
+                  <CheckCircle className="h-5 w-5 text-gray-500" />
                 ) : (
-                  <MinusCircle className="h-5 w-5 text-red-500" />
+                  <MinusCircle className="h-5 w-5 text-gray-500" />
                 )}
-                <span className={`text-2xl font-bold ${(results.netCostForProcessingCards || 0) < 0 ? 'text-green-600' : 'text-red-600'}`}>
-                  {(results.netCostForProcessingCards || 0) < 0 
-                    ? `(${formatCurrency(Math.abs(results.netCostForProcessingCards || 0))})` 
-                    : formatCurrency(results.netCostForProcessingCards || 0)
-                  }
+                <span className="text-2xl font-bold text-gray-700">
+                  {formatCurrency(results.recovery || 0)}
                 </span>
               </div>
             </div>
 
-            {/* Processing Cost Savings (Only) */}
-            <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
+            {/* Processing Cost Savings (Cards Only) - TEAL */}
+            <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Processing Cost Savings (Only)</span>
+                <span className="text-sm font-medium text-gray-600">Processing Cost Savings (Cards Only)</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('savingsCardsOnly')}
+                  data-testid="button-tooltip-savings-cards-only"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-blue-500" />
-                <span className="text-2xl font-bold text-blue-600">
-                  {formatCurrency(results.processingCostSavingsOnly || 0)}
+                <CheckCircle className="h-5 w-5 text-teal-500" />
+                <span className="text-2xl font-bold text-teal-600">
+                  {formatCurrency(results.savingsCardsOnly || 0)}
                 </span>
               </div>
             </div>
 
-            {/* Processing Cost Savings % */}
-            <div className="bg-indigo-50 rounded-lg p-4 border border-indigo-200">
+            {/* Processing Cost Savings % - NEUTRAL */}
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Processing Cost Savings %</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('savingsCardsOnly')}
+                  data-testid="button-tooltip-proc-savings-pct"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-indigo-500" />
-                <span className="text-2xl font-bold text-indigo-600">
-                  {((results.processingCostSavingsPct || 0) * 100).toFixed(1)}%
+                <CheckCircle className="h-5 w-5 text-gray-500" />
+                <span className="text-2xl font-bold text-gray-700">
+                  {((results.procSavingsPct || 0) * 100).toFixed(2)}%
                 </span>
               </div>
             </div>
 
-            {/* Fee Collected on Cash */}
-            <div className="bg-emerald-50 rounded-lg p-4 border border-emerald-200">
+            {/* Total Net Gain (Monthly) - TEAL with Annual subtext */}
+            <div className="bg-gradient-to-r from-teal-100 to-teal-50 rounded-lg p-4 border-2 border-teal-300">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Fee Collected on Cash</span>
+                <span className="text-sm font-medium text-gray-600">Total Net Gain (Monthly)</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-emerald-500" />
-                <span className="text-2xl font-bold text-emerald-600">
-                  {formatCurrency(results.cashFeeCollected || 0)}
-                </span>
+                <Trophy className="h-5 w-5 text-teal-600" />
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold text-teal-700">
+                    {formatCurrency(results.totalNetGainRevenue || 0)}
+                  </span>
+                  <span className="text-sm text-teal-600 font-medium">
+                    Annual Net Gain: {formatCurrency(results.annualNetGainRevenue || 0)}
+                  </span>
+                </div>
               </div>
             </div>
-
-            {/* Total Net Gain Revenue */}
-            <div className="bg-gradient-to-r from-dmp-blue-100 to-green-100 rounded-lg p-4 border-2 border-dmp-blue-300">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Total Net Gain Revenue</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <span className="text-2xl font-bold text-green-700">
-                  {formatCurrency(results.totalNetGainRevenue || 0)}
-                </span>
-              </div>
-            </div>
-
-            {/* Annual Net Gain Revenue */}
-            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-lg p-4 border border-green-300">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Annual Net Gain Revenue</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-green-600" />
-                <span className="text-2xl font-bold text-green-600">
-                  {formatCurrency(results.annualNetGainRevenue || 0)}
-                </span>
-              </div>
-            </div>
-
 
             {/* Tip assumption note */}
             {results.tipAssumptionNote && (
