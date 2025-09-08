@@ -21,7 +21,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
       'BEFORE_TIP__POST_TAX': { feeBaseCards: 'post-tax, pre-tip', tipBase: 'post-tax + fee' },
       'BEFORE_TIP__PRE_TAX':  { feeBaseCards: 'pre-tax', tipBase: 'base card + fee + tax' },
       'AFTER_TIP__POST_TAX':  { feeBaseCards: 'post-tax + tip', tipBase: 'post-tax' },
-      'AFTER_TIP__PRE_TAX':   { feeBaseCards: 'pre-tax + tip', tipBase: 'post-tax' }
+      'AFTER_TIP__PRE_TAX':   { feeBaseCards: 'pre-tax + tip', tipBase: 'pre-tax, pre-fee' }
     };
     return captionMap[comboKey]?.[field] || '';
   };

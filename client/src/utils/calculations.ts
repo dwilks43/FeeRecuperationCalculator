@@ -147,7 +147,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     'BEFORE_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Supplemental Fee → +Tip',
     'BEFORE_TIP__PRE_TAX': 'Pre-Tax Base → +Supplemental Fee → +Tax → +Tip',
     'AFTER_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Tip → +Supplemental Fee',
-    'AFTER_TIP__PRE_TAX': 'Pre-Tax Base → +Tip → +Fee → +Supplemental Fee'
+    'AFTER_TIP__PRE_TAX': 'Pre-Tax Base → +Tip → +Fee → +Tax'
   };
 
   // Shared pre-calculations (always Gross input model)
@@ -189,7 +189,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     case 'AFTER_TIP__PRE_TAX':
       feeBaseCards = base * (1 + tip);
       supplementalFeeCards = feeBaseCards * fee;
-      tipBase = postTaxPreTip;
+      tipBase = base;
       tipAmount = tipBase * tip;
       cardsProcessed = (postTaxPreTip * (1 + tip)) + (fee * feeBaseCards);
       break;
