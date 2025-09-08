@@ -1,0 +1,102 @@
+{
+  "version": "1.3.0-layout",
+  "module": "GLOBAL_UI",
+
+  "layout": {
+    "theme": "rectangle",
+    "grid": {
+      "containerMaxWidth": 1200,
+      "gutterPx": 24,
+      "breakpoints": { "sm": 640, "md": 768, "lg": 1024, "xl": 1280 }
+    },
+
+    "rows": [
+      {
+        "id": "rowCustomer",
+        "columns": [
+          { "card": "CustomerInfo", "span": { "sm": 12, "md": 12, "lg": 12 } }
+        ]
+      },
+      {
+        "id": "rowInputs",
+        "columns": [
+          { "card": "InputParameters", "span": { "sm": 12, "md": 12, "lg": 12 } }
+        ]
+      },
+      {
+        "id": "rowPreviewAndSavings",
+        "columns": [
+          {
+            "card": "LivePreview",
+            "span": { "sm": 12, "md": 12, "lg": 7 },
+            "order": { "sm": 2, "md": 2, "lg": 1 }
+          },
+          {
+            "card": "MonthlySavings",
+            "span": { "sm": 12, "md": 12, "lg": 5 },
+            "order": { "sm": 1, "md": 1, "lg": 2 },
+            "sticky": { "enabled": true, "breakpoint": "lg", "offsetTopPx": 16 }
+          }
+        ]
+      }
+    ]
+  },
+
+  "cards": {
+    "CustomerInfo": {
+      "variant": "rectangle",
+      "elevation": "sm",
+      "title": "Customer Information",
+      "padding": "lg"
+    },
+
+    "InputParameters": {
+      "variant": "rectangle",
+      "elevation": "sm",
+      "title": "Input Parameters",
+      "padding": "lg",
+      "marginTopPx": 16
+    },
+
+    "LivePreview": {
+      "variant": "rectangle",
+      "elevation": "sm",
+      "padding": "lg",
+      "titleByProgramType": {
+        "DUAL_PRICING": "Live Volume Breakdown",
+        "SUPPLEMENTAL_FEE": "Live Calculations"
+      }
+    },
+
+    "MonthlySavings": {
+      "variant": "rectangle",
+      "elevation": "sm",
+      "padding": "lg",
+      "titleByProgramType": {
+        "DUAL_PRICING": "Monthly Processing Savings",
+        "SUPPLEMENTAL_FEE": "Monthly Savings"
+      },
+      "bindTo": "ui.monthlySavings"   // uses the KPI list you already wired
+    }
+  },
+
+  "a11y": {
+    "landmarks": {
+      "CustomerInfo": "region",
+      "InputParameters": "region",
+      "LivePreview": "region",
+      "MonthlySavings": "complementary"
+    },
+    "announceOnChange": ["programType", "tipTiming", "feeTaxBasis"]
+  },
+
+  "styles": {
+    "rectangle": {
+      "borderRadiusPx": 12,
+      "borderColor": "neutral-200",
+      "background": "surface",
+      "shadow": "sm"
+    },
+    "spacing": { "betweenRowsPx": 16 }
+  }
+}
