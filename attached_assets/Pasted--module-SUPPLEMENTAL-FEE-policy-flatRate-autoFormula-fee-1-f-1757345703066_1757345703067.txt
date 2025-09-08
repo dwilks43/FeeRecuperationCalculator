@@ -1,0 +1,65 @@
+{
+  "module": "SUPPLEMENTAL_FEE",
+  "policy": {
+    "flatRate": {
+      "autoFormula": "fee/(1+fee)",
+      "editable": true,
+      "roundForMath": true,
+      "fractionDecimals": 4,
+      "percentDecimals": 2,
+      "roundingMode": "HALF_UP",
+      "caption": "Auto = Fee ÷ (1+Fee) → rounded to 3.85% for a 4% fee. The rounded value is used in all calculations."
+    }
+  },
+  "ui": {
+    "flatRateField": {
+      "scale": "percent",               // the input displays % (e.g., 3.85)
+      "autoBadge": "Auto",
+      "manualBadge": "Manual",
+      "resetLink": "Reset to auto"
+    },
+    "renameFields": {
+      "base": "Base Card Volume (pre-tax, pre-tip)",
+      "feeBaseCards": "Fee Base — Cards",
+      "cardsProcessed": "Card Processed Total (after fee & tip)"
+    },
+    "dynamicCaptions": {
+      "BEFORE_TIP__POST_TAX": { "feeBaseCards": "post-tax, pre-tip", "tipBase": "post-tax + fee" },
+      "BEFORE_TIP__PRE_TAX":  { "feeBaseCards": "pre-tax",           "tipBase": "pre-tax + fee + tax" },
+      "AFTER_TIP__POST_TAX":  { "feeBaseCards": "post-tax + tip",    "tipBase": "post-tax" },
+      "AFTER_TIP__PRE_TAX":   { "feeBaseCards": "pre-tax + tip",     "tipBase": "post-tax" }
+    },
+    "panels": {
+      "processingOnCards": {
+        "title": "Processing on Cards (New Program)",
+        "inlineFormulas": {
+          "procCharge": "Processor Charge = Card Processed Total × Flat Rate",
+          "recovery": "Under/Over-Recovery = Fee (Cards) − Processor",
+          "coveragePct": "Coverage % = Fee (Cards) ÷ Processor"
+        }
+      },
+      "savingsVsToday": {
+        "title": "Savings vs Today",
+        "inlineFormulas": {
+          "netChangeCards": "Net Change in Card Processing = Processor Charge − Fee (Cards)",
+          "savingsCardsOnly": "Savings (Cards Only) = Current Cost − Net Change"
+        }
+      }
+    }
+  },
+  "math": {
+    "flatRate": {
+      "fractionAuto": "fee/(1+fee)",
+      "fractionForMath": "ROUND_HALF_UP(fractionAuto, 4)",
+      "percentForUI": "ROUND_HALF_UP(fractionForMath*100, 2)",
+      "source": "IF(manualOverridePercent!=null, manualOverridePercent/100, fractionForMath)"
+    },
+    "chargesAndSavings": {
+      "procCharge": "cardsProcessed * flatRate.source",
+      "recovery": "supplementalFeeCards - procCharge",
+      "coveragePct": "IF(procCharge==0,0,supplementalFeeCards/procCharge)",
+      "netChangeCards": "procCharge - supplementalFeeCards",
+      "savingsCardsOnly": "currentCost - netChangeCards"
+    }
+  }
+}

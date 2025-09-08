@@ -564,7 +564,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                   Reset to auto
                 </button>
                 <div className="text-xs text-gray-500">
-                  Bank mapping: Fee ÷ (1+Fee) — rounded to 4 decimals and used in all calculations.
+                  Auto = Fee ÷ (1+Fee), rounded to 2-dp percent (e.g., 4% → 3.85%) and used in all calculations.
                 </div>
               </div>
             </div>

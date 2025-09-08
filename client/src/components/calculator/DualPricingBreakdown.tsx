@@ -91,7 +91,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Flat Rate %</span>
-                  <span className="font-medium">{((results.derivedFlatRate || 0) * 100).toFixed(4)}%</span>
+                  <span className="font-medium">{((results.derivedFlatRate || 0) * 100).toFixed(2)}%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
@@ -142,13 +142,13 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Savings (Cards Only)</span>
+                    <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
                     <span className="text-xs text-gray-400 italic">Savings (Cards Only) = Current Cost − Net Change</span>
                   </div>
                   <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Supplemental Fee — Cash</span>
+                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cash</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.supplementalFeeCash || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">

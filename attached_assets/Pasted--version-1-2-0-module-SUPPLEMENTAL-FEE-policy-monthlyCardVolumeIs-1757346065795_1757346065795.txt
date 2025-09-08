@@ -1,0 +1,248 @@
+{
+  "version": "1.2.0",
+  "module": "SUPPLEMENTAL_FEE",
+
+  "policy": {
+    "monthlyCardVolumeIsGross": true,
+    "rounding": {
+      "internalPrecision": 12,
+      "displayDecimals": 2,
+      "negativeStyle": "leadingMinus"
+    },
+    "flatRate": {
+      "autoFormula": "fee/(1+fee)",
+      "editable": true,
+      "roundForMath": true,
+      "fractionDecimals": 4,
+      "percentDecimals": 2,
+      "roundingMode": "HALF_UP",
+      "caption": "Auto = Fee ÷ (1+Fee), rounded to 2-dp percent (e.g., 4% → 3.85%) and used in all calculations."
+    }
+  },
+
+  "radios": {
+    "tipTiming": {
+      "id": "TIP_TIMING",
+      "options": [
+        {
+          "id": "BEFORE_TIP",
+          "label": "Tip handwritten (fee before tip)",
+          "subtext": "Tip is added after the card is processed; fee is calculated before tip."
+        },
+        {
+          "id": "AFTER_TIP",
+          "label": "Tip at time of sale (fee after tip)",
+          "subtext": "Tip is part of the transaction when the fee is calculated."
+        }
+      ]
+    },
+    "feeTaxBasis": {
+      "id": "FEE_TAX_BASIS",
+      "options": [
+        { "id": "POST_TAX", "label": "Apply fee to post-tax amount", "subtext": "Tax is added before fee." },
+        { "id": "PRE_TAX",  "label": "Apply fee to pre-tax amount",  "subtext": "Fee is calculated before tax." }
+      ]
+    }
+  },
+
+  "ui": {
+    "removeControls": ["CARD_VOLUME_BASIS"],
+    "renameCards": { "DMPProfitability": "Gross Profit" },
+    "orderOfOperationsRibbon": true,
+    "orderOfOperationsTextByCombo": {
+      "BEFORE_TIP__POST_TAX": "Base → +Tax → +Supplemental Fee → +Tip",
+      "BEFORE_TIP__PRE_TAX":  "Base → +Supplemental Fee → +Tax → +Tip",
+      "AFTER_TIP__POST_TAX":  "Base → +Tax → +Tip → +Supplemental Fee",
+      "AFTER_TIP__PRE_TAX":   "Base → +Tax → +Tip → +Supplemental Fee"
+    },
+    "renameFields": {
+      "base": "Base Card Volume (pre-tax, pre-tip)",
+      "feeBaseCards": "Fee Base — Cards",
+      "cardsProcessed": "Card Processed Total (after fee & tip)"
+    },
+    "dynamicCaptions": {
+      "BEFORE_TIP__POST_TAX": { "feeBaseCards": "post-tax, pre-tip", "tipBase": "post-tax + fee" },
+      "BEFORE_TIP__PRE_TAX":  { "feeBaseCards": "pre-tax",           "tipBase": "pre-tax + fee + tax" },
+      "AFTER_TIP__POST_TAX":  { "feeBaseCards": "post-tax + tip",    "tipBase": "post-tax" },
+      "AFTER_TIP__PRE_TAX":   { "feeBaseCards": "pre-tax + tip",     "tipBase": "post-tax" }
+    },
+    "tooltips": {
+      "flatRate": "Calculated as Fee ÷ (1+Fee), rounded to 2-dp percent and used in all calculations. Editable; click Reset to auto to restore.",
+      "feeCollectedCards": "Fee is applied to the Fee Base for the selected options.",
+      "tipAmount": "Tip is calculated on the Tip Base shown.",
+      "processedTotal": "Amount the processor charges on (after fee and after tip).",
+      "recovery": "Under/Over = Supplemental Fee (Cards) − Processor Charge.",
+      "savingsCardsOnly": "Savings (Cards Only) = Current Cost − (Processor Charge − Fee on Cards)."
+    },
+    "flatRateField": {
+      "scale": "percent",
+      "autoBadge": "Auto",
+      "manualBadge": "Manual",
+      "resetLink": "Reset to auto"
+    }
+  },
+
+  "inputs": [
+    { "id": "grossCards",  "label": "Monthly Card Volume (Gross)", "type": "currency" },
+    { "id": "cashVol",     "label": "Monthly Cash Volume", "type": "currency" },
+    { "id": "currRate",    "label": "Current Processing Rate (%)", "type": "percent" },
+    { "id": "interchange", "label": "Interchange Cost (%)", "type": "percent" },
+    { "id": "tax",         "label": "Tax Rate (%)", "type": "percent" },
+    { "id": "tip",         "label": "Tip Rate (%)", "type": "percent" },
+    { "id": "fee",         "label": "Supplemental Fee (%)", "type": "percent" },
+    { "id": "flatRate",    "label": "Flat Rate % (Bank Mapping)", "type": "percent", "auto": "fee/(1+fee)", "editable": true, "showResetLink": true }
+  ],
+
+  "sections": [
+    {
+      "id": "derivedTotals",
+      "title": "Derived Bases & Totals",
+      "fieldsOrder": ["base", "feeBaseCards", "supplementalFeeCards", "tipBase", "tipAmount", "cardsProcessed"],
+      "fields": [
+        { "id": "base",                 "labelRef": "base",           "type": "currency" },
+        { "id": "feeBaseCards",         "labelRef": "feeBaseCards",   "type": "currency", "captionDynamic": true },
+        { "id": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards", "type": "currency" },
+        { "id": "tipBase",              "label": "Tip Base",          "type": "currency", "captionDynamic": true },
+        { "id": "tipAmount",            "label": "Tip Amount",        "type": "currency" },
+        { "id": "cardsProcessed",       "labelRef": "cardsProcessed", "type": "currency" }
+      ]
+    },
+    {
+      "id": "processingOnCards",
+      "title": "Processing on Cards (New Program)",
+      "fieldsOrder": ["cardsProcessed", "flatRate", "procCharge", "supplementalFeeCards", "recovery", "coveragePct"],
+      "fields": [
+        { "id": "cardsProcessed", "labelRef": "cardsProcessed", "type": "currency" },
+        { "id": "flatRate",       "label": "Flat Rate %",       "type": "percent", "showBadges": true },
+        { "id": "procCharge",     "label": "Processor Charge on Cards", "type": "currency", "formulaNote": "Processor Charge = Card Processed Total × Flat Rate" },
+        { "id": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards", "type": "currency" },
+        { "id": "recovery",       "label": "Card Under/Over-Recovery", "type": "currency", "formulaNote": "Under/Over = Fee (Cards) − Processor" },
+        { "id": "coveragePct",    "label": "Coverage %", "type": "percent", "formulaNote": "Coverage % = Fee (Cards) ÷ Processor" }
+      ]
+    },
+    {
+      "id": "savingsVsToday",
+      "title": "Savings vs Today",
+      "fieldsOrder": ["currentCost", "netChangeCards", "savingsCardsOnly", "supplementalFeeCash", "netMonthly", "netAnnual"],
+      "fields": [
+        { "id": "currentCost",      "label": "Current Processing Cost (Today)", "type": "currency" },
+        { "id": "netChangeCards",   "label": "Net Change in Card Processing",   "type": "currency", "formulaNote": "Net Change = Processor Charge − Fee (Cards)" },
+        { "id": "savingsCardsOnly", "label": "Processing Cost Savings (Cards Only)", "type": "currency", "formulaNote": "Savings = Current Cost − Net Change" },
+        { "id": "supplementalFeeCash", "label": "Supplemental Fee Collected — Cash", "type": "currency" },
+        { "id": "netMonthly",       "label": "Total Net Gain (Monthly)", "type": "currency" },
+        { "id": "netAnnual",        "label": "Annual Net Gain", "type": "currency" }
+      ]
+    },
+    {
+      "id": "profit",
+      "title": "Gross Profit",
+      "fieldsOrder": ["grossProfit"],
+      "fields": [
+        { "id": "grossProfit", "label": "Gross Profit (Cards)", "type": "currency" }
+      ]
+    }
+  ],
+
+  "math": {
+    "flatRate": {
+      "fractionAuto": "fee/(1+fee)",
+      "fractionForMath": "ROUND_HALF_UP(fractionAuto, 4)",
+      "percentForUI": "ROUND_HALF_UP(fractionForMath*100, 2)",
+      "source": "IF(manualOverridePercent!=null, ROUND_HALF_UP(manualOverridePercent/100, 4), fractionForMath)"
+    },
+
+    "shared": {
+      "base": "grossCards/(1+tax+tip)",
+      "postTaxPreTip": "base*(1+tax)"
+    },
+
+    "combos": {
+      "BEFORE_TIP__POST_TAX": {
+        "ledger": "Base → +Tax → +Supplemental Fee → +Tip",
+        "feeBaseCards": "postTaxPreTip",
+        "supplementalFeeCards": "feeBaseCards*fee",
+        "tipBase": "postTaxPreTip*(1+fee)",
+        "tipAmount": "tipBase*tip",
+        "cardsProcessed": "postTaxPreTip*(1+fee)*(1+tip)"
+      },
+      "BEFORE_TIP__PRE_TAX": {
+        "ledger": "Base → +Supplemental Fee → +Tax → +Tip",
+        "feeBaseCards": "base",
+        "supplementalFeeCards": "feeBaseCards*fee",
+        "tipBase": "base*(1+fee)*(1+tax)",
+        "tipAmount": "tipBase*tip",
+        "cardsProcessed": "base*(1+fee)*(1+tax)*(1+tip)"
+      },
+      "AFTER_TIP__POST_TAX": {
+        "ledger": "Base → +Tax → +Tip → +Supplemental Fee",
+        "feeBaseCards": "postTaxPreTip*(1+tip)",
+        "supplementalFeeCards": "feeBaseCards*fee",
+        "tipBase": "postTaxPreTip",
+        "tipAmount": "tipBase*tip",
+        "cardsProcessed": "postTaxPreTip*(1+tip)*(1+fee)"
+      },
+      "AFTER_TIP__PRE_TAX": {
+        "ledger": "Base → +Tax → +Tip → +Supplemental Fee",
+        "feeBaseCards": "base*(1+tip)",
+        "supplementalFeeCards": "feeBaseCards*fee",
+        "tipBase": "postTaxPreTip",
+        "tipAmount": "tipBase*tip",
+        "cardsProcessed": "(postTaxPreTip*(1+tip)) + (fee*feeBaseCards)"
+      }
+    },
+
+    "chargesAndSavings": {
+      "procCharge": "cardsProcessed * flatRate.source",
+      "recovery": "supplementalFeeCards - procCharge",
+      "coveragePct": "IF(procCharge==0,0,supplementalFeeCards/procCharge)",
+      "currentCost": "grossCards*currRate",
+      "netChangeCards": "procCharge - supplementalFeeCards",
+      "savingsCardsOnly": "currentCost - netChangeCards",
+      "supplementalFeeCash": "cashVol*fee",
+      "netMonthly": "savingsCardsOnly + supplementalFeeCash",
+      "netAnnual": "netMonthly*12",
+      "grossProfit": "(flatRate.source - interchange)*cardsProcessed"
+    }
+  },
+
+  "pdf": {
+    "summary": { "enabled": false },
+    "details": {
+      "sectionsOrder": ["derivedTotals", "processingOnCards", "savingsVsToday", "profit"],
+      "sections": {
+        "derivedTotals": [
+          { "key": "base",                 "label": "Base Card Volume (pre-tax, pre-tip)" },
+          { "key": "feeBaseCards",         "label": "Fee Base — Cards" },
+          { "key": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards" },
+          { "key": "tipBase",              "label": "Tip Base" },
+          { "key": "tipAmount",            "label": "Tip Amount" },
+          { "key": "cardsProcessed",       "label": "Card Processed Total (after fee & tip)" }
+        ],
+        "processingOnCards": [
+          { "key": "cardsProcessed",       "label": "Card Processed Total (after fee & tip)" },
+          { "key": "flatRate",             "label": "Flat Rate %" },
+          { "key": "procCharge",           "label": "Processor Charge on Cards" },
+          { "key": "supplementalFeeCards", "label": "Supplemental Fee Collected — Cards" },
+          { "key": "recovery",             "label": "Card Under/Over-Recovery" },
+          { "key": "coveragePct",          "label": "Coverage %" }
+        ],
+        "savingsVsToday": [
+          { "key": "currentCost",         "label": "Current Processing Cost (Today)" },
+          { "key": "netChangeCards",      "label": "Net Change in Card Processing" },
+          { "key": "savingsCardsOnly",    "label": "Processing Cost Savings (Cards Only)" },
+          { "key": "supplementalFeeCash", "label": "Supplemental Fee Collected — Cash" },
+          { "key": "netMonthly",          "label": "Total Net Gain (Monthly)" },
+          { "key": "netAnnual",           "label": "Annual Net Gain" }
+        ],
+        "profit": [
+          { "key": "grossProfit", "label": "Gross Profit (Cards)" }
+        ]
+      }
+    },
+    "footnotes": [
+      "Flat Rate = Fee ÷ (1+Fee), rounded to 2-dp percent and used in calculations.",
+      "Card volume assumed Gross (tax + tip included).",
+      "Savings can be negative if processor charges exceed the fee collected on cards."
+    ]
+  }
+}
