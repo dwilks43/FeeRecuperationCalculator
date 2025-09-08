@@ -228,80 +228,87 @@ export default function Calculator() {
           </div>
         </div>
 
-        {/* DMP Toggle and Action Buttons */}
-        <div className="mt-8 space-y-6">
-          {/* DMP Toggle Section */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <Button
-              variant={showDMPProfit ? "default" : "outline"}
-              onClick={() => setShowDMPProfit(!showDMPProfit)}
-              className={`font-semibold py-3 px-8 ${
-                showDMPProfit 
-                  ? "bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white shadow-lg" 
-                  : "bg-white hover:bg-gray-50 text-dmp-blue-600 border-dmp-blue-300"
-              }`}
-              data-testid="button-toggle-dmp"
-            >
-              DMP
-            </Button>
-            <Button
-              variant="outline"
-              onClick={handleReset}
-              className="bg-white hover:bg-gray-50 text-dmp-blue-600 font-semibold py-3 px-8 border-dmp-blue-300"
-              data-testid="button-reset"
-            >
-              <RotateCcw className="h-4 w-4 mr-2" />
-              Reset Calculator
-            </Button>
-          </div>
+        {/* Actions Section */}
+        <div className="grid grid-cols-12 gap-6 mt-4">
+          <div className="col-span-12">
+            <Card className="rounded-xl border-neutral-200 bg-white shadow-sm">
+              <div className="p-6 space-y-6">
+                {/* DMP Toggle Section */}
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                  <Button
+                    variant={showDMPProfit ? "default" : "outline"}
+                    onClick={() => setShowDMPProfit(!showDMPProfit)}
+                    className={`font-semibold py-3 px-8 ${
+                      showDMPProfit 
+                        ? "bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white shadow-lg" 
+                        : "bg-white hover:bg-gray-50 text-dmp-blue-600 border-dmp-blue-300"
+                    }`}
+                    data-testid="button-toggle-dmp"
+                    aria-pressed={showDMPProfit}
+                  >
+                    DMP
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={handleReset}
+                    className="bg-white hover:bg-gray-50 text-dmp-blue-600 font-semibold py-3 px-8 border-dmp-blue-300"
+                    data-testid="button-reset"
+                  >
+                    <RotateCcw className="h-4 w-4 mr-2" />
+                    Reset Calculator
+                  </Button>
+                </div>
 
-          {/* DMP Profitability Card (conditionally shown) */}
-          {showDMPProfit && (
-            <div className="flex justify-center">
-              <div className="w-full max-w-md">
-                <GrossProfit
-                  results={results}
-                  showDMPProfit={showDMPProfit}
-                  onToggle={setShowDMPProfit}
-                  onTooltip={handleTooltip}
-                />
-              </div>
-            </div>
-          )}
-
-          {/* Generate Report Buttons */}
-          <div className="flex justify-center">
-            <div className="grid grid-cols-2 gap-3 w-full max-w-md">
-              <Button 
-                onClick={handleGenerateReport}
-                disabled={isGeneratingPDF}
-                className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-4 shadow-lg disabled:opacity-50"
-                data-testid="button-download-pdf"
-              >
-                {isGeneratingPDF ? (
-                  <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                    Generating...
-                  </>
-                ) : (
-                  <>
-                    <Download className="w-4 h-4 mr-2" />
-                    Download PDF
-                  </>
+                {/* DMP Profitability Card (conditionally shown) */}
+                {showDMPProfit && (
+                  <div className="flex justify-center">
+                    <div className="w-full max-w-md">
+                      <GrossProfit
+                        results={results}
+                        showDMPProfit={showDMPProfit}
+                        onToggle={setShowDMPProfit}
+                        onTooltip={handleTooltip}
+                      />
+                    </div>
+                  </div>
                 )}
-              </Button>
-              
-              <EmailReportDialog calculatorData={calculatorData}>
-                <Button 
-                  variant="outline" 
-                  className="w-full bg-white hover:bg-gray-50 text-dmp-blue-600 border-dmp-blue-300 font-semibold py-3 px-4 shadow-lg"
-                  data-testid="button-email-report"
-                >
-                  <Mail className="w-4 h-4 mr-2" />
-                  Email Report
-                </Button>
-              </EmailReportDialog>
-            </div>
+
+                {/* Generate Report Buttons */}
+                <div className="flex justify-center">
+                  <div className="grid grid-cols-2 gap-3 w-full max-w-md">
+                    <Button 
+                      onClick={handleGenerateReport}
+                      disabled={isGeneratingPDF}
+                      className="bg-dmp-blue-600 hover:bg-dmp-blue-700 text-white font-semibold py-3 px-4 shadow-lg disabled:opacity-50"
+                      data-testid="button-download-pdf"
+                    >
+                      {isGeneratingPDF ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Generating...
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-4 h-4 mr-2" />
+                          Download PDF
+                        </>
+                      )}
+                    </Button>
+                    
+                    <EmailReportDialog calculatorData={calculatorData}>
+                      <Button 
+                        variant="outline" 
+                        className="w-full bg-white hover:bg-gray-50 text-dmp-blue-600 border-dmp-blue-300 font-semibold py-3 px-4 shadow-lg"
+                        data-testid="button-email-report"
+                      >
+                        <Mail className="w-4 h-4 mr-2" />
+                        Email Report
+                      </Button>
+                    </EmailReportDialog>
+                  </div>
+                </div>
+              </div>
+            </Card>
           </div>
         </div>
       </div>
