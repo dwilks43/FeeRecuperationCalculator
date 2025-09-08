@@ -128,11 +128,26 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   const tip = (inputs.tipRate || 0) / 100;
   const fee = (inputs.priceDifferential || 0) / 100;  // Supplemental Fee %
   
+  // Debug logging for 4% case
+  if (Math.abs((inputs.priceDifferential || 0) - 4) < 0.01) {
+    console.log('🧮 DEBUG: Main calculation with 4% fee');
+    console.log('priceDifferential input:', inputs.priceDifferential);
+    console.log('Fee (decimal):', fee);
+  }
+  
   // Flat Rate logic with auto-calculation and override support (v1.0.1-patch-roundedFlatRate)
   const flatRateAuto = calculateAutoFlatRate(fee);
   const flatRate = inputs.flatRateOverride !== undefined ? 
     inputs.flatRateOverride / 100 : 
     (inputs.flatRatePct !== undefined ? inputs.flatRatePct / 100 : flatRateAuto);
+    
+  // Debug logging for 4% case
+  if (Math.abs((inputs.priceDifferential || 0) - 4) < 0.01) {
+    console.log('Auto flat rate (decimal):', flatRateAuto);
+    console.log('Auto flat rate (percentage):', (flatRateAuto * 100).toFixed(4) + '%');
+    console.log('Final flat rate used:', flatRate);
+    console.log('Final flat rate (percentage):', (flatRate * 100).toFixed(4) + '%');
+  }
 
   // New v1.0.1 timing approach - map legacy to new types
   const tipTiming = inputs.tipTiming || 
