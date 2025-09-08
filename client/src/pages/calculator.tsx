@@ -154,7 +154,8 @@ export default function Calculator() {
         />
       </div>
       
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      {/* v1.3.0 Rectangle Layout */}
+      <div className="container mx-auto px-6 py-8" style={{maxWidth: '1200px'}}>
         {/* Header Section */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2" data-testid="text-title">
@@ -165,38 +166,65 @@ export default function Calculator() {
           </p>
         </div>
 
-        {/* Customer Information Section */}
-        <div className="mb-8">
-          <CustomerInfoForm
-            onDataChange={setCustomerInfo}
-            initialData={customerInfo}
-          />
+        {/* Row 1: Customer Information */}
+        <div className="grid grid-cols-12 gap-6 mb-4">
+          <div className="col-span-12">
+            <Card className="rounded-xl border-neutral-200 bg-white shadow-sm" role="region" aria-label="Customer Information">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Customer Information</h2>
+                <CustomerInfoForm
+                  onDataChange={setCustomerInfo}
+                  initialData={customerInfo}
+                />
+              </div>
+            </Card>
+          </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {/* Left Column: Input Parameters */}
-          <div className="space-y-6">
-            <InputForm
-              inputs={inputs}
-              onInputChange={handleInputChange}
-              onTooltip={handleTooltip}
-            />
+        {/* Row 2: Input Parameters */}
+        <div className="grid grid-cols-12 gap-6 mb-4">
+          <div className="col-span-12">
+            <Card className="rounded-xl border-neutral-200 bg-white shadow-sm" role="region" aria-label="Input Parameters">
+              <div className="p-6">
+                <h2 className="text-xl font-semibold text-gray-900 mb-4">Input Parameters</h2>
+                <InputForm
+                  inputs={inputs}
+                  onInputChange={handleInputChange}
+                  onTooltip={handleTooltip}
+                />
+              </div>
+            </Card>
+          </div>
+        </div>
 
-            <DualPricingBreakdown
-              results={results}
-              onTooltip={handleTooltip}
-              programType={inputs.programType}
-            />
+        {/* Row 3: Live Preview and Monthly Savings */}
+        <div className="grid grid-cols-12 gap-6 mb-4">
+          {/* Live Preview - 7/12 on large, full width on small, order 2 on small/medium, 1 on large */}
+          <div className="col-span-12 lg:col-span-7 order-2 lg:order-1">
+            <Card className="rounded-xl border-neutral-200 bg-white shadow-sm" role="region" aria-label={inputs.programType === 'DUAL_PRICING' ? 'Live Volume Breakdown' : 'Live Calculations'}>
+              <div className="p-6">
+                <DualPricingBreakdown
+                  results={results}
+                  onTooltip={handleTooltip}
+                  programType={inputs.programType}
+                />
+              </div>
+            </Card>
           </div>
 
-          {/* Right Column: Results */}
-          <div className="space-y-6">
-            <ProcessingSavings
-              results={results}
-              onTooltip={handleTooltip}
-              programType={inputs.programType}
-            />
-
+          {/* Monthly Savings - 5/12 on large, full width on small, order 1 on small/medium, 2 on large, sticky on large */}
+          <div className="col-span-12 lg:col-span-5 order-1 lg:order-2">
+            <div className="lg:sticky lg:top-4">
+              <Card className="rounded-xl border-neutral-200 bg-white shadow-sm" role="complementary" aria-label={inputs.programType === 'DUAL_PRICING' ? 'Monthly Processing Savings' : 'Monthly Savings'}>
+                <div className="p-6">
+                  <ProcessingSavings
+                    results={results}
+                    onTooltip={handleTooltip}
+                    programType={inputs.programType}
+                  />
+                </div>
+              </Card>
+            </div>
           </div>
         </div>
 
