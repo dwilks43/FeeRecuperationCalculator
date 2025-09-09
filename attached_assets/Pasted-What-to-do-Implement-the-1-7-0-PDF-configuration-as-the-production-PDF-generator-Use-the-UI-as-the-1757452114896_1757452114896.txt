@@ -1,0 +1,78 @@
+What to do
+
+Implement the 1.7.0 PDF configuration as the production PDF generator.
+Use the UI as the single source of truth (mirror—no recalculation).
+
+Implementation notes (copy to Replit)
+
+Use this file: pdf.config.json (the 1.7.0 JSON I just gave you).
+
+Entry point: the existing /api/generate-pdf-report should load pdf.config.json, not internal hardcoded templates.
+
+Binding rules:
+
+Summary page KPI rail → ui.monthlySavings.items (exact order/labels/styles).
+
+Details page sections → sections.derived/derivedTotals, sections.processingOnCards, sections.savingsVsToday, sections.profit.
+
+Inputs card values → the same display fields the UI shows (e.g., inputs.taxRateDisplay, not raw math).
+
+Percent normalization: enable formatting.normalizePercent.mode = "auto" and never multiply display strings (e.g., “2.25%”). If a value already contains %, pass through.
+
+Label unification: apply the labels.unify map globally (especially “Processing Cost After Price Differential” and “Markup Collected — Cards (price differential)”).
+
+Brand/theme:
+
+Use the Inter stack from the config.
+
+Colors: Ultramarine #004ED3, Aqua #2BD8C2, Spruce #00937B, Ink #0B2340 (plus neutrals in the config).
+
+Keep the summary accent bar (Ultramarine) and details accent bar (Aqua).
+
+Layout: Keep the two-page layout exactly as specified:
+
+Page 1 (Summary): Logo + title + Customer Info + Program & Inputs (single card) + the mirrored KPI rail.
+
+Page 2 (Details): Derived → Processing on Cards → Savings vs Today → Gross Profit (Internal badge).
+
+Formatting: currency 2dp, percent 2dp, leading minus for negatives, thousands separators on money.
+
+Assets: use the existing Base64 logo (already validated in the app). No CDN fetches.
+
+Acceptance criteria (quick QA)
+
+Replit should validate these before handing it back:
+
+Mirroring
+
+Editing a value in the app changes the same field in the PDF (same label, same number).
+
+The right-rail KPI set in the app matches exactly on Page 1 of the PDF (labels, order, values, colors).
+
+No double-percent bug
+
+Inputs in PDF show 2.25% / 10.00% / 20.00% / 2.00% / 4.00% (not 225/1000/etc.).
+
+Unified labels
+
+Anywhere “Residual cost after markup” or “Net Change in Card Processing” appeared now reads “Processing Cost After Price Differential.”
+
+“Markup Collected — Cards” includes the (price differential) suffix on DP.
+
+No duplicate Inputs
+
+Inputs appear only on Page 1’s “Program & Inputs” card (not repeated again at the bottom or on Page 2).
+
+Brand & polish
+
+Titles use Inter with the sizes from the config, cards have 8px radius, hairline borders #E2E8F0, consistent spacing.
+
+Negative values show as - $197.74 (not parentheses).
+
+Print-ready
+
+PDF margins are consistent; no clipped content; looks good at 100% and printed.
+
+One-liner to Replit
+
+Implement the 1.7.0 PDF spec as the default generator, binding directly to the UI objects as configured, fixing percent normalization, applying the unified labels, and using the two-page brand layout. Validate against the acceptance criteria above.
