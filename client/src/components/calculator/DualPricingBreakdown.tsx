@@ -64,7 +64,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   <span className="font-medium">{formatCurrency(results.feeBaseCards || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
+                  <span className="text-sm text-gray-600">Markup Collected — Cards</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">

@@ -148,14 +148,14 @@ export function generateBrandedPDF(data: any): string {
               <tr><th>Card Processed Total (after fee, tip, & tax)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
               <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
               <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
-              <tr><th>Supplemental Fee (Cards)</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+              <tr><th>Markup Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
               <tr><th>Under/Over-Recovery</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
               <tr><th>Coverage %</th><td class="metric">${((results.coveragePct || 0) * 100).toFixed(1)}%</td></tr>
             ` : `
               <tr><th>Card Processed Total</th><td class="metric">${formatCurrency(results.adjustedCardVolume || 0)}</td></tr>
               <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
               <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processingFees || 0)}</td></tr>
-              <tr><th>Markup (Cards)</th><td class="metric metric--positive">${formatCurrency(results.markupCollected || 0)}</td></tr>
+              <tr><th>Markup Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.markupCollected || 0)}</td></tr>
               <tr><th>Under/Over-Recovery</th><td class="metric ${((results.markupCollected || 0) - (results.processingFees || 0)) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency((results.markupCollected || 0) - (results.processingFees || 0))}</td></tr>
             `}
           </table>
@@ -172,7 +172,7 @@ export function generateBrandedPDF(data: any): string {
         <div class="section-bd">
           <table class="kv">
             <tr><th>Current Processing Cost (Today)</th><td class="metric metric--negative">${formatCurrency(results.currentCost || 0)}</td></tr>
-            <tr><th>Net Change in Card Processing</th><td class="metric ${(results.netChangeCards || 0) <= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.netChangeCards || 0)}</td></tr>
+            <tr><th>Processing Cost After Price Differential</th><td class="metric ${(results.netChangeCards || 0) <= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.netChangeCards || 0)}</td></tr>
             <tr><th>Processing Cost Savings (Cards Only)</th><td class="metric metric--positive">${formatCurrency(results.savingsCardsOnly || 0)}</td></tr>
             ${isSF ? `<tr><th>Supplemental Fee Collected — Cash</th><td class="metric metric--positive">${formatCurrency(results.supplementalFeeCash || 0)}</td></tr>` : ''}
             <tr style="background: var(--bg-soft);"><th style="font-weight: 700;">Net Monthly</th><td class="metric metric--positive" style="font-weight: 700;">${formatCurrency(isSF ? results.totalNetGainRevenue || 0 : results.monthlySavings || 0)}</td></tr>
