@@ -1,0 +1,85 @@
+{
+  "version": "1.3.1-flatRate-on-switch",
+  "module": "SUPPLEMENTAL_FEE",
+
+  "policy": {
+    "flatRate": {
+      "autoFormula": "fee/(1+fee)",
+      "editable": true,
+      "roundForMath": true,
+      "fractionDecimals": 4,
+      "percentDecimals": 2,
+      "roundingMode": "HALF_UP"
+    }
+  },
+
+  "events": {
+    "onProgramTypeChange": [
+      {
+        "to": "SUPPLEMENTAL_FEE",
+        "actions": [
+          {
+            "if": "(!state.isFlatRateManual) || isEmpty(form.flatRatePercent)",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP( fee/(1+fee), 4 )",
+              "form.flatRatePercent": "ROUND_HALF_UP( form.flatRate*100, 2 )",
+              "state.isFlatRateManual": false,
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ],
+    "onProgramMount": [
+      {
+        "program": "SUPPLEMENTAL_FEE",
+        "actions": [
+          {
+            "if": "(!state.isFlatRateManual) || isEmpty(form.flatRatePercent)",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP( fee/(1+fee), 4 )",
+              "form.flatRatePercent": "ROUND_HALF_UP( form.flatRate*100, 2 )",
+              "state.isFlatRateManual": false,
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ],
+    "onFieldChange": [
+      {
+        "field": "fee",
+        "program": "SUPPLEMENTAL_FEE",
+        "actions": [
+          {
+            "if": "!state.isFlatRateManual",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP( fee/(1+fee), 4 )",
+              "form.flatRatePercent": "ROUND_HALF_UP( form.flatRate*100, 2 )",
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "math": {
+    "flatRate": {
+      "fractionAuto": "fee/(1+fee)",
+      "fractionForMath": "ROUND_HALF_UP(fractionAuto, 4)",
+      "percentForUI": "ROUND_HALF_UP(fractionForMath*100, 2)",
+      "source": "IF(state.isFlatRateManual && !isEmpty(form.flatRatePercent), ROUND_HALF_UP(form.flatRatePercent/100, 4), fractionForMath)"
+    }
+  },
+
+  "ui": {
+    "flatRateField": {
+      "scale": "percent",
+      "autoBadge": "Auto",
+      "manualBadge": "Manual",
+      "resetLink": "Reset to auto",
+      "badgeLogic": "state.isFlatRateManual ? 'Manual' : 'Auto'"
+    }
+  }
+}
