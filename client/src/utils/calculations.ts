@@ -326,7 +326,7 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   // 6) Current Processing Cost (Today)
   const currentCost = cc * curr;
 
-  // 7) v1.5.0: Card Under/Over-Recovery (Markup − Processor)
+  // 7) v1.5.0: Processing Cost after Price Differential
   const recovery = markupCollected - procCharge; // can be negative
   const netCostForProcessingCards = -recovery; // legacy alias (sign flipped)
 
@@ -376,7 +376,7 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     processed,                   // Card Processed Total
     procCharge,                  // Processor Charge on Cards
     markupCollected,            // Card Price Increase Collected (Cards)
-    recovery,                    // Card Under/Over-Recovery (Markup − Processor)
+    recovery,                    // Processing Cost after Price Differential
     coveragePct,                // Coverage %
     currentCost,                // Current Processing Cost (Today)
     netChangeCards,             // Net Change in Card Processing
