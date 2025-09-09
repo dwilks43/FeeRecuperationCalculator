@@ -73,10 +73,10 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             </div>
 
-            {/* Card Under/Over-Recovery (Markup − Processor) - NEUTRAL */}
+            {/* Processing Cost after Price Differential - NEUTRAL */}
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Card Under/Over-Recovery (Markup − Processor)</span>
+                <span className="text-sm font-medium text-gray-600">Processing Cost after Price Differential</span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -229,10 +229,10 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             </div>
 
-            {/* 4. Card Under/Over-Recovery (Markup − Processor) - NEUTRAL */}
+            {/* 4. Processing Cost after Price Differential - NEUTRAL */}
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Card Under/Over-Recovery (Markup − Processor)</span>
+                <span className="text-sm font-medium text-gray-600">Processing Cost after Price Differential</span>
                 <Button
                   variant="ghost"
                   size="sm"

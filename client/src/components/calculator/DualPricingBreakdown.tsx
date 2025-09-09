@@ -183,7 +183,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Price-Adjusted Base + Price Differential</span>
+                    <span className="text-sm text-gray-600">Base Card Volume + Price Differential</span>
                     <span className="text-xs text-gray-400 italic">Base × (1 + Price Differential)</span>
                   </div>
                   <span className="font-medium">{formatCurrency(results.priceAdjustedBase || 0)}</span>
@@ -222,7 +222,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Card Under/Over-Recovery (Markup − Processor)</span>
+                    <span className="text-sm text-gray-600">Processing Cost after Price Differential</span>
                     <span className="text-xs text-gray-400 italic">Recovery = Markup − Processor Charge</span>
                   </div>
                   <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>

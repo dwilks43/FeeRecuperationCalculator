@@ -61,7 +61,7 @@ export const TOOLTIPS = {
     body: 'Remaining processor cost after your price differential/fee offsets part of it.'
   },
   priceAdjustedBase: {
-    title: 'Price-Adjusted Base + Price Differential',
+    title: 'Base Card Volume + Price Differential',
     body: 'Base Card Volume × (1 + Price Differential).'
   },
   markupCollected: {
