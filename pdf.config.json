@@ -1,5 +1,5 @@
 {
-  "version": "1.7.0-pdf-pro-setup",
+  "version": "1.7.1-pdf-mirror-ui",
   "pdf": {
     "rendering": {
       "sourceOfTruth": "ui_and_results",
@@ -14,10 +14,14 @@
         "brandSpruce": "#00937B",
         "brandInk": "#0B2340",
         "neutral90": "#0F172A",
+        "neutral80": "#1F2937",
         "neutral70": "#334155",
+        "neutral50": "#64748B",
         "neutral40": "#94A3B8",
+        "neutral30": "#CBD5E1",
         "neutral20": "#E2E8F0",
         "neutral10": "#F1F5F9",
+        "panel": "#F9FAFB",
         "danger": "#EF4444",
         "warning": "#F59E0B",
         "success": "#10B981",
@@ -25,14 +29,16 @@
       },
       "typography": {
         "fontFamily": "Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
-        "h1": { "size": 22, "weight": 700, "color": "brandInk", "letterSpacing": 0.1 },
+        "h1": { "size": 22, "weight": 800, "color": "brandInk", "letterSpacing": 0.1 },
         "h2": { "size": 16, "weight": 700, "color": "brandInk" },
-        "h3": { "size": 13, "weight": 600, "color": "neutral90" },
+        "h3": { "size": 13, "weight": 700, "color": "neutral90" },
         "label": { "size": 10, "weight": 600, "color": "neutral70" },
         "value": { "size": 11, "weight": 600, "color": "neutral90" },
-        "small": { "size": 9, "weight": 500, "color": "neutral40" }
+        "muted": { "size": 9, "weight": 500, "color": "neutral50" },
+        "footnote": { "size": 9, "weight": 500, "color": "neutral40" }
       },
       "spacing": {
+        "pageMargin": 36,
         "sectionY": 18,
         "blockY": 12,
         "rowY": 8,
@@ -57,12 +63,13 @@
     },
 
     "formatting": {
-      "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus" },
-      "percent":  { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus" },
+      "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
+      "percent":  { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
       "normalizePercent": {
         "mode": "auto",
         "thresholdGtOneTreatAsPercent": true
-      }
+      },
+      "coercePercentStrings": true
     },
 
     "labels": {
@@ -83,9 +90,9 @@
         "id": "summary",
         "header": {
           "layout": "brand-left",
-          "logo": { "source": "dmpLogoBase64", "width": 72, "height": 24 },
+          "logo": { "source": "dmpLogoBase64", "width": 84, "height": 28 },
           "title": "Fee Recuperation Savings Calculator",
-          "subtitle": "Savings summary",
+          "subtitle": "Savings Summary",
           "accentBar": { "color": "brandUltramarine", "height": 3 }
         },
         "body": [
@@ -97,30 +104,37 @@
                 "blocks": [
                   {
                     "type": "card",
+                    "surface": "panel",
                     "title": "Customer Information",
-                    "titleColor": "brandInk",
                     "content": { "from": "inputs.customerInfo" }
                   },
                   {
                     "type": "card",
+                    "surface": "panel",
                     "title": "Program & Inputs",
                     "content": {
                       "rows": [
-                        { "label": "Program Type",          "value": "inputs.programTypeLabel" },
-                        { "label": "Monthly Card Volume",   "value": "inputs.monthlyCardVolume", "format": "currency" },
-                        { "label": "Monthly Cash Volume",   "value": "inputs.monthlyCashVolume", "format": "currency" },
-                        { "label": "Current Processing Rate","value": "inputs.currentRateDisplay", "format": "percent" },
-                        { "label": "Interchange Cost",      "value": "inputs.interchangeDisplay", "format": "percent" },
-                        { "label": "Tax Rate",              "value": "inputs.taxRateDisplay", "format": "percent" },
-                        { "label": "Tip Rate",              "value": "inputs.tipRateDisplay", "format": "percent" },
-                        { "if": "program==DUAL_PRICING", "label": "Price Differential", "value": "inputs.priceDiffDisplay", "format": "percent" },
-                        { "if": "program==SUPPLEMENTAL_FEE", "label": "Supplemental Fee", "value": "inputs.supplementalFeeDisplay", "format": "percent" },
-                        { "label": "Flat Rate % (Bank Mapping)", "value": "ui.flatRatePercentDisplay", "format": "percent",
+                        { "label": "Program Type",            "value": "inputs.programTypeLabel" },
+                        { "label": "Monthly Card Volume",     "value": "inputs.monthlyCardVolume", "format": "currency" },
+                        { "label": "Monthly Cash Volume",     "value": "inputs.monthlyCashVolume", "format": "currency", "if": "inputs.monthlyCashVolume != null" },
+                        { "label": "Current Processing Rate", "value": "inputs.currentRateDisplay", "format": "percent" },
+                        { "label": "Interchange Cost",        "value": "inputs.interchangeDisplay", "format": "percent" },
+                        { "label": "Tax Rate",                "value": "inputs.taxRateDisplay", "format": "percent" },
+                        { "label": "Tip Rate",                "value": "inputs.tipRateDisplay", "format": "percent" },
+                        { "label": "Price Differential",      "value": "inputs.priceDiffDisplay", "format": "percent", "if": "program == 'DUAL_PRICING'" },
+                        { "label": "Supplemental Fee",        "value": "inputs.supplementalFeeDisplay", "format": "percent", "if": "program == 'SUPPLEMENTAL_FEE'" },
+                        { "label": "Fee Timing",              "value": "inputs.feeTimingLabel", "if": "program == 'SUPPLEMENTAL_FEE'"},
+                        { "label": "Fee Tax Basis",           "value": "inputs.feeTaxBasisLabel", "if": "program == 'SUPPLEMENTAL_FEE'"},
+                        {
+                          "label": "Flat Rate % (Bank Mapping)",
+                          "value": "ui.flatRatePercentDisplay",
+                          "format": "percent",
                           "badge": { "text": "Auto", "when": "!state.isFlatRateManual", "style": "auto" },
-                          "badgeAlt": { "text": "Manual", "when": "state.isFlatRateManual", "style": "manual" } }
+                          "badgeAlt": { "text": "Manual", "when": "state.isFlatRateManual", "style": "manual" }
+                        }
                       ]
                     },
-                    "footerNote": "Percent values mirror on-screen display—no recalculation."
+                    "footerNote": "Values mirror the on-screen display. No recalculation is performed in the PDF."
                   }
                 ]
               },
@@ -132,7 +146,8 @@
                     "title": "Savings Summary",
                     "mirrorFrom": "ui.monthlySavings.items",
                     "styleMap": "theme.kpiColors",
-                    "valueFormatting": { "currency": "currency", "percent": "percent" }
+                    "valueFormatting": { "currency": "currency", "percent": "percent" },
+                    "layout": { "columns": 1, "gap": 8 }
                   }
                 ]
               }
@@ -140,7 +155,7 @@
           }
         ],
         "footer": {
-          "left": "Prepared by DMP",
+          "left": "Prepared by Dynamic Merchant Processing",
           "right": "Estimates based on inputs; actual results may vary.",
           "divider": true
         }
@@ -156,48 +171,74 @@
         },
         "body": [
           {
-            "type": "section",
-            "title": "Derived Bases & Totals",
-            "subtitle": "Order of Operations: ${ui.orderOfOperationsText || 'Base → +Differential → +Tax → +Tip/Fee (mode dependent)'}",
-            "table": {
-              "cols": ["Label", "Amount"],
-              "rowsFrom": [
-                { "from": "sections.derived || sections.derivedTotals" }
-              ],
-              "labelStyle": "label", "valueStyle": "value"
-            }
-          },
-          {
-            "type": "section",
-            "title": "Processing on Cards (New Program)",
-            "table": {
-              "cols": ["Label", "Amount"],
-              "rowsFrom": [
-                { "from": "sections.processingOnCards" }
-              ]
-            },
-            "note": "Coverage % shows how much the markup/fee offsets the processor charge."
-          },
-          {
-            "type": "section",
-            "title": "Savings vs Today",
-            "table": {
-              "cols": ["Label", "Amount"],
-              "rowsFrom": [
-                { "from": "sections.savingsVsToday" }
-              ]
-            }
-          },
-          {
-            "type": "section",
-            "title": "Gross Profit",
-            "badge": { "text": "Internal", "style": "internal" },
-            "table": {
-              "cols": ["Label", "Amount"],
-              "rowsFrom": [
-                { "from": "sections.profit" }
-              ]
-            }
+            "type": "grid",
+            "columns": [
+              {
+                "span": 12,
+                "blocks": [
+                  {
+                    "type": "card",
+                    "surface": "panel",
+                    "title": "Derived Bases & Totals",
+                    "subtitle": "${ui.orderOfOperationsText || 'Base → +Differential/Fee → +Tax → +Tip (mode dependent)'}",
+                    "table": {
+                      "cols": [
+                        { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                        { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+                      ],
+                      "rowsFrom": [
+                        { "from": "sections.derivedTotals" },
+                        { "from": "sections.derived" }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "card",
+                    "surface": "panel",
+                    "title": "Processing on Cards (New Program)",
+                    "table": {
+                      "cols": [
+                        { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                        { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+                      ],
+                      "rowsFrom": [
+                        { "from": "sections.processingOnCards" }
+                      ]
+                    },
+                    "note": "Coverage % shows how much the price differential/fee offsets the processor charge."
+                  },
+                  {
+                    "type": "card",
+                    "surface": "panel",
+                    "title": "Savings vs Today",
+                    "table": {
+                      "cols": [
+                        { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                        { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+                      ],
+                      "rowsFrom": [
+                        { "from": "sections.savingsVsToday" }
+                      ]
+                    }
+                  },
+                  {
+                    "type": "card",
+                    "surface": "panel",
+                    "title": "Gross Profit",
+                    "badge": { "text": "Internal", "style": "internal" },
+                    "table": {
+                      "cols": [
+                        { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                        { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+                      ],
+                      "rowsFrom": [
+                        { "from": "sections.profit" }
+                      ]
+                    }
+                  }
+                ]
+              }
+            ]
           }
         ],
         "footer": {
