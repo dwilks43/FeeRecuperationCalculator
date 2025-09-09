@@ -29,15 +29,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             <div className="bg-red-50 rounded-lg p-4 border border-red-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Current Processing Cost (Today)</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('current-cost')}
-                  data-testid="button-tooltip-current-cost"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
               </div>
               <div className="flex items-center gap-2">
                 <MinusCircle className="h-5 w-5 text-red-500" />
@@ -77,15 +68,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Processing Cost after Price Differential</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('recovery')}
-                  data-testid="button-tooltip-recovery"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
               </div>
               <div className="flex items-center gap-2">
                 {(results.recovery || 0) >= 0 ? (
@@ -103,15 +85,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Processing Cost Savings (Cards Only)</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('savingsCardsOnly')}
-                  data-testid="button-tooltip-savings-cards-only"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-teal-500" />
@@ -125,15 +98,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Processing Cost Savings %</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('procSavingsPct')}
-                  data-testid="button-tooltip-proc-savings-pct"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-gray-500" />
@@ -185,15 +149,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             <div className="bg-red-50 rounded-lg p-4 border border-red-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Current Processing Cost (Today)</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('current-cost')}
-                  data-testid="button-tooltip-current-cost"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
               </div>
               <div className="flex items-center gap-2">
                 <MinusCircle className="h-5 w-5 text-red-500" />
@@ -233,15 +188,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Processing Cost after Price Differential</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('recovery')}
-                  data-testid="button-tooltip-recovery"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
               </div>
               <div className="flex items-center gap-2">
                 {(results.recovery || 0) >= 0 ? (
