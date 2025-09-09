@@ -1,0 +1,253 @@
+{
+  "version": "1.7.2-pdf-bindings-hotfix",
+  "pdf": {
+    "rendering": {
+      "sourceOfTruth": "ui_and_results",
+      "noNewMath": true,
+      "bindStrategy": "byKey",
+      "interpolateStrings": true,               // evaluate ${...} in titles/subtitles/notes
+      "fallbackNullToEmpty": true
+    },
+
+    "formatting": {
+      "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
+      "percent":  { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
+      "normalizePercent": { "mode": "auto", "thresholdGtOneTreatAsPercent": true },
+      "coercePercentStrings": true
+    },
+
+    "labels": {
+      "unify": {
+        "Residual cost after markup": "Processing Cost After Price Differential",
+        "Net Change in Card Processing": "Processing Cost After Price Differential",
+        "Processor Cost After Markup": "Processing Cost After Price Differential",
+        "Markup Collected — Cards": "Markup Collected — Cards (price differential)",
+        "Card Processed Total (after tax & handwritten tip)": "Card Processed Total (incl. price differential, tax, and tip)",
+        "Pre-Tax Base": "Base Card Volume (pre-tax, pre-tip)",
+        "Price-Adjusted Base (pre-tax, pre-tip)": "Price-Adjusted Base + Price Differential"
+      },
+      "titleCase": true
+    },
+
+    "dataBindings": {
+      "inputs": {
+        "programTypeLabel": ["ui.program.label", "results.programTypeLabel", "results.programType", "program"],
+
+        "monthlyCardVolume": ["inputs.monthlyVolume", "ui.inputs.monthlyVolume", "results.monthlyVolume"],
+        "monthlyCashVolume": ["inputs.monthlyCashVolume", "ui.inputs.monthlyCashVolume", "results.monthlyCashVolume"],
+
+        "currentRateDisplay": ["ui.inputs.currentRateDisplay", "results.currentRateDisplay", "inputs.currentRate"],
+        "interchangeDisplay": ["ui.inputs.interchangeDisplay", "results.interchangeDisplay", "inputs.interchangeCost"],
+        "taxRateDisplay": ["ui.inputs.taxRateDisplay", "results.taxRateDisplay", "inputs.taxRate"],
+        "tipRateDisplay": ["ui.inputs.tipRateDisplay", "results.tipRateDisplay", "inputs.tipRate"],
+
+        "priceDiffDisplay": ["ui.inputs.priceDifferentialDisplay", "results.priceDifferentialDisplay", "inputs.priceDifferential"],
+        "supplementalFeeDisplay": ["ui.inputs.supplementalFeeDisplay", "results.supplementalFeeDisplay", "inputs.supplementalFee"],
+
+        "feeTimingLabel": ["ui.inputs.feeTimingLabel", "results.feeTimingLabel"],
+        "feeTaxBasisLabel": ["ui.inputs.feeTaxBasisLabel", "results.feeTaxBasisLabel"]
+      },
+
+      "ui": {
+        "flatRatePercentDisplay": ["ui.flatRatePercentDisplay", "results.flatRatePercentDisplay", "inputs.flatRate"],
+        "monthlySavings.items": ["ui.monthlySavings.items", "results.monthlySavings.items"],
+
+        "orderOfOperationsText": [
+          "ui.orderOfOperationsText",
+          "results.orderOfOperationsText",
+          "program=='DUAL_PRICING' ? 'Base Card Volume → +Price Differential → +Tax → +Tip (handwritten)' : 'Base → +Differential/Fee → +Tax → +Tip (mode dependent)'"
+        ]
+      },
+
+      "sections": {
+        "derivedTotals": [
+          "ui.sections.derivedTotals.rows",
+          "results.sections.derivedTotals.rows",
+          "sections.derivedTotals.rows"
+        ],
+        "derived": [
+          "ui.sections.derived.rows",
+          "results.sections.derived.rows",
+          "sections.derived.rows"
+        ],
+        "processingOnCards": [
+          "ui.sections.processingOnCards.rows",
+          "results.sections.processingOnCards.rows",
+          "sections.processingOnCards.rows"
+        ],
+        "savingsVsToday": [
+          "ui.sections.savingsVsToday.rows",
+          "results.sections.savingsVsToday.rows",
+          "sections.savingsVsToday.rows"
+        ],
+        "profit": [
+          "ui.sections.profit.rows",
+          "results.sections.profit.rows",
+          "sections.profit.rows"
+        ]
+      },
+
+      "meta": {
+        "reportNumber": ["results.reportId", "results.reportNumber", "state.reportId"],
+        "reportDate": ["results.reportDate", "state.generatedAt", "now()"]
+      }
+    },
+
+    "pages": [
+      {
+        "id": "summary",
+        "header": {
+          "layout": "brand-left",
+          "logo": { "source": "dmpLogoBase64", "width": 84, "height": 28 },
+          "title": "Fee Recuperation Savings Calculator",
+          "subtitle": "Savings Summary",
+          "meta": { "left": "Report #: ${meta.reportNumber}", "right": "Date: ${formatDate(meta.reportDate)}" },
+          "accentBar": { "color": "brandUltramarine", "height": 3 }
+        },
+        "body": [
+          {
+            "type": "grid",
+            "columns": [
+              {
+                "span": 7,
+                "blocks": [
+                  {
+                    "type": "card",
+                    "surface": "panel",
+                    "title": "Customer Information",
+                    "content": { "from": "inputs.customerInfo" }
+                  },
+                  {
+                    "type": "card",
+                    "surface": "panel",
+                    "title": "Program & Inputs",
+                    "content": {
+                      "rows": [
+                        { "label": "Program Type",            "value": "inputs.programTypeLabel" },
+                        { "label": "Monthly Card Volume",     "value": "inputs.monthlyCardVolume", "format": "currency" },
+                        { "label": "Monthly Cash Volume",     "value": "inputs.monthlyCashVolume", "format": "currency", "if": "inputs.monthlyCashVolume != null" },
+                        { "label": "Current Processing Rate", "value": "inputs.currentRateDisplay", "format": "percent" },
+                        { "label": "Interchange Cost",        "value": "inputs.interchangeDisplay", "format": "percent" },
+                        { "label": "Tax Rate",                "value": "inputs.taxRateDisplay", "format": "percent" },
+                        { "label": "Tip Rate",                "value": "inputs.tipRateDisplay", "format": "percent" },
+                        { "if": "program=='DUAL_PRICING'",       "label": "Price Differential", "value": "inputs.priceDiffDisplay", "format": "percent" },
+                        { "if": "program=='SUPPLEMENTAL_FEE'",   "label": "Supplemental Fee",   "value": "inputs.supplementalFeeDisplay", "format": "percent" },
+                        { "if": "program=='SUPPLEMENTAL_FEE'",   "label": "Fee Timing",    "value": "inputs.feeTimingLabel" },
+                        { "if": "program=='SUPPLEMENTAL_FEE'",   "label": "Fee Tax Basis", "value": "inputs.feeTaxBasisLabel" },
+                        {
+                          "label": "Flat Rate % (Bank Mapping)",
+                          "value": "ui.flatRatePercentDisplay",
+                          "format": "percent",
+                          "badge": { "text": "Auto", "when": "!state.isFlatRateManual", "style": "auto" },
+                          "badgeAlt": { "text": "Manual", "when": "state.isFlatRateManual", "style": "manual" }
+                        }
+                      ]
+                    },
+                    "footerNote": "Values mirror the on-screen display—no recalculation."
+                  }
+                ]
+              },
+              {
+                "span": 5,
+                "blocks": [
+                  {
+                    "type": "kpiRail",
+                    "title": "Savings Summary",
+                    "mirrorFrom": "ui.monthlySavings.items",
+                    "styleMap": "theme.kpiColors",
+                    "valueFormatting": { "currency": "currency", "percent": "percent" },
+                    "layout": { "columns": 1, "gap": 8 }
+                  }
+                ]
+              }
+            ]
+          }
+        ],
+        "footer": {
+          "left": "Prepared by Dynamic Merchant Processing",
+          "right": "Estimates based on inputs; actual results may vary.",
+          "divider": true
+        }
+      },
+
+      {
+        "id": "details",
+        "header": {
+          "layout": "brand-left",
+          "title": "Calculation Details",
+          "subtitle": "Exact breakdown mirroring the application",
+          "meta": { "left": "", "right": "" },         // prevent duplicate Report#/Date here
+          "accentBar": { "color": "brandAqua", "height": 3 }
+        },
+        "body": [
+          {
+            "type": "section",
+            "title": "Derived Bases & Totals",
+            "subtitle": "${ui.orderOfOperationsText}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+              ],
+              "rowsFrom": [
+                { "from": "sections.derivedTotals" },
+                { "from": "sections.derived" }
+              ]
+            }
+          },
+          {
+            "type": "section",
+            "title": "Processing on Cards (New Program)",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+              ],
+              "rowsFrom": [
+                { "from": "sections.processingOnCards" }
+              ]
+            },
+            "note": "Coverage % shows how much the price differential/fee offsets the processor charge."
+          },
+          {
+            "type": "section",
+            "title": "Savings vs Today",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+              ],
+              "rowsFrom": [
+                { "from": "sections.savingsVsToday" }
+              ]
+            }
+          },
+          {
+            "type": "section",
+            "title": "Gross Profit",
+            "badge": { "text": "Internal", "style": "internal" },
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Label", "style": "label", "align": "left" },
+                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+              ],
+              "rowsFrom": [
+                { "from": "sections.profit" }
+              ]
+            }
+          }
+        ],
+        "footer": {
+          "left": "Dynamic Merchant Processing",
+          "right": "© DMP — Confidential",
+          "divider": true
+        }
+      }
+    ]
+  },
+
+  "guards": {
+    "hideEmptyRows": true,
+    "stripZeroKPIs": false
+  }
+}
