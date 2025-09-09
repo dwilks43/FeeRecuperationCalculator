@@ -1,0 +1,134 @@
+{
+  "version": "1.6.1-tooltips-pro",
+  "tooltips": {
+    "shared": {
+      "inputsBlock": "Enter the merchant’s real volumes and rates. Card volume should include tax & tip; we back out the base for the math.",
+      "monthlyCardVolume": "Total card sales per month (tax + tip included). We’ll back out tax/tip to find the pre-tax base.",
+      "monthlyCashVolume": "Total cash sales per month. Used for cash fee revenue in Supplemental Fee.",
+      "currentRate": "All-in rate with the current processor. Used to show today’s processing cost for apples-to-apples savings.",
+      "interchange": "Estimated bank cost. Only used to show internal Gross Profit = (Flat Rate − Interchange) × Card Processed Total.",
+      "taxRate": "Sales tax rate used in the ticket math.",
+      "tipRate": "Typical tip rate for this merchant.",
+      "flatRatePercent": "DMP processing rate. Auto-mapped from the differential/fee; you can override. Used for processor charge math.",
+      "flatRateAutoBadge": "Auto-mapped from your differential/fee. Click to switch to Manual if underwriting requires a custom flat rate.",
+      "flatRateManualBadge": "Manual override. Click “Reset to auto” to return to the mapped rate.",
+      "grossProfit": "Internal only. Gross Profit (Cards) = (Flat Rate − Interchange) × Card Processed Total.",
+      "procSavingsPct": "Processing Cost Savings % = Savings on Cards ÷ Current Processing Cost."
+    },
+
+    "DUAL_PRICING": {
+      "orderOfOps": "Order of Operations: Base Card Volume → +Price Differential → +Tax → +Tip (handwritten on presented total).",
+      "derivedSection": "Derived Bases & Totals: makes the ticket math transparent for the client.",
+      "base": "Base Card Volume (pre-tax, pre-tip) = Card Gross ÷ (1 + tax + tip). Why it matters: this is the real price before taxes/tips.",
+      "priceAdjustedBase": "Price-Adjusted Base + Price Differential = Base × (1 + price differential). This is the card price the customer sees before tax.",
+      "processed": "Card Processed Total (incl. price differential, tax, and tip) = Price-Adjusted Base × (1 + tax) × (1 + tip). Example: $100 base, +4% diff → $104; +10% tax → $114.40; +20% tip → $137.28.",
+      "processingSection": "Processing on Cards (New Program): what the bank charges and what your markup covers.",
+      "procCharge": "Processor Charge on Cards = Card Processed Total × Flat Rate.",
+      "markupCollected": "Markup Collected — Cards (price differential) = Base × price differential. This is the extra revenue you collect at the register.",
+      "netChangeCards": "Processing Cost After Price Differential = Processor Charge − Markup Collected. Think of it as “what’s left to pay the processor.”",
+      "coveragePct": "Coverage % = Markup Collected ÷ Processor Charge. 100% means markup fully covers the processor charge.",
+      "savingsSection": "Savings vs Today: side-by-side with the merchant’s current costs.",
+      "currentCost": "Current Processing Cost (Today) = Card Gross × current rate.",
+      "savingsCardsOnly": "Processing Cost Savings (Cards Only) = Current Cost − Processing Cost After Price Differential.",
+      "netMonthly": "Total Net Gain (Monthly). Same as savings on cards for Dual Pricing.",
+      "netAnnual": "Annual Net Gain = Monthly × 12.",
+      "rightRail": {
+        "currentCost": "What the merchant pays today with their current processor.",
+        "procCharge": "Processor charge under the new Dual Pricing program.",
+        "markupCollected": "Total card markup collected from the price differential.",
+        "netChangeCards": "Processor Cost After Price Differential: remaining processor cost after the markup offsets it.",
+        "savingsCardsOnly": "Savings on card processing compared to today.",
+        "procSavingsPct": "Savings % vs today’s processing cost.",
+        "netMonthly": "Total monthly impact.",
+        "netAnnual": "Yearly impact at the same volumes."
+      },
+      "profitCard": {
+        "grossProfit": "Internal only. (Flat Rate − Interchange) × Card Processed Total. Not customer-facing."
+      }
+    },
+
+    "SUPPLEMENTAL_FEE": {
+      "modeIntro": "Supplemental Fee adds a line-item fee to all transactions (cards & cash). Timing/tax basis control the order of fee, tax, and tip.",
+      "selectorsBlock": "Choose how the merchant collects tips and where the fee applies for taxes.",
+      "feeTiming": {
+        "AFTER_TIP": "Tip at time of sale: tip is part of the checkout total.",
+        "BEFORE_TIP": "Tip handwritten – post sale: tip is added after the card is processed."
+      },
+      "feeTaxBasis": {
+        "POST_TAX": "Apply fee to post-tax amount (fee is computed on the taxed amount).",
+        "PRE_TAX": "Apply fee to pre-tax amount (fee is computed before tax)."
+      },
+      "comboCaption": {
+        "AFTER_TIP__POST_TAX": "Order: Base → +Tax → +Tip → +Fee (fee on post-tax + tip). Example on $100 base, 10% tax, 20% tip, 4% fee → fee on $132.",
+        "AFTER_TIP__PRE_TAX":  "Order: Base → +Tip → +Fee (pre-tax) → +Tax (taxes the fee). Example fee on $120; tax then applies to the subtotal including fee.",
+        "BEFORE_TIP__POST_TAX":"Order: Base → +Tax → +Fee (post-tax) → +Tip. Fee is added before the handwritten tip.",
+        "BEFORE_TIP__PRE_TAX": "Order: Base → +Fee (pre-tax) → +Tax → +Tip. Fee is computed on the pre-tax amount."
+      },
+
+      "derivedSection": "Derived Bases & Totals: shows the exact dollar bases for fee and tip given the selected timing & tax basis.",
+      "base": "Base Card Volume (pre-tax, pre-tip) = Card Gross ÷ (1 + tax + tip).",
+      "feeEligibleVolumeCards": "Fee-Eligible Volume (Cards): the dollar base the supplemental fee is applied to on cards (changes with timing/tax basis).",
+      "tipEligibleVolumeCards": "Tip-Eligible Volume (Cards): the dollar base the tip is applied to (changes with timing).",
+      "supplementalFeeCards": "Supplemental Fee — Cards = Fee-Eligible Volume (Cards) × fee %. This offsets the processor charge on card tickets.",
+      "supplementalFeeCash": "Supplemental Fee — Cash = Monthly Cash Volume × fee %. This is extra revenue from cash tickets.",
+      "tipAmount": "Tip Amount = Tip-Eligible Volume (Cards) × tip %. Shown to explain the card ticket math.",
+      "processingSection": "Processing on Cards (New Program): shows the new bank charge and how much the fee offsets.",
+      "processed": "Card Processed Total (incl. fee, tax & tip). Built from the selected order of operations (see caption above).",
+      "procCharge": "Processor Charge on Cards = Card Processed Total × Flat Rate.",
+      "netChangeCards": "Processing Cost After Price Differential = Processor Charge − Fee Collected on Cards.",
+      "coveragePct": "Coverage % = Fee Collected on Cards ÷ Processor Charge.",
+      "savingsSection": "Savings vs Today: current cost versus the new program result.",
+      "currentCost": "Current Processing Cost (Today) = Card Gross × current rate.",
+      "savingsCardsOnly": "Processing Cost Savings (Cards Only) = Current Cost − Processing Cost After Price Differential.",
+      "netMonthly": "Total Net Gain (Monthly) = Savings on cards + Fee collected on cash.",
+      "netAnnual": "Annual Net Gain = Monthly × 12.",
+      "rightRail": {
+        "currentCost": "What the merchant pays today with their current processor.",
+        "procCharge": "Processor charge under the Supplemental Fee program.",
+        "markupCollected": "Supplemental fee collected on card tickets.",
+        "recovery": "Coverage Gap (info only) = Fee on Cards − Processor Charge.",
+        "savingsCardsOnly": "Savings on card processing compared to today.",
+        "procSavingsPct": "Savings % vs today’s processing cost.",
+        "netMonthly": "Total monthly impact (cards + cash fee).",
+        "netAnnual": "Yearly impact at the same volumes."
+      }
+    }
+  },
+
+  "uiMicroFormulas": {
+    "DUAL_PRICING": {
+      "derived": [
+        "Base = Card Gross ÷ (1 + tax + tip)",
+        "Price-Adjusted Base = Base × (1 + price differential)",
+        "Processed = Price-Adjusted Base × (1 + tax) × (1 + tip)"
+      ],
+      "processing": [
+        "Processor = Processed × Flat Rate",
+        "Markup (Cards) = Base × price differential",
+        "After Price Differential = Processor − Markup (Cards)"
+      ],
+      "savings": [
+        "Current Cost = Card Gross × current rate",
+        "Savings (Cards) = Current Cost − After Price Differential",
+        "Annual = Monthly × 12"
+      ]
+    },
+    "SUPPLEMENTAL_FEE": {
+      "derived": [
+        "Base = Card Gross ÷ (1 + tax + tip)",
+        "Fee-Eligible/Tip-Eligible depend on timing & tax basis"
+      ],
+      "processing": [
+        "Processor = Processed × Flat Rate",
+        "After Price Differential = Processor − Fee on Cards",
+        "Coverage % = Fee on Cards ÷ Processor"
+      ],
+      "savings": [
+        "Current Cost = Card Gross × current rate",
+        "Savings (Cards) = Current Cost − After Price Differential",
+        "Net Monthly = Savings (Cards) + Fee on Cash",
+        "Annual = Monthly × 12"
+      ]
+    }
+  }
+}
