@@ -145,17 +145,17 @@ export function generateBrandedPDF(data: any): string {
         <div class="section-bd">
           <table class="kv">
             ${isSF ? `
-              <tr><th>Card Processed Total (after fee, tip, & tax)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+              <tr><th>Card Processed Total (incl. price differential, tax, and tip)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
               <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
               <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
               <tr><th>Markup Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
               <tr><th>Under/Over-Recovery</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
               <tr><th>Coverage %</th><td class="metric">${((results.coveragePct || 0) * 100).toFixed(1)}%</td></tr>
             ` : `
-              <tr><th>Card Processed Total</th><td class="metric">${formatCurrency(results.adjustedCardVolume || 0)}</td></tr>
+              <tr><th>Card Processed Total (incl. price differential, tax, and tip)</th><td class="metric">${formatCurrency(results.adjustedCardVolume || 0)}</td></tr>
               <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
               <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processingFees || 0)}</td></tr>
-              <tr><th>Markup Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.markupCollected || 0)}</td></tr>
+              <tr><th>Markup Collected — Cards (price differential)</th><td class="metric metric--positive">${formatCurrency(results.markupCollected || 0)}</td></tr>
               <tr><th>Under/Over-Recovery</th><td class="metric ${((results.markupCollected || 0) - (results.processingFees || 0)) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency((results.markupCollected || 0) - (results.processingFees || 0))}</td></tr>
             `}
           </table>
@@ -636,7 +636,7 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Supplemental Fee Collected — Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
                         <tr><th>Tip-Eligible Volume (Cards)</th><td class="metric">${formatCurrency(results.tipBase || 0)}</td></tr>
                         <tr><th>Tip Amount</th><td class="metric">${formatCurrency(results.tipAmount || 0)}</td></tr>
-                        <tr><th>Card Processed Total (after fee, tip, & tax)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+                        <tr><th>Card Processed Total (incl. price differential, tax, and tip)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
                     </table>
                 </div>
             </div>
@@ -648,7 +648,7 @@ export function generateBrandedPDF(data: any): string {
                 </div>
                 <div class="section-bd">
                     <table class="kv">
-                        <tr><th>Card Processed Total (after fee, tip, & tax)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+                        <tr><th>Card Processed Total (incl. price differential, tax, and tip)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
                         <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(inputs.flatRatePct || results.derivedFlatRate || flatRate)}</td></tr>
                         <tr><th>Processor Charge on Cards</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
                         <tr><th>Supplemental Fee Collected — Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
