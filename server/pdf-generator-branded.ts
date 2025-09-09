@@ -575,21 +575,8 @@ export function generateBrandedPDF(data: any): string {
 </body>
 </html>
 `;
-        <div class="page-2 break-before">
-            <!-- Summary Title and Mode Display -->
-            <div class="section avoid-break">
-                <div class="section-hd">
-                    <div class="section-title" style="font-size: 18px; color: var(--brand-ultramarine);">Summary</div>
-                </div>
-                <div class="section-bd">
-                    ${results.comboKey ? `
-                    <div style="margin-bottom: 12px; padding: 8px; background: var(--bg-soft); border-radius: 4px;">
-                        <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Order of Operations:</div>
-                        <div style="font-size: 13px; font-weight: 600; color: var(--ink-800);">${results.orderOfOperations || ''}</div>
-                    </div>
-                    ` : ''}
-                </div>
-            </div>
+
+}
 
             <!-- Summary KPIs -->
             <div class="section avoid-break">
