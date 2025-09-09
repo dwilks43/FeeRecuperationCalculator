@@ -1,24 +1,15 @@
 import { LOGO_DATA_URL } from './logo-loader.js';
 
+/**
+ * v1.4.0 PDF Mirror UI Generation
+ * Source of Truth: ui_and_results, no new math calculations
+ * Mirror ProcessingSavings (page 1) and DualPricingBreakdown (page 2) exactly
+ */
 export function generateBrandedPDF(data: any): string {
   const {
     programType,
     inputs = {},
     results = {},
-    monthlyVolume,
-    monthlyCashVolume = 0,
-    currentRate,
-    interchangeCost,
-    flatRate,
-    priceDifferential,
-    taxRate = 0,
-    tipRate = 0,
-    baseVolume,
-    adjustedVolume,
-    currentCost,
-    newCost,
-    monthlySavings,
-    annualSavings,
     businessName = '',
     streetAddress = '',
     city = '',
@@ -41,7 +32,171 @@ export function generateBrandedPDF(data: any): string {
 
   // Format all numeric values with proper currency/percentage formatting
   const formatCurrency = (amount: number) => `$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-  const formatPercentage = (rate: number) => `${rate.toFixed(2)}%`;
+  const formatPercentage = (rate: number) => `${(rate * 100).toFixed(2)}%`;
+
+  // v1.4.0: Helper functions to mirror UI components exactly
+  const renderMonthlySavingsSummary = () => {
+    if (isSF) {
+      // Mirror ProcessingSavings.tsx - Supplemental Fee "Savings Summary"
+      return `
+        <div class="section avoid-break">
+          <div class="section-hd">
+            <div class="section-title">${isSF ? 'Supplemental Fee — Summary' : 'Dual Pricing / Cash Discounting — Summary'}</div>
+          </div>
+          <div class="section-bd">
+            ${results.comboKey ? `
+            <div style="margin-bottom: 12px; padding: 8px; background: var(--bg-soft); border-radius: 4px;">
+              <div style="font-size: 12px; color: var(--muted); margin-bottom: 4px;">Order of Operations:</div>
+              <div style="font-size: 13px; font-weight: 600; color: var(--ink-800);">${results.orderOfOperations || ''}</div>
+            </div>
+            ` : ''}
+            <table class="kv">
+              <tr><th>Current Processing Cost (Today)</th><td class="metric metric--negative">${formatCurrency(results.currentCost || 0)}</td></tr>
+              <tr><th>Processor Charge on Cards</th><td class="metric metric--negative">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
+              <tr><th>Supplemental Fee Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+              <tr><th>Card Under/Over-Recovery (Fee − Processor)</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
+              <tr><th>Processing Cost Savings (Cards Only)</th><td class="metric metric--positive">${formatCurrency(results.savingsCardsOnly || 0)}</td></tr>
+              <tr><th>Processing Cost Savings %</th><td class="metric">${((results.procSavingsPct || 0) * 100).toFixed(2)}%</td></tr>
+              <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">Total Net Gain (Monthly)</th><td class="metric metric-lg" style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.totalNetGainRevenue || 0)}</td></tr>
+              <tr><th style="font-size: 14px; color: var(--muted);">Annual Net Gain</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualNetGainRevenue || 0)}</td></tr>
+            </table>
+          </div>
+        </div>`;
+    } else {
+      // Mirror ProcessingSavings.tsx - Dual Pricing "Monthly Processing Savings"
+      return `
+        <div class="section avoid-break">
+          <div class="section-hd">
+            <div class="section-title">Dual Pricing / Cash Discounting — Summary</div>
+          </div>
+          <div class="section-bd">
+            <table class="kv">
+              <tr><th>Current Processing Cost</th><td class="metric metric--negative">${formatCurrency(results.currentCost || 0)}</td></tr>
+              ${(results.residualAfterMarkup || 0) > 0 ? 
+                `<tr><th>Residual cost after markup</th><td class="metric metric--negative">${formatCurrency(results.residualAfterMarkup || 0)}</td></tr>` :
+                (results.overageRetained || 0) > 0 ?
+                `<tr><th>Overage retained after markup</th><td class="metric metric--positive">${formatCurrency(results.overageRetained || 0)}</td></tr>` :
+                `<tr><th>Residual cost after markup</th><td class="metric">${formatCurrency(0)}</td></tr>`
+              }
+              <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">Monthly Savings</th><td class="metric metric-lg" style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.monthlySavings || 0)}</td></tr>
+              <tr><th style="font-size: 14px; color: var(--muted);">Annual Savings</th><td class="metric" style="font-size: 16px; color: var(--brand-spruce);">${formatCurrency(results.annualSavings || 0)}</td></tr>
+            </table>
+          </div>
+        </div>`;
+    }
+  };
+
+  const renderInputParameters = () => {
+    // Mirror UI input display exactly 
+    return `
+      <div class="section avoid-break">
+        <div class="section-hd">
+          <div class="section-title">Input Parameters</div>
+        </div>
+        <div class="section-bd">
+          <table class="kv">
+            <tr><th>Program Type</th><td class="metric">${isSF ? 'Supplemental Fee' : 'Dual Pricing or Cash Discounting'}</td></tr>
+            <tr><th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(inputs.monthlyVolume || 0)}</td></tr>
+            <tr><th>Monthly Cash Volume</th><td class="metric">${formatCurrency(inputs.monthlyCashVolume || 0)}</td></tr>
+            <tr><th>Current Processing Rate</th><td class="metric">${formatPercentage(inputs.currentRate || 0)}</td></tr>
+            <tr><th>Tax Rate</th><td class="metric">${formatPercentage(inputs.taxRate || 0)}</td></tr>
+            <tr><th>Tip Rate</th><td class="metric">${formatPercentage(inputs.tipRate || 0)}</td></tr>
+            ${isSF ? `
+              <tr><th>Supplemental Fee (%)</th><td class="metric">${formatPercentage(inputs.priceDifferential || 0)}</td></tr>
+              <tr><th>Flat Rate % (Bank Mapping)</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}${Math.abs((inputs.flatRatePct || 0) - ((results.derivedFlatRate || 0) * 100)) < 0.0001 ? ' (auto-set for 100% offset)' : ' (custom)'}</td></tr>
+              <tr><th>Tip Timing</th><td class="metric">${inputs.tipTiming === 'AFTER_TIP' ? 'Tip at time of sale (fee after tip)' : 'Tip handwritten (fee before tip)'}</td></tr>
+              <tr><th>Apply Fee To</th><td class="metric">${inputs.feeTaxBasis === 'PRE_TAX' ? 'Apply fee to pre-tax amount' : 'Apply fee to post-tax amount'}</td></tr>
+            ` : `
+              <tr><th>Interchange Cost</th><td class="metric">${formatPercentage(inputs.interchangeCost || 0)}</td></tr>
+              <tr><th>Price Differential</th><td class="metric">${formatPercentage(inputs.priceDifferential || 0)}</td></tr>
+              <tr><th>Flat Rate % (Bank Mapping)</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
+            `}
+          </table>
+        </div>
+      </div>`;
+  };
+
+  // Mirror DualPricingBreakdown.tsx sections
+  const renderDerivedTotals = () => {
+    if (!isSF) return ''; // Only for Supplemental Fee
+    return `
+      <div class="section avoid-break">
+        <div class="section-hd">
+          <div class="section-title">Derived Bases & Totals</div>
+        </div>
+        <div class="section-bd">
+          <table class="kv">
+            <tr><th>Base Card Volume (pre-tax, pre-tip)</th><td class="metric">${formatCurrency(results.baseVolumePreTaxPreTip || 0)}</td></tr>
+            <tr><th>Fee-Eligible Volume (Cards)</th><td class="metric">${formatCurrency(results.feeBaseCards || 0)}</td></tr>
+            <tr><th>Supplemental Fee Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+            <tr><th>Tip-Eligible Volume (Cards)</th><td class="metric">${formatCurrency(results.tipBase || 0)}</td></tr>
+            <tr><th>Tip Amount</th><td class="metric">${formatCurrency(results.tipAmount || 0)}</td></tr>
+          </table>
+        </div>
+      </div>`;
+  };
+
+  const renderProcessingOnCards = () => {
+    return `
+      <div class="section avoid-break">
+        <div class="section-hd">
+          <div class="section-title">Processing on Cards (New Program)</div>
+        </div>
+        <div class="section-bd">
+          <table class="kv">
+            ${isSF ? `
+              <tr><th>Card Processed Total (after fee, tip, & tax)</th><td class="metric">${formatCurrency(results.cardProcessedTotal || 0)}</td></tr>
+              <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
+              <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
+              <tr><th>Supplemental Fee (Cards)</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
+              <tr><th>Under/Over-Recovery</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
+              <tr><th>Coverage %</th><td class="metric">${((results.coveragePct || 0) * 100).toFixed(1)}%</td></tr>
+            ` : `
+              <tr><th>Card Processed Total</th><td class="metric">${formatCurrency(results.adjustedCardVolume || 0)}</td></tr>
+              <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
+              <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processingFees || 0)}</td></tr>
+              <tr><th>Markup (Cards)</th><td class="metric metric--positive">${formatCurrency(results.markupCollected || 0)}</td></tr>
+              <tr><th>Under/Over-Recovery</th><td class="metric ${((results.markupCollected || 0) - (results.processingFees || 0)) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency((results.markupCollected || 0) - (results.processingFees || 0))}</td></tr>
+            `}
+          </table>
+        </div>
+      </div>`;
+  };
+
+  const renderSavingsVsToday = () => {
+    return `
+      <div class="section avoid-break">
+        <div class="section-hd">
+          <div class="section-title">Savings vs Today</div>
+        </div>
+        <div class="section-bd">
+          <table class="kv">
+            <tr><th>Current Processing Cost (Today)</th><td class="metric metric--negative">${formatCurrency(results.currentCost || 0)}</td></tr>
+            <tr><th>Net Change in Card Processing</th><td class="metric ${(results.netChangeCards || 0) <= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.netChangeCards || 0)}</td></tr>
+            <tr><th>Processing Cost Savings (Cards Only)</th><td class="metric metric--positive">${formatCurrency(results.savingsCardsOnly || 0)}</td></tr>
+            ${isSF ? `<tr><th>Supplemental Fee Collected — Cash</th><td class="metric metric--positive">${formatCurrency(results.supplementalFeeCash || 0)}</td></tr>` : ''}
+            <tr style="background: var(--bg-soft);"><th style="font-weight: 700;">Net Monthly</th><td class="metric metric--positive" style="font-weight: 700;">${formatCurrency(isSF ? results.totalNetGainRevenue || 0 : results.monthlySavings || 0)}</td></tr>
+            <tr><th>Net Annual</th><td class="metric metric--positive">${formatCurrency(isSF ? results.annualNetGainRevenue || 0 : results.annualSavings || 0)}</td></tr>
+          </table>
+        </div>
+      </div>`;
+  };
+
+  const renderGrossProfit = () => {
+    return `
+      <div class="section avoid-break">
+        <div class="section-hd">
+          <div class="section-title">Gross Profit</div>
+        </div>
+        <div class="section-bd">
+          <table class="kv">
+            <tr><th>Gross Profit (Cards)</th><td class="metric metric--positive">${formatCurrency(results.grossProfit || 0)}</td></tr>
+            <tr><th>Skytab Bonus (Gross)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusGross || 0)}</td></tr>
+            <tr><th>Skytab Bonus (Rep 50%)</th><td class="metric metric--positive">${formatCurrency(results.skytabBonusRep || 0)}</td></tr>
+          </table>
+        </div>
+      </div>`;
+  };
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -387,58 +542,39 @@ export function generateBrandedPDF(data: any): string {
             </div>
         </div>
 
-        <!-- Input Parameters Section -->
-        <div class="section avoid-break">
-            <div class="section-hd">
-                <div class="section-title">Input Parameters</div>
-            </div>
-            <div class="section-bd">
-                <table class="kv-2col">
-                    <tr>
-                        <th>Program Type</th><td class="metric">${isSF ? 'Supplemental Fee' : 'Dual Pricing or Cash Discounting'}</td>
-                        <th>Monthly Credit Card Volume</th><td class="metric">${formatCurrency(monthlyVolume)}</td>
-                    </tr>
-                    <tr>
-                        <th>Monthly Cash Volume</th><td class="metric">${formatCurrency(monthlyCashVolume)}</td>
-                        <th>Current Processing Rate</th><td class="metric">${formatPercentage(currentRate)}</td>
-                    </tr>
+        ${renderInputParameters()}
+
+        <!-- Page 1: SUMMARY (v1.4.0 Mirror UI) -->
+        <div class="page-1 break-before">
+            ${renderMonthlySavingsSummary()}
+            
+            <!-- Footnotes -->
+            <div style="margin-top: 24px; padding: 16px; background: var(--bg-soft); border-radius: 6px; border-left: 3px solid var(--brand-ultramarine);">
+                <div style="font-size: 11px; color: var(--muted); line-height: 1.4;">
                     ${isSF ? `
-                    <tr>
-                        <th>Supplemental Fee (%)</th><td class="metric">${formatPercentage(priceDifferential)}</td>
-                        <th>Flat Rate (%)</th><td class="metric">${formatPercentage(inputs.flatRatePct || results.derivedFlatRate || flatRate)}${Math.abs((inputs.flatRatePct || flatRate) - (results.derivedFlatRate || 0)) < 0.0001 ? ' (auto-set for 100% offset)' : ' (custom)'}</td>
-                    </tr>
-                    <tr>
-                        <th>Tip (%)</th><td class="metric">${formatPercentage(tipRate)}</td>
-                        <th>Card volume is</th><td class="metric">${inputs.cardVolumeBasis === 'GROSS' ? 'Gross (includes tax & tip)' : 'Pre-tax'}</td>
-                    </tr>
-                    <tr>
-                        <th>Apply fee</th><td class="metric">${inputs.feeTaxBasis === 'PRE_TAX' ? 'Pre-tax' : 'Post tax'}</td>
-                        <th>Tip mode</th><td class="metric">${inputs.feeTiming === 'FEE_AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale'}</td>
-                    </tr>
-                    <tr>
-                        <th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td>
-                        <th>&nbsp;</th><td>&nbsp;</td>
-                    </tr>
+                        <div>• Flat Rate = Fee ÷ (1+Fee), rounded to 2-dp percent and used in calculations.</div>
+                        <div>• Card volume assumed Gross (tax + tip included).</div>
+                        <div>• Savings can be negative if processor charges exceed the fee collected on cards.</div>
                     ` : `
-                    <tr>
-                        <th>Interchange Cost</th><td class="metric">${formatPercentage(interchangeCost)}</td>
-                        <th>Flat Rate</th><td class="metric">${formatPercentage(flatRate)}</td>
-                    </tr>
-                    <tr>
-                        <th>Price Differential</th><td class="metric">${formatPercentage(priceDifferential)}</td>
-                        <th>Tax Rate</th><td class="metric">${formatPercentage(taxRate)}</td>
-                    </tr>
-                    <tr>
-                        <th>Tip Rate</th><td class="metric">${formatPercentage(tipRate)}</td>
-                        <th>&nbsp;</th><td>&nbsp;</td>
-                    </tr>
+                        <div>• Flat Rate = Price Differential ÷ (1+Price Differential), rounded to 2-dp percent and used in calculations.</div>
+                        <div>• Card volume assumed Gross (tax + tip included).</div>
                     `}
-                </table>
+                </div>
             </div>
         </div>
 
-        ${isSF ? `
-        <!-- Page 2: SUMMARY for Supplemental Fee (v1.2.2) -->
+        <!-- Page 2: DETAILS (v1.4.0 Mirror UI) -->
+        <div class="page-2 break-before">
+            ${renderInputParameters()}
+            ${renderDerivedTotals()}
+            ${renderProcessingOnCards()}
+            ${renderSavingsVsToday()}
+            ${renderGrossProfit()}
+        </div>
+    </div>
+</body>
+</html>
+`;
         <div class="page-2 break-before">
             <!-- Summary Title and Mode Display -->
             <div class="section avoid-break">
