@@ -299,7 +299,10 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const tax  = (inputs.taxRate || 0) / 100;
   const tip  = (inputs.tipRate || 0) / 100;
   const pd   = (inputs.priceDifferential || 0) / 100;
-  const fr   = (inputs.flatRate || 0) / 100;     // what DMP charges merchant under DP
+  // Use flatRatePct (Bank Mapping) field, with fallback for legacy
+  const fr = inputs.flatRatePct !== undefined ? 
+    inputs.flatRatePct / 100 : 
+    (inputs.flatRate || 0) / 100;     // what DMP charges merchant under DP
   const curr = (inputs.currentRate || 0) / 100;
 
   // 1) Recover base (pre-tax, pre-tip) using the additive model used elsewhere in the app
@@ -359,6 +362,7 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     skytabBonusRep,
     collectedLabel: 'Markup Collected',
     collectedValue: cardPriceIncreaseCollected,
+    derivedFlatRate: fr, // Include the actual flat rate used in calculations
     // Canonical fields
     programCardFees,
     feeCollectedOnCards: cardPriceIncreaseCollected,
