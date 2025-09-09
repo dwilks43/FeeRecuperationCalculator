@@ -53,8 +53,12 @@ export const TOOLTIPS = {
     body: 'Dollar volume of card sales that the supplemental fee is applied to, based on your fee/tip timing.'
   },
   cardFeeCollected: {
-    title: 'Supplemental Fee Collected — Cards',
+    title: 'Markup Collected — Cards',
     body: 'Fee is applied to the Fee Base for the selected options.'
+  },
+  netChangeCards: {
+    title: 'Processing Cost After Price Differential',
+    body: 'Remaining processor cost after your price differential/fee offsets part of it.'
   },
   tipBase: {
     title: 'Tip-Eligible Volume (Cards)',
@@ -78,7 +82,7 @@ export const TOOLTIPS = {
   },
   recovery: {
     title: 'Card Under/Over-Recovery',
-    body: 'Under/Over = Supplemental Fee (Cards) − Processor Charge.'
+    body: 'Under/Over = Markup Collected — Cards − Processor Charge.'
   },
   coveragePct: {
     title: 'Coverage %',

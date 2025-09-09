@@ -1,0 +1,74 @@
+{
+  "version": "1.5.5-unify-after-differential",
+  "modules": ["DUAL_PRICING", "SUPPLEMENTAL_FEE"],
+
+  "ui": {
+    "sections": [
+      {
+        "id": "processingOnCards",
+        "fields": [
+          { "id": "netChangeCards",
+            "label": "Processing Cost After Price Differential",
+            "type": "currency",
+            "formulaNote": "Processor Charge − Markup Collected (Cards)" }
+        ]
+      },
+      {
+        "id": "savingsVsToday",
+        "fields": [
+          { "id": "netChangeCards",
+            "label": "Processing Cost After Price Differential",
+            "type": "currency",
+            "formulaNote": "Processor Charge − Markup Collected (Cards)" }
+        ]
+      }
+    ],
+
+    "monthlySavings": {
+      "labelOverrides": {
+        "Residual cost after markup": "Processing Cost After Price Differential",
+        "Net Change in Card Processing": "Processing Cost After Price Differential",
+        "Processor Cost After Markup": "Processing Cost After Price Differential"
+      },
+      "itemsReplaceByKey": [
+        { "key": "netChangeCards", "label": "Processing Cost After Price Differential" }
+      ]
+    },
+
+    "tooltips": {
+      "netChangeCards": "Remaining processor cost after your price differential/fee offsets part of it."
+    },
+
+    "toggles": {
+      "showCoverageGap": true  // set to false to hide the Under/Over-Recovery row in center cards & right rail
+    },
+
+    "visibilityRules": [
+      {
+        "when": "!ui.toggles.showCoverageGap",
+        "hide": [
+          "sections.processingOnCards.fields.recovery",
+          "monthlySavings.items.key=recovery"
+        ]
+      }
+    ]
+  },
+
+  "pdf": {
+    "summary": {
+      "useMonthlySavingsFromUI": true,
+      "labelOverrides": {
+        "Residual cost after markup": "Processing Cost After Price Differential",
+        "Net Change in Card Processing": "Processing Cost After Price Differential",
+        "Processor Cost After Markup": "Processing Cost After Price Differential"
+      }
+    },
+    "details": {
+      "mirrorUISections": true,
+      "labelOverrides": {
+        "Net Change in Card Processing": "Processing Cost After Price Differential",
+        "Processor Cost After Markup": "Processing Cost After Price Differential"
+      }
+    }
+  }
+}
