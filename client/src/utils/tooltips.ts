@@ -70,7 +70,7 @@ export const TOOLTIPS = {
   },
   processed: {
     title: 'Card Processed Total',
-    body: 'Price-Adjusted Base × (1 + Tax + Tip). Dual Pricing does not tax the tip.'
+    body: 'Price-Adjusted Base × (1 + Tax) × (1 + Tip). Tips are handwritten after tax on the presented total.'
   },
   processorChargeOnCards: {
     title: 'Processor Charge on Cards',

@@ -311,8 +311,8 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   // 2) v1.5.0: Price-Adjusted Base (pre-tax, pre-tip) = Base × (1 + Price Differential) 
   const priceAdjustedBase = base * (1 + pd);
 
-  // 3) v1.5.0: Card Processed Total = Price-Adjusted Base × (1 + Tax + Tip)
-  const processed = priceAdjustedBase * (1 + tax + tip);
+  // 3) v1.5.2: Card Processed Total = Price-Adjusted Base × (1 + Tax) × (1 + Tip) - handwritten after tax
+  const processed = priceAdjustedBase * (1 + tax) * (1 + tip);
   const adjustedCardVolume = processed; // legacy alias
 
   // 4) Processor Charge on Cards = Card Processed Total × Flat Rate
