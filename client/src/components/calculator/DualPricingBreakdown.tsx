@@ -217,7 +217,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   <span className="font-medium text-red-600">{formatCurrency(results.procCharge || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Price Increase Collected (Cards)</span>
+                  <span className="text-sm text-gray-600">Markup Collected — Cards</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -249,8 +249,8 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Net Change in Card Processing</span>
-                    <span className="text-xs text-gray-400 italic">Net Change = Processor Charge − Markup (Cards)</span>
+                    <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
+                    <span className="text-xs text-gray-400 italic">Processor Charge − Markup Collected</span>
                   </div>
                   <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(results.netChangeCards || 0)}
