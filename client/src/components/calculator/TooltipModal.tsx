@@ -2,13 +2,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { TooltipKey, TooltipContent } from "@/types/calculator";
-import { TOOLTIPS, getTooltip } from "@/utils/tooltips";
+import { TOOLTIPS, getTooltip, getMicroFormulas, UI_MICRO_FORMULAS } from "@/utils/tooltips";
 
 interface TooltipModalProps {
   isOpen: boolean;
   onClose: () => void;
   tooltipKey: TooltipKey | null;
   programType?: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
+  showMicroFormulas?: boolean;
 }
 
 // Convert TOOLTIPS to match TooltipContent interface
@@ -40,7 +41,7 @@ const tooltipContent: Record<string, TooltipContent> = Object.fromEntries(
   ])
 );
 
-export default function TooltipModal({ isOpen, onClose, tooltipKey, programType }: TooltipModalProps) {
+export default function TooltipModal({ isOpen, onClose, tooltipKey, programType, showMicroFormulas }: TooltipModalProps) {
   // Try new unified tooltip system first, then fallback to legacy
   let content: { title: string; content: string } | null = null;
   
@@ -93,7 +94,30 @@ export default function TooltipModal({ isOpen, onClose, tooltipKey, programType 
             </Button>
           </div>
         </DialogHeader>
-        <p className="text-gray-600 leading-relaxed">{content.content}</p>
+        <div className="space-y-4">
+          <p className="text-gray-600 leading-relaxed">{content.content}</p>
+          
+          {/* Show micro formulas if requested and program type is available */}
+          {showMicroFormulas && programType && (
+            <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-dmp-blue-500">
+              <h4 className="font-semibold text-gray-900 mb-2 text-sm">Quick Reference Formulas</h4>
+              <div className="space-y-2">
+                {Object.entries(UI_MICRO_FORMULAS[programType]).map(([section, formulas]) => (
+                  <div key={section}>
+                    <h5 className="font-medium text-gray-700 text-xs uppercase tracking-wide mb-1">{section}</h5>
+                    <ul className="text-xs text-gray-600 space-y-1">
+                      {formulas.map((formula, index) => (
+                        <li key={index} className="font-mono bg-white px-2 py-1 rounded border text-gray-800">
+                          {formula}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );
