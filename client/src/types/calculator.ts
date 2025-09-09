@@ -91,6 +91,8 @@ export interface CalculatorResults {
   procCharge?: number;              // Processor Charge on Cards
   netMonthly?: number;              // Total Net Gain (Monthly)
   netAnnual?: number;               // Annual Net Gain
+  // v1.5.1 DP rounding improvements
+  savingsCardsOnlyRaw?: number;     // Processing Cost Savings (raw, unrounded)
 }
 
 export interface TooltipContent {

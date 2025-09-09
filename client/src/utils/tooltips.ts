@@ -68,6 +68,10 @@ export const TOOLTIPS = {
     title: 'Card Processed Total',
     body: 'Amount the processor charges on (after fee and after tip).'
   },
+  processed: {
+    title: 'Card Processed Total',
+    body: 'Price-Adjusted Base × (1 + Tax + Tip). Dual Pricing does not tax the tip.'
+  },
   processorChargeOnCards: {
     title: 'Processor Charge on Cards',
     body: 'v1.0.1: Your card processing cost calculated as Card Processed Total × Flat Rate %.'

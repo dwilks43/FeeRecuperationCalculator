@@ -243,7 +243,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-600">Net Change in Card Processing</span>
-                    <span className="text-xs text-gray-400 italic">Net Change = Processor Charge − Markup</span>
+                    <span className="text-xs text-gray-400 italic">Net Change = Processor Charge − Markup (Cards)</span>
                   </div>
                   <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(results.netChangeCards || 0)}
