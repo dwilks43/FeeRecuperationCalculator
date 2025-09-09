@@ -1,0 +1,194 @@
+{
+  "version": "1.5.0-dp-align",
+  "module": "DUAL_PRICING",
+
+  "policy": {
+    "rounding": { "currencyDecimals": 2, "percentDecimals": 2, "negativeStyle": "leadingMinus" },
+    "flatRate": {
+      "autoFormula": "priceDiff/(1+priceDiff)",
+      "editable": true,
+      "roundForMath": true,
+      "fractionDecimals": 4,
+      "percentDecimals": 2,
+      "roundingMode": "HALF_UP",
+      "caption": "Auto = Price Diff ÷ (1+Price Diff), rounded to 2-dp percent and used in all calculations."
+    }
+  },
+
+  "ui": {
+    "orderOfOperationsText": "Pre-Tax Base → +Price Differential → +Tax + Tip",
+    "renameFields": {
+      "base": "Base Card Volume (pre-tax, pre-tip)",
+      "processed": "Card Processed Total"
+    },
+    "flatRateField": {
+      "label": "Flat Rate % (Bank Mapping)",
+      "scale": "percent",
+      "autoBadge": "Auto",
+      "manualBadge": "Manual",
+      "resetLink": "Reset to auto",
+      "helper": "Auto = Price Diff ÷ (1+Price Diff). You can override; click Reset to return to auto."
+    },
+
+    "sections": [
+      {
+        "id": "derivedTotals",
+        "title": "Derived Bases & Totals",
+        "fieldsOrder": ["base", "priceAdjustedBase", "processed"],
+        "fields": [
+          { "id": "base",               "labelRef": "base",          "type": "currency" },
+          { "id": "priceAdjustedBase",  "label": "Price-Adjusted Base (pre-tax, pre-tip)", "type": "currency", "tooltip": "Base × (1 + Price Differential)" },
+          { "id": "processed",          "labelRef": "processed",     "type": "currency", "tooltip": "Price-Adjusted Base × (1 + Tax + Tip)" }
+        ]
+      },
+      {
+        "id": "processingOnCards",
+        "title": "Processing on Cards (New Program)",
+        "fieldsOrder": ["processed", "flatRate", "procCharge", "markupCollected", "recovery", "coveragePct"],
+        "fields": [
+          { "id": "processed",        "labelRef": "processed", "type": "currency" },
+          { "id": "flatRate",         "label": "Flat Rate %", "type": "percent", "showBadges": true },
+          { "id": "procCharge",       "label": "Processor Charge on Cards", "type": "currency", "formulaNote": "Processor Charge = Card Processed Total × Flat Rate" },
+          { "id": "markupCollected",  "label": "Card Price Increase Collected (Cards)", "type": "currency" },
+          { "id": "recovery",         "label": "Card Under/Over-Recovery (Markup − Processor)", "type": "currency" },
+          { "id": "coveragePct",      "label": "Coverage %", "type": "percent", "formulaNote": "Coverage % = Markup (Cards) ÷ Processor" }
+        ]
+      },
+      {
+        "id": "savingsVsToday",
+        "title": "Savings vs Today",
+        "fieldsOrder": ["currentCost", "netChangeCards", "savingsCardsOnly", "netMonthly", "netAnnual"],
+        "fields": [
+          { "id": "currentCost",     "label": "Current Processing Cost (Today)", "type": "currency" },
+          { "id": "netChangeCards",  "label": "Net Change in Card Processing",   "type": "currency", "formulaNote": "Net Change = Processor Charge − Markup (Cards)" },
+          { "id": "savingsCardsOnly","label": "Processing Cost Savings (Cards Only)", "type": "currency", "formulaNote": "Savings = Current Cost − Net Change" },
+          { "id": "netMonthly",      "label": "Total Net Gain (Monthly)", "type": "currency" },
+          { "id": "netAnnual",       "label": "Annual Net Gain", "type": "currency" }
+        ]
+      }
+    ],
+
+    "monthlySavings": {
+      "enabled": true,
+      "title": "Monthly Processing Savings",
+      "items": [
+        { "key": "currentCost",     "label": "Current Processing Cost (Today)",                    "style": "cost",          "format": "currency" },
+        { "key": "procCharge",      "label": "Processor Charge on Cards",                          "style": "cost",          "format": "currency" },
+        { "key": "markupCollected", "label": "Card Price Increase Collected (Cards)",              "style": "feesCollected", "format": "currency" },
+        { "key": "recovery",        "label": "Card Under/Over-Recovery (Markup − Processor)",      "style": "bases",         "format": "currency" },
+        { "key": "savingsCardsOnly","label": "Processing Cost Savings (Cards Only)",               "style": "net",           "format": "currency" },
+        { "key": "procSavingsPct",  "label": "Processing Cost Savings %",                          "style": "bases",         "format": "percent" },
+        { "key": "netMonthly",      "label": "Total Net Gain (Monthly)",                           "style": "net",           "format": "currency" },
+        { "key": "netAnnual",       "label": "Annual Net Gain",                                    "style": "net",           "format": "currency" }
+      ],
+      "colors": { "cost": "red", "feesCollected": "green", "bases": "neutral", "net": "teal" }
+    }
+  },
+
+  "events": {
+    "onProgramTypeChange": [
+      {
+        "to": "DUAL_PRICING",
+        "actions": [
+          {
+            "if": "(!state.isFlatRateManual) || isEmpty(form.flatRatePercent)",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP(priceDiff/(1+priceDiff), 4)",
+              "form.flatRatePercent": "ROUND_HALF_UP(form.flatRate*100, 2)",
+              "state.isFlatRateManual": false,
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ],
+    "onProgramMount": [
+      {
+        "program": "DUAL_PRICING",
+        "actions": [
+          {
+            "if": "(!state.isFlatRateManual) || isEmpty(form.flatRatePercent)",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP(priceDiff/(1+priceDiff), 4)",
+              "form.flatRatePercent": "ROUND_HALF_UP(form.flatRate*100, 2)",
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ],
+    "onFieldChange": [
+      {
+        "field": "priceDiff",
+        "program": "DUAL_PRICING",
+        "actions": [
+          {
+            "if": "!state.isFlatRateManual",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP(priceDiff/(1+priceDiff), 4)",
+              "form.flatRatePercent": "ROUND_HALF_UP(form.flatRate*100, 2)",
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ]
+  },
+
+  "math": {
+    "flatRate": {
+      "fractionAuto": "priceDiff/(1+priceDiff)",
+      "fractionForMath": "ROUND_HALF_UP(fractionAuto, 4)",
+      "percentForUI": "ROUND_HALF_UP(fractionForMath*100, 2)",
+      "source": "IF(state.isFlatRateManual && !isEmpty(form.flatRatePercent), ROUND_HALF_UP(form.flatRatePercent/100, 4), fractionForMath)"
+    },
+
+    "shared": {
+      "base": "cardGross/(1+tax+tip)"
+    },
+
+    "dp": {
+      "priceAdjustedBase": "base*(1+priceDiff)",
+      "processed": "priceAdjustedBase*(1+tax+tip)"
+    },
+
+    "totals": {
+      "procCharge": "dp.processed*flatRate.source",
+      "markupCollected": "base*priceDiff",
+      "recovery": "markupCollected - totals.procCharge",
+      "coveragePct": "IF(totals.procCharge==0,0,markupCollected/totals.procCharge)",
+      "currentCost": "cardGross*currentRate",
+      "netChangeCards": "totals.procCharge - markupCollected",
+      "savingsCardsOnly": "currentCost - totals.netChangeCards",
+      "procSavingsPct": "IF(currentCost==0,0,savingsCardsOnly/currentCost)",
+      "netMonthly": "savingsCardsOnly",
+      "netAnnual": "netMonthly*12",
+      "grossProfit": "(flatRate.source - interchange)*dp.processed"
+    }
+  },
+
+  "pdf": {
+    "rendering": { "sourceOfTruth": "ui_and_results", "noNewMath": true, "bindStrategy": "byKey" },
+    "summary": {
+      "enabled": true,
+      "title": "Dual Pricing / Cash Discounting — Summary",
+      "useMonthlySavingsFromUI": true,
+      "itemsRef": "ui.monthlySavings.items",
+      "footnotes": [
+        "Flat Rate = Price Differential ÷ (1+Price Differential), rounded to 2-dp percent and used in calculations.",
+        "Card volume assumed Gross (tax + tip included)."
+      ]
+    },
+    "details": {
+      "mirrorUISections": true,
+      "sectionsOrder": ["inputs", "derivedTotals", "processingOnCards", "savingsVsToday", "profit"],
+      "sections": {
+        "inputs":            { "from": "inputs",                 "label": "Input Parameters" },
+        "derivedTotals":     { "from": "sections.derivedTotals", "label": "Derived Bases & Totals" },
+        "processingOnCards": { "from": "sections.processingOnCards", "label": "Processing on Cards (New Program)" },
+        "savingsVsToday":    { "from": "sections.savingsVsToday", "label": "Savings vs Today" },
+        "profit":            { "from": "sections.profit",        "label": "Gross Profit" }
+      }
+    }
+  }
+}

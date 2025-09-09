@@ -305,26 +305,50 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     (inputs.flatRate || 0) / 100;     // what DMP charges merchant under DP
   const curr = (inputs.currentRate || 0) / 100;
 
-  // 1) Recover base (pre-tax, pre-tip) using the additive model used elsewhere in the app
+  // 1) Base Card Volume (pre-tax, pre-tip) - v1.5.0 aligned terminology
   const base = cc / (1 + tax + tip);
 
-  // 2) Adjusted Card Volume includes markup, tax, and tip (your requested definition)
-  const adjustedCardVolume = base * (1 + pd) * (1 + tax) * (1 + tip);
+  // 2) v1.5.0: Price-Adjusted Base (pre-tax, pre-tip) = Base × (1 + Price Differential) 
+  const priceAdjustedBase = base * (1 + pd);
 
-  // 3) Program card fees (new cost)
-  const programCardFees = adjustedCardVolume * fr;
+  // 3) v1.5.0: Card Processed Total = Price-Adjusted Base × (1 + Tax + Tip)
+  const processed = priceAdjustedBase * (1 + tax + tip);
+  const adjustedCardVolume = processed; // legacy alias
 
-  // 4) Markup collected on cards
-  const cardPriceIncreaseCollected = base * pd;
+  // 4) Processor Charge on Cards = Card Processed Total × Flat Rate
+  const procCharge = processed * fr;
+  const programCardFees = procCharge; // legacy alias
 
-  // 5) Baseline current processing cost
+  // 5) v1.5.0: Card Price Increase Collected = Base × Price Differential
+  const markupCollected = base * pd;
+  const cardPriceIncreaseCollected = markupCollected; // legacy alias
+
+  // 6) Current Processing Cost (Today)
   const currentCost = cc * curr;
 
-  // 6) Signed net on cards and Savings
-  const netCostForProcessingCards = cardPriceIncreaseCollected - programCardFees; // can be negative
+  // 7) v1.5.0: Card Under/Over-Recovery (Markup − Processor)
+  const recovery = markupCollected - procCharge; // can be negative
+  const netCostForProcessingCards = -recovery; // legacy alias (sign flipped)
+
+  // 8) v1.5.0: Net Change in Card Processing = Processor Charge − Markup
+  const netChangeCards = procCharge - markupCollected;
+
+  // 9) v1.5.0: Processing Cost Savings (Cards Only) = Current Cost − Net Change
+  const savingsCardsOnly = currentCost - netChangeCards;
+
+  // 10) v1.5.0: Processing Cost Savings % = Savings ÷ Current Cost
+  const procSavingsPct = currentCost === 0 ? 0 : savingsCardsOnly / currentCost;
+
+  // 11) v1.5.0: Coverage % = Markup ÷ Processor Charge
+  const coveragePct = procCharge === 0 ? 0 : markupCollected / procCharge;
+
+  // 12) v1.5.0: Total Net Gain (Monthly & Annual)
+  const netMonthly = savingsCardsOnly; 
+  const netAnnual = netMonthly * 12;
+  const monthlySavings = netMonthly; // legacy alias
+  const annualSavings = netAnnual; // legacy alias
+  
   const feeCollectedOnCash = 0; // DP/CD has no cash fee
-  const monthlySavings = currentCost + netCostForProcessingCards + feeCollectedOnCash;
-  const annualSavings  = monthlySavings * 12;
 
   // Gross Profit calculation: (flat rate % - interchange cost %) × adjusted card volume
   const interchangeRate = (inputs.interchangeCost || 0) / 100;
@@ -345,33 +369,50 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const skytabBonus = skytabBonusGross; // Use new calculation
 
   return {
+    // v1.5.0: New DP-aligned field structure
+    base,                         // Base Card Volume (pre-tax, pre-tip)
+    priceAdjustedBase,           // Price-Adjusted Base (pre-tax, pre-tip) 
+    processed,                   // Card Processed Total
+    procCharge,                  // Processor Charge on Cards
+    markupCollected,            // Card Price Increase Collected (Cards)
+    recovery,                    // Card Under/Over-Recovery (Markup − Processor)
+    coveragePct,                // Coverage %
+    currentCost,                // Current Processing Cost (Today)
+    netChangeCards,             // Net Change in Card Processing
+    savingsCardsOnly,           // Processing Cost Savings (Cards Only)
+    procSavingsPct,             // Processing Cost Savings %
+    netMonthly,                 // Total Net Gain (Monthly)
+    netAnnual,                  // Annual Net Gain
+    derivedFlatRate: fr,        // Flat Rate % used in calculations
+    
+    // Legacy aliases for backward compatibility
     baseVolume: base,
-    markedUpVolume: base + cardPriceIncreaseCollected,
-    adjustedVolume: adjustedCardVolume,
-    adjustedCardVolume,
-    cardPriceIncreaseCollected,
-    markupCollected: cardPriceIncreaseCollected, // legacy alias
-    processingFees: programCardFees, // legacy alias
-    currentCost,
-    newCost: programCardFees, // legacy alias
-    monthlySavings,
-    annualSavings,
-    annualVolume,
-    dmpProfit,
-    skytabBonus,
-    skytabBonusRep,
-    collectedLabel: 'Markup Collected',
-    collectedValue: cardPriceIncreaseCollected,
-    derivedFlatRate: fr, // Include the actual flat rate used in calculations
-    // Canonical fields
-    programCardFees,
-    feeCollectedOnCards: cardPriceIncreaseCollected,
+    adjustedVolume: processed,
+    adjustedCardVolume: processed,
+    cardPriceIncreaseCollected: markupCollected,
+    processingFees: procCharge,
+    programCardFees: procCharge,
+    newCost: procCharge,
+    monthlySavings: netMonthly,
+    annualSavings: netAnnual,
+    markedUpVolume: base + markupCollected,
     netCostForProcessingCards,
+    feeCollectedOnCards: markupCollected,
     feeCollectedOnCash,
-    // Gross Profit and Skytab bonus calculations
+    
+    // Labels and display
+    collectedLabel: 'Card Price Increase Collected',
+    collectedValue: markupCollected,
+    
+    // Gross Profit and Skytab calculations
     grossProfit,
+    skytabBonus: skytabBonusGross,
     skytabBonusGross,
-    // UX-specific fields for neutral row display
+    skytabBonusRep,
+    
+    // Legacy fields
+    annualVolume,
+    dmpProfit: recovery,
     residualAfterMarkup,
     overageRetained
   };
