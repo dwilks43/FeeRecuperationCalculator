@@ -1,0 +1,73 @@
+{
+  "version": "1.4.0-pdf-mirror-ui",
+  "pdf": {
+    "rendering": {
+      "sourceOfTruth": "ui_and_results",
+      "inheritRoundingFrom": "policy.rounding",
+      "noNewMath": true,                 // hard guard: PDF never computes, only binds
+      "bindStrategy": "byKey"            // always look up results.<key> used by UI
+    }
+  },
+
+  "modules": {
+    "SUPPLEMENTAL_FEE": {
+      "pdf": {
+        "layout": { "page1": "SUMMARY", "page2": "DETAILS" },
+
+        /* SUMMARY = Right-rail Monthly Savings (exact mirror) */
+        "summary": {
+          "enabled": true,
+          "title": "Supplemental Fee — Summary",
+          "useMonthlySavingsFromUI": true,            // pull items/labels/colors from ui.monthlySavings.items
+          "itemsRef": "ui.monthlySavings.items",      // [{key,label,format,...}] – no overrides
+          "ledgerTextByComboRef": "ui.orderOfOperationsTextByCombo",
+          "footnotes": [
+            "Flat Rate = Fee ÷ (1+Fee), rounded to 2-dp percent and used in calculations.",
+            "Card volume assumed Gross (tax + tip included).",
+            "Savings can be negative if processor charges exceed the fee collected on cards."
+          ]
+        },
+
+        /* DETAILS = Live Calculations cards (exact mirror) */
+        "details": {
+          "mirrorUISections": true,
+          "sectionsOrder": ["inputs", "derivedTotals", "processingOnCards", "savingsVsToday", "profit"],
+          "sections": {
+            "inputs":        { "from": "inputs",            "label": "Input Parameters" },
+            "derivedTotals": { "from": "sections.derivedTotals",     "label": "Derived Bases & Totals" },
+            "processingOnCards": { "from": "sections.processingOnCards", "label": "Processing on Cards (New Program)" },
+            "savingsVsToday": { "from": "sections.savingsVsToday",   "label": "Savings vs Today" },
+            "profit":        { "from": "sections.profit",            "label": "Gross Profit" }
+          }
+        }
+      }
+    },
+
+    "DUAL_PRICING": {
+      "pdf": {
+        "layout": { "page1": "SUMMARY", "page2": "DETAILS" },
+
+        /* SUMMARY = the program’s right-rail summary (mirror) 
+           If you haven’t yet switched Dual Pricing’s right-rail to the 7/8 KPI layout,
+           this will still mirror whatever list is there today so there’s no drift. */
+        "summary": {
+          "enabled": true,
+          "title": "Dual Pricing / Cash Discounting — Summary",
+          "useMonthlySavingsFromUI": true,           // mirrors the DP right-rail summary block
+          "itemsRef": "ui.monthlySavings.items",
+          "footnotes": [
+            "Flat Rate = Price Differential ÷ (1+Price Differential), rounded to 2-dp percent and used in calculations.",
+            "Card volume assumed Gross (tax + tip included)."
+          ]
+        },
+
+        /* DETAILS = Live cards (exact mirror) */
+        "details": {
+          "mirrorUISections": true,
+          "sectionsOrder": ["inputs", "derived", "processingOnCards", "savingsVsToday", "profit"],
+          "sections": {
+            "inputs":            { "from": "inputs",                   "label": "Input Parameters" },
+            "derived":           { "from": "sections.derived",         "label": "Derived Bases & Totals" },
+            "processingOnCards": { "from": "sections.processingOnCards", "label": "Processing on Cards (New Program)" },
+            "savingsVsToday":    { "from": "sections.savingsVsToday",  "label": "Savings vs Today" },
+            "profit":            { "from": "sections.profit",          "lab
