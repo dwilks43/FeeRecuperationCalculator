@@ -599,8 +599,8 @@ export function generateBrandedPDF(data: any): string {
                         </div>
                     </div>
                     <table class="kv">
-                        <tr><th>Base Volume</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
-                        <tr><th>Adjusted Card Volume</th><td class="metric">${formatCurrency(results.adjustedCardVolume || adjustedVolume)}</td></tr>
+                        <tr><th>Base Card Volume (pre-tax, pre-tip)</th><td class="metric">${formatCurrency(baseVolume)}</td></tr>
+                        <tr><th>Card Processed Total</th><td class="metric">${formatCurrency(results.adjustedCardVolume || adjustedVolume)}</td></tr>
                         <tr><th>Current Processing Cost</th><td class="metric">${formatCurrency(currentCost)}</td></tr>
                         ${(results.residualAfterMarkup || 0) > 0 ? 
                             `<tr><th>Residual cost after markup</th><td class="metric">${formatCurrency(results.residualAfterMarkup || 0)}</td></tr>` :

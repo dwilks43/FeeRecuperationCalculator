@@ -169,7 +169,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
             {/* Base Volume */}
             <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Base Volume</span>
+                <span className="text-sm font-medium text-gray-700">Base Card Volume (pre-tax, pre-tip)</span>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -188,7 +188,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
             {/* Adjusted Card Volume */}
             <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Adjusted Card Volume</span>
+                <span className="text-sm font-medium text-gray-700">Card Processed Total</span>
                 <Button
                   variant="ghost"
                   size="sm"
