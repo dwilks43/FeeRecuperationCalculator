@@ -106,8 +106,8 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Under/Over-Recovery</span>
-                    <span className="text-xs text-gray-400 italic">Under/Over-Recovery = Fee (Cards) − Processor</span>
+                    <span className="text-sm text-gray-600">Card Under/Over-Recovery</span>
+                    <span className="text-xs text-gray-400 italic">Under/Over-Recovery = Markup Collected − Processor</span>
                   </div>
                   <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(results.recovery || 0)}

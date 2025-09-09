@@ -73,10 +73,10 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             </div>
 
-            {/* Card Under/Over-Recovery (Fee − Processor) - NEUTRAL */}
+            {/* Card Under/Over-Recovery (Markup − Processor) - NEUTRAL */}
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Card Under/Over-Recovery (Fee − Processor)</span>
+                <span className="text-sm font-medium text-gray-600">Card Under/Over-Recovery (Markup − Processor)</span>
                 <Button
                   variant="ghost"
                   size="sm"
