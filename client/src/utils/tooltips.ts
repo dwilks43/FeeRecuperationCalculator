@@ -60,6 +60,14 @@ export const TOOLTIPS = {
     title: 'Processing Cost After Price Differential',
     body: 'Remaining processor cost after your price differential/fee offsets part of it.'
   },
+  priceAdjustedBase: {
+    title: 'Price-Adjusted Base + Price Differential',
+    body: 'Base Card Volume × (1 + Price Differential).'
+  },
+  markupCollected: {
+    title: 'Markup Collected — Cards (price differential)',
+    body: 'The additional revenue collected from applying the price differential.'
+  },
   tipBase: {
     title: 'Tip-Eligible Volume (Cards)',
     body: 'Dollar volume of card sales that the tip is applied to, based on your fee/tax/tip timing.'

@@ -170,7 +170,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
             <div className="mb-4 p-3 bg-gradient-to-r from-dmp-blue-50 to-blue-100 rounded-lg border border-dmp-blue-200">
               <div className="text-xs font-medium text-dmp-blue-700 mb-1">Order of Operations</div>
               <div className="text-sm text-dmp-blue-600 font-mono">
-                Pre-Tax Base → +Price Differential → +Tax → +Tip (handwritten)
+                Base Card Volume → +Price Differential → +Tax → +Tip (handwritten)
               </div>
             </div>
             {/* Panel 1: Derived Bases & Totals */}
