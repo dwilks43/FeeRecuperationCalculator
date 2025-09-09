@@ -333,8 +333,9 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   // 8) v1.5.0: Net Change in Card Processing = Processor Charge − Markup
   const netChangeCards = procCharge - markupCollected;
 
-  // 9) v1.5.0: Processing Cost Savings (Cards Only) = Current Cost − Net Change
-  const savingsCardsOnly = currentCost - netChangeCards;
+  // 9) v1.5.1: Processing Cost Savings (Cards Only) - with proper rounding
+  const savingsCardsOnlyRaw = currentCost - netChangeCards;
+  const savingsCardsOnly = roundHalfUp(savingsCardsOnlyRaw, 2);
 
   // 10) v1.5.0: Processing Cost Savings % = Savings ÷ Current Cost
   const procSavingsPct = currentCost === 0 ? 0 : savingsCardsOnly / currentCost;
@@ -342,9 +343,9 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   // 11) v1.5.0: Coverage % = Markup ÷ Processor Charge
   const coveragePct = procCharge === 0 ? 0 : markupCollected / procCharge;
 
-  // 12) v1.5.0: Total Net Gain (Monthly & Annual)
+  // 12) v1.5.1: Total Net Gain - use raw for annual calculation, then round
   const netMonthly = savingsCardsOnly; 
-  const netAnnual = netMonthly * 12;
+  const netAnnual = roundHalfUp(savingsCardsOnlyRaw * 12, 2);
   const monthlySavings = netMonthly; // legacy alias
   const annualSavings = netAnnual; // legacy alias
   
@@ -369,7 +370,7 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const skytabBonus = skytabBonusGross; // Use new calculation
 
   return {
-    // v1.5.0: New DP-aligned field structure
+    // v1.5.1: New DP-aligned field structure with proper rounding
     base,                         // Base Card Volume (pre-tax, pre-tip)
     priceAdjustedBase,           // Price-Adjusted Base (pre-tax, pre-tip) 
     processed,                   // Card Processed Total
@@ -379,6 +380,7 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
     coveragePct,                // Coverage %
     currentCost,                // Current Processing Cost (Today)
     netChangeCards,             // Net Change in Card Processing
+    savingsCardsOnlyRaw,        // Processing Cost Savings (Raw, unrounded)
     savingsCardsOnly,           // Processing Cost Savings (Cards Only)
     procSavingsPct,             // Processing Cost Savings %
     netMonthly,                 // Total Net Gain (Monthly)
