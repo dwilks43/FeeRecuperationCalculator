@@ -164,82 +164,100 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
 
           </>
         ) : (
-          // Dual Pricing - keep original layout
+          // Dual Pricing - structured panels per v1.3.1 specification
           <>
-            {/* Base Volume */}
-            <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Base Card Volume (pre-tax, pre-tip)</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('base-volume')}
-                  data-testid="button-tooltip-base-volume"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
+            {/* Panel 1: Processing on Cards (New Program) */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
+              <div className="space-y-2">
+                {/* 1. processed - Card Processed Total */}
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Card Processed Total</span>
+                  <span className="font-bold">{formatCurrency(results.adjustedCardVolume || results.adjustedVolume || 0)}</span>
+                </div>
+                {/* 2. flatRate - Flat Rate % */}
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Flat Rate %</span>
+                  <span className="font-medium">{((results.derivedFlatRate || 0) * 100).toFixed(2)}%</span>
+                </div>
+                {/* 3. procCharge - Processor Charge */}
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Processor Charge</span>
+                    <span className="text-xs text-gray-400 italic">Processor Charge = Card Processed Total × Flat Rate</span>
+                  </div>
+                  <span className="font-medium text-red-600">{formatCurrency(results.processingFees || 0)}</span>
+                </div>
+                {/* 4. markupCollected - Markup Collected */}
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Markup (Cards)</span>
+                  <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
+                </div>
+                {/* 5. recovery - Under/Over-Recovery */}
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Under/Over-Recovery</span>
+                    <span className="text-xs text-gray-400 italic">Under/Over-Recovery = Markup (Cards) − Processor</span>
+                  </div>
+                  <span className={`font-medium ${((results.markupCollected || 0) - (results.processingFees || 0)) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {formatCurrency((results.markupCollected || 0) - (results.processingFees || 0))}
+                  </span>
+                </div>
+                {/* 6. coveragePct - Coverage % */}
+                <div className="flex justify-between items-center border-t pt-2">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-700">Coverage %</span>
+                    <span className="text-xs text-gray-400 italic">Coverage % = Markup (Cards) ÷ Processor</span>
+                  </div>
+                  <span className="font-bold">
+                    {results.processingFees && results.processingFees > 0 
+                      ? ((results.markupCollected || 0) / results.processingFees * 100).toFixed(1) 
+                      : '0.0'}%
+                  </span>
+                </div>
               </div>
-              <span className="text-lg font-bold text-gray-900" data-testid="text-base-volume">
-                {formatCurrency(results.baseVolume)}
-              </span>
             </div>
 
-            {/* Adjusted Card Volume */}
-            <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Card Processed Total</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('adjusted-volume')}
-                  data-testid="button-tooltip-adjusted-volume"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
+            {/* Panel 2: Savings vs Today */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Savings vs Today</h3>
+              <div className="space-y-2">
+                {/* 1. currentCost - Current Processing Cost */}
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Current Processing Cost</span>
+                  <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
+                </div>
+                {/* 2. netChangeCards - Net Change in Card Processing */}
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Net Change in Card Processing</span>
+                    <span className="text-xs text-gray-400 italic">Net Change in Card Processing = Processor Charge − Markup (Cards)</span>
+                  </div>
+                  <span className={`font-medium ${((results.processingFees || 0) - (results.markupCollected || 0)) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {formatCurrency((results.processingFees || 0) - (results.markupCollected || 0))}
+                  </span>
+                </div>
+                {/* 3. savingsCardsOnly - Savings (Cards Only) */}
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Savings (Cards Only)</span>
+                    <span className="text-xs text-gray-400 italic">Savings (Cards Only) = Current Cost − Net Change</span>
+                  </div>
+                  <span className="font-medium text-blue-600">
+                    {formatCurrency((results.currentCost || 0) - ((results.processingFees || 0) - (results.markupCollected || 0)))}
+                  </span>
+                </div>
+                {/* 4. netMonthly - Net Monthly */}
+                <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
+                  <span className="text-sm font-medium text-gray-700">Net Monthly</span>
+                  <span className="font-bold text-green-700">{formatCurrency(results.monthlySavings || 0)}</span>
+                </div>
+                {/* 5. netAnnual - Net Annual */}
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-700">Net Annual</span>
+                  <span className="font-bold text-green-600">{formatCurrency(results.annualSavings || 0)}</span>
+                </div>
               </div>
-              <span className="text-lg font-bold text-dmp-blue-600" data-testid="text-adjusted-volume">
-                {formatCurrency(results.adjustedCardVolume || results.adjustedVolume)}
-              </span>
-            </div>
-
-            {/* Total Processing Fees Charged */}
-            <div className="flex justify-between items-center p-4 bg-green-50 rounded-lg">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">Total Processing Fees Charged</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('processing-fees')}
-                  data-testid="button-tooltip-processing-fees"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
-              </div>
-              <span className="text-lg font-bold text-green-600" data-testid="text-processing-fees">
-                {formatCurrency(results.programCardFees || results.processingFees)}
-              </span>
-            </div>
-
-            {/* Dynamic Collected Label */}
-            <div className="flex justify-between items-center p-4 bg-amber-50 rounded-lg border border-amber-200">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-700">{results.collectedLabel}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-auto p-0"
-                  onClick={() => onTooltip('markup-collected')}
-                  data-testid="button-tooltip-markup-collected"
-                >
-                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-                </Button>
-              </div>
-              <span className="text-lg font-bold text-amber-600" data-testid="text-markup-collected">
-                {formatCurrency(results.collectedValue)}
-              </span>
             </div>
           </>
         )}
