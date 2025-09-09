@@ -164,8 +164,15 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
 
           </>
         ) : (
-          // v1.5.0: Dual Pricing - aligned 3-section layout
+          // v1.5.2: Dual Pricing - handwritten after-tax tips
           <>
+            {/* Order of Operations Ribbon */}
+            <div className="mb-4 p-3 bg-gradient-to-r from-dmp-blue-50 to-blue-100 rounded-lg border border-dmp-blue-200">
+              <div className="text-xs font-medium text-dmp-blue-700 mb-1">Order of Operations</div>
+              <div className="text-sm text-dmp-blue-600 font-mono">
+                Pre-Tax Base → +Price Differential → +Tax → +Tip (handwritten)
+              </div>
+            </div>
             {/* Panel 1: Derived Bases & Totals */}
             <div className="border border-gray-200 rounded-lg p-4 bg-white">
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Derived Bases & Totals</h3>
@@ -183,8 +190,8 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Card Processed Total</span>
-                    <span className="text-xs text-gray-400 italic">Price-Adjusted Base × (1 + Tax + Tip)</span>
+                    <span className="text-sm text-gray-600">Card Processed Total (after tax & handwritten tip)</span>
+                    <span className="text-xs text-gray-400 italic">Price-Adjusted Base × (1 + Tax) × (1 + Tip)</span>
                   </div>
                   <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                 </div>
@@ -195,7 +202,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Processed Total</span>
+                  <span className="text-sm text-gray-600">Card Processed Total (after tax & handwritten tip)</span>
                   <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
