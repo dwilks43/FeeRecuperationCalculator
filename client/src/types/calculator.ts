@@ -84,6 +84,13 @@ export interface CalculatorResults {
   netChangeCards?: number;
   comboKey?: string;
   orderOfOperations?: string;
+  // v1.5.0 DP-aligned fields
+  base?: number;                    // Base Card Volume (pre-tax, pre-tip)
+  priceAdjustedBase?: number;       // Price-Adjusted Base (pre-tax, pre-tip)
+  processed?: number;               // Card Processed Total  
+  procCharge?: number;              // Processor Charge on Cards
+  netMonthly?: number;              // Total Net Gain (Monthly)
+  netAnnual?: number;               // Annual Net Gain
 }
 
 export interface TooltipContent {
