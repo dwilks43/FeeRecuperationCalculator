@@ -183,14 +183,14 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Price-Adjusted Base (pre-tax, pre-tip)</span>
+                    <span className="text-sm text-gray-600">Price-Adjusted Base + Price Differential</span>
                     <span className="text-xs text-gray-400 italic">Base × (1 + Price Differential)</span>
                   </div>
                   <span className="font-medium">{formatCurrency(results.priceAdjustedBase || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Card Processed Total (after tax & handwritten tip)</span>
+                    <span className="text-sm text-gray-600">Card Processed Total (incl. price differential, tax, and tip)</span>
                     <span className="text-xs text-gray-400 italic">Price-Adjusted Base × (1 + Tax) × (1 + Tip)</span>
                   </div>
                   <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
@@ -202,7 +202,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Processed Total (after tax & handwritten tip)</span>
+                  <span className="text-sm text-gray-600">Card Processed Total (incl. price differential, tax, and tip)</span>
                   <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -217,7 +217,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   <span className="font-medium text-red-600">{formatCurrency(results.procCharge || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Markup Collected — Cards</span>
+                  <span className="text-sm text-gray-600">Markup Collected — Cards (price differential)</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">

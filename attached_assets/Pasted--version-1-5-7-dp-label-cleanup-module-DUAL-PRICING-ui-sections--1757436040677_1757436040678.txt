@@ -1,0 +1,52 @@
+{
+  "version": "1.5.7-dp-label-cleanup",
+  "module": "DUAL_PRICING",
+
+  "ui": {
+    "sections": [
+      {
+        "id": "liveVolumeBreakdown",
+        "orderOfOps": "Base Card Volume → +Price Differential → +Tax → +Tip (handwritten)",
+        "fields": [
+          { "id": "baseVolume", "label": "Base Card Volume (pre-tax, pre-tip)" },
+          { "id": "priceAdjustedBase", "label": "Price-Adjusted Base + Price Differential" },
+          { "id": "cardProcessedTotal", "label": "Card Processed Total (incl. price differential, tax, and tip)" }
+        ]
+      },
+      {
+        "id": "processingOnCards",
+        "fields": [
+          { "id": "markupCollected", "label": "Markup Collected — Cards (price differential)" },
+          { "id": "netChangeCards", "label": "Processing Cost After Price Differential" }
+        ]
+      },
+      {
+        "id": "monthlySavings",
+        "labelOverrides": {
+          "Card Under/Over-Recovery (Markup − Processor)": "Processing Cost After Price Differential"
+        }
+      }
+    ],
+    "tooltips": {
+      "priceAdjustedBase": "Base Card Volume × (1 + Price Differential).",
+      "cardProcessedTotal": "Total after applying price differential, tax, and handwritten tip.",
+      "markupCollected": "The additional revenue collected from applying the price differential.",
+      "netChangeCards": "Remaining processor cost after markup is applied."
+    }
+  },
+
+  "pdf": {
+    "summary": {
+      "labelOverrides": {
+        "Pre-Tax Base": "Base Card Volume (pre-tax, pre-tip)",
+        "Price-Adjusted Base (pre-tax, pre-tip)": "Price-Adjusted Base + Price Differential",
+        "Card Processed Total (after tax & handwritten tip)": "Card Processed Total (incl. price differential, tax, and tip)",
+        "Markup Collected — Cards": "Markup Collected — Cards (price differential)",
+        "Card Under/Over-Recovery (Markup − Processor)": "Processing Cost After Price Differential"
+      }
+    },
+    "details": {
+      "mirrorUISections": true
+    }
+  }
+}
