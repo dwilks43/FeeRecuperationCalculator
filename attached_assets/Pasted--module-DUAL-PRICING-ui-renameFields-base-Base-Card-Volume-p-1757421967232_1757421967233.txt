@@ -1,0 +1,101 @@
+{
+  "module": "DUAL_PRICING",
+  "ui": {
+    "renameFields": {
+      "base": "Base Card Volume (pre-tax, pre-tip)",
+      "adjustedCardVolume": "Card Processed Total"
+    },
+    "panels": {
+      "processingOnCards": {
+        "title": "Processing on Cards (New Program)",
+        "fieldsOrder": ["processed", "flatRate", "procCharge", "markupCollected", "recovery", "coveragePct"],
+        "inlineFormulas": {
+          "procCharge": "Processor Charge = Card Processed Total × Flat Rate",
+          "recovery": "Under/Over-Recovery = Markup (Cards) − Processor",
+          "coveragePct": "Coverage % = Markup (Cards) ÷ Processor"
+        }
+      },
+      "savingsVsToday": {
+        "title": "Savings vs Today",
+        "fieldsOrder": ["currentCost", "netChangeCards", "savingsCardsOnly", "netMonthly", "netAnnual"],
+        "inlineFormulas": {
+          "netChangeCards": "Net Change in Card Processing = Processor Charge − Markup (Cards)",
+          "savingsCardsOnly": "Savings (Cards Only) = Current Cost − Net Change"
+        }
+      }
+    },
+    "tooltips": {
+      "processed": "Base × (1 + Price Differential) × (1 + Tax + Tip)",
+      "recovery": "Markup (Cards) − Processor Charge",
+      "coveragePct": "Markup (Cards) ÷ Processor Charge"
+    },
+    "flatRateField": {
+      "label": "Flat Rate % (Bank Mapping)",
+      "scale": "percent",
+      "autoBadge": "Auto",
+      "manualBadge": "Manual",
+      "resetLink": "Reset to auto"
+    }
+  },
+  "policy": {
+    "flatRate": {
+      "autoFormula": "priceDiff/(1+priceDiff)",
+      "editable": true,
+      "roundForMath": true,
+      "fractionDecimals": 4,
+      "percentDecimals": 2,
+      "roundingMode": "HALF_UP"
+    }
+  },
+  "events": {
+    "onFieldChange": [
+      {
+        "field": "priceDiff",
+        "program": "DUAL_PRICING",
+        "actions": [
+          {
+            "if": "!state.isFlatRateManual",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP(priceDiff/(1+priceDiff), 4)",
+              "form.flatRatePercent": "ROUND_HALF_UP(form.flatRate*100, 2)",
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ],
+    "onProgramMount": [
+      {
+        "program": "DUAL_PRICING",
+        "actions": [
+          {
+            "if": "(!state.isFlatRateManual) || isEmpty(form.flatRatePercent)",
+            "set": {
+              "form.flatRate": "ROUND_HALF_UP(priceDiff/(1+priceDiff), 4)",
+              "form.flatRatePercent": "ROUND_HALF_UP(form.flatRate*100, 2)",
+              "state.flatRateSource": "auto"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "math": {
+    "shared": {
+      "base": "cardGross/(1+tax+tip)"
+    },
+    "totals": {
+      "processed": "base*(1+priceDiff)*(1+tax+tip)",
+      "procCharge": "processed*flatRate.source",
+      "markupCollected": "base*priceDiff",
+      "recovery": "markupCollected - procCharge",
+      "coveragePct": "IF(procCharge==0,0,markupCollected/procCharge)",
+      "currentCost": "cardGross*currentRate",
+      "netChangeCards": "procCharge - markupCollected",
+      "savingsCardsOnly": "currentCost - netChangeCards",
+      "netMonthly": "savingsCardsOnly",
+      "netAnnual": "netMonthly*12",
+      "grossProfit": "(flatRate.source - interchange)*processed"
+    }
+  }
+}

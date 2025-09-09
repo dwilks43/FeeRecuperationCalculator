@@ -51,6 +51,12 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     return roundHalfUp(fee / (1 + fee), 4);
   };
 
+  // Auto flat rate calculation for dual pricing using priceDiff/(1+priceDiff)
+  const calculateAutoFlatRateDualPricing = (priceDiff: number): number => {
+    if (priceDiff <= 0) return 0;
+    return roundHalfUp(priceDiff / (1 + priceDiff), 4);
+  };
+
   const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {
     if (typeof value === 'string') {
       setInputValues(prev => ({ ...prev, [field]: value }));
@@ -69,24 +75,39 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const handleProgramTypeChange = (newType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE') => {
     onInputChange('programType', newType as any);
     
-    // Auto-calculate flat rate when switching to supplemental fee
-    if (newType === 'SUPPLEMENTAL_FEE' && inputs.priceDifferential > 0) {
-      const fee = inputs.priceDifferential / 100;
-      const flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+    // Auto-calculate flat rate when switching programs
+    if (inputs.priceDifferential > 0) {
+      let flatRate: number;
+      if (newType === 'SUPPLEMENTAL_FEE') {
+        const fee = inputs.priceDifferential / 100;
+        flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+      } else {
+        // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
+        const priceDiff = inputs.priceDifferential / 100;
+        flatRate = calculateAutoFlatRateDualPricing(priceDiff) * 100; // Convert to percentage
+      }
       onInputChange('flatRatePct', flatRate);
       setAutoSynced(true);
+      setIsAutoFlatRate(true);
     }
   };
 
-  const handleSupplementalFeeChange = (value: string) => {
+  const handlePriceDifferentialChange = (value: string) => {
     setInputValues(prev => ({ ...prev, priceDifferential: value }));
-    const fee = parseNumericInput(value) / 100;
-    onInputChange('priceDifferential', parseNumericInput(value));
-    
+    const priceDifferentialValue = parseNumericInput(value);
+    onInputChange('priceDifferential', priceDifferentialValue);
     
     // Auto-update flat rate if still synced
-    if (autoSynced && inputs.programType === 'SUPPLEMENTAL_FEE') {
-      const flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+    if (autoSynced) {
+      let flatRate: number;
+      if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+        const fee = priceDifferentialValue / 100;
+        flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+      } else {
+        // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
+        const priceDiff = priceDifferentialValue / 100;
+        flatRate = calculateAutoFlatRateDualPricing(priceDiff) * 100; // Convert to percentage
+      }
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
     }
@@ -100,10 +121,17 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     setIsAutoFlatRate(false); // Mark as manual override
   };
 
-  const resetFlatRateToOffset = () => {
+  const resetFlatRateToAuto = () => {
     if (inputs.priceDifferential > 0) {
-      const fee = inputs.priceDifferential / 100;
-      const flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+      let flatRate: number;
+      if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+        const fee = inputs.priceDifferential / 100;
+        flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+      } else {
+        // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
+        const priceDiff = inputs.priceDifferential / 100;
+        flatRate = calculateAutoFlatRateDualPricing(priceDiff) * 100; // Convert to percentage
+      }
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
       setAutoSynced(true);
@@ -512,7 +540,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
                 placeholder="6.00"
                 value={inputValues.priceDifferential}
-                onChange={(e) => inputs.programType === 'SUPPLEMENTAL_FEE' ? handleSupplementalFeeChange(e.target.value) : handleInputChange('priceDifferential', e.target.value)}
+                onChange={(e) => handlePriceDifferentialChange(e.target.value)}
                 data-testid="input-price-differential"
               />
               <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
@@ -521,12 +549,14 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
 
           {/* Card Volume Basis control removed per v1.0.1 spec - always Gross */}
 
-          {/* Flat Rate (%) for Supplemental Fee mode */}
-          {inputs.programType === 'SUPPLEMENTAL_FEE' && (
+          {/* Flat Rate (%) for both modes */}
+          {(inputs.programType === 'SUPPLEMENTAL_FEE' || inputs.programType === 'DUAL_PRICING') && (
             <div>
               <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 Flat Rate % (Bank Mapping)
-                {!isAutoFlatRate && (
+                {isAutoFlatRate ? (
+                  <span className="ml-1 px-2 py-0.5 bg-green-100 text-green-700 text-xs rounded-full">Auto</span>
+                ) : (
                   <span className="ml-1 px-2 py-0.5 bg-blue-100 text-blue-700 text-xs rounded-full">Manual</span>
                 )}
                 <Button
@@ -556,7 +586,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 <button
                   type="button"
                   onClick={() => {
-                    resetFlatRateToOffset();
+                    resetFlatRateToAuto();
                     setIsAutoFlatRate(true);
                   }}
                   className="text-blue-600 hover:text-blue-800 underline"
@@ -565,7 +595,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                   Reset to auto
                 </button>
                 <div className="text-xs text-gray-500">
-                  Auto = Fee ÷ (1+Fee), rounded to 2-dp percent (e.g., 4% → 3.85%) and used in all calculations.
+                  {inputs.programType === 'SUPPLEMENTAL_FEE' ? (
+                    <>Auto = Fee ÷ (1+Fee), rounded to 2-dp percent (e.g., 4% → 3.85%) and used in all calculations.</>
+                  ) : (
+                    <>Auto = Price Diff ÷ (1+Price Diff), rounded to 2-dp percent (e.g., 6% → 5.66%) and used in all calculations.</>
+                  )}
                 </div>
               </div>
             </div>
