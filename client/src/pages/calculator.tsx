@@ -317,6 +317,7 @@ export default function Calculator() {
         isOpen={isTooltipOpen}
         onClose={() => setIsTooltipOpen(false)}
         tooltipKey={tooltipKey}
+        programType={inputs.programType}
       />
     </div>
   );
