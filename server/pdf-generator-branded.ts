@@ -577,12 +577,6 @@ export function generateBrandedPDF(data: any): string {
 `;
 
 }
-
-            <!-- Summary KPIs -->
-            <div class="section avoid-break">
-                <div class="section-hd">
-                    <div class="section-title">Key Performance Indicators</div>
-                </div>
                 <div class="section-bd">
                     <table class="kv">
                         <tr><th>Current Processing Cost (Today)</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
