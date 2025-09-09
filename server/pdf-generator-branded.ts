@@ -54,7 +54,7 @@ export function generateBrandedPDF(data: any): string {
               <tr><th>Current Processing Cost (Today)</th><td class="metric metric--negative">${formatCurrency(results.currentCost || 0)}</td></tr>
               <tr><th>Processor Charge on Cards</th><td class="metric metric--negative">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
               <tr><th>Supplemental Fee Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
-              <tr><th>Card Under/Over-Recovery (Fee − Processor)</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
+              <tr><th>Processing Cost after Price Differential</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
               <tr><th>Processing Cost Savings (Cards Only)</th><td class="metric metric--positive">${formatCurrency(results.savingsCardsOnly || 0)}</td></tr>
               <tr><th>Processing Cost Savings %</th><td class="metric">${((results.procSavingsPct || 0) * 100).toFixed(2)}%</td></tr>
               <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">Total Net Gain (Monthly)</th><td class="metric metric-lg" style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.totalNetGainRevenue || 0)}</td></tr>
@@ -149,14 +149,14 @@ export function generateBrandedPDF(data: any): string {
               <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
               <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
               <tr><th>Markup Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
-              <tr><th>Under/Over-Recovery</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
+              <tr><th>Processing Cost after Price Differential</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency(results.recovery || 0)}</td></tr>
               <tr><th>Coverage %</th><td class="metric">${((results.coveragePct || 0) * 100).toFixed(1)}%</td></tr>
             ` : `
               <tr><th>Card Processed Total (incl. price differential, tax, and tip)</th><td class="metric">${formatCurrency(results.adjustedCardVolume || 0)}</td></tr>
               <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(results.derivedFlatRate || 0)}</td></tr>
               <tr><th>Processor Charge</th><td class="metric metric--negative">${formatCurrency(results.processingFees || 0)}</td></tr>
               <tr><th>Markup Collected — Cards (price differential)</th><td class="metric metric--positive">${formatCurrency(results.markupCollected || 0)}</td></tr>
-              <tr><th>Under/Over-Recovery</th><td class="metric ${((results.markupCollected || 0) - (results.processingFees || 0)) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency((results.markupCollected || 0) - (results.processingFees || 0))}</td></tr>
+              <tr><th>Processing Cost after Price Differential</th><td class="metric ${((results.markupCollected || 0) - (results.processingFees || 0)) >= 0 ? 'metric--positive' : 'metric--negative'}">${formatCurrency((results.markupCollected || 0) - (results.processingFees || 0))}</td></tr>
             `}
           </table>
         </div>
@@ -582,7 +582,7 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Current Processing Cost (Today)</th><td class="metric">${formatCurrency(results.currentCost || currentCost)}</td></tr>
                         <tr><th>Processor Charge on Cards</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
                         <tr><th>Supplemental Fee Collected — Cards</th><td class="metric metric--positive">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
-                        <tr><th>Card Under/Over-Recovery (Fee − Processor)</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : ''}">${formatCurrency(results.recovery || 0)}</td></tr>
+                        <tr><th>Processing Cost after Price Differential</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : ''}">${formatCurrency(results.recovery || 0)}</td></tr>
                         <tr><th>Processing Cost Savings (Cards Only)</th><td class="metric metric--positive">${formatCurrency(results.savingsCardsOnly || 0)}</td></tr>
                         <tr><th>Processing Cost Savings %</th><td class="metric">${((results.procSavingsPct || 0) * 100).toFixed(2)}%</td></tr>
                         <tr style="background: var(--bg-soft); border-top: 2px solid var(--brand-spruce);"><th style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">Total Net Gain (Monthly)</th><td class="metric metric-lg" style="font-size: 18px; color: var(--brand-spruce); font-weight: 700;">${formatCurrency(results.totalNetGainRevenue || 0)}</td></tr>
@@ -652,7 +652,7 @@ export function generateBrandedPDF(data: any): string {
                         <tr><th>Flat Rate %</th><td class="metric">${formatPercentage(inputs.flatRatePct || results.derivedFlatRate || flatRate)}</td></tr>
                         <tr><th>Processor Charge on Cards</th><td class="metric">${formatCurrency(results.processorChargeOnCards || 0)}</td></tr>
                         <tr><th>Supplemental Fee Collected — Cards</th><td class="metric">${formatCurrency(results.cardFeeCollected || 0)}</td></tr>
-                        <tr><th>Card Under/Over-Recovery</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : ''}">${formatCurrency(results.recovery || 0)}</td></tr>
+                        <tr><th>Processing Cost after Price Differential</th><td class="metric ${(results.recovery || 0) >= 0 ? 'metric--positive' : ''}">${formatCurrency(results.recovery || 0)}</td></tr>
                         <tr><th>Coverage %</th><td class="metric">${((results.coveragePct || 0) * 100).toFixed(1)}%</td></tr>
                     </table>
                 </div>
