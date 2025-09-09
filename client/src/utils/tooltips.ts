@@ -181,17 +181,22 @@ export const UNIFIED_TOOLTIPS = {
 // Helper function to get tooltip based on program type and key
 export function getTooltip(key: string, programType?: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE') {
   // First check program-specific tooltips
-  if (programType && UNIFIED_TOOLTIPS[programType] && UNIFIED_TOOLTIPS[programType][key]) {
-    return UNIFIED_TOOLTIPS[programType][key];
+  if (programType && UNIFIED_TOOLTIPS[programType]) {
+    const programTooltips = UNIFIED_TOOLTIPS[programType] as Record<string, { title: string; body: string }>;
+    if (programTooltips[key]) {
+      return programTooltips[key];
+    }
   }
   
   // Then check shared tooltips
-  if (UNIFIED_TOOLTIPS.shared[key]) {
-    return UNIFIED_TOOLTIPS.shared[key];
+  const sharedTooltips = UNIFIED_TOOLTIPS.shared as Record<string, { title: string; body: string }>;
+  if (sharedTooltips[key]) {
+    return sharedTooltips[key];
   }
   
   // Legacy fallback for backward compatibility
-  return LEGACY_TOOLTIPS[key] || null;
+  const legacyTooltips = LEGACY_TOOLTIPS as Record<string, { title: string; body: string }>;
+  return legacyTooltips[key] || null;
 }
 
 // Legacy tooltips for backward compatibility

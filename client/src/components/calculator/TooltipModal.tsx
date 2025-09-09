@@ -2,12 +2,13 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 import { TooltipKey, TooltipContent } from "@/types/calculator";
-import { TOOLTIPS } from "@/utils/tooltips";
+import { TOOLTIPS, getTooltip } from "@/utils/tooltips";
 
 interface TooltipModalProps {
   isOpen: boolean;
   onClose: () => void;
   tooltipKey: TooltipKey | null;
+  programType?: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
 }
 
 // Convert TOOLTIPS to match TooltipContent interface
@@ -39,8 +40,37 @@ const tooltipContent: Record<string, TooltipContent> = Object.fromEntries(
   ])
 );
 
-export default function TooltipModal({ isOpen, onClose, tooltipKey }: TooltipModalProps) {
-  const content = tooltipKey ? tooltipContent[tooltipKey] : null;
+export default function TooltipModal({ isOpen, onClose, tooltipKey, programType }: TooltipModalProps) {
+  // Try new unified tooltip system first, then fallback to legacy
+  let content: { title: string; content: string } | null = null;
+  
+  if (tooltipKey) {
+    // Convert tooltip key format
+    const keyName = tooltipKey === 'monthly-volume' ? 'monthlyCardVolume' :
+                    tooltipKey === 'monthly-cash-volume' ? 'monthlyCashVolume' :
+                    tooltipKey === 'current-rate' ? 'currentRate' :
+                    tooltipKey === 'tax-rate' ? 'taxRate' :
+                    tooltipKey === 'tip-rate' ? 'tipRate' :
+                    tooltipKey === 'flat-rate-pct' ? 'flatRate' :
+                    tooltipKey === 'supplemental-fee' ? 'supplementalFee' :
+                    tooltipKey === 'price-differential' ? 'priceDifferential' :
+                    tooltipKey === 'gross-profit' ? 'grossProfit' :
+                    tooltipKey === 'recovery' ? 'recovery' :
+                    tooltipKey === 'savingsCardsOnly' ? 'savingsCardsOnly' :
+                    tooltipKey === 'procSavingsPct' ? 'processingCostSavingsPct' :
+                    tooltipKey === 'skytab-bonus' ? 'skytabBonusGross' :
+                    tooltipKey === 'skytab-bonus-rep' ? 'skytabBonusRep' :
+                    tooltipKey;
+    
+    // Try unified tooltip system
+    const unifiedTooltip = getTooltip(keyName, programType);
+    if (unifiedTooltip) {
+      content = { title: unifiedTooltip.title, content: unifiedTooltip.body };
+    } else {
+      // Fallback to legacy system
+      content = tooltipContent[tooltipKey] || null;
+    }
+  }
 
   if (!content) return null;
 
