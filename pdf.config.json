@@ -303,6 +303,7 @@
 
   "guards": {
     "hideEmptyRows": true,
-    "stripZeroKPIs": false
+    "stripZeroKPIs": false,
+    "coercePercentStrings": true
   }
 }
