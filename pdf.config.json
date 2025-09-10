@@ -36,6 +36,7 @@
         "h3": { "size": 13, "weight": 700, "color": "neutral90" },
         "label": { "size": 10, "weight": 600, "color": "neutral70" },
         "value": { "size": 11, "weight": 600, "color": "neutral90" },
+        "small": { "size": 9, "weight": 500, "color": "neutral40" },
         "muted": { "size": 9, "weight": 500, "color": "neutral50" },
         "footnote": { "size": 9, "weight": 500, "color": "neutral40" }
       },
