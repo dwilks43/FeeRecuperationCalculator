@@ -9,6 +9,61 @@
       "fallbackNullToEmpty": true
     },
 
+    "theme": {
+      "colors": {
+        "brandUltramarine": "#004ED3",
+        "brandAqua": "#2BD8C2",
+        "brandSpruce": "#00937B",
+        "brandInk": "#0B2340",
+        "neutral90": "#0F172A",
+        "neutral80": "#1F2937",
+        "neutral70": "#334155",
+        "neutral50": "#64748B",
+        "neutral40": "#94A3B8",
+        "neutral30": "#CBD5E1",
+        "neutral20": "#E2E8F0",
+        "neutral10": "#F1F5F9",
+        "panel": "#F9FAFB",
+        "danger": "#EF4444",
+        "warning": "#F59E0B",
+        "success": "#10B981",
+        "info": "#3B82F6"
+      },
+      "typography": {
+        "fontFamily": "Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif",
+        "h1": { "size": 22, "weight": 800, "color": "brandInk", "letterSpacing": 0.1 },
+        "h2": { "size": 16, "weight": 700, "color": "brandInk" },
+        "h3": { "size": 13, "weight": 700, "color": "neutral90" },
+        "label": { "size": 10, "weight": 600, "color": "neutral70" },
+        "value": { "size": 11, "weight": 600, "color": "neutral90" },
+        "muted": { "size": 9, "weight": 500, "color": "neutral50" },
+        "footnote": { "size": 9, "weight": 500, "color": "neutral40" }
+      },
+      "spacing": {
+        "pageMargin": 36,
+        "sectionY": 18,
+        "blockY": 12,
+        "rowY": 8,
+        "colGap": 14,
+        "cardPadding": 12
+      },
+      "borders": {
+        "radius": 8,
+        "hairline": "1px solid #E2E8F0"
+      },
+      "badges": {
+        "auto": { "bg": "#E8F1FF", "fg": "#004ED3" },
+        "manual": { "bg": "#FFF7ED", "fg": "#C2410C" },
+        "internal": { "bg": "#EEF2FF", "fg": "#3730A3" }
+      },
+      "kpiColors": {
+        "cost": "danger",
+        "feesCollected": "success",
+        "bases": "info",
+        "net": "brandSpruce"
+      }
+    },
+
     "formatting": {
       "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
       "percent":  { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
