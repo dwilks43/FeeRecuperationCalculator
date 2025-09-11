@@ -275,6 +275,60 @@ function generateCSS(config: PDFConfig): string {
             padding: ${spacing.cardPadding}px;
             border: ${borders.hairline};
         }
+        
+        /* Title bar styles for v1.7.5 */
+        .title-bar {
+            display: inline-block;
+            width: 4px;
+            height: 14px;
+            margin-right: 8px;
+            border-radius: 2px;
+            vertical-align: middle;
+        }
+        
+        .title-bar.ultramarine {
+            background: var(--brand-ultramarine);
+        }
+        
+        .title-bar.spruce {
+            background: var(--brand-spruce);
+        }
+        
+        .title-text {
+            font-weight: 800;
+            font-size: 12px;
+            vertical-align: middle;
+        }
+        
+        /* Brand logo styles */
+        .brand-logo {
+            height: 28px;
+            max-height: 28px;
+            display: block;
+        }
+        
+        .hdr-right .report-line {
+            text-align: right;
+            line-height: 1.15;
+        }
+        
+        /* Savings legend */
+        .savings-legend {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: ${borders.hairline};
+            font-size: 9px;
+            color: var(--neutral40);
+        }
+        
+        .savings-legend span {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
 
         .kpi-item {
             padding: ${spacing.rowY}px 0;
@@ -508,10 +562,17 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
       `;
     }).join('');
     
+    // Add the 'after' element if present
+    let afterContent = '';
+    if (block.after) {
+      afterContent = resolveDataBinding(block.after, data, config);
+    }
+    
     return `
       <div class="kpi-rail">
         ${title ? `<div class="card-title">${title}</div>` : ''}
         ${kpiItems}
+        ${afterContent}
       </div>
     `;
   }
@@ -644,8 +705,11 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
     return cardContent;
   }
   
+  // Add surface class if specified
+  const surfaceClass = block.surface === 'subtle' ? ' subtle' : '';
+  
   return `
-    <div class="card">
+    <div class="card${surfaceClass}">
       ${title ? `<div class="card-title">${title}</div>` : ''}
       ${cardContent}
     </div>

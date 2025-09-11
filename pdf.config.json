@@ -1,5 +1,5 @@
 {
-  "version": "1.7.3-mirror-ui-v1",
+  "version": "1.7.5-brand-polish-aligned",
   "pdf": {
     "rendering": {
       "sourceOfTruth": "ui",
@@ -7,6 +7,32 @@
       "bindStrategy": "byKey",
       "interpolateStrings": true,
       "fallbackNullToEmpty": true
+    },
+    "dataBindings": {
+      "meta": {
+        "reportId": ["report.id", "ui.report.id"],
+        "reportDate": ["report.createdAtISO", "ui.report.dateISO"]
+      },
+      "brand": {
+        "logoUrl": ["ui.brand.logoUrl", "ui.brand.logo", "ui.logoUrl", "logoBase64"]
+      },
+      "customerInfo": {
+        "title": ["ui.sections.customerInformation.title", "ui.labels.customerInformation"],
+        "rows": ["ui.sections.customerInformation.rows"]
+      },
+      "inputParams": {
+        "title": ["ui.sections.inputParameters.title", "ui.labels.inputParameters"],
+        "rows": ["ui.sections.inputParameters.rows"]
+      },
+      "liveVolume": {
+        "title": ["ui.sections.liveVolumeBreakdown.title", "ui.labels.liveVolumeBreakdown"],
+        "note": ["ui.sections.liveVolumeBreakdown.note", "ui.orderOfOperationsText"],
+        "rows": ["ui.sections.liveVolumeBreakdown.rows"]
+      },
+      "monthlySavings": {
+        "title": ["ui.sections.monthlyProcessingSavings.title", "ui.labels.monthlyProcessingSavings"],
+        "items": ["ui.monthlySavings.items"]
+      }
     },
     "theme": {
       "colors": {
@@ -21,12 +47,11 @@
       },
       "typography": {
         "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
-        "h1": { "size": 18, "weight": 700, "color": "brandInk" },
+        "h1": { "size": 18, "weight": 800, "color": "brandInk", "letterSpacing": -0.2 },
         "h2": { "size": 14, "weight": 700, "color": "brandInk" },
         "h3": { "size": 12, "weight": 700, "color": "brandInk" },
         "label": { "size": 10, "weight": 600, "color": "brandInk" },
         "value": { "size": 10, "weight": 600, "color": "brandInk" },
-        "small": { "size": 9, "weight": 400, "color": "mutedInk" },
         "fine": { "size": 9, "weight": 400, "color": "mutedInk" }
       },
       "layout": {
@@ -34,14 +59,6 @@
         "pageHeightIn": 11,
         "marginIn": 0.5,
         "gridGap": 12,
-        "cardPadding": 12
-      },
-      "spacing": {
-        "pageMargin": 36,
-        "sectionY": 18,
-        "blockY": 12,
-        "rowY": 8,
-        "colGap": 14,
         "cardPadding": 12
       },
       "borders": {
@@ -55,44 +72,13 @@
       "normalizePercent": { "mode": "auto", "thresholdGtOneTreatAsPercent": true },
       "tabularNumbers": true
     },
-    "labels": {
-      "title": "Fee Recuperation Savings Calculator",
-      "footerLeft": "Dynamic Merchant Processing",
-      "footerRight": "© DMP — Confidential"
-    },
-    "dataBindings": {
-      "meta": {
-        "reportId": ["report.id", "ui.report.id"],
-        "reportDate": ["report.createdAtISO", "ui.report.dateISO"]
-      },
-
-      "customerInfo": {
-        "title": ["ui.sections.customerInformation.title", "ui.labels.customerInformation"],
-        "rows": ["ui.sections.customerInformation.rows"]
-      },
-      "inputParams": {
-        "title": ["ui.sections.inputParameters.title", "ui.labels.inputParameters"],
-        "rows": ["ui.sections.inputParameters.rows"]
-      },
-
-      "liveVolume": {
-        "title": ["ui.sections.liveVolumeBreakdown.title", "ui.labels.liveVolumeBreakdown"],
-        "note": ["ui.sections.liveVolumeBreakdown.note", "ui.orderOfOperationsText"],
-        "rows": ["ui.sections.liveVolumeBreakdown.rows"]
-      },
-      "monthlySavings": {
-        "title": ["ui.sections.monthlyProcessingSavings.title", "ui.labels.monthlyProcessingSavings"],
-        "items": ["ui.monthlySavings.items"]
-      }
-    },
-
     "pages": [
       {
         "name": "Summary",
         "header": {
-          "title": "Fee Recuperation Savings Calculator",
-          "left": "Report # {{ meta.reportId }}",
-          "right": "{{ meta.reportDate }}",
+          "title": "",
+          "left": "<div class='brand-left'><img class='brand-logo' src='{{ brand.logoUrl }}' alt='DMP' /></div>",
+          "right": "<div class='hdr-right'><div class='report-line'>Report # {{ meta.reportId }}</div><div class='report-line'>{{ meta.reportDate }}</div></div>",
           "showOnPage": 1
         },
         "layout": { "columns": 12, "gap": 12 },
@@ -100,9 +86,7 @@
           {
             "type": "card",
             "colSpan": 12,
-            "surface": "panel",
-            "accent": "brandUltramarine",
-            "title": "{{ customerInfo.title }}",
+            "title": "<span class='title-bar ultramarine'></span><span class='title-text'>{{ customerInfo.title }}</span>",
             "table": {
               "cols": [
                 { "key": "label", "title": "Field", "align": "left" },
@@ -115,9 +99,7 @@
           {
             "type": "card",
             "colSpan": 12,
-            "surface": "panel",
-            "accent": "brandUltramarine",
-            "title": "{{ inputParams.title }}",
+            "title": "<span class='title-bar spruce'></span><span class='title-text'>{{ inputParams.title }}</span>",
             "table": {
               "cols": [
                 { "key": "label", "title": "Input", "align": "left" },
@@ -135,7 +117,6 @@
           "divider": true
         }
       },
-
       {
         "name": "Details",
         "header": { "title": "", "left": "", "right": "", "showOnPage": 0 },
@@ -143,10 +124,8 @@
         "body": [
           {
             "type": "card",
-            "colSpan": 7,
-            "surface": "subtle",
-            "accent": "brandUltramarine",
-            "title": "{{ liveVolume.title }}",
+            "colSpan": 12,
+            "title": "<span class='title-bar ultramarine'></span><span class='title-text'>{{ liveVolume.title }}</span>",
             "note": "{{ liveVolume.note }}",
             "table": {
               "cols": [
@@ -155,16 +134,16 @@
               ],
               "rowsFrom": [{ "from": "liveVolume.rows" }],
               "valueFormatHintKey": "format"
-            }
+            },
+            "surface": "subtle"
           },
           {
             "type": "card",
-            "colSpan": 5,
-            "surface": "panel",
-            "accent": "brandSpruce",
-            "title": "{{ monthlySavings.title }}",
+            "colSpan": 12,
+            "title": "<span class='title-bar spruce'></span><span class='title-text'>💵 {{ monthlySavings.title }}</span>",
             "kpiRailFrom": "monthlySavings.items",
-            "kpi": { "labelKey": "label", "valueKey": "value", "valueFormat": "currency" }
+            "kpi": { "labelKey": "label", "valueKey": "value", "valueFormat": "money" },
+            "after": "<div class='savings-legend'><span>💵 Current</span><span>💸 Monthly</span><span>📅 Annual</span></div>"
           }
         ],
         "footer": {
@@ -175,25 +154,18 @@
       }
     ]
   },
-
-  "guards": {
-    "hideEmptyRows": true,
-    "stripZeroKPIs": false
-  },
-
   "styles": {
-    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .num{text-align:right;font-variant-numeric:tabular-nums} .card{border:1px solid #E5E7EB;border-radius:10pt;padding:12pt;background:#fff;box-shadow:0 1pt 3pt rgba(0,0,0,.06)} .card.subtle{background:#F8FAFC} .card .title{font-weight:700;margin:0 0 6pt} .table td{padding:6pt 0;border-bottom:1px solid #E5E7EB} .pill-internal{border:1px solid #0A7A64;color:#0A7A64;border-radius:4pt;padding:2pt 6pt;font-size:8pt;font-weight:600}",
+    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .num{text-align:right;font-variant-numeric:tabular-nums} .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8pt} .brand-logo{height:28pt;max-height:28pt;display:block} .hdr-right .report-line{text-align:right;line-height:1.15} .card{border:1px solid #E5E7EB;border-radius:10pt;padding:12pt;background:#fff;box-shadow:0 1pt 3pt rgba(0,0,0,.06)} .title-bar{display:inline-block;width:4pt;height:14pt;margin-right:8pt;border-radius:2pt;vertical-align:middle} .title-bar.ultramarine{background:#0046FF} .title-bar.spruce{background:#0A7A64} .title-text{font-weight:800;font-size:12pt;vertical-align:middle} .card.subtle{background:#F8FAFC} .savings-legend{display:flex;gap:12pt;justify-content:center;margin-top:12pt;padding-top:12pt;border-top:1px solid #E5E7EB;font-size:9pt;color:#334155} .savings-legend span{display:flex;align-items:center;gap:4pt}",
     "formatters": {
-      "currency": {
-        "fn": "n => (n==null||isNaN(n)) ? '—' : `${n<0?'- ':''}$${Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`"
-      },
-      "percent": {
-        "fn": "n => (n==null||isNaN(n)) ? '—' : `${(n*100).toFixed(2)}%`"
-      },
-      "number": { "fn": "n => (n==null||isNaN(n)) ? '—' : n.toLocaleString()" }
+      "money": { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; const s=v<0?'- ':''; return `${s}$${Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` }" },
+      "percent": { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return `${(v*100).toFixed(2)}%` }" },
+      "number": { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return v.toLocaleString() }" }
     },
     "valueRenderer": {
-      "fn": "(row)=>{switch(row?.format){case 'money':return FORMAT.currency(row.value);case 'percent':return FORMAT.percent(row.value);case 'number':return FORMAT.number(row.value);default:return (row?.value ?? '—');}}"
+      "fn": "(row)=>{ if(!row) return '—'; if(row.format==='money') return FORMAT.money(row.value); if(row.format==='percent') return FORMAT.percent(row.value); if(row.format==='number') return FORMAT.number(row.value); return row.value ?? '—'; }"
     }
+  },
+  "guards": {
+    "hideEmptyRows": true
   }
 }

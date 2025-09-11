@@ -735,7 +735,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...calculatorData,
         programType: calculatorData.programType,
         inputs: calculatorData.inputs || {},
-        results: calculatorData.results || {}
+        results: calculatorData.results || {},
+        // Add logo data for PDF header
+        logoBase64: LOGO_DATA_URL
       };
       
       // Generate PDF using DocRaptor
@@ -772,7 +774,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         ...calculatorData,
         programType: calculatorData.programType,
         inputs: calculatorData.inputs || {},
-        results: calculatorData.results || {}
+        results: calculatorData.results || {},
+        // Add logo data for PDF header
+        logoBase64: LOGO_DATA_URL
       };
       
       // Send email with PDF attachment
