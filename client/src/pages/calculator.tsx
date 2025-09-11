@@ -114,9 +114,11 @@ export default function Calculator() {
   };
 
   const handleGenerateReport = async () => {
+    console.log('Download PDF clicked');
     try {
       setIsGeneratingPDF(true);
       
+      console.log('Preparing data transformation...');
       // Transform the data using the PDF transformer
       const transformedData = preparePdfData(
         calculatorData,
@@ -124,6 +126,9 @@ export default function Calculator() {
         results,
         customerInfo
       );
+      
+      console.log('Transformed data:', transformedData);
+      console.log('Sending request to /api/generate-savings-report...');
       
       const response = await fetch('/api/generate-savings-report', {
         method: 'POST',
@@ -133,6 +138,7 @@ export default function Calculator() {
         body: JSON.stringify(transformedData),
       });
 
+      console.log('PDF response status:', response.status);
       if (!response.ok) throw new Error('PDF generation failed');
 
       const blob = await response.blob();
@@ -142,6 +148,7 @@ export default function Calculator() {
       a.download = 'DMP-Savings-Report.pdf';
       a.click();
       window.URL.revokeObjectURL(url);
+      console.log('PDF download initiated');
       
     } catch (error) {
       console.error('Error generating PDF:', error);

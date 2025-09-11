@@ -33,6 +33,7 @@ interface PDFConfig {
       unify: Record<string, string>;
       titleCase: boolean;
     };
+    dataBindings?: Record<string, any>;
     pages: any[];
   };
   guards: {
@@ -401,12 +402,147 @@ function generateHeader(page: any, config: PDFConfig): string {
   `;
 }
 
+// Resolve data binding with interpolation
+function resolveDataBinding(path: string, data: any, config: PDFConfig): any {
+  // Handle interpolation like "{{ customerInfo.title }}"
+  if (path && path.includes('{{')) {
+    return path.replace(/\{\{\s*([^}]+)\s*\}\}/g, (match, binding) => {
+      const trimmed = binding.trim();
+      
+      // Check dataBindings first
+      const bindingParts = trimmed.split('.');
+      if (bindingParts.length >= 2) {
+        const section = bindingParts[0];
+        const key = bindingParts.slice(1).join('.');
+        
+        const dataBinding = config.pdf.dataBindings?.[section]?.[key];
+        if (dataBinding && Array.isArray(dataBinding)) {
+          // Try each fallback path
+          for (const fallbackPath of dataBinding) {
+            const value = resolvePath(data, fallbackPath);
+            if (value !== null && value !== undefined) {
+              return value;
+            }
+          }
+        }
+      }
+      
+      // Direct path resolution as fallback
+      const value = resolvePath(data, trimmed);
+      return value !== null && value !== undefined ? value : '';
+    });
+  }
+  
+  // Direct path resolution
+  return resolvePath(data, path);
+}
+
 // Generate card content
 function generateCard(block: any, data: any, config: PDFConfig): string {
   let cardContent = '';
   
-  if (block.content?.from) {
-    // Simple data binding - render customer info from data
+  // Resolve title with interpolation
+  const title = block.title ? resolveDataBinding(block.title, data, config) : '';
+  
+  // Handle KPI Rail cards
+  if (block.kpiRailFrom) {
+    const items = resolvePath(data, block.kpiRailFrom) || [];
+    const kpiConfig = block.kpi || {};
+    const labelKey = kpiConfig.labelKey || 'label';
+    const valueKey = kpiConfig.valueKey || 'value';
+    const valueFormat = kpiConfig.valueFormat || 'currency';
+    
+    const kpiItems = items.map((item: any) => {
+      const label = item[labelKey] || '';
+      const value = item[valueKey] || 0;
+      const formattedValue = formatValue(value, valueFormat, config);
+      
+      // Apply color based on item type if available
+      const colorMap: Record<string, string> = {
+        'cost': 'danger',
+        'feesCollected': 'success',
+        'bases': 'info',
+        'net': 'brand-spruce'
+      };
+      const colorClass = item.type && colorMap[item.type] ? `kpi-${item.type}` : '';
+      
+      return `
+        <div class="kpi-item">
+          <div class="kpi-label">${unifyLabel(label, config)}</div>
+          <div class="kpi-value ${colorClass}">${formattedValue}</div>
+        </div>
+      `;
+    }).join('');
+    
+    return `
+      <div class="kpi-rail">
+        ${title ? `<div class="card-title">${title}</div>` : ''}
+        ${kpiItems}
+      </div>
+    `;
+  }
+  
+  // Handle table-based cards
+  if (block.table) {
+    const table = block.table;
+    const rowSources = table.rowsFrom || [];
+    const allRows: any[] = [];
+    
+    // Collect all rows from all sources
+    rowSources.forEach((source: any) => {
+      const sourceData = resolvePath(data, source.from);
+      if (sourceData) {
+        if (Array.isArray(sourceData)) {
+          allRows.push(...sourceData);
+        } else if (typeof sourceData === 'object') {
+          // Convert object to rows
+          Object.entries(sourceData).forEach(([key, value]) => {
+            allRows.push({ label: key, value: value, format: 'text' });
+          });
+        }
+      }
+    });
+    
+    // Get format hint key
+    const formatHintKey = table.valueFormatHintKey || 'format';
+    
+    // Generate table rows
+    const rows = allRows.map((row: any) => {
+      const label = unifyLabel(row.label || row.name || '', config);
+      const value = row.value !== undefined ? row.value : row.amount;
+      const format = row[formatHintKey] || 'text';
+      
+      // Map format strings to standard formats
+      let formatType = format;
+      if (format === 'money') formatType = 'currency';
+      
+      const formattedValue = formatType !== 'text' ? 
+        formatValue(value, formatType, config) : 
+        String(value || '');
+      
+      // Handle badges if present
+      let badge = '';
+      if (row.badge) {
+        const badgeStyle = row.badge.style || 'auto';
+        const badgeText = row.badge.text || '';
+        badge = ` <span class="badge badge-${badgeStyle}">${badgeText}</span>`;
+      }
+      
+      return `
+        <tr>
+          <th>${label}</th>
+          <td>${formattedValue}${badge}</td>
+        </tr>
+      `;
+    }).join('');
+    
+    cardContent = `
+      <table class="kv-table">
+        ${rows}
+      </table>
+    `;
+  } else if (block.content?.from) {
+    // Legacy: Simple data binding - render customer info from data
     const sourceData = resolvePath(data, block.content.from);
     if (sourceData) {
       cardContent = `
@@ -421,7 +557,7 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
       `;
     }
   } else if (block.content?.rows) {
-    // Row-based content with conditional rendering
+    // Legacy: Row-based content with conditional rendering
     const rows = block.content.rows
       .filter((row: any) => !row.if || evaluateCondition(row.if, data))
       .map((row: any) => {
@@ -453,9 +589,30 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
     }
   }
   
+  // Add footer note if present
+  if (block.footerNote) {
+    const note = resolveDataBinding(block.footerNote, data, config);
+    if (note) {
+      cardContent += `<div class="small" style="margin-top: 8px; font-style: italic;">${note}</div>`;
+    }
+  }
+  
+  // Add note if present (alternative to footerNote)
+  if (block.note) {
+    const note = resolveDataBinding(block.note, data, config);
+    if (note) {
+      cardContent += `<div class="small" style="margin-top: 8px; font-style: italic;">${note}</div>`;
+    }
+  }
+  
+  // For KPI rails, return without card wrapper (already has kpi-rail wrapper)
+  if (block.kpiRailFrom) {
+    return cardContent;
+  }
+  
   return `
     <div class="card">
-      <div class="card-title">${block.title}</div>
+      ${title ? `<div class="card-title">${title}</div>` : ''}
       ${cardContent}
     </div>
   `;
@@ -546,41 +703,92 @@ function generateFooter(page: any): string {
 export function generateConfigDrivenPDF(data: any): string {
   const config = loadConfig();
   
+  // Debug logging
+  console.log('PDF Generation - Received data structure:', {
+    hasUi: !!data.ui,
+    uiSections: data.ui?.sections ? Object.keys(data.ui.sections) : [],
+    uiMonthlySavings: !!data.ui?.monthlySavings,
+    topLevelKeys: Object.keys(data)
+  });
+  
   // Apply program type context for conditional rendering
   const contextData = {
     ...data,
-    program: data.programType
+    program: data.programType,
+    meta: {
+      reportId: data.reportId || Date.now().toString().slice(-8),
+      reportDate: data.reportDate || new Date().toLocaleDateString()
+    }
   };
   
   const pages = config.pdf.pages.map((page, index) => {
-    const header = generateHeader(page, config);
+    // Update header with resolved data
+    const resolvedPage = {
+      ...page,
+      header: page.header ? {
+        ...page.header,
+        title: page.header.title ? resolveDataBinding(page.header.title, contextData, config) : '',
+        left: page.header.left ? resolveDataBinding(page.header.left, contextData, config) : '',
+        right: page.header.right ? resolveDataBinding(page.header.right, contextData, config) : ''
+      } : undefined
+    };
+    
+    const header = page.header?.showOnPage === undefined || page.header?.showOnPage === index + 1 ? 
+      generateHeader(resolvedPage, config) : '';
     
     let bodyContent = '';
-    page.body.forEach((element: any) => {
-      if (element.type === 'grid') {
-        const columns = element.columns.map((col: any) => {
-          const colSpan = col.span === 7 ? 'grid-col-7' : col.span === 5 ? 'grid-col-5' : 'grid-col';
-          const blocks = col.blocks.map((block: any) => {
-            switch (block.type) {
-              case 'card':
-                return generateCard(block, contextData, config);
-              case 'kpiRail':
-                return generateKPIRail(block, contextData, config);
-              default:
-                return '';
-            }
+    
+    // Handle new v1.7.3 body structure
+    if (Array.isArray(page.body)) {
+      page.body.forEach((element: any) => {
+        if (element.type === 'card') {
+          // Determine column span
+          const colSpan = element.colSpan || 12;
+          const colClass = colSpan === 7 ? 'grid-col-7' : 
+                          colSpan === 5 ? 'grid-col-5' : 
+                          colSpan === 12 ? '' : 'grid-col';
+          
+          const card = generateCard(element, contextData, config);
+          
+          if (colSpan === 12) {
+            bodyContent += card;
+          } else {
+            // Wrap in grid if needed
+            bodyContent += `<div class="grid"><div class="${colClass}">${card}</div></div>`;
+          }
+        } else if (element.type === 'grid') {
+          // Legacy grid structure
+          const columns = element.columns.map((col: any) => {
+            const colSpan = col.span === 7 ? 'grid-col-7' : col.span === 5 ? 'grid-col-5' : 'grid-col';
+            const blocks = col.blocks.map((block: any) => {
+              switch (block.type) {
+                case 'card':
+                  return generateCard(block, contextData, config);
+                case 'kpiRail':
+                  return generateKPIRail(block, contextData, config);
+                default:
+                  return '';
+              }
+            }).join('');
+            
+            return `<div class="${colSpan}">${blocks}</div>`;
           }).join('');
           
-          return `<div class="${colSpan}">${blocks}</div>`;
-        }).join('');
-        
-        bodyContent += `<div class="grid">${columns}</div>`;
-      } else if (element.type === 'section') {
-        bodyContent += generateSection(element, contextData, config);
-      }
-    });
+          bodyContent += `<div class="grid">${columns}</div>`;
+        } else if (element.type === 'section') {
+          bodyContent += generateSection(element, contextData, config);
+        }
+      });
+    }
     
-    const footer = generateFooter(page);
+    // Handle footer with resolved data
+    const resolvedFooter = page.footer ? {
+      ...page.footer,
+      left: page.footer.left ? resolveDataBinding(page.footer.left, contextData, config) : '',
+      right: page.footer.right ? resolveDataBinding(page.footer.right, contextData, config) : ''
+    } : undefined;
+    
+    const footer = generateFooter({ ...page, footer: resolvedFooter });
     const pageBreak = index > 0 ? 'page-break' : '';
     
     return `
