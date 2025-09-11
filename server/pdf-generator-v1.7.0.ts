@@ -30,8 +30,11 @@ interface PDFConfig {
       normalizePercent: any;
     };
     labels: {
-      unify: Record<string, string>;
-      titleCase: boolean;
+      unify?: Record<string, string>;
+      titleCase?: boolean;
+      title?: string;
+      footerLeft?: string;
+      footerRight?: string;
     };
     dataBindings?: Record<string, any>;
     pages: any[];
@@ -108,19 +111,50 @@ function formatValue(value: any, format: string, config: PDFConfig): string {
 
 // Apply label unification
 function unifyLabel(label: string, config: PDFConfig): string {
-  const unified = config.pdf.labels.unify[label];
+  // Check if unify mapping exists and has this label
+  const unified = config.pdf.labels?.unify?.[label];
   if (unified) return unified;
   
-  if (config.pdf.labels.titleCase) {
+  // Check if titleCase is enabled
+  if (config.pdf.labels?.titleCase) {
     return label.replace(/\b\w/g, l => l.toUpperCase());
   }
   
+  // Default: return label as-is
   return label;
 }
 
 // Resolve nested object path (e.g., "inputs.currentRateDisplay")
 function resolvePath(obj: any, path: string): any {
   return path.split('.').reduce((current, key) => current?.[key], obj);
+}
+
+/**
+ * Resolves a key through dataBindings first, then falls back to direct path
+ * This handles non-interpolated binding keys like "customerInfo.rows"
+ */
+function resolveBindingOrPath(key: string, data: any, config: PDFConfig): any {
+  // Check if this might be a binding key (e.g., "customerInfo.rows")
+  if (key && key.includes('.')) {
+    const parts = key.split('.');
+    const section = parts[0];
+    const property = parts.slice(1).join('.');
+    
+    // Check if there's a dataBinding for this section.property
+    const binding = config.pdf.dataBindings?.[section]?.[property];
+    if (binding && Array.isArray(binding)) {
+      // Try each fallback path in order
+      for (const path of binding) {
+        const value = resolvePath(data, path);
+        if (value !== null && value !== undefined) {
+          return value;
+        }
+      }
+    }
+  }
+  
+  // Fall back to direct path resolution
+  return resolvePath(data, key);
 }
 
 // Evaluate conditional expressions (e.g., "program==DUAL_PRICING")
@@ -446,7 +480,7 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
   
   // Handle KPI Rail cards
   if (block.kpiRailFrom) {
-    const items = resolvePath(data, block.kpiRailFrom) || [];
+    const items = resolveBindingOrPath(block.kpiRailFrom, data, config) || [];
     const kpiConfig = block.kpi || {};
     const labelKey = kpiConfig.labelKey || 'label';
     const valueKey = kpiConfig.valueKey || 'value';
@@ -490,7 +524,7 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
     
     // Collect all rows from all sources
     rowSources.forEach((source: any) => {
-      const sourceData = resolvePath(data, source.from);
+      const sourceData = resolveBindingOrPath(source.from, data, config);
       if (sourceData) {
         if (Array.isArray(sourceData)) {
           allRows.push(...sourceData);
@@ -653,7 +687,7 @@ function generateSection(section: any, data: any, config: PDFConfig): string {
     const allRows: any[] = [];
     
     rowSources.forEach((source: any) => {
-      const sourceData = resolvePath(data, source.from);
+      const sourceData = resolveBindingOrPath(source.from, data, config);
       if (sourceData && Array.isArray(sourceData)) {
         allRows.push(...sourceData);
       }
