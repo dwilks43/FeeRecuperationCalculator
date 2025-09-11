@@ -29,6 +29,7 @@
         "h3": { "size": 12, "weight": 700, "color": "brandInk" },
         "label": { "size": 10, "weight": 600, "color": "brandInk" },
         "value": { "size": 10, "weight": 600, "color": "brandInk" },
+        "small": { "size": 9, "weight": 400, "color": "mutedInk" },
         "fine": { "size": 9, "weight": 400, "color": "mutedInk" }
       },
       "layout": {
@@ -36,6 +37,14 @@
         "pageHeightIn": 11,
         "marginIn": 0.5,
         "gridGap": 12,
+        "blockY": 12,
+        "rowY": 8,
+        "colGap": 14,
+        "cardPadding": 12
+      },
+      "spacing": {
+        "pageMargin": 36,
+        "sectionY": 18,
         "blockY": 12,
         "rowY": 8,
         "colGap": 14,
