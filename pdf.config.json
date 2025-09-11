@@ -1,8 +1,8 @@
 {
-  "version": "1.7.2-pdf-bindings-hotfix-final",
+  "version": "1.7.3-mirror-ui-v1",
   "pdf": {
     "rendering": {
-      "sourceOfTruth": "ui_and_results",
+      "sourceOfTruth": "ui",
       "noNewMath": true,
       "bindStrategy": "byKey",
       "interpolateStrings": true,
@@ -17,10 +17,7 @@
         "mutedInk": "#334155",
         "border": "#E5E7EB",
         "panel": "#FFFFFF",
-        "subtle": "#F8FAFC",
-        "danger": "#DC2626",
-        "success": "#059669",
-        "info": "#2563EB"
+        "subtle": "#F8FAFC"
       },
       "typography": {
         "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
@@ -37,9 +34,6 @@
         "pageHeightIn": 11,
         "marginIn": 0.5,
         "gridGap": 12,
-        "blockY": 12,
-        "rowY": 8,
-        "colGap": 14,
         "cardPadding": 12
       },
       "spacing": {
@@ -53,128 +47,86 @@
       "borders": {
         "radius": 10,
         "hairline": "1px solid #E5E7EB"
-      },
-      "badges": {
-        "auto": { "bg": "#E8F1FF", "fg": "#0046FF" },
-        "manual": { "bg": "#FFF7ED", "fg": "#C2410C" },
-        "internal": { "bg": "#EEF2FF", "fg": "#3730A3" }
-      },
-      "kpiColors": {
-        "cost": "danger",
-        "feesCollected": "success",
-        "bases": "info",
-        "net": "brandSpruce"
       }
     },
     "formatting": {
       "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
       "percent": { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
       "normalizePercent": { "mode": "auto", "thresholdGtOneTreatAsPercent": true },
-      "coercePercentStrings": true,
       "tabularNumbers": true
     },
     "labels": {
-      "summaryTitle": "DMP Savings Report",
-      "programInputs": "Program & Inputs",
-      "kpiTitle": "Monthly Processing Savings",
-      "derivedTitle": "Derived Bases & Totals",
-      "processingTitle": "Processing on Cards (New Program)",
-      "savingsTitle": "Savings vs Today",
-      "profitTitle": "Gross Profit",
-      "internalBadge": "Internal",
+      "title": "Fee Recuperation Savings Calculator",
       "footerLeft": "Dynamic Merchant Processing",
-      "footerRight": "© DMP — Confidential",
-      "titleCase": true
+      "footerRight": "© DMP — Confidential"
     },
     "dataBindings": {
       "meta": {
-        "reportId": ["report.id", "results.reportId", "ui.report.id"],
-        "reportDate": ["report.createdAtISO", "results.createdAtISO", "ui.report.date"]
+        "reportId": ["report.id", "ui.report.id"],
+        "reportDate": ["report.createdAtISO", "ui.report.dateISO"]
       },
-      "inputs": {
-        "programTypeLabel": ["ui.program.label", "results.programTypeLabel", "results.programType", "program"],
-        "monthlyCardVolume": ["inputs.monthlyVolume", "ui.inputs.monthlyVolume", "results.monthlyVolume"],
-        "monthlyCashVolume": ["inputs.monthlyCashVolume", "ui.inputs.monthlyCashVolume", "results.monthlyCashVolume"],
-        "currentRateDisplay": ["ui.inputs.currentRateDisplay", "results.currentRateDisplay", "inputs.currentRate"],
-        "interchangeDisplay": ["ui.inputs.interchangeDisplay", "results.interchangeDisplay", "inputs.interchangeCost"],
-        "taxRateDisplay": ["ui.inputs.taxRateDisplay", "results.taxRateDisplay", "inputs.taxRate"],
-        "tipRateDisplay": ["ui.inputs.tipRateDisplay", "results.tipRateDisplay", "inputs.tipRate"],
-        "priceDiffDisplay": ["ui.inputs.priceDifferentialDisplay", "results.priceDifferentialDisplay", "inputs.priceDifferential"],
-        "supplementalFeeDisplay": ["ui.inputs.supplementalFeeDisplay", "results.supplementalFeeDisplay", "inputs.supplementalFee"],
-        "feeTimingLabel": ["ui.inputs.feeTimingLabel", "results.feeTimingLabel"],
-        "feeTaxBasisLabel": ["ui.inputs.feeTaxBasisLabel", "results.feeTaxBasisLabel"]
+
+      "customerInfo": {
+        "title": ["ui.sections.customerInformation.title", "ui.labels.customerInformation"],
+        "rows": ["ui.sections.customerInformation.rows"]
       },
-      "ui": {
-        "flatRatePercentDisplay": ["ui.flatRatePercentDisplay", "results.flatRatePercentDisplay", "inputs.flatRate"],
-        "monthlySavings.items": ["ui.monthlySavings.items", "results.monthlySavings.items"],
-        "orderOfOperationsText": ["ui.orderOfOperationsText", "results.orderOfOperationsText", "ui.orderOfOpsText"]
+      "inputParams": {
+        "title": ["ui.sections.inputParameters.title", "ui.labels.inputParameters"],
+        "rows": ["ui.sections.inputParameters.rows"]
       },
-      "sections": {
-        "derived": ["details.derivedBases", "ui.details.derivedBases", "results.details.derivedBases"],
-        "processing": ["details.processingOnCards", "ui.details.processingOnCards", "results.details.processingOnCards"],
-        "savingsVsToday": ["details.savingsVsToday", "ui.details.savingsVsToday", "results.details.savingsVsToday"],
-        "profit": ["details.grossProfitInternal", "ui.details.grossProfitInternal", "results.details.grossProfitInternal"]
+
+      "liveVolume": {
+        "title": ["ui.sections.liveVolumeBreakdown.title", "ui.labels.liveVolumeBreakdown"],
+        "note": ["ui.sections.liveVolumeBreakdown.note", "ui.orderOfOperationsText"],
+        "rows": ["ui.sections.liveVolumeBreakdown.rows"]
       },
-      "state": {
-        "program": ["ui.program.code", "results.programCode", "program"],
-        "isFlatRateManual": ["ui.state.isFlatRateManual", "results.state.isFlatRateManual", "state.isFlatRateManual"]
+      "monthlySavings": {
+        "title": ["ui.sections.monthlyProcessingSavings.title", "ui.labels.monthlyProcessingSavings"],
+        "items": ["ui.monthlySavings.items"]
       }
     },
+
     "pages": [
       {
         "name": "Summary",
         "header": {
-          "title": "DMP Savings Report",
+          "title": "Fee Recuperation Savings Calculator",
           "left": "Report # {{ meta.reportId }}",
           "right": "{{ meta.reportDate }}",
           "showOnPage": 1
         },
-        "layout": {
-          "columns": 12,
-          "gap": 12
-        },
+        "layout": { "columns": 12, "gap": 12 },
         "body": [
           {
             "type": "card",
-            "colSpan": 7,
+            "colSpan": 12,
             "surface": "panel",
-            "title": "Program & Inputs",
-            "content": {
-              "rows": [
-                { "label": "Program Type", "value": "inputs.programTypeLabel" },
-                { "label": "Monthly Card Volume", "value": "inputs.monthlyCardVolume", "format": "currency" },
-                { "label": "Monthly Cash Volume", "value": "inputs.monthlyCashVolume", "format": "currency", "if": "inputs.monthlyCashVolume != null" },
-                { "label": "Current Processing Rate", "value": "inputs.currentRateDisplay", "format": "percent" },
-                { "label": "Interchange Cost", "value": "inputs.interchangeDisplay", "format": "percent" },
-                { "label": "Tax Rate", "value": "inputs.taxRateDisplay", "format": "percent" },
-                { "label": "Tip Rate", "value": "inputs.tipRateDisplay", "format": "percent" },
-                { "if": "state.program == 'DUAL_PRICING'", "label": "Price Differential", "value": "inputs.priceDiffDisplay", "format": "percent" },
-                { "if": "state.program == 'SUPPLEMENTAL_FEE'", "label": "Supplemental Fee", "value": "inputs.supplementalFeeDisplay", "format": "percent" },
-                { "if": "state.program == 'SUPPLEMENTAL_FEE'", "label": "Fee Timing", "value": "inputs.feeTimingLabel" },
-                { "if": "state.program == 'SUPPLEMENTAL_FEE'", "label": "Fee Tax Basis", "value": "inputs.feeTaxBasisLabel" },
-                {
-                  "label": "Flat Rate % (Bank Mapping)",
-                  "value": "ui.flatRatePercentDisplay",
-                  "format": "percent",
-                  "badge": { "text": "Auto", "when": "!state.isFlatRateManual", "style": "auto" },
-                  "badgeAlt": { "text": "Manual", "when": "state.isFlatRateManual", "style": "manual" }
-                }
-              ]
-            },
-            "footerNote": "Values mirror the on-screen display—no recalculation."
+            "accent": "brandUltramarine",
+            "title": "{{ customerInfo.title }}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Field", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "customerInfo.rows" }],
+              "valueFormatHintKey": "format"
+            }
           },
           {
             "type": "card",
-            "colSpan": 5,
+            "colSpan": 12,
             "surface": "panel",
-            "title": "Monthly Processing Savings",
-            "kpiRailFrom": "ui.monthlySavings.items",
-            "kpi": {
-              "labelKey": "label",
-              "valueKey": "value",
-              "valueFormat": "currency",
-              "stripZero": false
-            }
+            "accent": "brandUltramarine",
+            "title": "{{ inputParams.title }}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Input", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "inputParams.rows" }],
+              "valueFormatHintKey": "format"
+            },
+            "footerNote": "Values mirror the on-screen inputs—no recalculation."
           }
         ],
         "footer": {
@@ -183,81 +135,36 @@
           "divider": true
         }
       },
+
       {
         "name": "Details",
-        "header": {
-          "title": "",
-          "left": "",
-          "right": "",
-          "showOnPage": 0
-        },
-        "layout": {
-          "columns": 12,
-          "gap": 12
-        },
+        "header": { "title": "", "left": "", "right": "", "showOnPage": 0 },
+        "layout": { "columns": 12, "gap": 12 },
         "body": [
           {
-            "type": "section",
-            "title": "Derived Bases & Totals",
-            "note": "{{ ui.orderOfOperationsText }}",
+            "type": "card",
+            "colSpan": 7,
+            "surface": "subtle",
+            "accent": "brandUltramarine",
+            "title": "{{ liveVolume.title }}",
+            "note": "{{ liveVolume.note }}",
             "table": {
               "cols": [
-                { "key": "label", "title": "Label", "style": "label", "align": "left" },
-                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
+                { "key": "label", "title": "Label", "align": "left" },
+                { "key": "value", "title": "Amount", "align": "right" }
               ],
-              "rowsFrom": [
-                { "from": "sections.derived" }
-              ],
+              "rowsFrom": [{ "from": "liveVolume.rows" }],
               "valueFormatHintKey": "format"
-            },
-            "surface": "subtle"
+            }
           },
           {
-            "type": "section",
-            "title": "Processing on Cards (New Program)",
-            "fine": "Coverage % shows how much the price differential/fee offsets the processor charge.",
-            "table": {
-              "cols": [
-                { "key": "label", "title": "Label", "style": "label", "align": "left" },
-                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
-              ],
-              "rowsFrom": [
-                { "from": "sections.processing" }
-              ],
-              "valueFormatHintKey": "format"
-            },
-            "surface": "subtle"
-          },
-          {
-            "type": "section",
-            "title": "Savings vs Today",
-            "table": {
-              "cols": [
-                { "key": "label", "title": "Label", "style": "label", "align": "left" },
-                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
-              ],
-              "rowsFrom": [
-                { "from": "sections.savingsVsToday" }
-              ],
-              "valueFormatHintKey": "format"
-            },
-            "surface": "subtle"
-          },
-          {
-            "type": "section",
-            "title": "Gross Profit",
-            "badge": { "text": "Internal", "style": "internal" },
-            "table": {
-              "cols": [
-                { "key": "label", "title": "Label", "style": "label", "align": "left" },
-                { "key": "value", "title": "Amount", "style": "value", "align": "right" }
-              ],
-              "rowsFrom": [
-                { "from": "sections.profit" }
-              ],
-              "valueFormatHintKey": "format"
-            },
-            "surface": "subtle"
+            "type": "card",
+            "colSpan": 5,
+            "surface": "panel",
+            "accent": "brandSpruce",
+            "title": "{{ monthlySavings.title }}",
+            "kpiRailFrom": "monthlySavings.items",
+            "kpi": { "labelKey": "label", "valueKey": "value", "valueFormat": "currency" }
           }
         ],
         "footer": {
@@ -268,9 +175,25 @@
       }
     ]
   },
+
   "guards": {
     "hideEmptyRows": true,
-    "stripZeroKPIs": false,
-    "coercePercentStrings": true
+    "stripZeroKPIs": false
+  },
+
+  "styles": {
+    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .num{text-align:right;font-variant-numeric:tabular-nums} .card{border:1px solid #E5E7EB;border-radius:10pt;padding:12pt;background:#fff;box-shadow:0 1pt 3pt rgba(0,0,0,.06)} .card.subtle{background:#F8FAFC} .card .title{font-weight:700;margin:0 0 6pt} .table td{padding:6pt 0;border-bottom:1px solid #E5E7EB} .pill-internal{border:1px solid #0A7A64;color:#0A7A64;border-radius:4pt;padding:2pt 6pt;font-size:8pt;font-weight:600}",
+    "formatters": {
+      "currency": {
+        "fn": "n => (n==null||isNaN(n)) ? '—' : `${n<0?'- ':''}$${Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`"
+      },
+      "percent": {
+        "fn": "n => (n==null||isNaN(n)) ? '—' : `${(n*100).toFixed(2)}%`"
+      },
+      "number": { "fn": "n => (n==null||isNaN(n)) ? '—' : n.toLocaleString()" }
+    },
+    "valueRenderer": {
+      "fn": "(row)=>{switch(row?.format){case 'money':return FORMAT.currency(row.value);case 'percent':return FORMAT.percent(row.value);case 'number':return FORMAT.number(row.value);default:return (row?.value ?? '—');}}"
+    }
   }
 }

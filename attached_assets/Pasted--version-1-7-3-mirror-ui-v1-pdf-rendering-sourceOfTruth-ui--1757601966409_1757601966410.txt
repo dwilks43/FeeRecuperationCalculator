@@ -1,0 +1,192 @@
+{
+  "version": "1.7.3-mirror-ui-v1",
+  "pdf": {
+    "rendering": {
+      "sourceOfTruth": "ui",
+      "noNewMath": true,
+      "bindStrategy": "byKey",
+      "interpolateStrings": true,
+      "fallbackNullToEmpty": true
+    },
+    "theme": {
+      "colors": {
+        "brandUltramarine": "#0046FF",
+        "brandAqua": "#1CD3D3",
+        "brandSpruce": "#0A7A64",
+        "brandInk": "#0F172A",
+        "mutedInk": "#334155",
+        "border": "#E5E7EB",
+        "panel": "#FFFFFF",
+        "subtle": "#F8FAFC"
+      },
+      "typography": {
+        "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+        "h1": { "size": 18, "weight": 700, "color": "brandInk" },
+        "h2": { "size": 14, "weight": 700, "color": "brandInk" },
+        "h3": { "size": 12, "weight": 700, "color": "brandInk" },
+        "label": { "size": 10, "weight": 600, "color": "brandInk" },
+        "value": { "size": 10, "weight": 600, "color": "brandInk" },
+        "fine": { "size": 9, "weight": 400, "color": "mutedInk" }
+      },
+      "layout": {
+        "pageWidthIn": 8.5,
+        "pageHeightIn": 11,
+        "marginIn": 0.5,
+        "gridGap": 12,
+        "cardPadding": 12
+      },
+      "borders": {
+        "radius": 10,
+        "hairline": "1px solid #E5E7EB"
+      }
+    },
+    "formatting": {
+      "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
+      "percent": { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
+      "normalizePercent": { "mode": "auto", "thresholdGtOneTreatAsPercent": true },
+      "tabularNumbers": true
+    },
+    "labels": {
+      "title": "Fee Recuperation Savings Calculator",
+      "footerLeft": "Dynamic Merchant Processing",
+      "footerRight": "© DMP — Confidential"
+    },
+    "dataBindings": {
+      "meta": {
+        "reportId": ["report.id", "ui.report.id"],
+        "reportDate": ["report.createdAtISO", "ui.report.dateISO"]
+      },
+
+      /* ---- PAGE 1 CONTENT ---- */
+      "customerInfo": {
+        "title": ["ui.sections.customerInformation.title", "ui.labels.customerInformation"],
+        "rows": ["ui.sections.customerInformation.rows"]
+      },
+      "inputParams": {
+        "title": ["ui.sections.inputParameters.title", "ui.labels.inputParameters"],
+        "rows": ["ui.sections.inputParameters.rows"]
+      },
+
+      /* ---- PAGE 2 CONTENT ---- */
+      "liveVolume": {
+        "title": ["ui.sections.liveVolumeBreakdown.title", "ui.labels.liveVolumeBreakdown"],
+        "note": ["ui.sections.liveVolumeBreakdown.note", "ui.orderOfOperationsText"],
+        "rows": ["ui.sections.liveVolumeBreakdown.rows"]
+      },
+      "monthlySavings": {
+        "title": ["ui.sections.monthlyProcessingSavings.title", "ui.labels.monthlyProcessingSavings"],
+        "items": ["ui.monthlySavings.items"]
+      }
+    },
+
+    "pages": [
+      {
+        "name": "Summary",
+        "header": {
+          "title": "Fee Recuperation Savings Calculator",
+          "left": "Report # {{ meta.reportId }}",
+          "right": "{{ meta.reportDate }}",
+          "showOnPage": 1
+        },
+        "layout": { "columns": 12, "gap": 12 },
+        "body": [
+          {
+            "type": "card",
+            "colSpan": 12,
+            "surface": "panel",
+            "accent": "brandUltramarine",
+            "title": "{{ customerInfo.title }}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Field", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "customerInfo.rows" }],
+              "valueFormatHintKey": "format"
+            }
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "surface": "panel",
+            "accent": "brandUltramarine",
+            "title": "{{ inputParams.title }}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Input", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "inputParams.rows" }],
+              "valueFormatHintKey": "format"
+            },
+            "footerNote": "Values mirror the on-screen inputs—no recalculation."
+          }
+        ],
+        "footer": {
+          "left": "Dynamic Merchant Processing",
+          "right": "© DMP — Confidential",
+          "divider": true
+        }
+      },
+
+      {
+        "name": "Details",
+        "header": { "title": "", "left": "", "right": "", "showOnPage": 0 },
+        "layout": { "columns": 12, "gap": 12 },
+        "body": [
+          {
+            "type": "card",
+            "colSpan": 7,
+            "surface": "subtle",
+            "accent": "brandUltramarine",
+            "title": "{{ liveVolume.title }}",
+            "note": "{{ liveVolume.note }}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Label", "align": "left" },
+                { "key": "value", "title": "Amount", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "liveVolume.rows" }],
+              "valueFormatHintKey": "format"
+            }
+          },
+          {
+            "type": "card",
+            "colSpan": 5,
+            "surface": "panel",
+            "accent": "brandSpruce",
+            "title": "{{ monthlySavings.title }}",
+            "kpiRailFrom": "monthlySavings.items",
+            "kpi": { "labelKey": "label", "valueKey": "value", "valueFormat": "currency" }
+          }
+        ],
+        "footer": {
+          "left": "Dynamic Merchant Processing",
+          "right": "© DMP — Confidential",
+          "divider": true
+        }
+      }
+    ]
+  },
+
+  "guards": {
+    "hideEmptyRows": true,
+    "stripZeroKPIs": false
+  },
+
+  "styles": {
+    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .num{text-align:right;font-variant-numeric:tabular-nums} .card{border:1px solid #E5E7EB;border-radius:10pt;padding:12pt;background:#fff;box-shadow:0 1pt 3pt rgba(0,0,0,.06)} .card.subtle{background:#F8FAFC} .card .title{font-weight:700;margin:0 0 6pt} .table td{padding:6pt 0;border-bottom:1px solid #E5E7EB} .pill-internal{border:1px solid #0A7A64;color:#0A7A64;border-radius:999px;padding:2pt 6pt;font-size:9pt;font-weight:600}",
+    "formatters": {
+      "currency": {
+        "fn": "n => (n==null||isNaN(n)) ? '—' : `${n<0?'- ':''}$${Math.abs(n).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}`"
+      },
+      "percent": {
+        "fn": "n => (n==null||isNaN(n)) ? '—' : `${(n*100).toFixed(2)}%`"
+      },
+      "number": { "fn": "n => (n==null||isNaN(n)) ? '—' : n.toLocaleString()" }
+    },
+    "valueRenderer": {
+      "fn": "(row)=>{switch(row?.format){case 'money':return FORMAT.currency(row.value);case 'percent':return FORMAT.percent(row.value);case 'number':return FORMAT.number(row.value);default:return (row?.value ?? '—');}}"
+    }
+  }
+}
