@@ -12,6 +12,7 @@ import { CustomerInfoForm } from "@/components/calculator/CustomerInfoForm";
 import dmpLogoPath from "@assets/DMP—Logo Mark—2 Color_1755032066759.jpg";
 import { CalculatorInputs, TooltipKey, CustomerInfo } from "@/types/calculator";
 import { calculateResults, debounce, formatCurrency, formatLargeNumber } from "@/utils/calculations";
+import { preparePdfData } from "@/utils/pdfDataTransformer";
 
 export default function Calculator() {
   const [inputs, setInputs] = useState<CalculatorInputs>({
@@ -116,12 +117,20 @@ export default function Calculator() {
     try {
       setIsGeneratingPDF(true);
       
+      // Transform the data using the PDF transformer
+      const transformedData = preparePdfData(
+        calculatorData,
+        inputs,
+        results,
+        customerInfo
+      );
+      
       const response = await fetch('/api/generate-savings-report', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(calculatorData),
+        body: JSON.stringify(transformedData),
       });
 
       if (!response.ok) throw new Error('PDF generation failed');
