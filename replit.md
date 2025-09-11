@@ -4,10 +4,17 @@ This is a professional React-based **Fee Recuperation Savings Calculator** for D
 
 The calculator takes various merchant parameters (monthly credit card volume, monthly cash volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under the Fee Recuperation Program, along with potential monthly and annual savings. It generates professional PDF reports with DMP branding for sales presentations.
 
-## Recent PDF Generation Updates (August 2025)
+## Recent PDF Generation Updates (September 2025)
+- **Critical Fix**: Resolved empty PDF issue by implementing UI data transformation layer
+- Created `pdfDataTransformer.ts` to convert raw calculator data into UI-formatted structure expected by v1.7.3 configuration
+- PDF configuration now properly receives data in expected format: ui.sections.* and ui.monthlySavings.* paths
+- Both program types (Dual Pricing and Supplemental Fee) generate PDFs successfully with complete data
+- Configuration uses `sourceOfTruth: "ui"` to mirror UI presentation exactly without recalculation
+
+## Previous PDF Generation Updates (August 2025)
 - **BREAKTHROUGH**: Implemented server-side logo loading solution reading DMP logo at startup
 - Successfully converted 277,736 byte logo to 370,316 character base64 string with validation
-- Applied official DMP brand color palette: Ultramarine (#004ED3), Aqua (#2BD8C2), Spruce (#00937B), Ink (#0B2340)
+- Applied official DMP brand color palette: Ultramarine (#0046FF), Aqua (#1CD3D3), Spruce (#0A7A64), Ink (#0F172A)
 - Replaced emoji section markers with professional styled section headers
 - Removed redundant chip labels for clean, premium hierarchy
 - Enhanced Monthly Savings emphasis with larger type (24px) and Spruce green highlighting
