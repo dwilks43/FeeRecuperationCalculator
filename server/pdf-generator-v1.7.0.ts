@@ -19,10 +19,17 @@ interface PDFConfig {
     theme: {
       colors: Record<string, string>;
       typography: Record<string, any>;
-      spacing: Record<string, number>;
+      spacing?: Record<string, number>;
+      layout?: {
+        pageWidthIn?: number;
+        pageHeightIn?: number;
+        marginIn?: number;
+        gridGap?: number;
+        cardPadding?: number;
+      };
       borders: Record<string, any>;
-      badges: Record<string, any>;
-      kpiColors: Record<string, string>;
+      badges?: Record<string, any>;
+      kpiColors?: Record<string, string>;
     };
     formatting: {
       currency: any;
@@ -175,7 +182,16 @@ function evaluateCondition(condition: string, data: any): boolean {
 
 // Generate CSS from configuration
 function generateCSS(config: PDFConfig): string {
-  const { colors, typography, spacing, borders } = config.pdf.theme;
+  const { colors, typography, borders } = config.pdf.theme;
+  // Use spacing from config or layout properties from v1.7.5 config
+  const spacing = config.pdf.theme.spacing || {
+    pageMargin: 36,
+    sectionY: 18,
+    blockY: 12,
+    rowY: 8,
+    colGap: config.pdf.theme.layout?.gridGap || 14,
+    cardPadding: config.pdf.theme.layout?.cardPadding || 12
+  };
   
   // CSS Variables
   const cssVars = Object.entries(colors)
@@ -210,12 +226,12 @@ function generateCSS(config: PDFConfig): string {
         }
 
         /* Typography Styles */
-        .h1 { font-size: ${typography.h1.size}px; font-weight: ${typography.h1.weight}; color: var(--${typography.h1.color.replace('#', '').toLowerCase()}); }
-        .h2 { font-size: ${typography.h2.size}px; font-weight: ${typography.h2.weight}; color: var(--${typography.h2.color.replace('#', '').toLowerCase()}); }
-        .h3 { font-size: ${typography.h3.size}px; font-weight: ${typography.h3.weight}; color: var(--${typography.h3.color.replace('#', '').toLowerCase()}); }
-        .label { font-size: ${typography.label.size}px; font-weight: ${typography.label.weight}; color: var(--${typography.label.color.replace('#', '').toLowerCase()}); }
-        .value { font-size: ${typography.value.size}px; font-weight: ${typography.value.weight}; color: var(--${typography.value.color.replace('#', '').toLowerCase()}); }
-        .small { font-size: ${typography.small.size}px; font-weight: ${typography.small.weight}; color: var(--${typography.small.color.replace('#', '').toLowerCase()}); }
+        .h1 { font-size: ${typography.h1?.size || 18}px; font-weight: ${typography.h1?.weight || 700}; color: var(--${(typography.h1?.color || 'brandInk').replace('#', '').toLowerCase()}); }
+        .h2 { font-size: ${typography.h2?.size || 14}px; font-weight: ${typography.h2?.weight || 700}; color: var(--${(typography.h2?.color || 'brandInk').replace('#', '').toLowerCase()}); }
+        .h3 { font-size: ${typography.h3?.size || 12}px; font-weight: ${typography.h3?.weight || 700}; color: var(--${(typography.h3?.color || 'brandInk').replace('#', '').toLowerCase()}); }
+        .label { font-size: ${typography.label?.size || 10}px; font-weight: ${typography.label?.weight || 600}; color: var(--${(typography.label?.color || 'brandInk').replace('#', '').toLowerCase()}); }
+        .value { font-size: ${typography.value?.size || 10}px; font-weight: ${typography.value?.weight || 600}; color: var(--${(typography.value?.color || 'brandInk').replace('#', '').toLowerCase()}); }
+        .small { font-size: ${typography.fine?.size || typography.small?.size || 9}px; font-weight: ${typography.fine?.weight || typography.small?.weight || 400}; color: var(--${(typography.fine?.color || typography.small?.color || 'mutedInk').replace('#', '').toLowerCase()}); }
 
         /* Layout Styles */
         .grid { display: table; width: 100%; table-layout: fixed; }
@@ -235,8 +251,8 @@ function generateCSS(config: PDFConfig): string {
         }
 
         .card-title {
-            font-size: ${typography.h3.size}px;
-            font-weight: ${typography.h3.weight};
+            font-size: ${typography.h3?.size || 12}px;
+            font-weight: ${typography.h3?.weight || 700};
             color: var(--brand-ink);
             margin-bottom: ${spacing.rowY}px;
             padding-bottom: ${spacing.rowY}px;
@@ -422,8 +438,8 @@ function generateCSS(config: PDFConfig): string {
         }
 
         .section-title {
-            font-size: ${typography.h3.size}px;
-            font-weight: ${typography.h3.weight};
+            font-size: ${typography.h3?.size || 12}px;
+            font-weight: ${typography.h3?.weight || 700};
             color: var(--brand-ink);
             margin: 0;
         }
@@ -446,14 +462,14 @@ function generateCSS(config: PDFConfig): string {
 
         .footer-left {
             display: table-cell;
-            font-size: ${typography.small.size}px;
+            font-size: ${typography.fine?.size || typography.small?.size || 9}px;
             color: var(--neutral40);
         }
 
         .footer-right {
             display: table-cell;
             text-align: right;
-            font-size: ${typography.small.size}px;
+            font-size: ${typography.fine?.size || typography.small?.size || 9}px;
             color: var(--neutral40);
         }
     </style>
