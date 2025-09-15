@@ -1,5 +1,5 @@
 {
-  "version": "1.7.6-final-two-page-brand-polish",
+  "version": "1.7.7-two-page-final-brand-clean",
   "pdf": {
     "rendering": {
       "sourceOfTruth": "ui",
@@ -30,8 +30,11 @@
         "rows": ["ui.sections.liveVolumeBreakdown.rows"]
       },
       "monthlySavings": {
-        "title": ["ui.sections.monthlyProcessingSavings.title", "ui.labels.monthlyProcessingSavings"],
-        "items": ["ui.monthlySavings.items"]
+        "title": ["ui.sections.monthlyProcessingSavings.title", "ui.labels.monthlyProcessingSavings", "'Monthly Processing Savings'"],
+        "rows": [
+          "ui.sections.monthlyProcessingSavings.rows",
+          "ui.monthlySavings.items"
+        ]
       }
     },
     "theme": {
@@ -58,7 +61,7 @@
         "pageWidthIn": 8.5,
         "pageHeightIn": 11,
         "marginIn": 0.5,
-        "gridGap": 12,
+        "gridGap": 10,
         "cardPadding": 12
       },
       "borders": {
@@ -76,12 +79,12 @@
       {
         "name": "Summary",
         "header": {
-          "title": "<div class='brand-title'><img class='brand-logo' src='{{ brand.logoUrl }}' alt='DMP Logo'/><div class='doc-titles'><div class='doc-title'>Fee Recuperation &amp; Processing Savings Analysis</div><div class='doc-subtitle'>Mirrors on-screen results • No recalculation in PDF</div></div></div>",
+          "title": "<div class='brand-title'><img class='brand-logo' src='{{ brand.logoUrl }}' alt='DMP Logo'/><div class='doc-titles'><div class='doc-title'>Fee Recuperation &amp; Processing Savings Analysis</div></div></div>",
           "left": "",
-          "right": "<div class='hdr-right'><div class='report-line'>Report # {{ meta.reportId }}</div><div class='report-line'>{{ meta.reportDate }}</div></div>",
+          "right": "<div class='hdr-right'><div class='report-line nowrap'>Report # {{ meta.reportId }}</div><div class='report-line nowrap'>{{ meta.reportDate }}</div></div>",
           "showOnPage": 1
         },
-        "layout": { "columns": 12, "gap": 12 },
+        "layout": { "columns": 12, "gap": 10 },
         "body": [
           {
             "type": "card",
@@ -107,8 +110,7 @@
               ],
               "rowsFrom": [{ "from": "inputParams.rows" }],
               "valueFormatHintKey": "format"
-            },
-            "footerNote": "Values mirror the on-screen inputs—no recalculation."
+            }
           }
         ],
         "footer": {
@@ -120,7 +122,7 @@
       {
         "name": "Details",
         "header": { "title": "", "left": "", "right": "", "showOnPage": 0 },
-        "layout": { "columns": 12, "gap": 12 },
+        "layout": { "columns": 12, "gap": 10 },
         "body": [
           {
             "type": "card",
@@ -140,14 +142,15 @@
           {
             "type": "card",
             "colSpan": 12,
-            "title": "<span class='title-bar spruce'></span><span class='title-text'>💵 Monthly Processing Savings</span>",
-            "kpiRailFrom": "monthlySavings.items",
-            "kpi": {
-              "labelKey": "label",
-              "valueKey": "value",
-              "valueFormat": "money"
-            },
-            "after": "<div class='savings-legend'><span>💵 Current Cost</span><span>💸 Monthly Savings</span><span>📅 Annual Savings</span></div>"
+            "title": "<span class='title-bar spruce'></span><span class='title-text'>{{ monthlySavings.title }}</span>",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Item", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "monthlySavings.rows" }],
+              "valueFormatHintKey": "format"
+            }
           }
         ],
         "footer": {
@@ -159,7 +162,7 @@
     ]
   },
   "styles": {
-    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .num{text-align:right;font-variant-numeric:tabular-nums} .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12pt} .brand-title{display:flex;align-items:center;gap:12pt} .brand-logo{height:40pt;max-height:40pt;display:block} .doc-titles{display:flex;flex-direction:column;gap:2pt} .doc-title{font-size:16pt;font-weight:800;letter-spacing:-0.02em;color:#0F172A} .doc-subtitle{font-size:10pt;font-weight:400;color:#334155} .hdr-right{text-align:right} .report-line{font-size:9pt;color:#334155} .title-bar{display:inline-block;width:4pt;height:14pt;border-radius:2pt;margin-right:8pt;vertical-align:middle} .title-bar.ultramarine{background:#0046FF} .title-bar.spruce{background:#0A7A64} .title-text{font-size:12pt;font-weight:700;color:#0F172A;vertical-align:middle} .savings-legend{display:flex;justify-content:space-around;padding:8pt 0;font-size:9pt;color:#334155;border-top:1pt solid #E5E7EB;margin-top:8pt}",
+    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .nowrap{white-space:nowrap} .num{text-align:right;font-variant-numeric:tabular-nums} .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10pt} .brand-title{display:flex;align-items:center;gap:10pt} .brand-logo{height:40pt;max-height:40pt;display:block} .doc-titles{display:flex;flex-direction:column;gap:0} .doc-title{font-size:16pt;font-weight:800;letter-spacing:-0.02em;color:#0F172A} .hdr-right{text-align:right} .report-line{font-size:9pt;color:#334155} .title-bar{display:inline-block;width:4pt;height:14pt;border-radius:2pt;margin-right:8pt;vertical-align:middle} .title-bar.ultramarine{background:#0046FF} .title-bar.spruce{background:#0A7A64} .title-text{font-size:12pt;font-weight:700;color:#0F172A;vertical-align:middle}",
     "formatters": {
       "money":  { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; const s=v<0?'- ':''; return `${s}$${Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` }" },
       "percent":{ "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return `${(v*100).toFixed(2)}%` }" },

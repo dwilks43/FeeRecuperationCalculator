@@ -1,0 +1,178 @@
+{
+  "version": "1.7.7-two-page-final-brand-clean",
+  "pdf": {
+    "rendering": {
+      "sourceOfTruth": "ui",
+      "noNewMath": true,
+      "bindStrategy": "byKey",
+      "interpolateStrings": true,
+      "fallbackNullToEmpty": true
+    },
+    "dataBindings": {
+      "meta": {
+        "reportId": ["report.id", "ui.report.id"],
+        "reportDate": ["report.createdAtISO", "ui.report.dateISO"]
+      },
+      "brand": {
+        "logoUrl": ["ui.brand.logoUrl", "ui.brand.logo", "ui.logoUrl"]
+      },
+      "customerInfo": {
+        "title": ["ui.sections.customerInformation.title", "ui.labels.customerInformation"],
+        "rows": ["ui.sections.customerInformation.rows"]
+      },
+      "inputParams": {
+        "title": ["ui.sections.inputParameters.title", "ui.labels.inputParameters"],
+        "rows": ["ui.sections.inputParameters.rows"]
+      },
+      "liveVolume": {
+        "title": ["ui.sections.liveVolumeBreakdown.title", "ui.labels.liveVolumeBreakdown"],
+        "note": ["ui.sections.liveVolumeBreakdown.note", "ui.orderOfOperationsText"],
+        "rows": ["ui.sections.liveVolumeBreakdown.rows"]
+      },
+      "monthlySavings": {
+        "title": ["ui.sections.monthlyProcessingSavings.title", "ui.labels.monthlyProcessingSavings", "'Monthly Processing Savings'"],
+        "rows": [
+          "ui.sections.monthlyProcessingSavings.rows",
+          "ui.monthlySavings.rows"
+        ]
+      }
+    },
+    "theme": {
+      "colors": {
+        "brandUltramarine": "#0046FF",
+        "brandAqua": "#1CD3D3",
+        "brandSpruce": "#0A7A64",
+        "brandInk": "#0F172A",
+        "mutedInk": "#334155",
+        "border": "#E5E7EB",
+        "panel": "#FFFFFF",
+        "subtle": "#F8FAFC"
+      },
+      "typography": {
+        "fontFamily": "Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif",
+        "h1": { "size": 18, "weight": 800, "color": "brandInk", "letterSpacing": -0.2 },
+        "h2": { "size": 14, "weight": 700, "color": "brandInk" },
+        "h3": { "size": 12, "weight": 700, "color": "brandInk" },
+        "label": { "size": 10, "weight": 600, "color": "brandInk" },
+        "value": { "size": 10, "weight": 600, "color": "brandInk" },
+        "fine":  { "size": 9,  "weight": 400, "color": "mutedInk" }
+      },
+      "layout": {
+        "pageWidthIn": 8.5,
+        "pageHeightIn": 11,
+        "marginIn": 0.5,
+        "gridGap": 10,
+        "cardPadding": 12
+      },
+      "borders": {
+        "radius": 10,
+        "hairline": "1px solid #E5E7EB"
+      }
+    },
+    "formatting": {
+      "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
+      "percent":  { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
+      "normalizePercent": { "mode": "auto", "thresholdGtOneTreatAsPercent": true },
+      "tabularNumbers": true
+    },
+    "pages": [
+      {
+        "name": "Summary",
+        "header": {
+          "title": "<div class='brand-title'><img class='brand-logo' src='{{ brand.logoUrl }}' alt='DMP Logo'/><div class='doc-titles'><div class='doc-title'>Fee Recuperation &amp; Processing Savings Analysis</div></div></div>",
+          "left": "",
+          "right": "<div class='hdr-right'><div class='report-line nowrap'>Report # {{ meta.reportId }}</div><div class='report-line nowrap'>{{ meta.reportDate }}</div></div>",
+          "showOnPage": 1
+        },
+        "layout": { "columns": 12, "gap": 10 },
+        "body": [
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "<span class='title-bar ultramarine'></span><span class='title-text'>{{ customerInfo.title }}</span>",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Field", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "customerInfo.rows" }],
+              "valueFormatHintKey": "format"
+            }
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "<span class='title-bar spruce'></span><span class='title-text'>{{ inputParams.title }}</span>",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Input", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "inputParams.rows" }],
+              "valueFormatHintKey": "format"
+            }
+          }
+        ],
+        "footer": {
+          "left": "Dynamic Merchant Processing",
+          "right": "© DMP — Confidential",
+          "divider": true
+        }
+      },
+      {
+        "name": "Details",
+        "header": { "title": "", "left": "", "right": "", "showOnPage": 0 },
+        "layout": { "columns": 12, "gap": 10 },
+        "body": [
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "<span class='title-bar ultramarine'></span><span class='title-text'>{{ liveVolume.title }}</span>",
+            "note": "{{ liveVolume.note }}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Label", "align": "left" },
+                { "key": "value", "title": "Amount", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "liveVolume.rows" }],
+              "valueFormatHintKey": "format"
+            },
+            "surface": "subtle"
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "<span class='title-bar spruce'></span><span class='title-text'>{{ monthlySavings.title }}</span>",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Item", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "monthlySavings.rows" }],
+              "valueFormatHintKey": "format"
+            }
+          }
+        ],
+        "footer": {
+          "left": "Dynamic Merchant Processing",
+          "right": "© DMP — Confidential",
+          "divider": true
+        }
+      }
+    ]
+  },
+  "styles": {
+    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .nowrap{white-space:nowrap} .num{text-align:right;font-variant-numeric:tabular-nums} .page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:10pt} .brand-title{display:flex;align-items:center;gap:10pt} .brand-logo{height:40pt;max-height:40pt;display:block} .doc-titles{display:flex;flex-direction:column;gap:0} .doc-title{font-size:16pt;font-weight:800;letter-spacing:-0.2px;color:#0F172A} .hdr-right .report-line{text-align:right;line-height:1.15} .card{border:1px solid #E5E7EB;border-radius:10pt;padding:12pt;background:#fff;box-shadow:0 1pt 3pt rgba(0,0,0,.06);page-break-inside:avoid} .subtle{background:#F8FAFC} .title-text{font-weight:700} .title-bar{display:inline-block;width:12pt;height:12pt;border-radius:3pt;margin-right:6pt;vertical-align:middle} .title-bar.ultramarine{background:#0046FF} .title-bar.spruce{background:#0A7A64} table{width:100%;border-collapse:collapse} .table td, table td{padding:6pt 0;border-bottom:1px solid #E5E7EB} .page{page-break-after:always} .page:last-child{page-break-after:auto}",
+    "formatters": {
+      "money":  { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; const s=v<0?'- ':''; return `${s}$${Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` }" },
+      "percent":{ "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return `${(v*100).toFixed(2)}%` }" },
+      "number": { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return v.toLocaleString() }" }
+    },
+    "valueRenderer": {
+      "fn": "(row)=>{ if(!row) return '—'; if(row.format==='money') return FORMAT.money(row.value); if(row.format==='percent') return FORMAT.percent(row.value); if(row.format==='number') return FORMAT.number(row.value); return row.value ?? '—'; }"
+    }
+  },
+  "guards": {
+    "hideEmptyRows": true
+  }
+}
