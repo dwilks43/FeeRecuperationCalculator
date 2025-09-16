@@ -5,16 +5,17 @@ This is a professional React-based **Fee Recuperation Savings Calculator** for D
 The calculator takes various merchant parameters (monthly credit card volume, monthly cash volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under the Fee Recuperation Program, along with potential monthly and annual savings. It generates professional PDF reports with DMP branding for sales presentations.
 
 ## Recent PDF Generation Updates (September 2025)
-- **Version 1.7.9 Hardening**: Enhanced robustness for two-page DMP layout
-- Improved monthlySavings data binding with dual fallback paths for maximum compatibility
-- Added CSS comments for header layout clarity (single logo, no duplicates)
-- Maintained flex-based header with logo and title side-by-side
-- Preserved report chips and colored title bars for brand consistency
-- Ensured stable PDF generation across both program types with fallback handling
-- **Critical Fix**: Resolved empty PDF issue by implementing UI data transformation layer
-- Created `pdfDataTransformer.ts` to convert raw calculator data into UI-formatted structure
-- Both program types (Dual Pricing and Supplemental Fee) generate PDFs successfully with complete data
+- **Version 1.8.0 Two-Page Lock**: Finalized production-ready PDF generation system
+- Applied comprehensive patches to ensure Monthly Processing Savings table renders properly
+- Added `buildMonthlySavingsRows()` helper with numeric coercion in `pdfDataTransformer.ts`
+- Updated to `pdf.config.json` v1.8.0 with strict two-page layout and enhanced data bindings
+- Single DMP logo in header with professional Report # and Date chips
+- Page 1: Customer Information + Input Parameters with colored title bars
+- Page 2: Live Volume Breakdown + Monthly Processing Savings as full-width table
+- Implemented robust numeric value handling to prevent formatting issues
+- Both program types (Dual Pricing and Supplemental Fee) generate PDFs successfully
 - Configuration uses `sourceOfTruth: "ui"` to mirror UI presentation exactly without recalculation
+- Verified end-to-end PDF generation with complete data population for all sections
 
 ## Previous PDF Generation Updates (August 2025)
 - **BREAKTHROUGH**: Implemented server-side logo loading solution reading DMP logo at startup
