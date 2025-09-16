@@ -496,13 +496,25 @@ type SavingsItem = { label: string; value: number; format?: 'money' | 'percent' 
 // Build Monthly Savings rows for table rendering
 function buildMonthlySavingsRows(items: SavingsItem[] | undefined): SavingsItem[] {
   if (!Array.isArray(items)) return [];
-  // Normalize to rows with explicit format hints
-  return items.map(it => ({
-    label: it.label,
-    value: it.value,
-    // If an item already has format, keep it. Otherwise default money unless label implies percent
-    format: it.format ?? (/percent|%/i.test(it.label) ? 'percent' : 'money')
-  }));
+  // Normalize to rows with explicit format hints and ensure numeric values
+  return items.map(it => {
+    // Ensure value is numeric (coerce if needed)
+    let numericValue = it.value;
+    if (typeof numericValue === 'string') {
+      // Strip currency symbols, commas, and percentage signs
+      const cleaned = numericValue.replace(/[$,%\s]/g, '').replace(/,/g, '');
+      numericValue = parseFloat(cleaned) || 0;
+    } else if (typeof numericValue !== 'number') {
+      numericValue = 0;
+    }
+    
+    return {
+      label: it.label,
+      value: numericValue,
+      // If an item already has format, keep it. Otherwise default money unless label implies percent
+      format: it.format ?? (/percent|%/i.test(it.label) ? 'percent' : 'money')
+    };
+  });
 }
 
 /**
