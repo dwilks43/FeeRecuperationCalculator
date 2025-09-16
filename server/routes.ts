@@ -740,6 +740,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
         logoBase64: LOGO_DATA_URL
       };
       
+      // Log the exact payload for debugging (without the large base64 logo)
+      const payloadForLogging = { ...pdfData, logoBase64: '[BASE64_LOGO_DATA_REDACTED]' };
+      console.log('EXACT PDF PAYLOAD:', JSON.stringify(payloadForLogging, null, 2));
+      
       // Generate PDF using DocRaptor
       const pdfBuffer = await generateSavingsReportPDF(pdfData);
       
