@@ -1,3 +1,54 @@
+✅ Patch 1 — client/src/utils/pdfDataTransformer.ts
+
+Goal: Always publish a table for Monthly Processing Savings.
+
+Add this helper (or inline it where you build ui.sections.*):
+
+// --- add near other helpers ---
+type SavingsItem = { label: string; value: number; format?: 'money' | 'percent' | 'number' | 'text' };
+
+function buildMonthlySavingsRows(items: SavingsItem[] | undefined): SavingsItem[] {
+  if (!Array.isArray(items)) return [];
+  // Normalize to rows with explicit format hints.
+  return items.map(it => ({
+    label: it.label,
+    value: it.value,
+    // If an item already has format, keep it. Otherwise default money unless label implies percent.
+    format: it.format ?? (/percent|%/i.test(it.label) ? 'percent' : 'money')
+  }));
+}
+
+
+Then, after you set ui.monthlySavings.items, publish the rows:
+
+// Ensure the section exists
+ui.sections = ui.sections || {};
+
+// Build rows from items so the PDF table can render
+ui.sections.monthlyProcessingSavings = {
+  title: 'Monthly Processing Savings',
+  rows: buildMonthlySavingsRows(ui.monthlySavings?.items)
+};
+
+
+This guarantees the PDF can render a table with proper $ / % formatting even if the KPI rail still exists.
+
+✅ Patch 2 — Drop-in JSON config (pdf.config.json)
+
+Single logo in the header (no left/right logos).
+
+Wider Report#/Date “chips” with no wrapping.
+
+Page 1 = Customer Information + Input Parameters.
+
+Page 2 = Live Volume Breakdown (full-width) + Monthly Processing Savings (full-width) as a table (no KPI rail).
+
+Tight spacing + page-break-inside: avoid so it always stays two pages.
+
+Rows for Monthly Savings come from either ui.sections.monthlyProcessingSavings.rows (preferred, via Patch 1) or ui.monthlySavings.items (fallback).
+
+Paste this entire file:
+
 {
   "version": "1.8.0-dmp-two-page-lock",
   "pdf": {
@@ -8,12 +59,14 @@
       "interpolateStrings": true,
       "fallbackNullToEmpty": true
     },
+
     "dataBindings": {
-      "brand": { "logoUrl": ["ui.brand.logoUrl", "ui.brand.logo", "ui.logoUrl", "logoBase64"] },
+      "brand": { "logoUrl": ["ui.brand.logoUrl", "ui.brand.logo", "ui.logoUrl"] },
       "meta": {
         "reportId": ["ui.report.id", "report.id"],
         "reportDate": ["ui.report.dateISO", "report.createdAtISO"]
       },
+
       "customerInfo": {
         "title": ["ui.sections.customerInformation.title", "'Customer Information'"],
         "rows": ["ui.sections.customerInformation.rows"]
@@ -22,11 +75,13 @@
         "title": ["ui.sections.inputParameters.title", "'Input Parameters'"],
         "rows": ["ui.sections.inputParameters.rows"]
       },
+
       "liveVolume": {
         "title": ["ui.sections.liveVolumeBreakdown.title", "'Live Volume Breakdown'"],
         "note":  ["ui.sections.liveVolumeBreakdown.note", "ui.orderOfOperationsText"],
         "rows":  ["ui.sections.liveVolumeBreakdown.rows"]
       },
+
       "monthlySavings": {
         "title": ["ui.sections.monthlyProcessingSavings.title", "'Monthly Processing Savings'"],
         "rows": [
@@ -35,6 +90,7 @@
         ]
       }
     },
+
     "theme": {
       "colors": {
         "brandUltramarine": "#0046FF",
@@ -64,12 +120,14 @@
       },
       "borders": { "radius": 10, "hairline": "1px solid #E5E7EB" }
     },
+
     "formatting": {
       "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
       "percent":  { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
       "normalizePercent": { "mode": "auto", "thresholdGtOneTreatAsPercent": true },
       "tabularNumbers": true
     },
+
     "pages": [
       {
         "name": "Summary",
@@ -110,6 +168,7 @@
         ],
         "footer": { "left": "Dynamic Merchant Processing", "right": "© DMP — Confidential", "divider": true }
       },
+
       {
         "name": "Details",
         "header": { "title": "", "left": "", "right": "", "showOnPage": 0 },
@@ -148,16 +207,52 @@
       }
     ]
   },
+
   "styles": {
-    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .num{text-align:right;font-variant-numeric:tabular-nums} .page{page-break-after:always;page-break-inside:avoid} .page:last-child{page-break-after:auto} .page-header{margin-bottom:10pt} .hdr-flex{display:flex;align-items:flex-end;justify-content:space-between;gap:12pt} .hdr-left{display:flex;align-items:flex-end;gap:10pt;min-width:0} .brand-logo{height:42pt;max-height:42pt;display:block} .doc-title{font-size:14pt;font-weight:700;line-height:1.2;color:#0F172A;flex-shrink:1} .hdr-right{display:flex;flex-direction:column;align-items:flex-end;gap:2pt;flex-shrink:0} .report-chip{background:#F1F5F9;border-radius:4pt;padding:2pt 8pt;font-size:8pt;color:#334155;white-space:nowrap;min-width:90pt;text-align:center} .title-bar{display:inline-block;width:4pt;height:14pt;border-radius:2pt;margin-right:8pt;vertical-align:middle} .title-bar.ultramarine{background:#0046FF} .title-bar.spruce{background:#0A7A64} .title-text{font-size:12pt;font-weight:700;color:#0F172A;vertical-align:middle}",
+    "globalCss": "body{font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;color:#0F172A} .num{text-align:right;font-variant-numeric:tabular-nums} .page{page-break-after:always} .page:last-child{page-break-after:auto} .page-header{margin-bottom:10pt} .hdr-flex{display:flex;align-items:flex-end;justify-content:space-between;gap:12pt} .hdr-left{display:flex;align-items:flex-end;gap:10pt;min-width:0} .brand-logo{height:42pt;max-height:42pt;display:block} .doc-title{font-size:16pt;font-weight:800;letter-spacing:-0.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis} .hdr-right{display:flex;gap:8pt;flex-wrap:nowrap} .report-chip{border:1px solid #E5E7EB;border-radius:999px;padding:4pt 10pt;font-size:10pt;white-space:nowrap} .card{border:1px solid #E5E7EB;border-radius:10pt;padding:12pt;background:#fff;box-shadow:0 1pt 3pt rgba(0,0,0,.06);page-break-inside:avoid} .subtle{background:#F8FAFC} .title-text{font-weight:700} .title-bar{display:inline-block;width:12pt;height:12pt;border-radius:3pt;margin-right:6pt;vertical-align:middle} .title-bar.ultramarine{background:#0046FF} .title-bar.spruce{background:#0A7A64} table{width:100%;border-collapse:collapse} td{padding:6pt 0;border-bottom:1px solid #E5E7EB}",
+
     "formatters": {
       "money":  { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; const s=v<0?'- ':''; return `${s}$${Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` }" },
       "percent":{ "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return `${(v*100).toFixed(2)}%` }" },
       "number": { "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return v.toLocaleString() }" }
     },
+
     "valueRenderer": {
       "fn": "(row)=>{ if(!row) return '—'; if(row.format==='money') return FORMAT.money(row.value); if(row.format==='percent') return FORMAT.percent(row.value); if(row.format==='number') return FORMAT.number(row.value); return row.value ?? '—'; }"
     }
   },
+
   "guards": { "hideEmptyRows": true }
 }
+
+✅ Patch 3 — (Optional) tiny generator hardening
+
+In server/pdf-generator-v1.7.0.ts, make sure only header.title is used:
+
+Set header.left = '', header.right = '' (the JSON above already does this).
+
+Ensure showOnPage logic is respected (Page-1 header only).
+
+Keep page-break-inside: avoid in generated CSS (it is in the JSON styles above).
+
+Quick acceptance checklist
+
+One logo in Page-1 header; no subtitle line.
+
+Report # and Date render as chips on the right, never wrapping.
+
+Page 1: Customer Information + Input Parameters (all fields present).
+
+Page 2: Live Volume Breakdown (top, full width) + Monthly Processing Savings as a table (full width), showing every savings line with correct $ / %.
+
+Exactly two pages. No third/blank page.
+
+If anything still misbehaves after this, paste back:
+
+pdfDataTransformer.ts (the part you modified),
+
+your rendered finalPayload (just the ui branch is fine),
+
+and the console log of resolveBindingOrPath('monthlySavings.rows', data, config) from the generator right before table rendering.
+
+I’ll match the exact lines and hand you copy-paste patches.

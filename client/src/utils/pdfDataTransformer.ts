@@ -490,6 +490,21 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
   return items;
 }
 
+// Helper type for savings items
+type SavingsItem = { label: string; value: number; format?: 'money' | 'percent' | 'number' | 'text' };
+
+// Build Monthly Savings rows for table rendering
+function buildMonthlySavingsRows(items: SavingsItem[] | undefined): SavingsItem[] {
+  if (!Array.isArray(items)) return [];
+  // Normalize to rows with explicit format hints
+  return items.map(it => ({
+    label: it.label,
+    value: it.value,
+    // If an item already has format, keep it. Otherwise default money unless label implies percent
+    format: it.format ?? (/percent|%/i.test(it.label) ? 'percent' : 'money')
+  }));
+}
+
 /**
  * Main function to build the PDF UI model from calculator data
  */
@@ -513,6 +528,9 @@ export function buildPdfUiModel(
     buildDualPricingBreakdownRows(inputs, results) :
     buildSupplementalFeeBreakdownRows(inputs, results);
   
+  // Build monthly savings items first
+  const monthlySavingsItems = buildMonthlySavingsItems(inputs, results);
+  
   // Build the complete UI model
   const uiModel = {
     ui: {
@@ -531,11 +549,12 @@ export function buildPdfUiModel(
           rows: liveVolumeRows
         },
         monthlyProcessingSavings: {
-          title: 'Monthly Processing Savings'
+          title: 'Monthly Processing Savings',
+          rows: buildMonthlySavingsRows(monthlySavingsItems)  // Add rows for table rendering
         }
       },
       monthlySavings: {
-        items: buildMonthlySavingsItems(inputs, results)
+        items: monthlySavingsItems
       },
       report: {
         id: reportId,
