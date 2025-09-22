@@ -885,8 +885,11 @@ export function generateConfigDrivenPDF(data: any): string {
     // Handle footer with resolved data
     const resolvedFooter = page.footer ? {
       ...page.footer,
-      left: page.footer.left ? resolveDataBinding(page.footer.left, contextData, config) : '',
-      right: page.footer.right ? resolveDataBinding(page.footer.right, contextData, config) : ''
+      // Check if text contains bindings ({{...}}) or use as-is
+      left: page.footer.left ? 
+        (page.footer.left.includes('{{') ? resolveDataBinding(page.footer.left, contextData, config) : page.footer.left) : '',
+      right: page.footer.right ? 
+        (page.footer.right.includes('{{') ? resolveDataBinding(page.footer.right, contextData, config) : page.footer.right) : ''
     } : undefined;
     
     const footer = generateFooter({ ...page, footer: resolvedFooter });
