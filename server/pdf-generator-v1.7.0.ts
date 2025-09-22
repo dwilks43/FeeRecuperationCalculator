@@ -496,10 +496,6 @@ function generateHeader(page: any, config: PDFConfig): string {
                     <div class="subtitle">${header.subtitle || ''}</div>
                     ${header.accentBar ? `<div class="accent-bar ${accentClass}"></div>` : ''}
                 </td>
-                <td style="text-align: right;">
-                    <div class="subtitle">Report #: ${Date.now().toString().slice(-8)}</div>
-                    <div class="subtitle">Date: ${new Date().toLocaleDateString()}</div>
-                </td>
             </tr>
         </table>
     </div>

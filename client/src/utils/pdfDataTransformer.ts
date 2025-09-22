@@ -166,11 +166,11 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
     });
   }
   
+  // Flat Rate % - already in percentage form (e.g., 5.66 means 5.66%)
   rows.push({ 
     label: 'Flat Rate %', 
-    value: inputs.flatRate, 
-    format: 'text',
-    valueOverride: `${inputs.flatRate.toFixed(2)}%`
+    value: inputs.flatRate,  // PDF generator auto-detects values > 1 as percentages
+    format: 'percent' 
   });
   
   // Tax and tip
