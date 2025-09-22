@@ -168,8 +168,9 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
   
   rows.push({ 
     label: 'Flat Rate %', 
-    value: inputs.flatRate / 100, 
-    format: 'percent' 
+    value: inputs.flatRate, 
+    format: 'text',
+    valueOverride: `${inputs.flatRate.toFixed(2)}%`
   });
   
   // Tax and tip
@@ -232,13 +233,13 @@ function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: Calcul
   });
   
   rows.push({ 
-    label: 'Price-Adjusted Base', 
+    label: 'Base Card Volume + Price Differential', 
     value: results.priceAdjustedBase || results.markedUpVolume, 
     format: 'money' 
   });
   
   rows.push({ 
-    label: 'Card Processed Total', 
+    label: 'Card Processed Total (incl. price differential, tax, and tip)', 
     value: results.processed || results.adjustedVolume, 
     format: 'money' 
   });
@@ -359,7 +360,7 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   
   // Processing on Cards section
   rows.push({ 
-    label: 'Card Processed Total', 
+    label: 'Card Processed Total (incl. price differential, tax, and tip)', 
     value: results.processed || results.cardProcessedTotal || results.adjustedVolume, 
     format: 'money' 
   });
@@ -455,14 +456,16 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
   items.push({
     label: 'Monthly Savings',
     value: results.monthlySavings,
-    format: 'money'
+    format: 'money',
+    highlight: true
   });
   
   // Annual Savings
   items.push({
     label: 'Annual Savings',
     value: results.annualSavings,
-    format: 'money'
+    format: 'money',
+    highlight: true
   });
   
   // Add cash fee revenue for Supplemental Fee
