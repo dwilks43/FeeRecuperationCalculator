@@ -437,58 +437,98 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
 function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorResults): any[] {
   const items = [];
   
-  // Current Cost
-  items.push({
-    label: 'Current Cost',
-    value: results.currentCost,
-    format: 'money'
-  });
-  
-  // New Cost (Processing Cost After Differential/Fee)
-  const newCostLabel = inputs.programType === 'DUAL_PRICING' ? 
-    'New Cost' : 'Processing Cost After Fee';
-  const newCostValue = results.netChangeCards || results.newCost || 0;
-  items.push({
-    label: newCostLabel,
-    value: newCostValue,
-    format: 'money'
-  });
-  
-  // Monthly Savings
-  items.push({
-    label: 'Monthly Savings',
-    value: results.monthlySavings,
-    format: 'money',
-    highlight: true
-  });
-  
-  // Annual Savings
-  items.push({
-    label: 'Annual Savings',
-    value: results.annualSavings,
-    format: 'money',
-    highlight: true
-  });
-  
-  // Add cash fee revenue for Supplemental Fee
-  if (inputs.programType === 'SUPPLEMENTAL_FEE' && inputs.monthlyCashVolume > 0) {
-    const cashFee = results.cashFeeCollected || results.feeCollectedOnCash || 
-      results.supplementalFeeCash || 0;
-    if (cashFee > 0) {
-      items.push({
-        label: 'Cash Fee Revenue',
-        value: cashFee,
-        format: 'money'
-      });
-    }
+  if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+    // Match the UI's Savings Summary exactly for Supplemental Fee
     
-    // Total Net Gain (includes cash fee)
-    const totalNetGain = results.netMonthly || results.totalNetGainRevenue || 
-      (results.monthlySavings + cashFee);
+    // 1. Current Processing Cost (Today)
     items.push({
-      label: 'Total Net Gain',
-      value: totalNetGain,
+      label: 'Current Processing Cost (Today)',
+      value: results.currentCost || 0,
       format: 'money'
+    });
+    
+    // 2. Processor Charge on Cards
+    items.push({
+      label: 'Processor Charge on Cards',
+      value: results.processorChargeOnCards || results.processingFees || 0,
+      format: 'money'
+    });
+    
+    // 3. Markup Collected — Cards
+    items.push({
+      label: 'Markup Collected — Cards',
+      value: results.cardFeeCollected || results.feeCollectedOnCards || 0,
+      format: 'money'
+    });
+    
+    // 4. Processing Cost after Price Differential
+    items.push({
+      label: 'Processing Cost after Price Differential',
+      value: results.recovery || results.newCost || 0,
+      format: 'money'
+    });
+    
+    // 5. Processing Cost Savings (Cards Only)
+    items.push({
+      label: 'Processing Cost Savings (Cards Only)',
+      value: results.savingsCardsOnly || results.processingSavings || 0,
+      format: 'money'
+    });
+    
+    // 6. Processing Cost Savings %
+    items.push({
+      label: 'Processing Cost Savings %',
+      value: results.procSavingsPct || results.processingCostSavingsPct || 0,
+      format: 'percent'
+    });
+    
+    // 7. Total Net Gain (Monthly)
+    items.push({
+      label: 'Total Net Gain (Monthly)',
+      value: results.totalNetGainRevenue || results.monthlySavings || 0,
+      format: 'money',
+      highlight: true
+    });
+    
+    // 8. Annual Net Gain
+    items.push({
+      label: 'Annual Net Gain',
+      value: results.annualNetGainRevenue || results.annualSavings || 0,
+      format: 'money',
+      highlight: true
+    });
+  } else {
+    // Dual Pricing mode - keep existing
+    
+    // Current Cost
+    items.push({
+      label: 'Current Cost',
+      value: results.currentCost,
+      format: 'money'
+    });
+    
+    // New Cost
+    const newCostValue = results.netChangeCards || results.newCost || 0;
+    items.push({
+      label: 'New Cost',
+      value: newCostValue,
+      format: 'money'
+    });
+    
+    // Monthly Savings
+    items.push({
+      label: 'Monthly Savings',
+      value: results.monthlySavings,
+      format: 'money',
+      highlight: true
+    });
+    
+    // Annual Savings
+    items.push({
+      label: 'Annual Savings',
+      value: results.annualSavings,
+      format: 'money',
+      highlight: true
     });
   }
   
@@ -566,7 +606,7 @@ export function buildPdfUiModel(
           rows: liveVolumeRows
         },
         monthlyProcessingSavings: {
-          title: 'Monthly Processing Savings',
+          title: inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Savings Summary' : 'Monthly Processing Savings',
           rows: buildMonthlySavingsRows(monthlySavingsItems)  // Add rows for table rendering
         }
       },
