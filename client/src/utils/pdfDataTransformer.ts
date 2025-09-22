@@ -166,10 +166,11 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
     });
   }
   
-  // Flat Rate % - already in percentage form (e.g., 5.66 means 5.66%)
+  // Flat Rate % - use flatRatePct if available, otherwise flatRate
+  const flatRateValue = inputs.flatRatePct !== undefined ? inputs.flatRatePct : inputs.flatRate;
   rows.push({ 
     label: 'Flat Rate %', 
-    value: inputs.flatRate,  // PDF generator auto-detects values > 1 as percentages
+    value: flatRateValue,  // PDF generator auto-detects values > 1 as percentages
     format: 'percent' 
   });
   

@@ -483,21 +483,12 @@ function generateHeader(page: any, config: PDFConfig): string {
 
   const accentClass = header.accentBar?.color ? `accent-${header.accentBar.color.replace('brand', '').toLowerCase()}` : '';
   
+  // Don't add any extra header HTML - let the title config handle everything
   return `
     <div class="header-section">
-        <table class="header">
-            <tr>
-                <td class="brand-cell">
-                    <img src="${LOGO_DATA_URL}" alt="DMP Logo" 
-                         style="width: ${header.logo?.width || 72}px; height: auto; display: block;" />
-                </td>
-                <td>
-                    <div class="title">${header.title || ''}</div>
-                    <div class="subtitle">${header.subtitle || ''}</div>
-                    ${header.accentBar ? `<div class="accent-bar ${accentClass}"></div>` : ''}
-                </td>
-            </tr>
-        </table>
+        ${header.title || ''}
+        ${header.subtitle ? `<div class="subtitle">${header.subtitle}</div>` : ''}
+        ${header.accentBar ? `<div class="accent-bar ${accentClass}"></div>` : ''}
     </div>
   `;
 }
