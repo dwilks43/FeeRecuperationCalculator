@@ -167,10 +167,11 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
   }
   
   // Flat Rate % - use flatRatePct if available, otherwise flatRate
+  // Always pass as decimal (divide by 100) so PDF generator converts properly
   const flatRateValue = inputs.flatRatePct !== undefined ? inputs.flatRatePct : inputs.flatRate;
   rows.push({ 
     label: 'Flat Rate %', 
-    value: flatRateValue,  // PDF generator auto-detects values > 1 as percentages
+    value: flatRateValue / 100,  // Pass as decimal for consistent PDF formatting
     format: 'percent' 
   });
   

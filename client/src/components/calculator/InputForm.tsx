@@ -80,11 +80,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       let flatRate: number;
       if (newType === 'SUPPLEMENTAL_FEE') {
         const fee = inputs.priceDifferential / 100;
-        flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+        flatRate = Math.round(calculateAutoFlatRate(fee) * 10000) / 100; // Convert to percentage with 2 decimals
       } else {
         // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
         const priceDiff = inputs.priceDifferential / 100;
-        flatRate = calculateAutoFlatRateDualPricing(priceDiff) * 100; // Convert to percentage
+        flatRate = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100; // Convert to percentage with 2 decimals
       }
       onInputChange('flatRatePct', flatRate);
       setAutoSynced(true);
@@ -102,11 +102,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       let flatRate: number;
       if (inputs.programType === 'SUPPLEMENTAL_FEE') {
         const fee = priceDifferentialValue / 100;
-        flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+        flatRate = Math.round(calculateAutoFlatRate(fee) * 10000) / 100; // Convert to percentage with 2 decimals
       } else {
         // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
         const priceDiff = priceDifferentialValue / 100;
-        flatRate = calculateAutoFlatRateDualPricing(priceDiff) * 100; // Convert to percentage
+        flatRate = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100; // Convert to percentage with 2 decimals
       }
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
@@ -126,11 +126,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       let flatRate: number;
       if (inputs.programType === 'SUPPLEMENTAL_FEE') {
         const fee = inputs.priceDifferential / 100;
-        flatRate = calculateAutoFlatRate(fee) * 100; // Convert to percentage
+        flatRate = Math.round(calculateAutoFlatRate(fee) * 10000) / 100; // Convert to percentage with 2 decimals
       } else {
         // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
         const priceDiff = inputs.priceDifferential / 100;
-        flatRate = calculateAutoFlatRateDualPricing(priceDiff) * 100; // Convert to percentage
+        flatRate = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100; // Convert to percentage with 2 decimals
       }
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
