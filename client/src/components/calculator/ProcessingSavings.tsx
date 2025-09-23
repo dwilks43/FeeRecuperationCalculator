@@ -54,7 +54,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             {/* Markup Collected — Cards - GREEN */}
             <div className="bg-green-50 rounded-lg p-4 border border-green-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Markup Collected — Cards</span>
+                <span className="text-sm font-medium text-gray-600">Supplemental Fee Collected — Cards</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-500" />
@@ -174,7 +174,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             {/* 3. Card Price Increase Collected - GREEN */}
             <div className="bg-green-50 rounded-lg p-4 border border-green-200">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-sm font-medium text-gray-600">Card Price Increase Collected</span>
+                <span className="text-sm font-medium text-gray-600">Card Price Increase Collected (Cards)</span>
               </div>
               <div className="flex items-center gap-2">
                 <CheckCircle className="h-5 w-5 text-green-500" />

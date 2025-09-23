@@ -278,7 +278,7 @@ function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: Calcul
   });
   
   rows.push({ 
-    label: 'Markup Collected — Cards (price differential)', 
+    label: 'Card Price Increase Collected (Cards)', 
     value: results.markupCollected || 0, 
     format: 'money' 
   });
@@ -359,7 +359,7 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   });
   
   rows.push({ 
-    label: 'Markup Collected — Cards', 
+    label: 'Supplemental Fee Collected — Cards', 
     value: results.cardFeeCollected || results.feeCollectedOnCards || 0, 
     format: 'money' 
   });
@@ -402,7 +402,7 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   });
   
   rows.push({ 
-    label: 'Supplemental Fee (Cards)', 
+    label: 'Supplemental Fee Collected — Cards', 
     value: results.cardFeeCollected || results.feeCollectedOnCards || 0, 
     format: 'money' 
   });
@@ -486,9 +486,9 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
       format: 'money'
     });
     
-    // 3. Markup Collected — Cards
+    // 3. Supplemental Fee Collected — Cards
     items.push({
-      label: 'Markup Collected — Cards',
+      label: 'Supplemental Fee Collected — Cards',
       value: results.cardFeeCollected || results.feeCollectedOnCards || 0,
       format: 'money'
     });

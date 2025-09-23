@@ -64,7 +64,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   <span className="font-medium">{formatCurrency(results.feeBaseCards || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Markup Collected — Cards</span>
+                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -101,13 +101,13 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   <span className="font-medium text-red-600">{formatCurrency(results.processorChargeOnCards || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Supplemental Fee (Cards)</span>
+                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-600">Processing Cost after Price Differential</span>
-                    <span className="text-xs text-gray-400 italic">Processing Cost = Markup Collected − Processor Charge</span>
+                    <span className="text-xs text-gray-400 italic">Processing Cost = Supplemental Fee Collected − Processor Charge</span>
                   </div>
                   <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(results.recovery || 0)}
@@ -217,13 +217,13 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   <span className="font-medium text-red-600">{formatCurrency(results.procCharge || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Markup Collected — Cards (price differential)</span>
+                  <span className="text-sm text-gray-600">Card Price Increase Collected (Cards)</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-600">Processing Cost after Price Differential</span>
-                    <span className="text-xs text-gray-400 italic">Recovery = Markup − Processor Charge</span>
+                    <span className="text-xs text-gray-400 italic">Recovery = Card Price Increase − Processor Charge</span>
                   </div>
                   <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(results.recovery || 0)}
@@ -250,7 +250,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
-                    <span className="text-xs text-gray-400 italic">Processor Charge − Markup Collected</span>
+                    <span className="text-xs text-gray-400 italic">Processor Charge − Card Price Increase Collected</span>
                   </div>
                   <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
                     {formatCurrency(results.netChangeCards || 0)}

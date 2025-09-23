@@ -84,16 +84,16 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Processor Charge on Cards = Card Processed Total × Flat Rate.'
     },
     markupCollected: {
-      title: 'Markup Collected — Cards (price differential)',
-      body: 'Markup Collected — Cards (price differential) = Base × price differential. This is the extra revenue you collect at the register.'
+      title: 'Card Price Increase Collected (Cards)',
+      body: 'Card Price Increase Collected (Cards) = Base × price differential. This is the extra revenue you collect at the register.'
     },
     netChangeCards: {
       title: 'Processing Cost After Price Differential',
-      body: 'Processing Cost After Price Differential = Processor Charge − Markup Collected. Think of it as "what\'s left to pay the processor."'
+      body: 'Processing Cost After Price Differential = Processor Charge − Card Price Increase Collected. Think of it as "what\'s left to pay the processor."'
     },
     coveragePct: {
       title: 'Coverage %',
-      body: 'Coverage % = Markup Collected ÷ Processor Charge. 100% means markup fully covers the processor charge.'
+      body: 'Coverage % = Card Price Increase Collected ÷ Processor Charge. 100% means card price increase fully covers the processor charge.'
     },
     savingsSection: {
       title: 'Savings vs Today',
@@ -125,8 +125,8 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Processor charge under the new Dual Pricing program.'
     },
     rightRailMarkupCollected: {
-      title: 'Markup Collected (Right Rail)',
-      body: 'Total card markup collected from the price differential.'
+      title: 'Card Price Increase Collected (Right Rail)',
+      body: 'Total card price increase collected from the price differential.'
     },
     rightRailNetChangeCards: {
       title: 'Net Change Cards (Right Rail)',
@@ -218,12 +218,12 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Tip-Eligible Volume (Cards): the dollar base the tip is applied to (changes with timing).'
     },
     supplementalFeeCards: {
-      title: 'Supplemental Fee — Cards',
-      body: 'Supplemental Fee — Cards = Fee-Eligible Volume (Cards) × fee %. This offsets the processor charge on card tickets.'
+      title: 'Supplemental Fee Collected — Cards',
+      body: 'Supplemental Fee Collected — Cards = Fee-Eligible Volume (Cards) × fee %. This offsets the processor charge on card tickets.'
     },
     supplementalFeeCash: {
-      title: 'Supplemental Fee — Cash',
-      body: 'Supplemental Fee — Cash = Monthly Cash Volume × fee %. This is extra revenue from cash tickets.'
+      title: 'Supplemental Fee Collected — Cash',
+      body: 'Supplemental Fee Collected — Cash = Monthly Cash Volume × fee %. This is extra revenue from cash tickets.'
     },
     tipAmount: {
       title: 'Tip Amount',
@@ -279,7 +279,7 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Processor charge under the Supplemental Fee program.'
     },
     rightRailMarkupCollected: {
-      title: 'Markup Collected (Right Rail)',
+      title: 'Supplemental Fee Collected (Right Rail)',
       body: 'Supplemental fee collected on card tickets.'
     },
     rightRailRecovery: {
