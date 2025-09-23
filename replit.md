@@ -5,6 +5,10 @@ This is a professional React-based **Fee Recuperation Savings Calculator** for D
 The calculator takes various merchant parameters (monthly credit card volume, monthly cash volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under the Fee Recuperation Program, along with potential monthly and annual savings. It generates professional PDF reports with DMP branding for sales presentations.
 
 ## Recent PDF Generation Updates (September 2025)
+- **Version 1.9.1 Unified Naming Conventions**: Standardized fee collection terminology throughout the application and PDFs
+  - **Dual Pricing Mode**: Changed "Markup Collected" to "Card Price Increase Collected (Cards)"
+  - **Supplemental Fee Mode**: Changed all variations to "Supplemental Fee Collected — Cards" and "Supplemental Fee Collected — Cash"
+  - Updated tooltips, UI components, and PDF generators to reflect consistent naming
 - **Version 1.9.0 Complete UI-PDF Consistency**: Achieved complete 1-to-1 consistency between app UI and PDF
 - **Unified Label Consistency**: Changed "Card Under/Over-Recovery" and "Net Change in Card Processing" to "Processing Cost after Price Differential" throughout app and PDF
 - **Live Calculations Structure**: Restructured PDF Live Calculations into 3 distinct sections matching the app exactly:
