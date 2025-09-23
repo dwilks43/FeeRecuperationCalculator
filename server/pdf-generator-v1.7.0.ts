@@ -604,41 +604,70 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
     // Get format hint key
     const formatHintKey = table.valueFormatHintKey || 'format';
     
-    // Generate table rows
-    const rows = allRows.map((row: any) => {
-      const label = unifyLabel(row.label || row.name || '', config);
+    // Generate table rows with section support
+    let tableContent = '';
+    let currentSection = '';
+    
+    allRows.forEach((row: any) => {
+      const label = row.label || row.name || '';
       const value = row.value !== undefined ? row.value : row.amount;
       const format = row[formatHintKey] || 'text';
       
-      // Map format strings to standard formats
-      let formatType = format;
-      if (format === 'money') formatType = 'currency';
-      
-      const formattedValue = formatType !== 'text' ? 
-        formatValue(value, formatType, config) : 
-        String(value || '');
-      
-      // Handle badges if present
-      let badge = '';
-      if (row.badge) {
-        const badgeStyle = row.badge.style || 'auto';
-        const badgeText = row.badge.text || '';
-        badge = ` <span class="badge badge-${badgeStyle}">${badgeText}</span>`;
+      // Check if this is a section header
+      if (format === 'section' || label.startsWith('###')) {
+        // Close previous section if exists
+        if (currentSection) {
+          tableContent += '</table>';
+        }
+        // Start new section
+        const sectionTitle = label.replace(/^###\s*/, '');
+        tableContent += `
+          <div style="margin-top: ${currentSection ? '16px' : '0'}; margin-bottom: 8px; padding: 6px 0; border-bottom: 2px solid #E2E8F0;">
+            <h4 style="font-size: 14px; font-weight: 700; color: #0F172A; margin: 0;">${sectionTitle}</h4>
+          </div>
+          <table class="kv-table">
+        `;
+        currentSection = sectionTitle;
+      } else {
+        // Regular row
+        const unifiedLabel = unifyLabel(label, config);
+        
+        // Map format strings to standard formats
+        let formatType = format;
+        if (format === 'money') formatType = 'currency';
+        
+        const formattedValue = formatType !== 'text' ? 
+          formatValue(value, formatType, config) : 
+          String(value || '');
+        
+        // Handle badges if present
+        let badge = '';
+        if (row.badge) {
+          const badgeStyle = row.badge.style || 'auto';
+          const badgeText = row.badge.text || '';
+          badge = ` <span class="badge badge-${badgeStyle}">${badgeText}</span>`;
+        }
+        
+        tableContent += `
+          <tr>
+            <th>${unifiedLabel}</th>
+            <td>${formattedValue}${badge}</td>
+          </tr>
+        `;
       }
-      
-      return `
-        <tr>
-          <th>${label}</th>
-          <td>${formattedValue}${badge}</td>
-        </tr>
-      `;
-    }).join('');
+    });
     
-    cardContent = `
-      <table class="kv-table">
-        ${rows}
-      </table>
-    `;
+    // Close last table if exists
+    if (currentSection || allRows.length > 0) {
+      tableContent += '</table>';
+    }
+    
+    // If no sections were created, wrap all in a single table
+    if (!currentSection && tableContent) {
+      cardContent = `<table class="kv-table">${tableContent}</table>`;
+    } else {
+      cardContent = tableContent;
+    }
   } else if (block.content?.from) {
     // Legacy: Simple data binding - render customer info from data
     const sourceData = resolvePath(data, block.content.from);

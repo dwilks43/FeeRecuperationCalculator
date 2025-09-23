@@ -223,210 +223,242 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
   return rows;
 }
 
-// Build Live Volume Breakdown rows for Dual Pricing
+// Build Live Volume Breakdown rows for Dual Pricing matching the app's 3 sections
 function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: CalculatorResults): any[] {
   const rows = [];
   
-  // Derived Bases & Totals section
+  // Section 1: Derived Bases & Totals
+  rows.push({ 
+    label: '### Derived Bases & Totals', 
+    value: '', 
+    format: 'section' 
+  });
+  
   rows.push({ 
     label: 'Base Card Volume (pre-tax, pre-tip)', 
-    value: results.base || results.baseVolume, 
+    value: results.base || results.baseVolume || 0, 
     format: 'money' 
   });
   
   rows.push({ 
     label: 'Base Card Volume + Price Differential', 
-    value: results.priceAdjustedBase || results.markedUpVolume, 
+    value: results.priceAdjustedBase || results.markedUpVolume || 0, 
     format: 'money' 
   });
   
   rows.push({ 
     label: 'Card Processed Total (incl. price differential, tax, and tip)', 
-    value: results.processed || results.adjustedVolume, 
+    value: results.processed || results.adjustedVolume || 0, 
     format: 'money' 
   });
   
-  // Processing on Cards section
+  // Section 2: Processing on Cards (New Program)
+  rows.push({ 
+    label: '### Processing on Cards (New Program)', 
+    value: '', 
+    format: 'section' 
+  });
+  
+  rows.push({ 
+    label: 'Card Processed Total (incl. price differential, tax, and tip)', 
+    value: results.processed || results.adjustedVolume || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Flat Rate %', 
+    value: results.derivedFlatRate || 0, 
+    format: 'percent' 
+  });
+  
   rows.push({ 
     label: 'Processor Charge on Cards', 
-    value: results.procCharge || results.processingFees, 
+    value: results.procCharge || results.processingFees || 0, 
     format: 'money' 
   });
   
   rows.push({ 
-    label: 'Markup Collected — Cards', 
-    value: results.markupCollected, 
+    label: 'Markup Collected — Cards (price differential)', 
+    value: results.markupCollected || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Processing Cost after Price Differential', 
+    value: results.recovery || results.netChangeCards || results.residualAfterMarkup || results.newCost || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Coverage %', 
+    value: results.coveragePct || 0, 
+    format: 'percent' 
+  });
+  
+  // Section 3: Savings vs Today
+  rows.push({ 
+    label: '### Savings vs Today', 
+    value: '', 
+    format: 'section' 
+  });
+  
+  rows.push({ 
+    label: 'Current Processing Cost (Today)', 
+    value: results.currentCost || 0, 
     format: 'money' 
   });
   
   rows.push({ 
     label: 'Processing Cost After Price Differential', 
-    value: results.netChangeCards || results.residualAfterMarkup || results.newCost, 
-    format: 'money' 
-  });
-  
-  const coveragePct = results.coveragePct || 
-    (results.processingFees > 0 ? (results.markupCollected / results.processingFees) : 0);
-  rows.push({ 
-    label: 'Coverage %', 
-    value: coveragePct, 
-    format: 'percent' 
-  });
-  
-  // Savings vs Today section
-  rows.push({ 
-    label: 'Current Processing Cost (Today)', 
-    value: results.currentCost, 
+    value: results.netChangeCards || results.recovery || 0, 
     format: 'money' 
   });
   
   rows.push({ 
     label: 'Processing Cost Savings (Cards Only)', 
-    value: results.savingsCardsOnly || results.monthlySavings, 
+    value: results.savingsCardsOnly || results.monthlySavings || 0, 
     format: 'money' 
-  });
-  
-  const procSavingsPct = results.procSavingsPct || results.processingCostSavingsPct ||
-    (results.currentCost > 0 ? (results.monthlySavings / results.currentCost) : 0);
-  rows.push({ 
-    label: 'Processing Cost Savings %', 
-    value: procSavingsPct, 
-    format: 'percent' 
   });
   
   rows.push({ 
     label: 'Total Net Gain (Monthly)', 
-    value: results.netMonthly || results.monthlySavings, 
+    value: results.netMonthly || results.monthlySavings || 0, 
     format: 'money' 
   });
   
   rows.push({ 
     label: 'Annual Net Gain', 
-    value: results.netAnnual || results.annualSavings, 
+    value: results.netAnnual || results.annualSavings || 0, 
     format: 'money' 
   });
   
   return rows;
 }
 
-// Build Live Volume Breakdown rows for Supplemental Fee
+// Build Live Volume Breakdown rows for Supplemental Fee matching the app's 3 sections
 function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: CalculatorResults): any[] {
   const rows = [];
   
-  // Derived Bases & Totals section
+  // Section 1: Derived Bases & Totals (matching app exactly)
+  rows.push({ 
+    label: '### Derived Bases & Totals', 
+    value: '', 
+    format: 'section' 
+  });
+  
   rows.push({ 
     label: 'Base Card Volume (pre-tax, pre-tip)', 
-    value: results.base || results.baseVolume, 
-    format: 'money' 
-  });
-  
-  if (results.feeBaseCards !== undefined) {
-    rows.push({ 
-      label: 'Fee-Eligible Volume (Cards)', 
-      value: results.feeBaseCards, 
-      format: 'money' 
-    });
-  }
-  
-  if (results.tipBase !== undefined) {
-    rows.push({ 
-      label: 'Tip-Eligible Volume (Cards)', 
-      value: results.tipBase, 
-      format: 'money' 
-    });
-  }
-  
-  if (results.cardFeeCollected !== undefined || results.feeCollectedOnCards !== undefined) {
-    rows.push({ 
-      label: 'Supplemental Fee — Cards', 
-      value: results.cardFeeCollected || results.feeCollectedOnCards || 0, 
-      format: 'money' 
-    });
-  }
-  
-  if (inputs.monthlyCashVolume > 0 && (results.cashFeeCollected !== undefined || results.feeCollectedOnCash !== undefined)) {
-    rows.push({ 
-      label: 'Supplemental Fee — Cash', 
-      value: results.cashFeeCollected || results.feeCollectedOnCash || results.supplementalFeeCash || 0, 
-      format: 'money' 
-    });
-  }
-  
-  if (results.tipAmount !== undefined) {
-    rows.push({ 
-      label: 'Tip Amount', 
-      value: results.tipAmount, 
-      format: 'money' 
-    });
-  }
-  
-  // Processing on Cards section
-  rows.push({ 
-    label: 'Card Processed Total (incl. price differential, tax, and tip)', 
-    value: results.processed || results.cardProcessedTotal || results.adjustedVolume, 
+    value: results.baseVolumePreTaxPreTip || results.base || results.baseVolume || 0, 
     format: 'money' 
   });
   
   rows.push({ 
-    label: 'Processor Charge on Cards', 
-    value: results.procCharge || results.processorChargeOnCards || results.processingFees, 
+    label: 'Fee-Eligible Volume (Cards)', 
+    value: results.feeBaseCards || 0, 
     format: 'money' 
   });
   
   rows.push({ 
-    label: 'Processing Cost After Fee', 
-    value: results.netChangeCards || results.netCostForProcessingCards || results.newCost, 
+    label: 'Markup Collected — Cards', 
+    value: results.cardFeeCollected || results.feeCollectedOnCards || 0, 
     format: 'money' 
   });
   
-  if (results.recovery !== undefined) {
-    rows.push({ 
-      label: 'Coverage Gap (info only)', 
-      value: results.recovery, 
-      format: 'money' 
-    });
-  }
-  
-  const coveragePct = results.coveragePct || 
-    (results.processingFees > 0 ? 
-      ((results.cardFeeCollected || results.feeCollectedOnCards || 0) / results.processingFees) : 0);
   rows.push({ 
-    label: 'Coverage %', 
-    value: coveragePct, 
+    label: 'Tip-Eligible Volume (Cards)', 
+    value: results.tipBase || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Tip Amount', 
+    value: results.tipAmount || 0, 
+    format: 'money' 
+  });
+  
+  // Section 2: Processing on Cards (New Program)
+  rows.push({ 
+    label: '### Processing on Cards (New Program)', 
+    value: '', 
+    format: 'section' 
+  });
+  
+  rows.push({ 
+    label: 'Card Processed Total (after fee, tip, & tax)', 
+    value: results.cardProcessedTotal || results.processed || results.adjustedVolume || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Flat Rate %', 
+    value: results.derivedFlatRate || 0, 
     format: 'percent' 
   });
   
-  // Savings vs Today section
+  rows.push({ 
+    label: 'Processor Charge', 
+    value: results.processorChargeOnCards || results.processingFees || results.procCharge || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Supplemental Fee (Cards)', 
+    value: results.cardFeeCollected || results.feeCollectedOnCards || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Processing Cost after Price Differential', 
+    value: results.recovery || results.netChangeCards || results.netCostForProcessingCards || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Coverage %', 
+    value: results.coveragePct || 0, 
+    format: 'percent' 
+  });
+  
+  // Section 3: Savings vs Today
+  rows.push({ 
+    label: '### Savings vs Today', 
+    value: '', 
+    format: 'section' 
+  });
+  
   rows.push({ 
     label: 'Current Processing Cost (Today)', 
-    value: results.currentCost, 
+    value: results.currentCost || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Processing Cost after Price Differential', 
+    value: results.netChangeCards || results.recovery || 0, 
     format: 'money' 
   });
   
   rows.push({ 
     label: 'Processing Cost Savings (Cards Only)', 
-    value: results.savingsCardsOnly || results.processingCostSavingsOnly || results.monthlySavings, 
-    format: 'money' 
-  });
-  
-  const procSavingsPct = results.procSavingsPct || results.processingCostSavingsPct ||
-    (results.currentCost > 0 ? 
-      ((results.savingsCardsOnly || results.monthlySavings) / results.currentCost) : 0);
-  rows.push({ 
-    label: 'Processing Cost Savings %', 
-    value: procSavingsPct, 
-    format: 'percent' 
-  });
-  
-  rows.push({ 
-    label: 'Total Net Gain (Monthly)', 
-    value: results.netMonthly || results.totalNetGainRevenue || results.monthlySavings, 
+    value: results.savingsCardsOnly || results.processingSavings || 0, 
     format: 'money' 
   });
   
   rows.push({ 
-    label: 'Annual Net Gain', 
-    value: results.netAnnual || results.annualNetGainRevenue || results.annualSavings, 
+    label: 'Supplemental Fee Collected — Cash', 
+    value: results.supplementalFeeCash || results.cashFeeCollected || results.feeCollectedOnCash || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Net Monthly', 
+    value: results.totalNetGainRevenue || results.netMonthly || results.monthlySavings || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Net Annual', 
+    value: results.annualNetGainRevenue || results.netAnnual || results.annualSavings || 0, 
     format: 'money' 
   });
   
