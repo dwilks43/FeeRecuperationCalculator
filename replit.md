@@ -5,7 +5,14 @@ This is a professional React-based **Fee Recuperation Savings Calculator** for D
 The calculator takes various merchant parameters (monthly credit card volume, monthly cash volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under the Fee Recuperation Program, along with potential monthly and annual savings. It generates professional PDF reports with DMP branding for sales presentations.
 
 ## Recent PDF Generation Updates (September 2025)
-- **Version 1.8.0 Two-Page Lock**: Finalized production-ready PDF generation system
+- **Version 1.9.0 Complete UI-PDF Consistency**: Achieved complete 1-to-1 consistency between app UI and PDF
+- **Unified Label Consistency**: Changed "Card Under/Over-Recovery" and "Net Change in Card Processing" to "Processing Cost after Price Differential" throughout app and PDF
+- **Live Calculations Structure**: Restructured PDF Live Calculations into 3 distinct sections matching the app exactly:
+  - Section 1: Derived Bases & Totals  
+  - Section 2: Processing on Cards (New Program)
+  - Section 3: Savings vs Today
+- **Section Headers**: Implemented section header rendering in PDF generator for rows with `format: 'section'`
+- **Data Flow Alignment**: Ensured all data points appear in exact same order as application (1-to-1 match)
 - Applied comprehensive patches to ensure Monthly Processing Savings table renders properly
 - Added `buildMonthlySavingsRows()` helper with numeric coercion in `pdfDataTransformer.ts`
 - Updated to `pdf.config.json` v1.8.0 with strict two-page layout and enhanced data bindings
@@ -13,7 +20,7 @@ The calculator takes various merchant parameters (monthly credit card volume, mo
 - Page 1: Customer Information + Input Parameters with colored title bars
 - Page 2: Live Volume Breakdown + Monthly Processing Savings as full-width table
 - Implemented robust numeric value handling to prevent formatting issues
-- Both program types (Dual Pricing and Supplemental Fee) generate PDFs successfully
+- Both program types (Dual Pricing and Supplemental Fee) generate PDFs successfully with consistent formatting
 - Configuration uses `sourceOfTruth: "ui"` to mirror UI presentation exactly without recalculation
 - Verified end-to-end PDF generation with complete data population for all sections
 
