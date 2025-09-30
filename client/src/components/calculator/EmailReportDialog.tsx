@@ -4,11 +4,15 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Mail, Loader2, Plus, X } from 'lucide-react';
+import { Mail, Loader2, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { preparePdfData } from '@/utils/pdfDataTransformer';
 
 interface EmailReportDialogProps {
   calculatorData: any;
+  inputs: any;
+  results: any;
+  customerInfo: any;
   children: React.ReactNode;
 }
 
@@ -20,11 +24,11 @@ interface EmailRecipient {
   label?: string;
 }
 
-export default function EmailReportDialog({ calculatorData, children }: EmailReportDialogProps) {
+export default function EmailReportDialog({ calculatorData, inputs, results, customerInfo, children }: EmailReportDialogProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const [recipients, setRecipients] = useState<EmailRecipient[]>([]);
-  const [additionalEmail, setAdditionalEmail] = useState('');
+  const [additionalEmails, setAdditionalEmails] = useState('');
   const { toast } = useToast();
 
   // Initialize recipients when dialog opens
@@ -85,6 +89,14 @@ export default function EmailReportDialog({ calculatorData, children }: EmailRep
     try {
       setIsSending(true);
       
+      // Transform the data using the same function as PDF download
+      const transformedData = preparePdfData(
+        calculatorData,
+        inputs,
+        results,
+        customerInfo
+      );
+      
       // Prepare recipient lists
       const toEmails = selectedRecipients
         .filter(r => r.email !== 'quotes@dmprocessing.com')
@@ -101,7 +113,7 @@ export default function EmailReportDialog({ calculatorData, children }: EmailRep
         body: JSON.stringify({
           toEmails,
           ccEmails,
-          calculatorData
+          calculatorData: transformedData
         }),
       });
 
@@ -124,7 +136,7 @@ export default function EmailReportDialog({ calculatorData, children }: EmailRep
       
       setIsOpen(false);
       setRecipients([]);
-      setAdditionalEmail('');
+      setAdditionalEmails('');
       
     } catch (error: any) {
       console.error('Email error:', error);
@@ -150,39 +162,61 @@ export default function EmailReportDialog({ calculatorData, children }: EmailRep
     ));
   };
 
-  const addAdditionalRecipient = () => {
-    if (!additionalEmail) return;
+  const processAdditionalEmails = (emailString: string) => {
+    if (!emailString || emailString.trim() === '') return;
     
-    // Validate email
+    // Split by comma and trim each email
+    const emails = emailString.split(',').map(e => e.trim()).filter(e => e);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(additionalEmail)) {
+    const validEmails: string[] = [];
+    const invalidEmails: string[] = [];
+    
+    emails.forEach(email => {
+      if (emailRegex.test(email)) {
+        // Check for duplicates
+        if (!recipients.some(r => r.email === email)) {
+          validEmails.push(email);
+        }
+      } else if (email) {
+        invalidEmails.push(email);
+      }
+    });
+    
+    if (invalidEmails.length > 0) {
       toast({
-        title: "Invalid Email",
-        description: "Please enter a valid email address.",
+        title: "Invalid Email(s)",
+        description: `Invalid format: ${invalidEmails.join(', ')}`,
         variant: "destructive",
       });
       return;
     }
     
-    // Check for duplicates
-    if (recipients.some(r => r.email === additionalEmail)) {
-      toast({
-        title: "Duplicate Email",
-        description: "This email is already in the recipient list.",
-        variant: "destructive",
-      });
-      return;
+    if (validEmails.length > 0) {
+      // Add all valid emails to recipients
+      const newRecipients = validEmails.map(email => ({
+        email,
+        name: '',
+        checked: true,
+        removable: true,
+        label: email
+      }));
+      
+      // Insert new recipients before the last item (quotes@dmprocessing.com)
+      setRecipients(prev => [...prev.slice(0, -1), ...newRecipients, prev[prev.length - 1]]);
+      setAdditionalEmails('');
     }
-    
-    setRecipients(prev => [...prev.slice(0, -1), {
-      email: additionalEmail,
-      name: '',
-      checked: true,
-      removable: true,
-      label: additionalEmail
-    }, prev[prev.length - 1]]); // Keep quotes@dmprocessing.com at the end
-    
-    setAdditionalEmail('');
+  };
+  
+  // Process emails when input loses focus or Enter is pressed
+  const handleEmailInputBlur = () => {
+    processAdditionalEmails(additionalEmails);
+  };
+  
+  const handleEmailInputKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      processAdditionalEmails(additionalEmails);
+    }
   };
 
   const removeRecipient = (index: number) => {
@@ -245,31 +279,20 @@ export default function EmailReportDialog({ calculatorData, children }: EmailRep
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="additional-email">Add Additional Recipient</Label>
-            <div className="flex gap-2">
-              <Input
-                id="additional-email"
-                type="email"
-                value={additionalEmail}
-                onChange={(e) => setAdditionalEmail(e.target.value)}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault();
-                    addAdditionalRecipient();
-                  }
-                }}
-                placeholder="additional.email@company.com"
-                data-testid="input-additional-email"
-              />
-              <Button 
-                type="button" 
-                variant="outline"
-                onClick={addAdditionalRecipient}
-                disabled={!additionalEmail}
-              >
-                <Plus className="h-4 w-4" />
-              </Button>
-            </div>
+            <Label htmlFor="additional-email">Add Additional Recipients</Label>
+            <Input
+              id="additional-email"
+              type="text"
+              value={additionalEmails}
+              onChange={(e) => setAdditionalEmails(e.target.value)}
+              onBlur={handleEmailInputBlur}
+              onKeyPress={handleEmailInputKeyPress}
+              placeholder="Enter email(s) - separate multiple with commas"
+              data-testid="input-additional-email"
+            />
+            <p className="text-xs text-muted-foreground">
+              Press Enter or click elsewhere to add. Separate multiple emails with commas.
+            </p>
           </div>
           
           <div className="flex gap-2">

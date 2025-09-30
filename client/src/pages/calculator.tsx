@@ -311,7 +311,12 @@ export default function Calculator() {
                       )}
                     </Button>
                     
-                    <EmailReportDialog calculatorData={calculatorData}>
+                    <EmailReportDialog 
+                      calculatorData={calculatorData}
+                      inputs={inputs}
+                      results={results}
+                      customerInfo={customerInfo}
+                    >
                       <Button 
                         variant="outline" 
                         className="w-full bg-white hover:bg-gray-50 text-dmp-blue-600 border-dmp-blue-300 font-semibold py-3 px-4 shadow-lg"
