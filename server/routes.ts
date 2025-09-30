@@ -41,7 +41,7 @@ function generateISOAmpLoginLink(
   return `${baseUrl}?m=${hexEncodedMessage}&s=${signature}&t=${unixTime}&v=${version}`;
 }
 
-async function sendSavingsReportEmail(recipientEmail: string, recipientName: string, calculatorData: any) {
+async function sendSavingsReportEmail(toEmails: string[], ccEmails: string[], calculatorData: any) {
   const postmarkToken = process.env.POSTMARK_SERVER_TOKEN;
   const verifiedSender = process.env.POSTMARK_VERIFIED_SENDER;
   
@@ -57,10 +57,11 @@ async function sendSavingsReportEmail(recipientEmail: string, recipientName: str
   
   const emailData = {
     From: verifiedSender,
-    To: recipientEmail,
+    To: toEmails.join(','),
+    Cc: ccEmails.join(','),
     Subject: 'Your DMP Dual Pricing Savings Report',
-    HtmlBody: generateEmailHTML(recipientName, calculatorData, verifiedSender),
-    TextBody: generateEmailText(recipientName, calculatorData, verifiedSender),
+    HtmlBody: generateEmailHTML(calculatorData, verifiedSender),
+    TextBody: generateEmailText(calculatorData, verifiedSender),
     Attachments: [{
       Name: 'DMP-Savings-Report.pdf',
       Content: pdfBase64,
@@ -86,8 +87,24 @@ async function sendSavingsReportEmail(recipientEmail: string, recipientName: str
   return await response.json();
 }
 
-function generateEmailHTML(recipientName: string, data: any, verifiedSender: string): string {
-  const { monthlySavings, annualSavings, monthlyVolume } = data;
+function generateEmailHTML(data: any, verifiedSender: string): string {
+  const { monthlySavings, annualSavings, monthlyVolume, results } = data;
+  const businessName = data.businessName || 'Valued Merchant';
+  const salesRepEmail = data.salesRepEmail || '';
+  
+  // Build mailto link with CC for sales rep
+  const mailtoParams = new URLSearchParams({
+    subject: 'Request More Information about Processing Savings'
+  });
+  if (salesRepEmail) {
+    mailtoParams.append('cc', salesRepEmail);
+  }
+  const contactLink = `mailto:quotes@dmprocessing.com?${mailtoParams.toString()}`;
+  
+  // Use results data if available, fallback to root level data
+  const savings = results?.monthlySavings || monthlySavings || 0;
+  const annualSavingsValue = results?.annualSavings || annualSavings || 0;
+  const volume = results?.monthlyVolume || monthlyVolume || 0;
   
   return `
 <!DOCTYPE html>
@@ -108,19 +125,19 @@ function generateEmailHTML(recipientName: string, data: any, verifiedSender: str
 <body>
     <div class="container">
         <div class="header">
-            <h1>Your Dual Pricing Savings Report</h1>
+            <h1>Your DMP Savings Report</h1>
             <p>Personalized analysis from Dynamic Merchant Processing</p>
         </div>
         
         <div class="content">
-            <p>Hello ${recipientName || 'Valued Merchant'},</p>
+            <p>Hello ${businessName},</p>
             
-            <p>Thank you for using our Dual Pricing Savings Calculator. Based on your monthly volume of <strong>$${monthlyVolume.toLocaleString()}</strong>, we've prepared a comprehensive analysis of your potential savings.</p>
+            <p>Thank you for providing your processing information for this quote.</p>
             
             <div class="highlight">
                 <h3>Your Potential Savings:</h3>
-                <div class="savings">Monthly: $${monthlySavings.toFixed(2)}</div>
-                <div class="savings">Annual: $${annualSavings.toFixed(2)}</div>
+                <div class="savings">Monthly: $${savings.toFixed(2)}</div>
+                <div class="savings">Annual: $${annualSavingsValue.toFixed(2)}</div>
             </div>
             
             <p>Your detailed savings report is attached to this email as a PDF. This report includes:</p>
@@ -128,12 +145,11 @@ function generateEmailHTML(recipientName: string, data: any, verifiedSender: str
                 <li>Complete breakdown of your current vs. new processing costs</li>
                 <li>Volume analysis with dual pricing calculations</li>
                 <li>Monthly and annual savings projections</li>
-                <li>Professional formatting for presentations</li>
             </ul>
             
             <p>Ready to start saving? Our team is here to help you implement this solution.</p>
             
-            <a href="mailto:${verifiedSender}?subject=DMP Dual Pricing Implementation" class="cta">Contact Us Today</a>
+            <a href="${contactLink}" class="cta">Contact Us Today</a>
         </div>
         
         <div class="footer">
@@ -145,27 +161,32 @@ function generateEmailHTML(recipientName: string, data: any, verifiedSender: str
 </html>`;
 }
 
-function generateEmailText(recipientName: string, data: any, verifiedSender: string): string {
-  const { monthlySavings, annualSavings, monthlyVolume } = data;
+function generateEmailText(data: any, verifiedSender: string): string {
+  const { monthlySavings, annualSavings, monthlyVolume, results } = data;
+  const businessName = data.businessName || 'Valued Merchant';
+  
+  // Use results data if available, fallback to root level data
+  const savings = results?.monthlySavings || monthlySavings || 0;
+  const annualSavingsValue = results?.annualSavings || annualSavings || 0;
+  const volume = results?.monthlyVolume || monthlyVolume || 0;
   
   return `
-Hello ${recipientName || 'Valued Merchant'},
+Hello ${businessName},
 
-Thank you for using our Dual Pricing Savings Calculator. Based on your monthly volume of $${monthlyVolume.toLocaleString()}, we've prepared a comprehensive analysis of your potential savings.
+Thank you for providing your processing information for this quote.
 
 YOUR POTENTIAL SAVINGS:
-Monthly: $${monthlySavings.toFixed(2)}
-Annual: $${annualSavings.toFixed(2)}
+Monthly: $${savings.toFixed(2)}
+Annual: $${annualSavingsValue.toFixed(2)}
 
 Your detailed savings report is attached to this email as a PDF. This report includes:
 - Complete breakdown of your current vs. new processing costs
 - Volume analysis with dual pricing calculations  
 - Monthly and annual savings projections
-- Professional formatting for presentations
 
 Ready to start saving? Our team is here to help you implement this solution.
 
-Contact us at: ${verifiedSender}
+Contact us at: quotes@dmprocessing.com
 
 Dynamic Merchant Processing | Professional Payment Solutions
 This report was generated using your provided data and DMP's proven dual pricing model.
@@ -760,17 +781,25 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Email PDF Report Route
   app.post("/api/email-savings-report", async (req, res) => {
     try {
-      const { email, name, calculatorData } = req.body;
+      const { toEmails, ccEmails, calculatorData } = req.body;
       
       // Basic validation
-      if (!email || !calculatorData) {
-        return res.status(400).json({ error: 'Email and calculator data required' });
+      if (!toEmails || !Array.isArray(toEmails) || toEmails.length === 0) {
+        return res.status(400).json({ error: 'At least one recipient email is required' });
       }
       
-      // Email validation
+      if (!calculatorData) {
+        return res.status(400).json({ error: 'Calculator data required' });
+      }
+      
+      // Validate all email addresses
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        return res.status(400).json({ error: 'Invalid email address' });
+      const allEmails = [...toEmails, ...(ccEmails || [])];
+      
+      for (const email of allEmails) {
+        if (!emailRegex.test(email)) {
+          return res.status(400).json({ error: `Invalid email address: ${email}` });
+        }
       }
       
       // Ensure we forward programType, inputs, and results for dual-mode support
@@ -784,7 +813,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       };
       
       // Send email with PDF attachment
-      const result = await sendSavingsReportEmail(email, name, emailData);
+      const result = await sendSavingsReportEmail(toEmails, ccEmails || [], emailData);
       
       res.json({ 
         success: true, 
