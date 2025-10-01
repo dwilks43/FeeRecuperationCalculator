@@ -81,15 +81,23 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const handleProgramTypeChange = (newType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE') => {
     onInputChange('programType', newType as any);
     
+    // Cap price differential if switching to Supplemental Fee mode
+    let priceDifferentialValue = inputs.priceDifferential;
+    if (newType === 'SUPPLEMENTAL_FEE' && priceDifferentialValue > 4) {
+      priceDifferentialValue = 4;
+      onInputChange('priceDifferential', 4);
+      setInputValues(prev => ({ ...prev, priceDifferential: '4' }));
+    }
+    
     // Auto-calculate flat rate when switching programs
-    if (inputs.priceDifferential > 0) {
+    if (priceDifferentialValue > 0) {
       let flatRate: number;
       if (newType === 'SUPPLEMENTAL_FEE') {
-        const fee = inputs.priceDifferential / 100;
+        const fee = priceDifferentialValue / 100;
         flatRate = Math.round(calculateAutoFlatRate(fee) * 10000) / 100; // Convert to percentage with 2 decimals
       } else {
         // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
-        const priceDiff = inputs.priceDifferential / 100;
+        const priceDiff = priceDifferentialValue / 100;
         flatRate = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100; // Convert to percentage with 2 decimals
       }
       onInputChange('flatRatePct', flatRate);
@@ -99,8 +107,16 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   };
 
   const handlePriceDifferentialChange = (value: string) => {
-    setInputValues(prev => ({ ...prev, priceDifferential: value }));
-    const priceDifferentialValue = parseNumericInput(value);
+    let priceDifferentialValue = parseNumericInput(value);
+    
+    // Cap at 4% for Supplemental Fee mode only
+    if (inputs.programType === 'SUPPLEMENTAL_FEE' && priceDifferentialValue > 4) {
+      priceDifferentialValue = 4;
+      setInputValues(prev => ({ ...prev, priceDifferential: '4' }));
+    } else {
+      setInputValues(prev => ({ ...prev, priceDifferential: value }));
+    }
+    
     onInputChange('priceDifferential', priceDifferentialValue);
     
     // Auto-update flat rate if still synced
@@ -523,6 +539,9 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               />
               <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
             </div>
+            {inputs.programType === 'SUPPLEMENTAL_FEE' && (
+              <p className="text-xs text-gray-500 mt-1">Maximum 4.00%</p>
+            )}
           </div>
 
           {/* Card Volume Basis control removed per v1.0.1 spec - always Gross */}
