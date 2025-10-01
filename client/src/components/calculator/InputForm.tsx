@@ -46,15 +46,21 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   };
 
   // Auto flat rate calculation with HALF_UP rounding to 4 decimals
+  // Capped at 4.00% maximum
   const calculateAutoFlatRate = (fee: number): number => {
     if (fee <= 0) return 0;
-    return roundHalfUp(fee / (1 + fee), 4);
+    const calculated = fee / (1 + fee);
+    const capped = Math.min(calculated, 0.04); // Cap at 4%
+    return roundHalfUp(capped, 4);
   };
 
   // Auto flat rate calculation for dual pricing using priceDiff/(1+priceDiff)
+  // Capped at 4.00% maximum
   const calculateAutoFlatRateDualPricing = (priceDiff: number): number => {
     if (priceDiff <= 0) return 0;
-    return roundHalfUp(priceDiff / (1 + priceDiff), 4);
+    const calculated = priceDiff / (1 + priceDiff);
+    const capped = Math.min(calculated, 0.04); // Cap at 4%
+    return roundHalfUp(capped, 4);
   };
 
   const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {

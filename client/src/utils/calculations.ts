@@ -102,10 +102,13 @@ export function roundHalfUp(value: number, decimals: number): number {
 
 /**
  * Calculate auto flat rate with HALF_UP rounding to 4 decimals (updated spec)
+ * Capped at 4.00% maximum
  */
 export function calculateAutoFlatRate(fee: number): number {
   if (fee <= 0) return 0;
-  return roundHalfUp(fee / (1 + fee), 4);
+  const calculated = fee / (1 + fee);
+  const capped = Math.min(calculated, 0.04); // Cap at 4%
+  return roundHalfUp(capped, 4);
 }
 
 /**
