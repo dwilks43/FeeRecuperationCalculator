@@ -33,7 +33,9 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     // v1.0.1 fields
     tipTiming: inputs.tipTiming || 'BEFORE_TIP',
     flatRateOverride: formatNumberInput(inputs.flatRateOverride || 0),
-    isAutoFlatRate: (inputs.isAutoFlatRate !== false).toString()
+    isAutoFlatRate: (inputs.isAutoFlatRate !== false).toString(),
+    // Cash Discounting field
+    cashDiscount: formatNumberInput(inputs.cashDiscount || 0)
   });
 
   const [autoSynced, setAutoSynced] = useState(true);
@@ -78,7 +80,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     onInputChange(field, value as any);
   };
 
-  const handleProgramTypeChange = (newType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE') => {
+  const handleProgramTypeChange = (newType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING') => {
     onInputChange('programType', newType as any);
     
     // Cap price differential if switching to Supplemental Fee mode
@@ -96,7 +98,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         const fee = priceDifferentialValue / 100;
         flatRate = Math.round(calculateAutoFlatRate(fee) * 10000) / 100; // Convert to percentage with 2 decimals
       } else {
-        // DUAL_PRICING mode uses priceDiff/(1+priceDiff)
+        // DUAL_PRICING and CASH_DISCOUNTING modes use priceDiff/(1+priceDiff)
         const priceDiff = priceDifferentialValue / 100;
         flatRate = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100; // Convert to percentage with 2 decimals
       }
@@ -233,7 +235,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         {/* Program Type Selection */}
         <div className="mb-6 p-4 bg-gray-50 rounded-lg">
           <Label className="text-sm font-medium text-gray-700 mb-3 block">Program Type</Label>
-          <div className="flex gap-4">
+          <div className="flex gap-4 flex-wrap">
             <label className="flex items-center">
               <input
                 type="radio"
@@ -243,7 +245,18 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 onChange={(e) => handleProgramTypeChange('DUAL_PRICING')}
                 className="mr-2"
               />
-              <span className="text-sm">Dual Pricing or Cash Discounting</span>
+              <span className="text-sm">Dual Pricing</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="programType"
+                value="CASH_DISCOUNTING"
+                checked={inputs.programType === 'CASH_DISCOUNTING'}
+                onChange={(e) => handleProgramTypeChange('CASH_DISCOUNTING')}
+                className="mr-2"
+              />
+              <span className="text-sm">Cash Discounting</span>
             </label>
             <label className="flex items-center">
               <input
@@ -514,10 +527,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             )}
           </div>
 
-          {/* Price Differential / Supplemental Fee */}
+          {/* Price Differential / Supplemental Fee / Menu Markup */}
           <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              {inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Supplemental Fee (%)' : 'Price Differential'}
+              {inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Supplemental Fee (%)' : 
+               inputs.programType === 'CASH_DISCOUNTING' ? 'Menu Markup (%)' : 'Price Differential'}
               <Button
                 variant="ghost"
                 size="sm"
@@ -544,10 +558,40 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             )}
           </div>
 
+          {/* Cash Discount % - Only for Cash Discounting */}
+          {inputs.programType === 'CASH_DISCOUNTING' && (
+            <div>
+              <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                Cash Discount (%)
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('cash-discount')}
+                  data-testid="button-tooltip-cash-discount"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
+              </Label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
+                  placeholder="3.50"
+                  value={inputValues.cashDiscount}
+                  onChange={(e) => handleInputChange('cashDiscount', e.target.value)}
+                  data-testid="input-cash-discount"
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+              </div>
+              <p className="text-xs text-gray-500 mt-1">The discount given to cash customers</p>
+            </div>
+          )}
+
           {/* Card Volume Basis control removed per v1.0.1 spec - always Gross */}
 
-          {/* Flat Rate (%) for both modes */}
-          {(inputs.programType === 'SUPPLEMENTAL_FEE' || inputs.programType === 'DUAL_PRICING') && (
+          {/* Flat Rate (%) for all modes */}
+          {(inputs.programType === 'SUPPLEMENTAL_FEE' || inputs.programType === 'DUAL_PRICING' || inputs.programType === 'CASH_DISCOUNTING') && (
             <div>
               <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 Flat Rate % (Bank Mapping)

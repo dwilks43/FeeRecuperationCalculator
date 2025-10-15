@@ -150,6 +150,30 @@ export const UNIFIED_TOOLTIPS = {
     }
   },
 
+  // Cash Discounting specific tooltips 
+  CASH_DISCOUNTING: {
+    orderOfOps: {
+      title: 'Order of Operations',
+      body: 'Order of Operations: Base Volume → +Menu Markup → −Cash Discount (Cash Only) → +Tax → +Tip (handwritten on presented total).'
+    },
+    cashDiscount: {
+      title: 'Cash Discount %',
+      body: 'The discount percentage given to cash-paying customers off the menu price. Often less than the menu markup, creating extra revenue.'
+    },
+    menuMarkup: {
+      title: 'Menu Markup %',
+      body: 'The percentage increase applied to all menu prices. Cards pay this full amount while cash gets a partial discount.'
+    },
+    extraCashRevenue: {
+      title: 'Revenue from Cash Differential',
+      body: 'Extra revenue = Cash Base × (Menu Markup − Cash Discount). This is the difference between what\'s added to menu prices and what\'s discounted for cash.'
+    },
+    netMonthly: {
+      title: 'Total Net Gain (Monthly)',
+      body: 'Total Net Gain = Card Processing Savings + Extra Cash Revenue. Includes both processing savings and the cash differential revenue.'
+    }
+  },
+
   // Supplemental Fee specific tooltips
   SUPPLEMENTAL_FEE: {
     modeIntro: {
@@ -420,5 +444,6 @@ export const TOOLTIPS = {
   tipRate: UNIFIED_TOOLTIPS.shared.tipRate,
   flatRate: UNIFIED_TOOLTIPS.shared.flatRate,
   grossProfit: UNIFIED_TOOLTIPS.shared.grossProfit,
-  processingCostSavingsPct: UNIFIED_TOOLTIPS.shared.processingCostSavingsPct
+  processingCostSavingsPct: UNIFIED_TOOLTIPS.shared.processingCostSavingsPct,
+  'cash-discount': UNIFIED_TOOLTIPS.CASH_DISCOUNTING.cashDiscount
 };

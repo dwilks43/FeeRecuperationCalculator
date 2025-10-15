@@ -7,7 +7,7 @@ import { formatCurrency } from "@/utils/calculations";
 interface ProcessingSavingsProps {
   results: CalculatorResults;
   onTooltip: (key: TooltipKey) => void;
-  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
+  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING';
 }
 
 export default function ProcessingSavings({ results, onTooltip, programType }: ProcessingSavingsProps) {
@@ -141,6 +141,117 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 </p>
               </div>
             )}
+          </>
+        ) : programType === 'CASH_DISCOUNTING' ? (
+          // Cash Discounting mode - 8-card grid with cash revenue
+          <>
+            {/* 1. Current Processing Cost (Today) - RED */}
+            <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Current Processing Cost (Today)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MinusCircle className="h-5 w-5 text-red-500" />
+                <span className="text-2xl font-bold text-red-600" data-testid="text-current-cost">
+                  {formatCurrency(results.currentCost || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* 2. Processor Charge on Cards - RED */}
+            <div className="bg-red-50 rounded-lg p-4 border border-red-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Processor Charge on Cards</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MinusCircle className="h-5 w-5 text-red-500" />
+                <span className="text-2xl font-bold text-red-600">
+                  {formatCurrency(results.procCharge || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* 3. Card Menu Markup Collected - GREEN */}
+            <div className="bg-green-50 rounded-lg p-4 border border-green-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Card Menu Markup Collected</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-green-500" />
+                <span className="text-2xl font-bold text-green-600">
+                  {formatCurrency(results.markupCollected || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* 4. Revenue from Cash Differential - AMBER/GOLD */}
+            <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Revenue from Cash Differential</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-amber-500" />
+                <span className="text-2xl font-bold text-amber-600">
+                  {formatCurrency(results.extraCashRevenue || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* 5. Processing Cost after Menu Markup - NEUTRAL */}
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Processing Cost after Menu Markup</span>
+              </div>
+              <div className="flex items-center gap-2">
+                {(results.recovery || 0) >= 0 ? (
+                  <CheckCircle className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <MinusCircle className="h-5 w-5 text-gray-500" />
+                )}
+                <span className="text-2xl font-bold text-gray-700">
+                  {formatCurrency(results.recovery || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* 6. Processing Cost Savings (Cards Only) - TEAL */}
+            <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Processing Cost Savings (Cards Only)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckCircle className="h-5 w-5 text-teal-500" />
+                <span className="text-2xl font-bold text-teal-600">
+                  {formatCurrency(results.savingsCardsOnly || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* 7. Total Net Gain (Monthly) - TEAL */}
+            <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Total Net Gain (Monthly)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-teal-500" />
+                <span className="text-2xl font-bold text-teal-600">
+                  {formatCurrency(results.netMonthly || 0)}
+                </span>
+              </div>
+            </div>
+
+            {/* 8. Annual Net Gain - TEAL */}
+            <div className="bg-teal-50 rounded-lg p-4 border border-teal-200">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm font-medium text-gray-600">Annual Net Gain</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Trophy className="h-5 w-5 text-teal-500" />
+                <span className="text-2xl font-bold text-teal-600">
+                  {formatCurrency(results.netAnnual || 0)}
+                </span>
+              </div>
+            </div>
           </>
         ) : (
           // v1.5.0: Dual Pricing mode - aligned 8-item layout

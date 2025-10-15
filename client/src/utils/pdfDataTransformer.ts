@@ -58,6 +58,10 @@ function getOrderOfOperationsText(inputs: CalculatorInputs): string {
     return 'Base Card Volume → +Price Differential → +Tax → +Tip';
   }
   
+  if (inputs.programType === 'CASH_DISCOUNTING') {
+    return 'Base Volume → +Menu Markup → Cash: -Cash Discount | Cards: +Tax → +Tip';
+  }
+  
   // Supplemental Fee order of operations
   const tipTiming = inputs.tipTiming || 
     (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP');
@@ -132,7 +136,10 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
   rows.push({ 
     label: 'Program Type', 
     value: inputs.programType === 'DUAL_PRICING' ? 
-      'Dual Pricing or Cash Discounting' : 'Supplemental Fee', 
+      'Dual Pricing' : 
+      inputs.programType === 'CASH_DISCOUNTING' ? 
+      'Cash Discounting' : 
+      'Supplemental Fee', 
     format: 'text' 
   });
   
@@ -194,12 +201,24 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
   
   // Price differential / Supplemental fee
   const differentialLabel = inputs.programType === 'DUAL_PRICING' ? 
-    'Price Differential' : 'Supplemental Fee %';
+    'Price Differential' : 
+    inputs.programType === 'CASH_DISCOUNTING' ? 
+    'Menu Markup %' : 
+    'Supplemental Fee %';
   rows.push({ 
     label: differentialLabel, 
     value: inputs.priceDifferential / 100, 
     format: 'percent' 
   });
+  
+  // Cash Discounting specific settings
+  if (inputs.programType === 'CASH_DISCOUNTING' && inputs.cashDiscount !== undefined) {
+    rows.push({ 
+      label: 'Cash Discount %', 
+      value: inputs.cashDiscount / 100, 
+      format: 'percent' 
+    });
+  }
   
   // Supplemental Fee specific settings
   if (inputs.programType === 'SUPPLEMENTAL_FEE') {
@@ -568,7 +587,7 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
 }
 
 // Helper type for savings items
-type SavingsItem = { label: string; value: number; format?: 'money' | 'percent' | 'number' | 'text' };
+type SavingsItem = { label: string; value: number | string; format?: 'money' | 'percent' | 'number' | 'text' };
 
 // Build Monthly Savings rows for table rendering
 function buildMonthlySavingsRows(items: SavingsItem[] | undefined): SavingsItem[] {
@@ -610,10 +629,10 @@ export function buildPdfUiModel(
   const orderOfOperationsText = getOrderOfOperationsText(inputs);
   
   // Build sections based on program type
-  const liveVolumeTitle = inputs.programType === 'DUAL_PRICING' ? 
+  const liveVolumeTitle = inputs.programType === 'DUAL_PRICING' || inputs.programType === 'CASH_DISCOUNTING' ? 
     'Live Volume Breakdown' : 'Live Calculations';
   
-  const liveVolumeRows = inputs.programType === 'DUAL_PRICING' ?
+  const liveVolumeRows = inputs.programType === 'DUAL_PRICING' || inputs.programType === 'CASH_DISCOUNTING' ?
     buildDualPricingBreakdownRows(inputs, results) :
     buildSupplementalFeeBreakdownRows(inputs, results);
   

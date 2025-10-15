@@ -8,7 +8,7 @@ interface TooltipModalProps {
   isOpen: boolean;
   onClose: () => void;
   tooltipKey: TooltipKey | null;
-  programType?: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
+  programType?: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING';
   showMicroFormulas?: boolean;
 }
 

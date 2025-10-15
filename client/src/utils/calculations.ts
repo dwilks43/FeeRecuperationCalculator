@@ -117,6 +117,8 @@ export function calculateAutoFlatRate(fee: number): number {
 export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
   if (inputs.programType === 'SUPPLEMENTAL_FEE') {
     return calculateSupplementalFeeResults(inputs);
+  } else if (inputs.programType === 'CASH_DISCOUNTING') {
+    return calculateCashDiscountingResults(inputs);
   }
   return calculateDualPricingResults(inputs);
 }
@@ -423,7 +425,152 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   };
 }
 
+/**
+ * Calculate results for Cash Discounting program
+ */
+function calculateCashDiscountingResults(inputs: CalculatorInputs): CalculatorResults {
+  // Read inputs
+  const cc = inputs.monthlyVolume || 0;           // monthly card volume (gross)
+  const cashVol = inputs.monthlyCashVolume || 0;  // monthly cash volume
+  const tax = (inputs.taxRate || 0) / 100;
+  const tip = (inputs.tipRate || 0) / 100;
+  const pd = (inputs.priceDifferential || 0) / 100;  // menu markup %
+  const cd = (inputs.cashDiscount || 0) / 100;       // cash discount %
+  const fr = inputs.flatRatePct !== undefined ? 
+    inputs.flatRatePct / 100 : 
+    (inputs.flatRate || 0) / 100;
+  const curr = (inputs.currentRate || 0) / 100;
 
+  // CARDS CALCULATIONS
+  // 1) Base Card Volume (pre-tax, pre-tip)
+  const base = cc / (1 + tax + tip);
+
+  // 2) Price-Adjusted Base (menu price for cards)
+  const priceAdjustedBase = base * (1 + pd);
+
+  // 3) Card Processed Total = Price-Adjusted Base × (1 + Tax) × (1 + Tip)
+  const processed = priceAdjustedBase * (1 + tax) * (1 + tip);
+
+  // 4) Processor Charge on Cards
+  const procCharge = processed * fr;
+
+  // 5) Card Price Increase Collected = Base × Price Differential
+  const markupCollected = base * pd;
+
+  // CASH CALCULATIONS
+  // 6) Base Cash Volume (pre-tax, pre-tip)
+  const baseCashVolume = cashVol / (1 + tax + tip);
+
+  // 7) Menu-Priced Cash Base (cash sees menu price too)
+  const menuPricedCashBase = baseCashVolume * (1 + pd);
+
+  // 8) Cash Discount Given (applied to menu-priced amount)
+  const cashDiscountGiven = menuPricedCashBase * cd;
+
+  // 9) Net Cash Base (after discount)
+  const netCashBase = menuPricedCashBase - cashDiscountGiven;
+  // Or: baseCashVolume × (1 + pd) × (1 - cd)
+
+  // 10) Cash Processed Total (with tax and tip on net amount)
+  const cashProcessedTotal = netCashBase * (1 + tax) * (1 + tip);
+
+  // 11) Extra Revenue from Cash (the differential kept by merchant)
+  const extraCashRevenue = baseCashVolume * (pd - cd);
+  // This is the key: menu markup minus discount given
+
+  // PROCESSING COST CALCULATIONS
+  // 12) Current Processing Cost
+  const currentCost = cc * curr;
+
+  // 13) Processing Cost after Price Differential (cards)
+  const recovery = markupCollected - procCharge;
+  const netChangeCards = procCharge - markupCollected;
+
+  // 14) Processing Cost Savings (Cards Only)
+  const savingsCardsOnlyRaw = currentCost - netChangeCards;
+  const savingsCardsOnly = roundHalfUp(savingsCardsOnlyRaw, 2);
+
+  // 15) Total Net Gain (includes cash revenue)
+  const netMonthly = savingsCardsOnly + extraCashRevenue;
+  const netAnnual = roundHalfUp((savingsCardsOnlyRaw + extraCashRevenue) * 12, 2);
+
+  // 16) Coverage % = Markup ÷ Processor Charge
+  const coveragePct = procCharge === 0 ? 0 : markupCollected / procCharge;
+
+  // 17) Processing Savings %
+  const procSavingsPct = currentCost === 0 ? 0 : savingsCardsOnly / currentCost;
+
+  // Gross Profit calculation
+  const interchangeRate = (inputs.interchangeCost || 0) / 100;
+  const grossProfit = (fr - interchangeRate) * processed;
+  
+  // Skytab bonus calculations
+  const skytabBonusGross = Math.min(grossProfit * SKYTAB_BONUS_MULT * SKYTAB_BONUS_SPLIT, SKYTAB_BONUS_CAP);
+  const skytabBonusRep = skytabBonusGross * SKYTAB_REP_SPLIT;
+
+  // Legacy compatibility fields
+  const annualVolume = cc * 12;
+  const residualAfterMarkup = Math.max(procCharge - markupCollected, 0);
+  const overageRetained = Math.max(markupCollected - procCharge, 0);
+
+  return {
+    // Core Card fields (matching Dual Pricing)
+    base,
+    priceAdjustedBase,
+    processed,
+    procCharge,
+    markupCollected,
+    recovery,
+    coveragePct,
+    currentCost,
+    netChangeCards,
+    savingsCardsOnlyRaw,
+    savingsCardsOnly,
+    procSavingsPct,
+    netMonthly,
+    netAnnual,
+    derivedFlatRate: fr,
+    
+    // Cash Discounting specific fields
+    baseCashVolume,
+    menuPricedCashBase,
+    cashDiscountGiven,
+    netCashBase,
+    cashProcessedTotal,
+    extraCashRevenue,
+    
+    // Legacy aliases for compatibility
+    baseVolume: base,
+    adjustedVolume: processed,
+    adjustedCardVolume: processed,
+    cardPriceIncreaseCollected: markupCollected,
+    processingFees: procCharge,
+    programCardFees: procCharge,
+    newCost: procCharge,
+    monthlySavings: netMonthly,
+    annualSavings: netAnnual,
+    markedUpVolume: base + markupCollected,
+    netCostForProcessingCards: -recovery,
+    feeCollectedOnCards: markupCollected,
+    feeCollectedOnCash: extraCashRevenue,
+    
+    // Labels and display
+    collectedLabel: 'Revenue Collected',
+    collectedValue: markupCollected + extraCashRevenue,
+    
+    // Gross Profit and Skytab
+    grossProfit,
+    skytabBonus: skytabBonusGross,
+    skytabBonusGross,
+    skytabBonusRep,
+    
+    // Legacy fields
+    annualVolume,
+    dmpProfit: recovery,
+    residualAfterMarkup,
+    overageRetained
+  };
+}
 
 /**
  * Parse and validate numeric input

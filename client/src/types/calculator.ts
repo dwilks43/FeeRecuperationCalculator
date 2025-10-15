@@ -4,7 +4,7 @@ export type CardVolumeBasis = 'PRE_TAX' | 'GROSS';
 export type TipTiming = 'BEFORE_TIP' | 'AFTER_TIP';
 
 export interface CalculatorInputs {
-  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
+  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING';
   monthlyVolume: number;
   monthlyCashVolume: number;
   currentRate: number;
@@ -22,6 +22,8 @@ export interface CalculatorInputs {
   tipTiming?: TipTiming;
   flatRateOverride?: number;
   isAutoFlatRate?: boolean;
+  // Cash Discounting field
+  cashDiscount?: number;
 }
 
 export interface CalculatorResults {
@@ -93,6 +95,13 @@ export interface CalculatorResults {
   netAnnual?: number;               // Annual Net Gain
   // v1.5.1 DP rounding improvements
   savingsCardsOnlyRaw?: number;     // Processing Cost Savings (raw, unrounded)
+  // Cash Discounting specific fields
+  baseCashVolume?: number;          // Base cash volume (pre-tax, pre-tip)
+  menuPricedCashBase?: number;      // Cash base × (1 + price differential)
+  cashDiscountGiven?: number;       // Amount of discount given to cash customers
+  netCashBase?: number;             // Cash base after net differential
+  cashProcessedTotal?: number;      // Total cash processed including tax and tip
+  extraCashRevenue?: number;        // Extra revenue from cash differential
 }
 
 export interface TooltipContent {
@@ -125,6 +134,7 @@ export type TooltipKey =
   | 'tip-rate'
   | 'price-differential'
   | 'supplemental-fee'
+  | 'cash-discount'
   | 'fee-timing'
   | 'fee-on-cards'
   | 'fee-on-cash'

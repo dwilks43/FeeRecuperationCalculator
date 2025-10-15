@@ -8,7 +8,7 @@ import { formatCurrency } from "@/utils/calculations";
 interface DualPricingBreakdownProps {
   results: CalculatorResults;
   onTooltip: (key: TooltipKey) => void;
-  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE';
+  programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING';
 }
 
 export default function DualPricingBreakdown({ results, onTooltip, programType }: DualPricingBreakdownProps) {
@@ -162,6 +162,208 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               </div>
             </div>
 
+          </>
+        ) : programType === 'CASH_DISCOUNTING' ? (
+          // Cash Discounting - menu markup with cash discount
+          <>
+            {/* Order of Operations Ribbon */}
+            <div className="mb-4 p-3 bg-gradient-to-r from-dmp-blue-50 to-blue-100 rounded-lg border border-dmp-blue-200">
+              <div className="text-xs font-medium text-dmp-blue-700 mb-1">Order of Operations</div>
+              <div className="text-sm text-dmp-blue-600 font-mono">
+                Base Volume → +Menu Markup → −Cash Discount (Cash Only) → +Tax → +Tip (handwritten)
+              </div>
+            </div>
+
+            {/* Panel 1: Derived Bases & Totals */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Derived Bases & Totals</h3>
+              
+              {/* Cards Section */}
+              <div className="mb-4">
+                <h4 className="text-sm font-semibold text-gray-700 mb-2">Cards:</h4>
+                <div className="space-y-2 pl-4">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Base Card Volume (pre-tax, pre-tip)</span>
+                    <span className="font-medium">{formatCurrency(results.base || 0)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-600">Base Card Volume + Menu Markup</span>
+                      <span className="text-xs text-gray-400 italic">Base × (1 + Menu Markup)</span>
+                    </div>
+                    <span className="font-medium">{formatCurrency(results.priceAdjustedBase || 0)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-600">Card Processed Total (incl. markup, tax, and tip)</span>
+                      <span className="text-xs text-gray-400 italic">Menu-Priced Base × (1 + Tax) × (1 + Tip)</span>
+                    </div>
+                    <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Cash Section */}
+              {results.baseCashVolume && results.baseCashVolume > 0 && (
+                <div>
+                  <h4 className="text-sm font-semibold text-gray-700 mb-2">Cash:</h4>
+                  <div className="space-y-2 pl-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Base Cash Volume (pre-tax, pre-tip)</span>
+                      <span className="font-medium">{formatCurrency(results.baseCashVolume || 0)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <span className="text-sm text-gray-600">Base Cash Volume + Menu Markup</span>
+                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Menu Markup)</span>
+                      </div>
+                      <span className="font-medium">{formatCurrency(results.menuPricedCashBase || 0)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <span className="text-sm text-gray-600">Cash Discount Applied</span>
+                        <span className="text-xs text-gray-400 italic">Menu-Priced Cash × Cash Discount %</span>
+                      </div>
+                      <span className="font-medium text-orange-600">−{formatCurrency(results.cashDiscountGiven || 0)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <span className="text-sm text-gray-600">Net Cash Base (after discount)</span>
+                        <span className="text-xs text-gray-400 italic">Menu-Priced − Discount</span>
+                      </div>
+                      <span className="font-medium">{formatCurrency(results.netCashBase || 0)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <span className="text-sm text-gray-600">Cash Processed Total (incl. net markup, tax, and tip)</span>
+                        <span className="text-xs text-gray-400 italic">Net Cash Base × (1 + Tax) × (1 + Tip)</span>
+                      </div>
+                      <span className="font-bold">{formatCurrency(results.cashProcessedTotal || 0)}</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Panel 2: Processing on Cards (New Program) */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Card Processed Total (incl. menu markup, tax, and tip)</span>
+                  <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Flat Rate %</span>
+                  <span className="font-medium">{((results.derivedFlatRate || 0) * 100).toFixed(2)}%</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Processor Charge on Cards</span>
+                    <span className="text-xs text-gray-400 italic">Card Processed Total × Flat Rate</span>
+                  </div>
+                  <span className="font-medium text-red-600">{formatCurrency(results.procCharge || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Card Menu Markup Collected (Cards)</span>
+                  <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Processing Cost after Menu Markup</span>
+                    <span className="text-xs text-gray-400 italic">Recovery = Card Markup − Processor Charge</span>
+                  </div>
+                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {formatCurrency(results.recovery || 0)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center border-t pt-2">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-700">Coverage %</span>
+                    <span className="text-xs text-gray-400 italic">Coverage % = Markup ÷ Processor Charge</span>
+                  </div>
+                  <span className="font-bold">{((results.coveragePct || 0) * 100).toFixed(1)}%</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Panel 3: Cash Revenue (New Program) */}
+            {results.baseCashVolume && results.baseCashVolume > 0 && (
+              <div className="border border-gray-200 rounded-lg p-4 bg-white">
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">Cash Revenue (New Program)</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Base Cash Volume (pre-tax, pre-tip)</span>
+                    <span className="font-medium">{formatCurrency(results.baseCashVolume || 0)}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-600">Menu Markup on Cash</span>
+                      <span className="text-xs text-gray-400 italic">Cash Base × Menu Markup %</span>
+                    </div>
+                    <span className="font-medium text-green-600">+{formatCurrency((results.menuPricedCashBase || 0) - (results.baseCashVolume || 0))}</span>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <div className="flex flex-col">
+                      <span className="text-sm text-gray-600">Less: Cash Discount Given</span>
+                      <span className="text-xs text-gray-400 italic">(Cash Base + Markup) × Cash Discount %</span>
+                    </div>
+                    <span className="font-medium text-orange-600">−{formatCurrency(results.cashDiscountGiven || 0)}</span>
+                  </div>
+                  <div className="flex justify-between items-center border-t pt-2 bg-amber-50 -mx-2 px-2 py-2 rounded">
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-gray-700">Net Revenue from Cash</span>
+                      <span className="text-xs text-gray-400 italic">Menu Markup − Discount Given</span>
+                    </div>
+                    <span className="font-bold text-amber-600">{formatCurrency(results.extraCashRevenue || 0)}</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Panel 4: Net Savings & Revenue */}
+            <div className="border border-gray-200 rounded-lg p-4 bg-white">
+              <h3 className="text-lg font-semibold text-gray-900 mb-3">Net Savings & Revenue</h3>
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                  <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Processing Cost After Menu Markup</span>
+                    <span className="text-xs text-gray-400 italic">Processor Charge − Card Markup Collected</span>
+                  </div>
+                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                    {formatCurrency(results.netChangeCards || 0)}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
+                    <span className="text-xs text-gray-400 italic">Current Cost − Net Change Cards</span>
+                  </div>
+                  <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
+                </div>
+                {results.extraCashRevenue && results.extraCashRevenue > 0 && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Revenue from Cash Differential</span>
+                    <span className="font-medium text-amber-600">{formatCurrency(results.extraCashRevenue || 0)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-700">Total Net Gain (Monthly)</span>
+                    <span className="text-xs text-gray-400 italic">Card Savings + Cash Revenue</span>
+                  </div>
+                  <span className="font-bold text-green-700">{formatCurrency(results.netMonthly || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
+                  <span className="font-bold text-green-600">{formatCurrency(results.netAnnual || 0)}</span>
+                </div>
+              </div>
+            </div>
           </>
         ) : (
           // v1.5.2: Dual Pricing - handwritten after-tax tips
