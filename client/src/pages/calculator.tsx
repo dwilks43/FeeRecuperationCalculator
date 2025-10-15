@@ -202,7 +202,7 @@ export default function Calculator() {
           <div className="grid grid-cols-12 gap-6 mb-4">
             <div className="col-span-12">
               <div className="text-center text-red-600 font-medium">
-                Please note that all calculations below are based off of tips post-sale and menu markup / price differential being added pre-tax
+                Please note that all calculations below are based off of tips being added after card is processed (handwritten). Further, all calculations are with the price increase (referred to as price differential or menu markup) occurring pre-tax and pre-tip.
               </div>
             </div>
           </div>
