@@ -223,7 +223,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
                         <span className="text-sm text-gray-600">Cash Discount Applied</span>
-                        <span className="text-xs text-gray-400 italic">Cash Base × Cash Discount %</span>
+                        <span className="text-xs text-gray-400 italic">(Base Cash Volume + Menu Markup) × Cash Discount %</span>
                       </div>
                       <span className="font-medium text-orange-600">−{formatCurrency(results.cashDiscountGiven || 0)}</span>
                     </div>
