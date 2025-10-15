@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, HelpCircle, ChevronDown, ChevronRight } from "lucide-react";
-import { CalculatorResults, TooltipKey } from "@/types/calculator";
+import { CalculatorResults, CalculatorInputs, TooltipKey } from "@/types/calculator";
 import { formatCurrency } from "@/utils/calculations";
 
 interface DualPricingBreakdownProps {
   results: CalculatorResults;
+  inputs: CalculatorInputs;
   onTooltip: (key: TooltipKey) => void;
   programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING';
 }
 
-export default function DualPricingBreakdown({ results, onTooltip, programType }: DualPricingBreakdownProps) {
+export default function DualPricingBreakdown({ results, inputs, onTooltip, programType }: DualPricingBreakdownProps) {
   const [showDetails, setShowDetails] = useState(false);
 
   // Dynamic captions based on combo key
@@ -204,7 +205,7 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               </div>
               
               {/* Cash Section */}
-              {results.baseCashVolume && results.baseCashVolume > 0 && (
+              {inputs.programType === 'CASH_DISCOUNTING' && inputs.monthlyCashVolume && inputs.monthlyCashVolume > 0 && (
                 <div>
                   <h4 className="text-sm font-semibold text-gray-700 mb-2">Cash:</h4>
                   <div className="space-y-2 pl-4">

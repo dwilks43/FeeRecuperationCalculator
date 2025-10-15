@@ -221,6 +221,7 @@ export default function Calculator() {
               <div className="p-6">
                 <DualPricingBreakdown
                   results={results}
+                  inputs={inputs}
                   onTooltip={handleTooltip}
                   programType={inputs.programType}
                 />
