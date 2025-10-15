@@ -289,7 +289,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
             </div>
 
             {/* Panel 3: Cash Revenue (New Program) */}
-            {results.baseCashVolume && results.baseCashVolume > 0 && (
+            {inputs.programType === 'CASH_DISCOUNTING' && (inputs.monthlyCashVolume && inputs.monthlyCashVolume > 0) && (
               <div className="border border-gray-200 rounded-lg p-4 bg-white">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Cash Revenue (New Program)</h3>
                 <div className="space-y-2">
@@ -316,7 +316,13 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       <span className="text-sm font-medium text-gray-700">Net Revenue from Cash</span>
                       <span className="text-xs text-gray-400 italic">Menu Markup − Discount Given</span>
                     </div>
-                    <span className="font-bold text-amber-600">{formatCurrency(results.extraCashRevenue || 0)}</span>
+                    <span className={`font-bold ${
+                      (results.extraCashRevenue || 0) > 0 ? 'text-amber-600' : 
+                      (results.extraCashRevenue || 0) < 0 ? 'text-red-600' : 
+                      'text-gray-600'
+                    }`}>
+                      {(results.extraCashRevenue || 0) < 0 ? '−' : ''}{formatCurrency(Math.abs(results.extraCashRevenue || 0))}
+                    </span>
                   </div>
                 </div>
               </div>

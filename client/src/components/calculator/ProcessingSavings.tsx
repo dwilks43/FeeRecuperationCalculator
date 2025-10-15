@@ -13,6 +13,16 @@ interface ProcessingSavingsProps {
 export default function ProcessingSavings({ results, onTooltip, programType }: ProcessingSavingsProps) {
   const isNegativeCost = results.newCost < 0;
   
+  // Debug logging
+  if (programType === 'CASH_DISCOUNTING') {
+    console.log('ProcessingSavings debug:', {
+      extraCashRevenue: results.extraCashRevenue,
+      isPositive: (results.extraCashRevenue || 0) > 0,
+      isNegative: (results.extraCashRevenue || 0) < 0,
+      isZero: (results.extraCashRevenue || 0) === 0
+    });
+  }
+  
   return (
     <Card className="bg-gradient-to-br from-dmp-blue-50 to-indigo-100 shadow-lg border border-dmp-blue-200">
       <CardHeader>
@@ -184,15 +194,29 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               </div>
             </div>
 
-            {/* 4. Revenue from Cash Differential - AMBER/GOLD */}
-            <div className="bg-amber-50 rounded-lg p-4 border border-amber-200">
+            {/* 4. Revenue from Cash Differential - DYNAMIC COLOR */}
+            <div className={`${
+              (results.extraCashRevenue || 0) > 0 ? 'bg-amber-50 border-amber-200' :
+              (results.extraCashRevenue || 0) < 0 ? 'bg-red-50 border-red-200' :
+              'bg-gray-50 border-gray-200'
+            } rounded-lg p-4 border`}>
               <div className="flex items-center gap-2 mb-2">
                 <span className="text-sm font-medium text-gray-600">Revenue from Cash Differential</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle className="h-5 w-5 text-amber-500" />
-                <span className="text-2xl font-bold text-amber-600">
-                  {formatCurrency(results.extraCashRevenue || 0)}
+                {(results.extraCashRevenue || 0) > 0 ? (
+                  <CheckCircle className="h-5 w-5 text-amber-500" />
+                ) : (results.extraCashRevenue || 0) < 0 ? (
+                  <MinusCircle className="h-5 w-5 text-red-500" />
+                ) : (
+                  <CheckCircle className="h-5 w-5 text-gray-500" />
+                )}
+                <span className={`text-2xl font-bold ${
+                  (results.extraCashRevenue || 0) > 0 ? 'text-amber-600' :
+                  (results.extraCashRevenue || 0) < 0 ? 'text-red-600' :
+                  'text-gray-600'
+                }`}>
+                  {(results.extraCashRevenue || 0) < 0 ? '−' : ''}{formatCurrency(Math.abs(results.extraCashRevenue || 0))}
                 </span>
               </div>
             </div>
