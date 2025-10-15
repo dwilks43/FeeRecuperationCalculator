@@ -175,7 +175,7 @@ export default function Calculator() {
         {/* Header Section */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2" data-testid="text-title">
-            Fee Recuperation Savings Calculator
+            Restaurant Fee Recuperation Savings Calculator
           </h1>
           <p className="text-gray-600 text-lg" data-testid="text-subtitle">
             Calculate your potential monthly savings with DMP's Fee Recuperation Program
@@ -196,6 +196,17 @@ export default function Calculator() {
             </Card>
           </div>
         </div>
+
+        {/* Red Notice for Dual Pricing and Cash Discounting */}
+        {(inputs.programType === 'DUAL_PRICING' || inputs.programType === 'CASH_DISCOUNTING') && (
+          <div className="grid grid-cols-12 gap-6 mb-4">
+            <div className="col-span-12">
+              <div className="text-center text-red-600 font-medium">
+                Please note that all calculations below are based off of tips post-sale and menu markup / price differential being added pre-tax
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Row 2: Input Parameters */}
         <div className="grid grid-cols-12 gap-6 mb-4">
