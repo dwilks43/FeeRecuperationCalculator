@@ -215,8 +215,8 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
-                        <span className="text-sm text-gray-600">Base Cash Volume + Price Differential</span>
-                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Price Differential)</span>
+                        <span className="text-sm text-gray-600">Base Cash Volume + Menu Markup</span>
+                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Menu Markup)</span>
                       </div>
                       <span className="font-medium">{formatCurrency(results.menuPricedCashBase || 0)}</span>
                     </div>
@@ -230,7 +230,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
                         <span className="text-sm text-gray-600">Net Cash Base (after discount)</span>
-                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Price Differential − Cash Discount %)</span>
+                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Menu Markup − Cash Discount %)</span>
                       </div>
                       <span className="font-medium">{formatCurrency(results.netCashBase || 0)}</span>
                     </div>
