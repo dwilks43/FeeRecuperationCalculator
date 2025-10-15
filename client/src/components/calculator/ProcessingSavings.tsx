@@ -13,16 +13,6 @@ interface ProcessingSavingsProps {
 export default function ProcessingSavings({ results, onTooltip, programType }: ProcessingSavingsProps) {
   const isNegativeCost = results.newCost < 0;
   
-  // Debug logging
-  if (programType === 'CASH_DISCOUNTING') {
-    console.log('ProcessingSavings debug:', {
-      extraCashRevenue: results.extraCashRevenue,
-      isPositive: (results.extraCashRevenue || 0) > 0,
-      isNegative: (results.extraCashRevenue || 0) < 0,
-      isZero: (results.extraCashRevenue || 0) === 0
-    });
-  }
-  
   return (
     <Card className="bg-gradient-to-br from-dmp-blue-50 to-indigo-100 shadow-lg border border-dmp-blue-200">
       <CardHeader>

@@ -475,8 +475,10 @@ function calculateCashDiscountingResults(inputs: CalculatorInputs): CalculatorRe
   const cashProcessedTotal = netCashBase * (1 + tax) * (1 + tip);
 
   // 11) Extra Revenue from Cash (the differential kept by merchant)
-  const extraCashRevenue = baseCashVolume * (pd - cd);
-  // This is the key: menu markup minus discount given
+  // This is the actual markup collected minus the discount given
+  const menuMarkupOnCash = baseCashVolume * pd;  // What merchant adds to cash prices
+  const extraCashRevenue = menuMarkupOnCash - cashDiscountGiven;  // Net revenue after giving discount
+  // This can be negative if discount exceeds markup!
 
   // PROCESSING COST CALCULATIONS
   // 12) Current Processing Cost
