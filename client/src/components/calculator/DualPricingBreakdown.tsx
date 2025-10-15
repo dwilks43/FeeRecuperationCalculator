@@ -326,16 +326,19 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Net Savings & Revenue</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                    <span className="text-xs text-gray-400 italic">Monthly Card Volume × Current Rate</span>
+                  </div>
                   <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Processing Cost After Menu Markup</span>
-                    <span className="text-xs text-gray-400 italic">Processor Charge − Card Markup Collected</span>
+                    <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
+                    <span className="text-xs text-gray-400 italic">Processor Charge − Card Price Increase Collected</span>
                   </div>
                   <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
-                    {formatCurrency(results.netChangeCards || 0)}
+                    {formatCurrency(Math.abs(results.netChangeCards || 0))}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -345,21 +348,25 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                   </div>
                   <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
                 </div>
-                {results.extraCashRevenue && results.extraCashRevenue > 0 && (
-                  <div className="flex justify-between items-center">
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
                     <span className="text-sm text-gray-600">Revenue from Cash Differential</span>
-                    <span className="font-medium text-amber-600">{formatCurrency(results.extraCashRevenue || 0)}</span>
+                    <span className="text-xs text-gray-400 italic">Cash Base × (Price Differential − Cash Discount %)</span>
                   </div>
-                )}
+                  <span className="font-medium text-amber-600">{formatCurrency(results.extraCashRevenue || 0)}</span>
+                </div>
                 <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
                   <div className="flex flex-col">
                     <span className="text-sm font-medium text-gray-700">Total Net Gain (Monthly)</span>
-                    <span className="text-xs text-gray-400 italic">Card Savings + Cash Revenue</span>
+                    <span className="text-xs text-gray-400 italic">Processing Cost Savings + Revenue from Cash</span>
                   </div>
                   <span className="font-bold text-green-700">{formatCurrency(results.netMonthly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
+                    <span className="text-xs text-gray-400 italic">Total Monthly Gain × 12</span>
+                  </div>
                   <span className="font-bold text-green-600">{formatCurrency(results.netAnnual || 0)}</span>
                 </div>
               </div>
