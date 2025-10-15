@@ -150,10 +150,11 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
     format: 'money' 
   });
   
-  if (inputs.monthlyCashVolume > 0) {
+  // For Cash Discounting, always show cash volume field
+  if (inputs.programType === 'CASH_DISCOUNTING' || inputs.monthlyCashVolume > 0) {
     rows.push({ 
       label: 'Monthly Cash Volume', 
-      value: inputs.monthlyCashVolume, 
+      value: inputs.monthlyCashVolume || 0, 
       format: 'money' 
     });
   }
@@ -165,7 +166,8 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
     format: 'percent' 
   });
   
-  if (inputs.interchangeCost > 0) {
+  // For Cash Discounting, always show interchange cost
+  if (inputs.programType === 'CASH_DISCOUNTING' || inputs.interchangeCost > 0) {
     rows.push({ 
       label: 'Interchange Cost', 
       value: inputs.interchangeCost / 100, 
@@ -182,8 +184,8 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
     format: 'percent' 
   });
   
-  // Tax and tip
-  if (inputs.taxRate > 0) {
+  // Tax and tip - For Cash Discounting, always show these fields
+  if (inputs.programType === 'CASH_DISCOUNTING' || inputs.taxRate > 0) {
     rows.push({ 
       label: 'Tax Rate', 
       value: inputs.taxRate / 100, 
@@ -191,7 +193,7 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
     });
   }
   
-  if (inputs.tipRate > 0) {
+  if (inputs.programType === 'CASH_DISCOUNTING' || inputs.tipRate > 0) {
     rows.push({ 
       label: 'Tip Rate', 
       value: inputs.tipRate / 100, 
@@ -367,7 +369,7 @@ function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: Ca
   
   // Cards Section
   rows.push({ 
-    label: '#### Cards:', 
+    label: 'Cards:', 
     value: '', 
     format: 'subsection' 
   });
@@ -390,44 +392,42 @@ function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: Ca
     format: 'money' 
   });
   
-  // Cash Section (if cash volume exists)
-  if (inputs.monthlyCashVolume && inputs.monthlyCashVolume > 0) {
-    rows.push({ 
-      label: '#### Cash:', 
-      value: '', 
-      format: 'subsection' 
-    });
-    
-    rows.push({ 
-      label: 'Base Cash Volume (pre-tax, pre-tip)', 
-      value: results.baseCashVolume || 0, 
-      format: 'money' 
-    });
-    
-    rows.push({ 
-      label: 'Base Cash Volume + Menu Markup', 
-      value: results.menuPricedCashBase || 0, 
-      format: 'money' 
-    });
-    
-    rows.push({ 
-      label: 'Cash Discount Applied', 
-      value: results.cashDiscountGiven || 0, 
-      format: 'money' 
-    });
-    
-    rows.push({ 
-      label: 'Net Cash Base (after discount)', 
-      value: results.netCashBase || 0, 
-      format: 'money' 
-    });
-    
-    rows.push({ 
-      label: 'Cash Processed Total (incl. net markup, tax, and tip)', 
-      value: results.cashProcessedTotal || 0, 
-      format: 'money' 
-    });
-  }
+  // Cash Section - always show for Cash Discounting even if cash volume is 0
+  rows.push({ 
+    label: 'Cash:', 
+    value: '', 
+    format: 'subsection' 
+  });
+  
+  rows.push({ 
+    label: 'Base Cash Volume (pre-tax, pre-tip)', 
+    value: results.baseCashVolume || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Base Cash Volume + Menu Markup', 
+    value: results.menuPricedCashBase || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Cash Discount Applied', 
+    value: results.cashDiscountGiven || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Net Cash Base (after discount)', 
+    value: results.netCashBase || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Cash Processed Total (incl. net markup, tax, and tip)', 
+    value: results.cashProcessedTotal || 0, 
+    format: 'money' 
+  });
   
   // Panel 2: Processing on Cards (New Program)
   rows.push({ 
@@ -472,38 +472,36 @@ function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: Ca
     format: 'percent' 
   });
   
-  // Panel 3: Cash Revenue (New Program) - only if cash volume exists
-  if (inputs.monthlyCashVolume && inputs.monthlyCashVolume > 0) {
-    rows.push({ 
-      label: '### Cash Revenue (New Program)', 
-      value: '', 
-      format: 'section' 
-    });
-    
-    rows.push({ 
-      label: 'Base Cash Volume (pre-tax, pre-tip)', 
-      value: results.baseCashVolume || 0, 
-      format: 'money' 
-    });
-    
-    rows.push({ 
-      label: 'Menu Markup on Cash', 
-      value: (results.menuPricedCashBase || 0) - (results.baseCashVolume || 0), 
-      format: 'money' 
-    });
-    
-    rows.push({ 
-      label: 'Less: Cash Discount Given', 
-      value: results.cashDiscountGiven || 0, 
-      format: 'money' 
-    });
-    
-    rows.push({ 
-      label: 'Net Revenue from Cash', 
-      value: results.extraCashRevenue || 0, 
-      format: 'money' 
-    });
-  }
+  // Panel 3: Cash Revenue (New Program) - always show for Cash Discounting
+  rows.push({ 
+    label: '### Cash Revenue (New Program)', 
+    value: '', 
+    format: 'section' 
+  });
+  
+  rows.push({ 
+    label: 'Base Cash Volume (pre-tax, pre-tip)', 
+    value: results.baseCashVolume || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Menu Markup on Cash', 
+    value: (results.menuPricedCashBase || 0) - (results.baseCashVolume || 0), 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Less: Cash Discount Given', 
+    value: results.cashDiscountGiven || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Net Revenue from Cash', 
+    value: results.extraCashRevenue || 0, 
+    format: 'money' 
+  });
   
   // Panel 4: Net Savings & Revenue
   rows.push({ 
