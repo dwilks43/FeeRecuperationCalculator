@@ -214,22 +214,22 @@ export default function DualPricingBreakdown({ results, onTooltip, programType }
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
-                        <span className="text-sm text-gray-600">Base Cash Volume + Menu Markup</span>
-                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Menu Markup)</span>
+                        <span className="text-sm text-gray-600">Base Cash Volume + Price Differential</span>
+                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Price Differential)</span>
                       </div>
                       <span className="font-medium">{formatCurrency(results.menuPricedCashBase || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
                         <span className="text-sm text-gray-600">Cash Discount Applied</span>
-                        <span className="text-xs text-gray-400 italic">Menu-Priced Cash × Cash Discount %</span>
+                        <span className="text-xs text-gray-400 italic">Cash Base × Cash Discount %</span>
                       </div>
                       <span className="font-medium text-orange-600">−{formatCurrency(results.cashDiscountGiven || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
                         <span className="text-sm text-gray-600">Net Cash Base (after discount)</span>
-                        <span className="text-xs text-gray-400 italic">Menu-Priced − Discount</span>
+                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Price Differential − Cash Discount %)</span>
                       </div>
                       <span className="font-medium">{formatCurrency(results.netCashBase || 0)}</span>
                     </div>
