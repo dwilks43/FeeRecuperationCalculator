@@ -354,6 +354,203 @@ function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: Calcul
   return rows;
 }
 
+// Build Live Volume Breakdown rows for Cash Discounting matching the app's 4 panels
+function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: CalculatorResults): any[] {
+  const rows = [];
+  
+  // Panel 1: Derived Bases & Totals
+  rows.push({ 
+    label: '### Derived Bases & Totals', 
+    value: '', 
+    format: 'section' 
+  });
+  
+  // Cards Section
+  rows.push({ 
+    label: '#### Cards:', 
+    value: '', 
+    format: 'subsection' 
+  });
+  
+  rows.push({ 
+    label: 'Base Card Volume (pre-tax, pre-tip)', 
+    value: results.base || results.baseVolume || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Base Card Volume + Menu Markup', 
+    value: results.priceAdjustedBase || results.markedUpVolume || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Card Processed Total (incl. markup, tax, and tip)', 
+    value: results.processed || results.adjustedVolume || 0, 
+    format: 'money' 
+  });
+  
+  // Cash Section (if cash volume exists)
+  if (inputs.monthlyCashVolume && inputs.monthlyCashVolume > 0) {
+    rows.push({ 
+      label: '#### Cash:', 
+      value: '', 
+      format: 'subsection' 
+    });
+    
+    rows.push({ 
+      label: 'Base Cash Volume (pre-tax, pre-tip)', 
+      value: results.baseCashVolume || 0, 
+      format: 'money' 
+    });
+    
+    rows.push({ 
+      label: 'Base Cash Volume + Menu Markup', 
+      value: results.menuPricedCashBase || 0, 
+      format: 'money' 
+    });
+    
+    rows.push({ 
+      label: 'Cash Discount Applied', 
+      value: results.cashDiscountGiven || 0, 
+      format: 'money' 
+    });
+    
+    rows.push({ 
+      label: 'Net Cash Base (after discount)', 
+      value: results.netCashBase || 0, 
+      format: 'money' 
+    });
+    
+    rows.push({ 
+      label: 'Cash Processed Total (incl. net markup, tax, and tip)', 
+      value: results.cashProcessedTotal || 0, 
+      format: 'money' 
+    });
+  }
+  
+  // Panel 2: Processing on Cards (New Program)
+  rows.push({ 
+    label: '### Processing on Cards (New Program)', 
+    value: '', 
+    format: 'section' 
+  });
+  
+  rows.push({ 
+    label: 'Card Processed Total (incl. menu markup, tax, and tip)', 
+    value: results.processed || results.adjustedVolume || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Flat Rate %', 
+    value: results.derivedFlatRate || 0, 
+    format: 'percent' 
+  });
+  
+  rows.push({ 
+    label: 'Processor Charge on Cards', 
+    value: results.procCharge || results.processingFees || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Card Menu Markup Collected (Cards)', 
+    value: results.markupCollected || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Processing Cost after Menu Markup', 
+    value: results.recovery || results.netChangeCards || results.residualAfterMarkup || results.newCost || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Coverage %', 
+    value: results.coveragePct || 0, 
+    format: 'percent' 
+  });
+  
+  // Panel 3: Cash Revenue (New Program) - only if cash volume exists
+  if (inputs.monthlyCashVolume && inputs.monthlyCashVolume > 0) {
+    rows.push({ 
+      label: '### Cash Revenue (New Program)', 
+      value: '', 
+      format: 'section' 
+    });
+    
+    rows.push({ 
+      label: 'Base Cash Volume (pre-tax, pre-tip)', 
+      value: results.baseCashVolume || 0, 
+      format: 'money' 
+    });
+    
+    rows.push({ 
+      label: 'Menu Markup on Cash', 
+      value: (results.menuPricedCashBase || 0) - (results.baseCashVolume || 0), 
+      format: 'money' 
+    });
+    
+    rows.push({ 
+      label: 'Less: Cash Discount Given', 
+      value: results.cashDiscountGiven || 0, 
+      format: 'money' 
+    });
+    
+    rows.push({ 
+      label: 'Net Revenue from Cash', 
+      value: results.extraCashRevenue || 0, 
+      format: 'money' 
+    });
+  }
+  
+  // Panel 4: Net Savings & Revenue
+  rows.push({ 
+    label: '### Net Savings & Revenue', 
+    value: '', 
+    format: 'section' 
+  });
+  
+  rows.push({ 
+    label: 'Current Processing Cost (Today)', 
+    value: results.currentCost || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Processing Cost After Menu Markup', 
+    value: Math.abs(results.netChangeCards || 0), 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Processing Cost Savings (Cards Only)', 
+    value: results.savingsCardsOnly || results.monthlySavings || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Revenue from Cash Differential', 
+    value: results.extraCashRevenue || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Total Net Gain (Monthly)', 
+    value: results.netMonthly || results.monthlySavings || 0, 
+    format: 'money' 
+  });
+  
+  rows.push({ 
+    label: 'Annual Net Gain', 
+    value: results.netAnnual || results.annualSavings || 0, 
+    format: 'money' 
+  });
+  
+  return rows;
+}
+
 // Build Live Volume Breakdown rows for Supplemental Fee matching the app's 3 sections
 function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: CalculatorResults): any[] {
   const rows = [];
@@ -548,36 +745,123 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
       format: 'money',
       highlight: true
     });
-  } else {
-    // Dual Pricing mode - keep existing
+  } else if (inputs.programType === 'CASH_DISCOUNTING') {
+    // Match the UI's Savings Summary exactly for Cash Discounting
     
-    // Current Cost
+    // 1. Current Processing Cost (Today)
     items.push({
-      label: 'Current Cost',
-      value: results.currentCost,
+      label: 'Current Processing Cost (Today)',
+      value: results.currentCost || 0,
       format: 'money'
     });
     
-    // New Cost
-    const newCostValue = results.netChangeCards || results.newCost || 0;
+    // 2. Processor Charge on Cards
     items.push({
-      label: 'New Cost',
-      value: newCostValue,
+      label: 'Processor Charge on Cards',
+      value: results.procCharge || 0,
       format: 'money'
     });
     
-    // Monthly Savings
+    // 3. Card Menu Markup Collected
     items.push({
-      label: 'Monthly Savings',
-      value: results.monthlySavings,
+      label: 'Card Menu Markup Collected',
+      value: results.markupCollected || 0,
+      format: 'money'
+    });
+    
+    // 4. Revenue from Cash Differential
+    items.push({
+      label: 'Revenue from Cash Differential',
+      value: results.extraCashRevenue || 0,
+      format: 'money'
+    });
+    
+    // 5. Processing Cost after Menu Markup
+    items.push({
+      label: 'Processing Cost after Menu Markup',
+      value: results.recovery || 0,
+      format: 'money'
+    });
+    
+    // 6. Processing Cost Savings (Cards Only)
+    items.push({
+      label: 'Processing Cost Savings (Cards Only)',
+      value: results.savingsCardsOnly || 0,
+      format: 'money'
+    });
+    
+    // 7. Total Net Gain (Monthly)
+    items.push({
+      label: 'Total Net Gain (Monthly)',
+      value: results.netMonthly || 0,
       format: 'money',
       highlight: true
     });
     
-    // Annual Savings
+    // 8. Annual Net Gain
     items.push({
-      label: 'Annual Savings',
-      value: results.annualSavings,
+      label: 'Annual Net Gain',
+      value: results.netAnnual || 0,
+      format: 'money',
+      highlight: true
+    });
+  } else {
+    // Dual Pricing mode - Match the UI's 8-item layout
+    
+    // 1. Current Processing Cost (Today)
+    items.push({
+      label: 'Current Processing Cost (Today)',
+      value: results.currentCost || 0,
+      format: 'money'
+    });
+    
+    // 2. Processor Charge on Cards
+    items.push({
+      label: 'Processor Charge on Cards',
+      value: results.procCharge || 0,
+      format: 'money'
+    });
+    
+    // 3. Card Price Increase Collected (Cards)
+    items.push({
+      label: 'Card Price Increase Collected (Cards)',
+      value: results.markupCollected || 0,
+      format: 'money'
+    });
+    
+    // 4. Processing Cost after Price Differential
+    items.push({
+      label: 'Processing Cost after Price Differential',
+      value: results.recovery || 0,
+      format: 'money'
+    });
+    
+    // 5. Processing Cost Savings (Cards Only)
+    items.push({
+      label: 'Processing Cost Savings (Cards Only)',
+      value: results.savingsCardsOnly || 0,
+      format: 'money'
+    });
+    
+    // 6. Processing Cost Savings %
+    items.push({
+      label: 'Processing Cost Savings %',
+      value: results.procSavingsPct || 0,
+      format: 'percent'
+    });
+    
+    // 7. Total Net Gain (Monthly)
+    items.push({
+      label: 'Total Net Gain (Monthly)',
+      value: results.netMonthly || results.monthlySavings || 0,
+      format: 'money',
+      highlight: true
+    });
+    
+    // 8. Annual Net Gain
+    items.push({
+      label: 'Annual Net Gain',
+      value: results.netAnnual || results.annualSavings || 0,
       format: 'money',
       highlight: true
     });
@@ -632,9 +916,14 @@ export function buildPdfUiModel(
   const liveVolumeTitle = inputs.programType === 'DUAL_PRICING' || inputs.programType === 'CASH_DISCOUNTING' ? 
     'Live Volume Breakdown' : 'Live Calculations';
   
-  const liveVolumeRows = inputs.programType === 'DUAL_PRICING' || inputs.programType === 'CASH_DISCOUNTING' ?
-    buildDualPricingBreakdownRows(inputs, results) :
-    buildSupplementalFeeBreakdownRows(inputs, results);
+  let liveVolumeRows: any[];
+  if (inputs.programType === 'DUAL_PRICING') {
+    liveVolumeRows = buildDualPricingBreakdownRows(inputs, results);
+  } else if (inputs.programType === 'CASH_DISCOUNTING') {
+    liveVolumeRows = buildCashDiscountingBreakdownRows(inputs, results);
+  } else {
+    liveVolumeRows = buildSupplementalFeeBreakdownRows(inputs, results);
+  }
   
   // Build monthly savings items first
   const monthlySavingsItems = buildMonthlySavingsItems(inputs, results);
