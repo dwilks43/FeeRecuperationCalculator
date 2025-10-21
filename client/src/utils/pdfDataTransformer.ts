@@ -54,12 +54,18 @@ function getFeeTaxBasisLabel(feeTaxBasis?: string): string {
 
 // Get order of operations text based on program type and settings
 function getOrderOfOperationsText(inputs: CalculatorInputs): string {
+  const isRetail = inputs.businessType === 'RETAIL';
+  
   if (inputs.programType === 'DUAL_PRICING') {
-    return 'Base Card Volume → +Price Differential → +Tax → +Tip';
+    return isRetail ? 
+      'Base Card Volume → +Price Differential → +Tax' :
+      'Base Card Volume → +Price Differential → +Tax → +Tip';
   }
   
   if (inputs.programType === 'CASH_DISCOUNTING') {
-    return 'Base Volume → +Menu Markup → Cash: -Cash Discount | Cards: +Tax → +Tip';
+    return isRetail ?
+      'Base Volume → +Menu Markup → Cash: -Cash Discount | Cards: +Tax' :
+      'Base Volume → +Menu Markup → Cash: -Cash Discount | Cards: +Tax → +Tip';
   }
   
   // Supplemental Fee order of operations
@@ -68,6 +74,17 @@ function getOrderOfOperationsText(inputs: CalculatorInputs): string {
   const feeTaxBasis = inputs.feeTaxBasis || 'POST_TAX';
   
   const comboKey = `${tipTiming}__${feeTaxBasis}`;
+  
+  // For Retail businesses, remove tip from the order of operations
+  if (isRetail) {
+    const orderOfOperationsMap: Record<string, string> = {
+      'BEFORE_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Supplemental Fee',
+      'BEFORE_TIP__PRE_TAX': 'Pre-Tax Base → +Supplemental Fee → +Tax',
+      'AFTER_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Supplemental Fee',
+      'AFTER_TIP__PRE_TAX': 'Pre-Tax Base → +Fee → +Tax'
+    };
+    return orderOfOperationsMap[comboKey] || 'Standard order of operations';
+  }
   
   const orderOfOperationsMap: Record<string, string> = {
     'BEFORE_TIP__POST_TAX': 'Pre-Tax Base → +Tax → +Supplemental Fee → +Tip',

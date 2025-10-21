@@ -17,6 +17,7 @@ interface InputFormProps {
 export default function InputForm({ inputs, onInputChange, onTooltip }: InputFormProps) {
   const [inputValues, setInputValues] = useState<Record<keyof CalculatorInputs, string>>({
     programType: inputs.programType,
+    businessType: inputs.businessType || 'RESTAURANT',
     monthlyVolume: formatNumberInput(inputs.monthlyVolume),
     monthlyCashVolume: formatNumberInput(inputs.monthlyCashVolume),
     currentRate: formatNumberInput(inputs.currentRate),
@@ -232,6 +233,54 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Business Type Selection */}
+        <div className="mb-4 p-4 bg-blue-50 rounded-lg">
+          <Label className="text-sm font-medium text-gray-700 mb-3 block">Business Type</Label>
+          <div className="flex gap-4 flex-wrap">
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="businessType"
+                value="RESTAURANT"
+                checked={(inputs.businessType || 'RESTAURANT') === 'RESTAURANT'}
+                onChange={(e) => {
+                  handleRadioChange('businessType', 'RESTAURANT');
+                  // Reset tip rate to previous value when switching back to Restaurant
+                  if (inputs.businessType === 'RETAIL') {
+                    handleInputChange('tipRate', '15');
+                    setInputValues(prev => ({ ...prev, tipRate: '15' }));
+                  }
+                }}
+                className="mr-2"
+                data-testid="radio-business-restaurant"
+              />
+              <span className="text-sm">Restaurant/QSR</span>
+            </label>
+            <label className="flex items-center">
+              <input
+                type="radio"
+                name="businessType"
+                value="RETAIL"
+                checked={inputs.businessType === 'RETAIL'}
+                onChange={(e) => {
+                  handleRadioChange('businessType', 'RETAIL');
+                  // Set tip rate to 0 when switching to Retail
+                  handleInputChange('tipRate', '0');
+                  setInputValues(prev => ({ ...prev, tipRate: '0' }));
+                }}
+                className="mr-2"
+                data-testid="radio-business-retail"
+              />
+              <span className="text-sm">Retail</span>
+            </label>
+          </div>
+          {inputs.businessType === 'RETAIL' && (
+            <div className="mt-2 text-xs text-gray-600 italic">
+              Tip calculations not applicable for retail businesses
+            </div>
+          )}
+        </div>
+
         {/* Program Type Selection */}
         <div className="mb-6 p-4 bg-gray-50 rounded-lg">
           <Label className="text-sm font-medium text-gray-700 mb-3 block">Program Type</Label>
@@ -463,31 +512,32 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             )}
           </div>
 
-          {/* Tip Rate - now enabled for Supplemental Fee mode */}
-          <div>
-            <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Tip Rate
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-auto p-0"
-                onClick={() => onTooltip('tip-rate')}
-                data-testid="button-tooltip-tip-rate"
-              >
-                <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
-              </Button>
-            </Label>
-            <div className="relative">
-              <Input
-                type="text"
-                className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
-                placeholder="20.00"
-                value={inputValues.tipRate}
-                onChange={(e) => handleInputChange('tipRate', e.target.value)}
-                data-testid="input-tip-rate"
-              />
-              <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
-            </div>
+          {/* Tip Rate - hidden for Retail businesses */}
+          {inputs.businessType !== 'RETAIL' ? (
+            <div>
+              <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
+                Tip Rate
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-auto p-0"
+                  onClick={() => onTooltip('tip-rate')}
+                  data-testid="button-tooltip-tip-rate"
+                >
+                  <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
+                </Button>
+              </Label>
+              <div className="relative">
+                <Input
+                  type="text"
+                  className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
+                  placeholder="20.00"
+                  value={inputValues.tipRate}
+                  onChange={(e) => handleInputChange('tipRate', e.target.value)}
+                  data-testid="input-tip-rate"
+                />
+                <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
+              </div>
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
               <div className="mt-2 flex justify-center">
                 <div>
@@ -525,7 +575,10 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 </div>
               </div>
             )}
-          </div>
+            </div>
+          ) : (
+            <div>{/* Empty div to maintain grid layout when Retail is selected */}</div>
+          )}
 
           {/* Price Differential / Supplemental Fee / Menu Markup */}
           <div>

@@ -115,12 +115,18 @@ export function calculateAutoFlatRate(fee: number): number {
  * Calculate all results from inputs
  */
 export function calculateResults(inputs: CalculatorInputs): CalculatorResults {
-  if (inputs.programType === 'SUPPLEMENTAL_FEE') {
-    return calculateSupplementalFeeResults(inputs);
-  } else if (inputs.programType === 'CASH_DISCOUNTING') {
-    return calculateCashDiscountingResults(inputs);
+  // Override tip rate to 0 for Retail businesses
+  const adjustedInputs = {
+    ...inputs,
+    tipRate: inputs.businessType === 'RETAIL' ? 0 : inputs.tipRate
+  };
+  
+  if (adjustedInputs.programType === 'SUPPLEMENTAL_FEE') {
+    return calculateSupplementalFeeResults(adjustedInputs);
+  } else if (adjustedInputs.programType === 'CASH_DISCOUNTING') {
+    return calculateCashDiscountingResults(adjustedInputs);
   }
-  return calculateDualPricingResults(inputs);
+  return calculateDualPricingResults(adjustedInputs);
 }
 
 function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorResults {

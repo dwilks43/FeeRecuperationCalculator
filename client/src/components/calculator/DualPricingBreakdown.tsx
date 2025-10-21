@@ -68,17 +68,21 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
-                <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Tip-Eligible Volume (Cards)</span>
-                    <span className="text-xs text-gray-400 italic">({getDynamicCaption('tipBase')})</span>
-                  </div>
-                  <span className="font-medium">{formatCurrency(results.tipBase || 0)}</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Tip Amount</span>
-                  <span className="font-medium">{formatCurrency(results.tipAmount || 0)}</span>
-                </div>
+                {inputs.businessType !== 'RETAIL' && (
+                  <>
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-col">
+                        <span className="text-sm text-gray-600">Tip-Eligible Volume (Cards)</span>
+                        <span className="text-xs text-gray-400 italic">({getDynamicCaption('tipBase')})</span>
+                      </div>
+                      <span className="font-medium">{formatCurrency(results.tipBase || 0)}</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-gray-600">Tip Amount</span>
+                      <span className="font-medium">{formatCurrency(results.tipAmount || 0)}</span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
@@ -87,7 +91,11 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Processed Total (after fee, tip, & tax)</span>
+                  <span className="text-sm text-gray-600">
+                    {inputs.businessType === 'RETAIL' ?
+                      'Card Processed Total (after fee & tax)' :
+                      'Card Processed Total (after fee, tip, & tax)'}
+                  </span>
                   <span className="font-bold">{formatCurrency(results.cardProcessedTotal || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -171,7 +179,9 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
             <div className="mb-4 p-3 bg-gradient-to-r from-dmp-blue-50 to-blue-100 rounded-lg border border-dmp-blue-200">
               <div className="text-xs font-medium text-dmp-blue-700 mb-1">Order of Operations</div>
               <div className="text-sm text-dmp-blue-600 font-mono">
-                Base Volume → +Menu Markup → −Cash Discount (Cash Only) → +Tax → +Tip (handwritten)
+                {inputs.businessType === 'RETAIL' ?
+                  'Base Volume → +Menu Markup → −Cash Discount (Cash Only) → +Tax' :
+                  'Base Volume → +Menu Markup → −Cash Discount (Cash Only) → +Tax → +Tip (handwritten)'}
               </div>
             </div>
 
@@ -184,7 +194,11 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 <h4 className="text-sm font-semibold text-gray-700 mb-2">Cards:</h4>
                 <div className="space-y-2 pl-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Base Card Volume (pre-tax, pre-tip)</span>
+                    <span className="text-sm text-gray-600">
+                      {inputs.businessType === 'RETAIL' ?
+                        'Base Card Volume (pre-tax)' :
+                        'Base Card Volume (pre-tax, pre-tip)'}
+                    </span>
                     <span className="font-medium">{formatCurrency(results.base || 0)}</span>
                   </div>
                   <div className="flex justify-between items-center">
@@ -196,8 +210,16 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   </div>
                   <div className="flex justify-between items-center">
                     <div className="flex flex-col">
-                      <span className="text-sm text-gray-600">Card Processed Total (incl. markup, tax, and tip)</span>
-                      <span className="text-xs text-gray-400 italic">Menu-Priced Base × (1 + Tax) × (1 + Tip)</span>
+                      <span className="text-sm text-gray-600">
+                        {inputs.businessType === 'RETAIL' ? 
+                          'Card Processed Total (incl. markup and tax)' : 
+                          'Card Processed Total (incl. markup, tax, and tip)'}
+                      </span>
+                      <span className="text-xs text-gray-400 italic">
+                        {inputs.businessType === 'RETAIL' ?
+                          'Menu-Priced Base × (1 + Tax)' :
+                          'Menu-Priced Base × (1 + Tax) × (1 + Tip)'}
+                      </span>
                     </div>
                     <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                   </div>
@@ -210,7 +232,11 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <h4 className="text-sm font-semibold text-gray-700 mb-2">Cash:</h4>
                   <div className="space-y-2 pl-4">
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Base Cash Volume (pre-tax, pre-tip)</span>
+                      <span className="text-sm text-gray-600">
+                        {inputs.businessType === 'RETAIL' ?
+                          'Base Cash Volume (pre-tax)' :
+                          'Base Cash Volume (pre-tax, pre-tip)'}
+                      </span>
                       <span className="font-medium">{formatCurrency(results.baseCashVolume || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
@@ -236,8 +262,16 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     </div>
                     <div className="flex justify-between items-center">
                       <div className="flex flex-col">
-                        <span className="text-sm text-gray-600">Cash Processed Total (incl. net markup, tax, and tip)</span>
-                        <span className="text-xs text-gray-400 italic">Net Cash Base × (1 + Tax) × (1 + Tip)</span>
+                        <span className="text-sm text-gray-600">
+                          {inputs.businessType === 'RETAIL' ?
+                            'Cash Processed Total (incl. net markup and tax)' :
+                            'Cash Processed Total (incl. net markup, tax, and tip)'}
+                        </span>
+                        <span className="text-xs text-gray-400 italic">
+                          {inputs.businessType === 'RETAIL' ?
+                            'Net Cash Base × (1 + Tax)' :
+                            'Net Cash Base × (1 + Tax) × (1 + Tip)'}
+                        </span>
                       </div>
                       <span className="font-bold">{formatCurrency(results.cashProcessedTotal || 0)}</span>
                     </div>
@@ -251,7 +285,11 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Processed Total (incl. menu markup, tax, and tip)</span>
+                  <span className="text-sm text-gray-600">
+                    {inputs.businessType === 'RETAIL' ?
+                      'Card Processed Total (incl. menu markup and tax)' :
+                      'Card Processed Total (incl. menu markup, tax, and tip)'}
+                  </span>
                   <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -386,7 +424,9 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
             <div className="mb-4 p-3 bg-gradient-to-r from-dmp-blue-50 to-blue-100 rounded-lg border border-dmp-blue-200">
               <div className="text-xs font-medium text-dmp-blue-700 mb-1">Order of Operations</div>
               <div className="text-sm text-dmp-blue-600 font-mono">
-                Base Card Volume → +Price Differential → +Tax → +Tip (handwritten)
+                {inputs.businessType === 'RETAIL' ?
+                  'Base Card Volume → +Price Differential → +Tax' :
+                  'Base Card Volume → +Price Differential → +Tax → +Tip (handwritten)'}
               </div>
             </div>
             {/* Panel 1: Derived Bases & Totals */}
@@ -406,8 +446,16 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Card Processed Total (incl. price differential, tax, and tip)</span>
-                    <span className="text-xs text-gray-400 italic">Price-Adjusted Base × (1 + Tax) × (1 + Tip)</span>
+                    <span className="text-sm text-gray-600">
+                      {inputs.businessType === 'RETAIL' ?
+                        'Card Processed Total (incl. price differential and tax)' :
+                        'Card Processed Total (incl. price differential, tax, and tip)'}
+                    </span>
+                    <span className="text-xs text-gray-400 italic">
+                      {inputs.businessType === 'RETAIL' ?
+                        'Price-Adjusted Base × (1 + Tax)' :
+                        'Price-Adjusted Base × (1 + Tax) × (1 + Tip)'}
+                    </span>
                   </div>
                   <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                 </div>
@@ -418,7 +466,11 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Processed Total (incl. price differential, tax, and tip)</span>
+                  <span className="text-sm text-gray-600">
+                    {inputs.businessType === 'RETAIL' ?
+                      'Card Processed Total (incl. price differential and tax)' :
+                      'Card Processed Total (incl. price differential, tax, and tip)'}
+                  </span>
                   <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">

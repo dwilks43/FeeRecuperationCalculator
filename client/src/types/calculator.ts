@@ -5,6 +5,7 @@ export type TipTiming = 'BEFORE_TIP' | 'AFTER_TIP';
 
 export interface CalculatorInputs {
   programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING';
+  businessType?: 'RESTAURANT' | 'RETAIL';  // Restaurant/QSR vs Retail toggle
   monthlyVolume: number;
   monthlyCashVolume: number;
   currentRate: number;

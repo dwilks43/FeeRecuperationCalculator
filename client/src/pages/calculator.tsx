@@ -17,6 +17,7 @@ import { preparePdfData } from "@/utils/pdfDataTransformer";
 export default function Calculator() {
   const [inputs, setInputs] = useState<CalculatorInputs>({
     programType: 'DUAL_PRICING',
+    businessType: 'RESTAURANT', // Default to Restaurant
     monthlyVolume: 0,
     monthlyCashVolume: 0,
     currentRate: 0,
