@@ -1,6 +1,6 @@
 # Overview
 
-This is a professional React-based **Fee Recuperation Savings Calculator** for Dynamic Merchant Processing (DMP). The main purpose is to help merchants understand their potential cost savings when switching to DMP's Fee Recuperation Program (dual pricing payment processing model). The application calculates processing fees, markup collections, and demonstrates how the program can reduce or eliminate credit card processing costs for businesses.
+This is a professional React-based **Fee Recuperation Savings Calculator** for Dynamic Merchant Processing (DMP). The main purpose is to help merchants understand their potential cost savings when switching to DMP's Fee Recuperation Program (dual pricing, cash discounting, or supplemental fee payment processing models). The application calculates processing fees, markup collections, and demonstrates how the program can reduce or eliminate credit card processing costs for businesses.
 
 The calculator takes various merchant parameters (monthly credit card volume, monthly cash volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under the Fee Recuperation Program, along with potential monthly and annual savings. It generates professional PDF reports with DMP branding for sales presentations.
 

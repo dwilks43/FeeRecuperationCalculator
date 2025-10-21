@@ -176,7 +176,7 @@ export default function Calculator() {
         {/* Header Section */}
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2" data-testid="text-title">
-            Restaurant Fee Recuperation Savings Calculator
+            Fee Recuperation Savings Calculator
           </h1>
           <p className="text-gray-600 text-lg" data-testid="text-subtitle">
             Calculate your potential monthly savings with DMP's Fee Recuperation Program
