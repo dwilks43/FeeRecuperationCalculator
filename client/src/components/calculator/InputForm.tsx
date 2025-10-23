@@ -29,7 +29,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     flatRatePct: formatNumberInput(inputs.flatRatePct || 0),
     tipBasis: inputs.tipBasis || 'fee_inclusive',
     feeTiming: inputs.feeTiming || 'FEE_BEFORE_TIP',
-    feeTaxBasis: inputs.feeTaxBasis || 'POST_TAX',
+    feeTaxBasis: inputs.feeTaxBasis || 'PRE_TAX',
     cardVolumeBasis: inputs.cardVolumeBasis || 'PRE_TAX',
     // v1.0.1 fields
     tipTiming: inputs.tipTiming || 'BEFORE_TIP',
@@ -90,6 +90,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       priceDifferentialValue = 4;
       onInputChange('priceDifferential', 4);
       setInputValues(prev => ({ ...prev, priceDifferential: '4' }));
+    }
+    
+    // Reset fee tax basis to default (PRE_TAX) when switching to Supplemental Fee
+    if (newType === 'SUPPLEMENTAL_FEE') {
+      onInputChange('feeTaxBasis', 'PRE_TAX' as any);
     }
     
     // Auto-calculate flat rate when switching programs
@@ -547,28 +552,28 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                       <input
                         type="radio"
                         name="feeTaxBasis"
-                        value="POST_TAX"
-                        checked={(inputs.feeTaxBasis || 'POST_TAX') === 'POST_TAX'}
-                        onChange={(e) => handleRadioChange('feeTaxBasis', 'POST_TAX')}
-                        className="mr-2 mt-0.5"
-                      />
-                      <div>
-                        <div className="font-medium">Apply fee to post-tax amount</div>
-                        <div className="text-gray-500 text-xs">Tax is added before fee.</div>
-                      </div>
-                    </label>
-                    <label className="flex items-start text-xs cursor-pointer">
-                      <input
-                        type="radio"
-                        name="feeTaxBasis"
                         value="PRE_TAX"
-                        checked={inputs.feeTaxBasis === 'PRE_TAX'}
+                        checked={(inputs.feeTaxBasis || 'PRE_TAX') === 'PRE_TAX'}
                         onChange={(e) => handleRadioChange('feeTaxBasis', 'PRE_TAX')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
                         <div className="font-medium">Apply fee to pre-tax amount</div>
                         <div className="text-gray-500 text-xs">Fee is calculated before tax.</div>
+                      </div>
+                    </label>
+                    <label className="flex items-start text-xs cursor-pointer">
+                      <input
+                        type="radio"
+                        name="feeTaxBasis"
+                        value="POST_TAX"
+                        checked={inputs.feeTaxBasis === 'POST_TAX'}
+                        onChange={(e) => handleRadioChange('feeTaxBasis', 'POST_TAX')}
+                        className="mr-2 mt-0.5"
+                      />
+                      <div>
+                        <div className="font-medium">Apply fee to post-tax amount</div>
+                        <div className="text-gray-500 text-xs">Tax is added before fee.</div>
                       </div>
                     </label>
                   </div>

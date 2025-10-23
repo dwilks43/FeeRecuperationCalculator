@@ -71,7 +71,7 @@ function getOrderOfOperationsText(inputs: CalculatorInputs): string {
   // Supplemental Fee order of operations
   const tipTiming = inputs.tipTiming || 
     (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP');
-  const feeTaxBasis = inputs.feeTaxBasis || 'POST_TAX';
+  const feeTaxBasis = inputs.feeTaxBasis || 'PRE_TAX';
   
   const comboKey = `${tipTiming}__${feeTaxBasis}`;
   

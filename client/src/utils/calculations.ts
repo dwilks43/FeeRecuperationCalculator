@@ -148,7 +148,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
   // New v1.0.1 timing approach - map legacy to new types
   const tipTiming = inputs.tipTiming || 
     (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP');
-  const feeTaxBasis = inputs.feeTaxBasis || 'POST_TAX';
+  const feeTaxBasis = inputs.feeTaxBasis || 'PRE_TAX';
 
   // Build combo key for formula selection
   const comboKey = `${tipTiming}__${feeTaxBasis}`;
