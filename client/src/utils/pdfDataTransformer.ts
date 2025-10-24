@@ -696,6 +696,56 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   return rows;
 }
 
+// Build Sales Impact section for hero display
+function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorResults): any {
+  const monthlySavings = results.netMonthly || results.monthlySavings || results.totalNetGainRevenue || 0;
+  const annualSavings = results.netAnnual || results.annualSavings || results.annualNetGainRevenue || 0;
+  const coveragePct = results.coveragePct || results.procSavingsPct || 0;
+  
+  // Generate emotional context based on savings amount
+  let businessContext = '';
+  if (monthlySavings >= 5000) {
+    businessContext = "That's your equipment upgrade fund covered";
+  } else if (monthlySavings >= 2000) {
+    businessContext = "That's your marketing budget covered";
+  } else if (monthlySavings >= 1000) {
+    businessContext = "That's your holiday marketing budget covered";
+  } else if (monthlySavings >= 500) {
+    businessContext = "That's extra profit for your business";
+  } else {
+    businessContext = "Every dollar saved improves your bottom line";
+  }
+  
+  return {
+    title: 'Your Monthly Impact',
+    heroNumber: monthlySavings,
+    businessContext: businessContext,
+    annualImpact: annualSavings,
+    costReduction: coveragePct,
+    programType: inputs.programType,
+    highlights: {
+      monthly: {
+        label: 'MONTHLY SAVINGS',
+        value: monthlySavings,
+        format: 'money',
+        emphasis: 'hero'
+      },
+      annual: {
+        label: 'ANNUAL IMPACT',
+        value: annualSavings,
+        format: 'money',
+        emphasis: 'strong'
+      },
+      coverage: {
+        label: 'COST REDUCTION',
+        value: coveragePct,
+        format: 'percent',
+        emphasis: 'metric'
+      }
+    }
+  };
+}
+
 // Build Monthly Savings items
 function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorResults): any[] {
   const items = [];
@@ -940,13 +990,17 @@ export function buildPdfUiModel(
     liveVolumeRows = buildSupplementalFeeBreakdownRows(inputs, results);
   }
   
-  // Build monthly savings items first
+  // Build sales impact section first (hero display)
+  const salesImpact = buildSalesImpactSection(inputs, results);
+  
+  // Build monthly savings items for technical breakdown
   const monthlySavingsItems = buildMonthlySavingsItems(inputs, results);
   
   // Build the complete UI model
   const uiModel = {
     ui: {
       sections: {
+        salesImpact: salesImpact,  // New hero section at the top
         customerInformation: {
           title: 'Customer Information',
           rows: buildCustomerInfoRows(customerInfo)
@@ -956,12 +1010,14 @@ export function buildPdfUiModel(
           rows: buildInputParamsRows(inputs)
         },
         liveVolumeBreakdown: {
-          title: liveVolumeTitle,
+          title: 'Technical Calculation Details',
+          subtitle: liveVolumeTitle,
           note: orderOfOperationsText,
           rows: liveVolumeRows
         },
         monthlyProcessingSavings: {
-          title: inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Savings Summary' : 'Monthly Processing Savings',
+          title: 'Processing Cost Breakdown',
+          subtitle: inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Savings Summary' : 'Monthly Processing Savings',
           rows: buildMonthlySavingsRows(monthlySavingsItems)  // Add rows for table rendering
         }
       },
@@ -976,10 +1032,11 @@ export function buildPdfUiModel(
       orderOfOperationsText: orderOfOperationsText,
       // Include labels for PDF rendering
       labels: {
+        salesImpact: 'Your Monthly Impact',
         customerInformation: 'Customer Information',
         inputParameters: 'Input Parameters',
-        liveVolumeBreakdown: liveVolumeTitle,
-        monthlyProcessingSavings: 'Monthly Processing Savings'
+        liveVolumeBreakdown: 'Technical Calculation Details',
+        monthlyProcessingSavings: 'Processing Cost Breakdown'
       }
     },
     // Include raw data for backward compatibility
