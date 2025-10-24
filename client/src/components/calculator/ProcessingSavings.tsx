@@ -286,19 +286,12 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                     </span>
                   </div>
                   
-                  {/* Total Menu Optimization Result */}
+                  {/* Total Menu Optimization Result - matches Total Net Gain from Calculation Details */}
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Menu Optimization Result</span>
-                    {(() => {
-                      const netCost = (results.procCharge || 0) - 
-                                     (results.markupCollected || 0) - 
-                                     (results.extraCashRevenue || 0);
-                      return (
-                        <span className={`text-sm font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
-                          {netCost <= 0 ? `Creates ${formatCurrency(Math.abs(netCost))} profit` : `${formatCurrency(netCost)} cost remains`}
-                        </span>
-                      );
-                    })()}
+                    <span className="text-sm font-semibold text-gray-700">Total Net Gain (Monthly)</span>
+                    <span className="text-sm font-bold text-green-600">
+                      {formatCurrency(results.netMonthly || 0)}
+                    </span>
                   </div>
                 </div>
               </>
