@@ -122,7 +122,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           <div className="flex justify-between items-center pb-3 border-b border-gray-200">
             <span className="text-sm font-semibold text-gray-700">
               {programType === 'CASH_DISCOUNTING' ? 'Current Payment Acceptance Cost:' : 
-               programType === 'SUPPLEMENTAL_FEE' ? 'Current Processing Burden:' :
+               programType === 'SUPPLEMENTAL_FEE' ? 'You Pay Alone Today:' :
                'Current Monthly Cost:'}
             </span>
             <span className="text-lg font-bold text-red-600">
@@ -173,20 +173,34 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                       </span>
                     );
                   } else if (programType === 'SUPPLEMENTAL_FEE') {
-                    // For Supplemental Fee, show transparency creating savings
-                    const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
-                    const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
-                    const netCost = processingCharges - feesCollected;
+                    // For Supplemental Fee, show the total transformation
+                    const currentCost = results.currentCost || 0;
+                    const monthlySavings = results.totalNetGainRevenue || 0;
                     
-                    return netCost <= 0 ? (
-                      <span className="text-green-600">
-                        {formatCurrency(Math.abs(netCost))} monthly savings
-                      </span>
-                    ) : (
-                      <span className="text-gray-700">
-                        {formatCurrency(netCost)} remaining cost
-                      </span>
-                    );
+                    // Show the transformation story
+                    if (monthlySavings > currentCost) {
+                      // Over 100% savings - they profit
+                      return (
+                        <span className="text-green-600">
+                          You save {formatCurrency(monthlySavings)} monthly
+                        </span>
+                      );
+                    } else if (monthlySavings > 0) {
+                      // Partial or full savings
+                      return (
+                        <span className="text-green-600">
+                          You save {formatCurrency(monthlySavings)} monthly
+                        </span>
+                      );
+                    } else {
+                      // Some cost remains
+                      const remainingCost = currentCost - monthlySavings;
+                      return (
+                        <span className="text-gray-700">
+                          {formatCurrency(remainingCost)} remaining cost
+                        </span>
+                      );
+                    }
                   } else {
                     // Default fallback
                     const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
@@ -254,18 +268,40 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   
                   {/* Total Savings Result */}
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Total Net Gain (Monthly)</span>
+                    <span className="text-sm font-semibold text-gray-700">Total Monthly Savings</span>
                     {(() => {
-                      const netCost = (results.processorChargeOnCards || results.processingFees || 0) - 
-                                     (results.cardFeeCollected || 0) - 
-                                     (results.supplementalFeeCash || 0);
+                      const currentCost = results.currentCost || 0;
+                      const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
+                      const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
+                      const netCost = processingCharges - feesCollected;
+                      const monthlySavings = results.totalNetGainRevenue || (currentCost - netCost);
+                      
                       return (
-                        <span className={`text-sm font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
-                          {netCost <= 0 ? `${formatCurrency(Math.abs(netCost))}` : `${formatCurrency(netCost)} cost remains`}
+                        <span className="text-sm font-bold text-green-600">
+                          {formatCurrency(monthlySavings)}
                         </span>
                       );
                     })()}
                   </div>
+                  
+                  {/* Show profit separately if there is one */}
+                  {(() => {
+                    const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
+                    const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
+                    const netCost = processingCharges - feesCollected;
+                    
+                    if (netCost < 0) {
+                      return (
+                        <div className="flex justify-between items-center bg-yellow-50 rounded p-2">
+                          <span className="text-sm font-semibold text-gray-700">💰 Monthly Profit (Beyond Savings)</span>
+                          <span className="text-sm font-bold text-green-600">
+                            +{formatCurrency(Math.abs(netCost))}
+                          </span>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
               </>
             ) : programType === 'CASH_DISCOUNTING' ? (

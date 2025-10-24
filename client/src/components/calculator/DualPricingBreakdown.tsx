@@ -151,10 +151,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   </span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
-                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
-                  </div>
+                  <span className="text-sm font-medium text-gray-700">Card Fee Coverage %</span>
                   <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
                 </div>
               </div>
@@ -197,11 +194,13 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-bold text-green-600">{formatCurrency(results.annualNetGainRevenue || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
-                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
-                  </div>
-                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
+                  <span className="text-sm font-medium text-gray-700">Total Cost Reduction %</span>
+                  <span className="font-bold">{(() => {
+                    const currentCost = results.currentCost || 0;
+                    const totalSavings = results.totalNetGainRevenue || 0;
+                    const percentage = currentCost > 0 ? (totalSavings / currentCost) * 100 : 0;
+                    return percentage.toFixed(0) + '%';
+                  })()}</span>
                 </div>
               </div>
             </div>
