@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, HelpCircle, ChevronDown, ChevronRight } from "lucide-react";
+import { TrendingUp, HelpCircle, ChevronDown, ChevronUp, Calculator, Eye, EyeOff } from "lucide-react";
 import { CalculatorResults, CalculatorInputs, TooltipKey } from "@/types/calculator";
 import { formatCurrency } from "@/utils/calculations";
 
@@ -14,6 +14,7 @@ interface DualPricingBreakdownProps {
 
 export default function DualPricingBreakdown({ results, inputs, onTooltip, programType }: DualPricingBreakdownProps) {
   const [showDetails, setShowDetails] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Dynamic captions based on combo key
   const getDynamicCaption = (field: 'feeBaseCards' | 'tipBase'): string => {
@@ -29,13 +30,40 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
   
   return (
     <Card className="shadow-lg border-gray-200">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2 text-xl text-gray-900">
-          <TrendingUp className="h-5 w-5 text-green-600" />
-          {programType === 'SUPPLEMENTAL_FEE' ? 'Live Calculations' : 'Live Volume Breakdown'}
+      <CardHeader className="cursor-pointer" onClick={() => setIsExpanded(!isExpanded)}>
+        <CardTitle className="flex items-center justify-between">
+          <div className="flex items-center gap-2 text-xl text-gray-900">
+            <Calculator className="h-5 w-5 text-gray-600" />
+            <span className="text-lg">
+              {programType === 'SUPPLEMENTAL_FEE' ? 'How It Works' : 'Calculation Details'}
+            </span>
+            <span className="text-sm text-gray-500 font-normal ml-2">(Technical Breakdown)</span>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
+            className="text-gray-600 hover:text-gray-800"
+          >
+            {isExpanded ? (
+              <>
+                <EyeOff className="h-4 w-4 mr-1" />
+                Hide
+              </>
+            ) : (
+              <>
+                <Eye className="h-4 w-4 mr-1" />
+                View
+              </>
+            )}
+          </Button>
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      {isExpanded && (
+        <CardContent className="space-y-4 animate-in slide-in-from-top-2">
         {programType === 'SUPPLEMENTAL_FEE' ? (
           // v1.0.1 Derived Panels Structure
           <>
@@ -543,7 +571,8 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
             </div>
           </>
         )}
-      </CardContent>
+        </CardContent>
+      )}
     </Card>
   );
 }

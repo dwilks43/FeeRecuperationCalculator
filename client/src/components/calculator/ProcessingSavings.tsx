@@ -35,7 +35,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
       // For Cash Discounting, include extra cash revenue
       return (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
     } else {
-      return results.savingsOverall || 0;
+      return results.monthlySavings || 0;
     }
   };
   
@@ -141,11 +141,11 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           </div>
 
           {/* Extra Cash Revenue for Cash Discounting */}
-          {programType === 'CASH_DISCOUNTING' && results.extraCashRevenue > 0 && (
+          {programType === 'CASH_DISCOUNTING' && (results.extraCashRevenue || 0) > 0 && (
             <div className="flex justify-between items-center pt-2 border-t border-green-200">
               <span className="text-sm font-medium text-gray-600">Extra cash revenue:</span>
               <span className="text-lg font-bold text-green-600">
-                +{formatCurrency(results.extraCashRevenue)}
+                +{formatCurrency(results.extraCashRevenue || 0)}
               </span>
             </div>
           )}
@@ -177,7 +177,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   </div>
                   
                   {/* Fee on Cash */}
-                  {results.supplementalFeeCash > 0 && (
+                  {(results.supplementalFeeCash || 0) > 0 && (
                     <div className="flex justify-between items-center bg-green-50/50 rounded p-2">
                       <span className="text-sm text-gray-600">Supplemental Fee (Cash)</span>
                       <span className="text-sm font-semibold text-green-600">
