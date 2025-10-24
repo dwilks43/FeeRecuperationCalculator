@@ -255,7 +255,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   <div className="text-xs font-medium text-gray-500 uppercase">Menu Optimization Impact</div>
                   
                   {/* Current Payment Acceptance Cost */}
-                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
+                  <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Current Payment Acceptance Cost</span>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
