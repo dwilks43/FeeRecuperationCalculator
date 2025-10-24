@@ -4,7 +4,21 @@ This is a professional React-based **Fee Recuperation Savings Calculator** for D
 
 The calculator takes various merchant parameters (monthly credit card volume, monthly cash volume, processing rates, tax/tip rates) and provides real-time calculations showing current costs versus new costs under the Fee Recuperation Program, along with potential monthly and annual savings. It generates professional PDF reports with DMP branding for sales presentations.
 
-## Recent PDF Generation Updates (September 2025)
+**New Sales-Focused UI Design (October 2025)**: The interface has been transformed from a technical/mathematical presentation to an emotionally impactful sales tool. Key changes include a hero "Your Monthly Impact" section with prominent savings display, business context phrases like "That's your holiday marketing budget covered", and technical details hidden in a collapsible accordion to reduce cognitive load.
+
+## Recent UI & PDF Updates (October 2025)
+- **Sales-Focused UI Transformation**: Complete redesign from technical to emotional presentation
+  - Hero "Your Monthly Impact" section with prominent savings number ($X,XXX.XX)
+  - Business context phrases dynamically generated based on savings amount
+  - Collapsible "Calculation Details" section for technical breakdown
+  - Color psychology: Green for gains, subtle grays for technical details
+  - Visual progress indicators showing cost elimination percentage
+- **PDF Sales Impact Section**: New hero section added to PDF reports
+  - "Your Monthly Impact" appears first with emotional business context
+  - Technical calculations moved to secondary sections
+  - Maintains professional DMP branding while emphasizing emotional impact
+
+## Previous PDF Generation Updates (September 2025)
 - **Version 1.9.1 Unified Naming Conventions**: Standardized fee collection terminology throughout the application and PDFs
   - **Dual Pricing Mode**: Changed "Markup Collected" to "Card Price Increase Collected (Cards)"
   - **Supplemental Fee Mode**: Changed all variations to "Supplemental Fee Collected — Cards" and "Supplemental Fee Collected — Cash"
