@@ -132,25 +132,18 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             
             {programType === 'DUAL_PRICING' ? (
               <>
-                {/* For Dual Pricing - show path to Total Net Gain */}
+                {/* For Dual Pricing - show path to Total Net Gain matching Calculation Details */}
                 <div className="flex justify-between items-center pl-4">
-                  <span className="text-sm text-gray-600">New Processing Cost</span>
+                  <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
                   <span className="text-base font-semibold text-gray-600">
-                    {formatCurrency(results.procCharge || 0)}
+                    {formatCurrency(results.netChangeCards || 0)}
                   </span>
                 </div>
                 
                 <div className="flex justify-between items-center pl-4">
-                  <span className="text-sm text-gray-600">Monthly Processing Savings</span>
+                  <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
                   <span className="text-base font-semibold text-green-600">
-                    +{formatCurrency((results.currentCost || 0) - (results.procCharge || 0))}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between items-center pl-4">
-                  <span className="text-sm text-gray-600">Card Price Increase Collected</span>
-                  <span className="text-base font-semibold text-green-600">
-                    +{formatCurrency(results.markupCollected || results.cardPriceIncreaseCollected || 0)}
+                    +{formatCurrency(results.savingsCardsOnly || 0)}
                   </span>
                 </div>
                 
@@ -364,33 +357,25 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   
                   {/* Current vs New */}
                   <div className="flex justify-between items-center bg-gray-50 rounded p-2">
-                    <span className="text-sm text-gray-600">Current Monthly Cost</span>
+                    <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
-                  {/* New Processing Cost */}
+                  {/* Processing Cost After Price Differential */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">New Processing Cost</span>
+                    <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
                     <span className="text-sm font-semibold text-gray-600">
-                      {formatCurrency(results.procCharge || 0)}
+                      {formatCurrency(results.netChangeCards || 0)}
                     </span>
                   </div>
                   
                   {/* Processing Savings */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Monthly Processing Savings</span>
+                    <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
                     <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency((results.currentCost || 0) - (results.procCharge || 0))}
-                    </span>
-                  </div>
-                  
-                  {/* Price Increase Collected */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Card Price Increase Collected</span>
-                    <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(results.markupCollected || 0)}
+                      +{formatCurrency(results.savingsCardsOnly || 0)}
                     </span>
                   </div>
                   
