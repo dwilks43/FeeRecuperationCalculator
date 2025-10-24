@@ -121,7 +121,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           {/* Current Cost */}
           <div className="flex justify-between items-center pb-3 border-b border-gray-200">
             <span className="text-sm font-semibold text-gray-700">Current Monthly Cost:</span>
-            <span className="text-lg font-bold text-gray-700">
+            <span className="text-lg font-bold text-red-600">
               {formatCurrency(results.currentCost || 0)}
             </span>
           </div>
