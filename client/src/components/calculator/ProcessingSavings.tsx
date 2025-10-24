@@ -120,7 +120,9 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         <div className="bg-white/50 rounded-lg p-4 space-y-4">
           {/* Current Cost */}
           <div className="flex justify-between items-center pb-3 border-b border-gray-200">
-            <span className="text-sm font-semibold text-gray-700">Current Monthly Cost:</span>
+            <span className="text-sm font-semibold text-gray-700">
+              {programType === 'CASH_DISCOUNTING' ? 'Current Payment Acceptance Cost:' : 'Current Monthly Cost:'}
+            </span>
             <span className="text-lg font-bold text-red-600">
               {formatCurrency(results.currentCost || 0)}
             </span>
@@ -128,13 +130,15 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           
           {/* With Fee Recovery Program - High Level Summary */}
           <div className="space-y-2">
-            <div className="text-sm font-semibold text-gray-700 mb-2">With Fee Recovery Program:</div>
+            <div className="text-sm font-semibold text-gray-700 mb-2">
+              {programType === 'CASH_DISCOUNTING' ? 'With Menu Optimization Program:' : 'With Fee Recovery Program:'}
+            </div>
             
             {/* Show the high-level outcome, not the detailed math */}
             <div className="flex justify-between items-center pl-4">
               <span className="text-sm text-gray-600">
                 {programType === 'DUAL_PRICING' ? 'Your New Reality' : 
-                 programType === 'CASH_DISCOUNTING' ? 'Your New Cost' : 
+                 programType === 'CASH_DISCOUNTING' ? 'Menu Optimization Creates' : 
                  'Your New Cost'}
               </span>
               <span className="text-lg font-bold">
@@ -147,14 +151,27 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         You profit {formatCurrency(gain)}
                       </span>
                     );
+                  } else if (programType === 'CASH_DISCOUNTING') {
+                    // For Cash Discounting, show it as menu optimization creating profit
+                    const processingCharges = results.procCharge || 0;
+                    const feesCollected = results.markupCollected || 0;
+                    const extraRevenue = results.extraCashRevenue || 0;
+                    const netCost = processingCharges - feesCollected - extraRevenue;
+                    
+                    return netCost <= 0 ? (
+                      <span className="text-green-600">
+                        {formatCurrency(Math.abs(netCost))} monthly profit
+                      </span>
+                    ) : (
+                      <span className="text-gray-700">
+                        {formatCurrency(netCost)} remaining cost
+                      </span>
+                    );
                   } else {
                     // For other programs, show the net cost
-                    const processingCharges = results.procCharge || results.processorChargeOnCards || results.processingFees || 0;
-                    const feesCollected = programType === 'SUPPLEMENTAL_FEE' 
-                      ? (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0)
-                      : results.markupCollected || results.cardPriceIncreaseCollected || 0;
-                    const extraRevenue = programType === 'CASH_DISCOUNTING' ? (results.extraCashRevenue || 0) : 0;
-                    const netCost = processingCharges - feesCollected - extraRevenue;
+                    const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
+                    const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
+                    const netCost = processingCharges - feesCollected;
                     
                     return netCost <= 0 ? (
                       <span className="text-green-600">
@@ -235,50 +252,50 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               <>
                 {/* Cash Discounting Detailed Breakdown */}
                 <div className="space-y-2">
-                  <div className="text-xs font-medium text-gray-500 uppercase">Detailed Breakdown</div>
+                  <div className="text-xs font-medium text-gray-500 uppercase">Menu Optimization Impact</div>
                   
-                  {/* Current vs New */}
+                  {/* Current Payment Acceptance Cost */}
                   <div className="flex justify-between items-center bg-gray-50 rounded p-2">
-                    <span className="text-sm text-gray-600">Current Monthly Cost</span>
+                    <span className="text-sm text-gray-600">Current Payment Acceptance Cost</span>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
-                  {/* Processing Charges */}
+                  {/* Processing After Menu Change */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Processing Charges</span>
+                    <span className="text-sm text-gray-600">Processing Cost (After Menu Change)</span>
                     <span className="text-sm font-semibold text-gray-600">
                       {formatCurrency(results.procCharge || 0)}
                     </span>
                   </div>
                   
-                  {/* Menu Markup Collected */}
+                  {/* Revenue from Cards at New Price */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Card Menu Markup Collected</span>
+                    <span className="text-sm text-gray-600">Revenue from Card Transactions</span>
                     <span className="text-sm font-semibold text-green-600">
                       -{formatCurrency(results.markupCollected || 0)}
                     </span>
                   </div>
                   
-                  {/* Extra Cash Revenue */}
+                  {/* Revenue from Cash Optimization */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Extra Cash Revenue</span>
+                    <span className="text-sm text-gray-600">Revenue from Cash Optimization</span>
                     <span className="text-sm font-semibold text-green-600">
                       -{formatCurrency(results.extraCashRevenue || 0)}
                     </span>
                   </div>
                   
-                  {/* Net New Cost */}
+                  {/* Total Menu Optimization Result */}
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
+                    <span className="text-sm font-semibold text-gray-700">Menu Optimization Result</span>
                     {(() => {
                       const netCost = (results.procCharge || 0) - 
                                      (results.markupCollected || 0) - 
                                      (results.extraCashRevenue || 0);
                       return (
                         <span className={`text-sm font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
-                          {netCost <= 0 ? `You earn ${formatCurrency(Math.abs(netCost))}` : formatCurrency(netCost)}
+                          {netCost <= 0 ? `Creates ${formatCurrency(Math.abs(netCost))} profit` : `${formatCurrency(netCost)} cost remains`}
                         </span>
                       );
                     })()}
