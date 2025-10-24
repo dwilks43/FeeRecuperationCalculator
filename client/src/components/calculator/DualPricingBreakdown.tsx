@@ -152,10 +152,10 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-700">Coverage %</span>
-                    <span className="text-xs text-gray-400 italic">Coverage % = Fee (Cards) ÷ Processor</span>
+                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
+                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
                   </div>
-                  <span className="font-bold">{((results.coveragePct || 0) * 100).toFixed(1)}%</span>
+                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
                 </div>
               </div>
             </div>
@@ -346,10 +346,10 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-700">Coverage %</span>
-                    <span className="text-xs text-gray-400 italic">Coverage % = Markup ÷ Processor Charge</span>
+                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
+                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
                   </div>
-                  <span className="font-bold">{((results.coveragePct || 0) * 100).toFixed(1)}%</span>
+                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
                 </div>
               </div>
             </div>
@@ -527,10 +527,10 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-700">Coverage %</span>
-                    <span className="text-xs text-gray-400 italic">Coverage % = Markup ÷ Processor Charge</span>
+                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
+                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
                   </div>
-                  <span className="font-bold">{((results.coveragePct || 0) * 100).toFixed(1)}%</span>
+                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
                 </div>
               </div>
             </div>

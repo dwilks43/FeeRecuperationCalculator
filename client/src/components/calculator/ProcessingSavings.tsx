@@ -126,75 +126,29 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             </span>
           </div>
           
-          {/* With Fee Recovery Program */}
+          {/* With Fee Recovery Program - High Level Summary */}
           <div className="space-y-2">
             <div className="text-sm font-semibold text-gray-700 mb-2">With Fee Recovery Program:</div>
             
-            {programType === 'DUAL_PRICING' ? (
-              <>
-                {/* For Dual Pricing - show path to Total Net Gain matching Calculation Details */}
-                <div className="flex justify-between items-center pl-4">
-                  <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
-                  <span className="text-base font-semibold text-gray-600">
-                    {formatCurrency(results.netChangeCards || 0)}
-                  </span>
-                </div>
-                
-                <div className="flex justify-between items-center pl-4">
-                  <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
-                  <span className="text-base font-semibold text-green-600">
-                    +{formatCurrency(results.savingsCardsOnly || 0)}
-                  </span>
-                </div>
-                
-                {/* Total Net Gain for Dual Pricing */}
-                <div className="flex justify-between items-center pl-4 pt-2 border-t border-gray-200">
-                  <span className="text-sm font-semibold text-gray-700">Total Net Gain (Monthly):</span>
-                  <span className="text-lg font-bold text-green-600">
-                    {formatCurrency(results.netMonthly || results.savingsCardsOnly || 0)}
-                  </span>
-                </div>
-              </>
-            ) : (
-              <>
-                {/* For Cash Discounting and Supplemental Fee - keep existing flow */}
-                {/* Processing Charges */}
-                <div className="flex justify-between items-center pl-4">
-                  <span className="text-sm text-gray-600">Processing Charges</span>
-                  <span className="text-base font-semibold text-gray-600">
-                    {formatCurrency(results.procCharge || results.processorChargeOnCards || results.processingFees || 0)}
-                  </span>
-                </div>
-                
-                {/* Fees Collected */}
-                <div className="flex justify-between items-center pl-4">
-                  <span className="text-sm text-gray-600">
-                    {programType === 'CASH_DISCOUNTING' ? 'Card Menu Markup Collected' : 'Supplemental Fees Collected'}
-                  </span>
-                  <span className="text-base font-semibold text-green-600">
-                    -{formatCurrency(
-                      programType === 'SUPPLEMENTAL_FEE' 
-                        ? (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0)
-                        : results.markupCollected || results.cardPriceIncreaseCollected || 0
-                    )}
-                  </span>
-                </div>
-                
-                {/* Extra Cash Revenue for Cash Discounting */}
-                {programType === 'CASH_DISCOUNTING' && (results.extraCashRevenue || 0) > 0 && (
-                  <div className="flex justify-between items-center pl-4">
-                    <span className="text-sm text-gray-600">Extra Cash Revenue</span>
-                    <span className="text-base font-semibold text-green-600">
-                      -{formatCurrency(results.extraCashRevenue || 0)}
-                    </span>
-                  </div>
-                )}
-                
-                {/* Net Cost */}
-                <div className="flex justify-between items-center pl-4 pt-2 border-t border-gray-200">
-                  <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
-                  {(() => {
-                    // Calculate the true net cost
+            {/* Show the high-level outcome, not the detailed math */}
+            <div className="flex justify-between items-center pl-4">
+              <span className="text-sm text-gray-600">
+                {programType === 'DUAL_PRICING' ? 'Your New Reality' : 
+                 programType === 'CASH_DISCOUNTING' ? 'Your New Cost' : 
+                 'Your New Cost'}
+              </span>
+              <span className="text-lg font-bold">
+                {(() => {
+                  if (programType === 'DUAL_PRICING') {
+                    // For Dual Pricing, show the total net gain as profit
+                    const gain = results.netMonthly || results.savingsCardsOnly || 0;
+                    return (
+                      <span className="text-green-600">
+                        You profit {formatCurrency(gain)}
+                      </span>
+                    );
+                  } else {
+                    // For other programs, show the net cost
                     const processingCharges = results.procCharge || results.processorChargeOnCards || results.processingFees || 0;
                     const feesCollected = programType === 'SUPPLEMENTAL_FEE' 
                       ? (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0)
@@ -202,21 +156,19 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                     const extraRevenue = programType === 'CASH_DISCOUNTING' ? (results.extraCashRevenue || 0) : 0;
                     const netCost = processingCharges - feesCollected - extraRevenue;
                     
-                    return (
-                      <span className={`text-lg font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
-                        {netCost <= 0 ? (
-                          <>
-                            <span className="text-sm font-normal">You earn</span> {formatCurrency(Math.abs(netCost))}
-                          </>
-                        ) : (
-                          formatCurrency(netCost)
-                        )}
+                    return netCost <= 0 ? (
+                      <span className="text-green-600">
+                        You profit {formatCurrency(Math.abs(netCost))}
+                      </span>
+                    ) : (
+                      <span className="text-gray-700">
+                        {formatCurrency(netCost)}
                       </span>
                     );
-                  })()}
-                </div>
-              </>
-            )}
+                  }
+                })()}
+              </span>
+            </div>
           </div>
         </div>
 
@@ -277,14 +229,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                       );
                     })()}
                   </div>
-                  
-                  {/* Coverage Percentage */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Coverage %</span>
-                    <span className="text-xs font-medium text-blue-600">
-                      {((results.coveragePct || 0) * 100).toFixed(1)}%
-                    </span>
-                  </div>
                 </div>
               </>
             ) : programType === 'CASH_DISCOUNTING' ? (
@@ -339,14 +283,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                       );
                     })()}
                   </div>
-                  
-                  {/* Coverage Percentage */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Coverage %</span>
-                    <span className="text-xs font-medium text-blue-600">
-                      {((results.coveragePct || 0) * 100).toFixed(1)}%
-                    </span>
-                  </div>
                 </div>
               </>
             ) : (
@@ -384,14 +320,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                     <span className="text-sm font-semibold text-gray-700">Total Net Gain (Monthly)</span>
                     <span className="text-sm font-bold text-green-600">
                       {formatCurrency(results.netMonthly || results.savingsCardsOnly || 0)}
-                    </span>
-                  </div>
-                  
-                  {/* Coverage Percentage */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-xs text-gray-500">Coverage %</span>
-                    <span className="text-xs font-medium text-blue-600">
-                      {((results.coveragePct || 0) * 100).toFixed(1)}%
                     </span>
                   </div>
                 </div>
