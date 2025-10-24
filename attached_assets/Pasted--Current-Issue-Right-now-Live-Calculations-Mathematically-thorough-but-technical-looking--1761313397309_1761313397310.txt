@@ -1,0 +1,87 @@
+⚠️ Current Issue
+
+Right now:
+
+Live Calculations = Mathematically thorough, but “technical looking.”
+
+Savings Summary = Shows similar numbers but doesn’t emotionally hit the merchant.
+
+Problem → Too much information, not enough impact. The eye doesn’t immediately land on “Here’s how much extra money you'll keep every month.”
+
+✅ Goal
+
+Make the bottom half of the UI (and matching PDF) act like a closing tool, not just a calculator.
+
+We want:
+
+Left side → For the sales rep (proof, breakdown).
+
+Right side → For the merchant (emotion, simplicity, $$ impact).
+
+Savings must “jump off the page” instantly.
+
+🔥 Recommended Layout Change
+✅ Left Column → “How It Works (Optional Detail)”
+
+Keep Live Calculations but collapse it by default:
+
+Title: “How It Works (Details)”
+
+Accordion-style dropdown.
+
+Shows Base Volume, Fees, Tip Choice, Taxes, etc.
+
+This is for the analytical rep or CFO-type customer.
+
+✅ Right Column → “Your Savings” (High-Impact Visual Section)
+
+Replace the Savings Summary box with:
+
+Element	Design	Purpose
+Monthly Savings	🌟 Big, bold, green dollar amount (e.g., $636.88)	Instantly grabs attention.
+Annual Savings	Slightly smaller but bold (e.g., $7,642.56/year)**	Drives big-picture thinking.
+% Saved vs Today	Subheading (e.g., “You are saving 97% of your processing costs”)	Psychological punch.
+Cash Back/Net Gain	If Fee Collected on Cash is positive, show “You earn $200 per month from cash customers.”	Shifts mindset: “not only saving—profiting.”
+New Cost to Process Cards	“Your new cost to accept cards: –$13.12 (you’re net ahead!)”	Reinforces value over current system.
+🎯 Psychological Enhancements
+
+✅ Use color logic: Green = money gained / savings; Red = what they pay today.
+
+✅ Add equivalents under annual savings:
+
+“= 2 new ovens”
+
+“= 1 extra server’s annual wages”
+
+“= $6,165 back into your pocket”
+(configurable per industry)
+
+✅ Add a small tagline under the dollar savings:
+
+“This is money you’re currently giving to Visa/MC every month.”
+
+📄 PDF Version Should Follow Same Logic
+
+In your PDF (like the one you attached 
+
+DMP-Savings-Report (89)
+
+), restructure the top half as:
+
+Monthly Savings:      $636.88 ✅
+Annual Savings:       $7,642.56 ✅
+You Currently Pay:    $450.00 ❌
+New Net Cost:         -$13.12 ✅ (You’re net positive)
+Coverage %:           97%
+Cash Collected:       $200.00 / month
+
+
+Then put “Derived Bases & Totals” underneath in smaller print.
+
+🛠 Next Steps I Can Build for You
+
+If you want, I can now:
+✔ Generate the JSON update to restructure this UI
+✔ Write the PDF layout update for DocRaptor (matching this layout)
+✔ Build conditional formatting rules to color and bold the savings dynamically
+✔ Write a “Sales Script Version” so reps know exactly how to present it
