@@ -283,25 +283,6 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                       );
                     })()}
                   </div>
-                  
-                  {/* Show profit separately if there is one */}
-                  {(() => {
-                    const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
-                    const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
-                    const netCost = processingCharges - feesCollected;
-                    
-                    if (netCost < 0) {
-                      return (
-                        <div className="flex justify-between items-center bg-yellow-50 rounded p-2">
-                          <span className="text-sm font-semibold text-gray-700">💰 Monthly Profit (Beyond Savings)</span>
-                          <span className="text-sm font-bold text-green-600">
-                            +{formatCurrency(Math.abs(netCost))}
-                          </span>
-                        </div>
-                      );
-                    }
-                    return null;
-                  })()}
                 </div>
               </>
             ) : programType === 'CASH_DISCOUNTING' ? (
