@@ -201,36 +201,59 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 <div className="space-y-2">
                   <div className="text-xs font-medium text-gray-500 uppercase">Detailed Breakdown</div>
                   
-                  {/* Processor Charge */}
-                  <div className="flex justify-between items-center bg-red-50/50 rounded p-2">
-                    <span className="text-sm text-gray-600">Processor Charge on Cards</span>
+                  {/* Current vs New */}
+                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
+                    <span className="text-sm text-gray-600">Current Monthly Cost</span>
                     <span className="text-sm font-semibold text-red-600">
-                      -{formatCurrency(results.processorChargeOnCards || 0)}
+                      {formatCurrency(results.currentCost || 0)}
+                    </span>
+                  </div>
+                  
+                  {/* Processor Charge */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Processing Charges</span>
+                    <span className="text-sm font-semibold text-gray-600">
+                      {formatCurrency(results.processorChargeOnCards || results.processingFees || 0)}
                     </span>
                   </div>
                   
                   {/* Fee Collected on Cards */}
-                  <div className="flex justify-between items-center bg-green-50/50 rounded p-2">
+                  <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Supplemental Fee (Cards)</span>
                     <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(results.cardFeeCollected || 0)}
+                      -{formatCurrency(results.cardFeeCollected || 0)}
                     </span>
                   </div>
                   
                   {/* Fee on Cash */}
                   {(results.supplementalFeeCash || 0) > 0 && (
-                    <div className="flex justify-between items-center bg-green-50/50 rounded p-2">
+                    <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Supplemental Fee (Cash)</span>
                       <span className="text-sm font-semibold text-green-600">
-                        +{formatCurrency(results.supplementalFeeCash || 0)}
+                        -{formatCurrency(results.supplementalFeeCash || 0)}
                       </span>
                     </div>
                   )}
                   
+                  {/* Net New Cost */}
+                  <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
+                    <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
+                    {(() => {
+                      const netCost = (results.processorChargeOnCards || results.processingFees || 0) - 
+                                     (results.cardFeeCollected || 0) - 
+                                     (results.supplementalFeeCash || 0);
+                      return (
+                        <span className={`text-sm font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
+                          {netCost <= 0 ? `You earn ${formatCurrency(Math.abs(netCost))}` : formatCurrency(netCost)}
+                        </span>
+                      );
+                    })()}
+                  </div>
+                  
                   {/* Coverage Percentage */}
-                  <div className="flex justify-between items-center bg-blue-50/50 rounded p-2">
-                    <span className="text-sm text-gray-600">Coverage %</span>
-                    <span className="text-sm font-semibold text-blue-600">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Coverage %</span>
+                    <span className="text-xs font-medium text-blue-600">
                       {((results.coveragePct || 0) * 100).toFixed(1)}%
                     </span>
                   </div>
@@ -242,42 +265,57 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 <div className="space-y-2">
                   <div className="text-xs font-medium text-gray-500 uppercase">Detailed Breakdown</div>
                   
-                  {/* Current Cost */}
-                  <div className="flex justify-between items-center bg-red-50/50 rounded p-2">
-                    <span className="text-sm text-gray-600">Current Processing Cost</span>
+                  {/* Current vs New */}
+                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
+                    <span className="text-sm text-gray-600">Current Monthly Cost</span>
                     <span className="text-sm font-semibold text-red-600">
-                      -{formatCurrency(results.currentCost || 0)}
+                      {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
-                  {/* New Processing Cost */}
-                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
-                    <span className="text-sm text-gray-600">New Processing Cost</span>
-                    <span className="text-sm font-semibold text-gray-700">
-                      -{formatCurrency(results.procCharge || 0)}
+                  {/* Processing Charges */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Processing Charges</span>
+                    <span className="text-sm font-semibold text-gray-600">
+                      {formatCurrency(results.procCharge || 0)}
                     </span>
                   </div>
                   
                   {/* Menu Markup Collected */}
-                  <div className="flex justify-between items-center bg-green-50/50 rounded p-2">
-                    <span className="text-sm text-gray-600">Menu Markup Collected (Cards)</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Card Menu Markup Collected</span>
                     <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(results.markupCollected || 0)}
+                      -{formatCurrency(results.markupCollected || 0)}
                     </span>
                   </div>
                   
                   {/* Extra Cash Revenue */}
-                  <div className="flex justify-between items-center bg-green-50/50 rounded p-2">
+                  <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Extra Cash Revenue</span>
                     <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(results.extraCashRevenue || 0)}
+                      -{formatCurrency(results.extraCashRevenue || 0)}
                     </span>
                   </div>
                   
+                  {/* Net New Cost */}
+                  <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
+                    <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
+                    {(() => {
+                      const netCost = (results.procCharge || 0) - 
+                                     (results.markupCollected || 0) - 
+                                     (results.extraCashRevenue || 0);
+                      return (
+                        <span className={`text-sm font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
+                          {netCost <= 0 ? `You earn ${formatCurrency(Math.abs(netCost))}` : formatCurrency(netCost)}
+                        </span>
+                      );
+                    })()}
+                  </div>
+                  
                   {/* Coverage Percentage */}
-                  <div className="flex justify-between items-center bg-blue-50/50 rounded p-2">
-                    <span className="text-sm text-gray-600">Card Processing Coverage</span>
-                    <span className="text-sm font-semibold text-blue-600">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Coverage %</span>
+                    <span className="text-xs font-medium text-blue-600">
                       {((results.coveragePct || 0) * 100).toFixed(1)}%
                     </span>
                   </div>
@@ -289,34 +327,47 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 <div className="space-y-2">
                   <div className="text-xs font-medium text-gray-500 uppercase">Detailed Breakdown</div>
                   
-                  {/* Current Cost */}
-                  <div className="flex justify-between items-center bg-red-50/50 rounded p-2">
-                    <span className="text-sm text-gray-600">Current Processing Cost</span>
+                  {/* Current vs New */}
+                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
+                    <span className="text-sm text-gray-600">Current Monthly Cost</span>
                     <span className="text-sm font-semibold text-red-600">
-                      -{formatCurrency(results.currentCost || 0)}
+                      {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
-                  {/* New Processing Cost */}
-                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
-                    <span className="text-sm text-gray-600">New Processing Cost</span>
-                    <span className="text-sm font-semibold text-gray-700">
-                      -{formatCurrency(results.procCharge || 0)}
+                  {/* Processing Charges */}
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Processing Charges</span>
+                    <span className="text-sm font-semibold text-gray-600">
+                      {formatCurrency(results.procCharge || 0)}
                     </span>
                   </div>
                   
                   {/* Price Increase Collected */}
-                  <div className="flex justify-between items-center bg-green-50/50 rounded p-2">
+                  <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Card Price Increase Collected</span>
                     <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(results.markupCollected || 0)}
+                      -{formatCurrency(results.markupCollected || 0)}
                     </span>
                   </div>
                   
+                  {/* Net New Cost */}
+                  <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
+                    <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
+                    {(() => {
+                      const netCost = (results.procCharge || 0) - (results.markupCollected || 0);
+                      return (
+                        <span className={`text-sm font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
+                          {netCost <= 0 ? `You earn ${formatCurrency(Math.abs(netCost))}` : formatCurrency(netCost)}
+                        </span>
+                      );
+                    })()}
+                  </div>
+                  
                   {/* Coverage Percentage */}
-                  <div className="flex justify-between items-center bg-blue-50/50 rounded p-2">
-                    <span className="text-sm text-gray-600">Coverage %</span>
-                    <span className="text-sm font-semibold text-blue-600">
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs text-gray-500">Coverage %</span>
+                    <span className="text-xs font-medium text-blue-600">
                       {((results.coveragePct || 0) * 100).toFixed(1)}%
                     </span>
                   </div>
