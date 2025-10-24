@@ -116,39 +116,70 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           </div>
         </div>
 
-        {/* COMPARISON SECTION */}
-        <div className="bg-white/50 rounded-lg p-4 space-y-3">
-          {/* What You Pay Today */}
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-600">What you pay today:</span>
-            <span className="text-lg font-bold text-red-600 line-through">
+        {/* COMPARISON SECTION - Clear Flow */}
+        <div className="bg-white/50 rounded-lg p-4 space-y-4">
+          {/* Current Cost */}
+          <div className="flex justify-between items-center pb-3 border-b border-gray-200">
+            <span className="text-sm font-semibold text-gray-700">Current Monthly Cost:</span>
+            <span className="text-lg font-bold text-gray-700">
               {formatCurrency(results.currentCost || 0)}
             </span>
           </div>
           
-          {/* Your New Cost */}
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-600">Your new cost:</span>
-            <span className={`text-lg font-bold ${isNegativeCost ? 'text-green-600' : 'text-gray-700'}`}>
-              {isNegativeCost ? (
-                <>
-                  <span className="text-sm font-normal">You earn</span> {formatCurrency(Math.abs(results.newCost))}
-                </>
-              ) : (
-                formatCurrency(results.newCost || 0)
-              )}
-            </span>
-          </div>
-
-          {/* Extra Cash Revenue for Cash Discounting */}
-          {programType === 'CASH_DISCOUNTING' && (results.extraCashRevenue || 0) > 0 && (
-            <div className="flex justify-between items-center pt-2 border-t border-green-200">
-              <span className="text-sm font-medium text-gray-600">Extra cash revenue:</span>
-              <span className="text-lg font-bold text-green-600">
-                +{formatCurrency(results.extraCashRevenue || 0)}
+          {/* With Fee Recovery Program */}
+          <div className="space-y-2">
+            <div className="text-sm font-semibold text-gray-700 mb-2">With Fee Recovery Program:</div>
+            
+            {/* Processing Charges */}
+            <div className="flex justify-between items-center pl-4">
+              <span className="text-sm text-gray-600">Processing Charges</span>
+              <span className="text-base font-semibold text-gray-600">
+                {formatCurrency(results.procCharge || results.processorChargeOnCards || results.processingFees || 0)}
               </span>
             </div>
-          )}
+            
+            {/* Fees Collected */}
+            <div className="flex justify-between items-center pl-4">
+              <span className="text-sm text-gray-600">
+                {programType === 'DUAL_PRICING' ? 'Card Price Increase Collected' :
+                 programType === 'CASH_DISCOUNTING' ? 'Card Menu Markup Collected' :
+                 'Supplemental Fees Collected'}
+              </span>
+              <span className="text-base font-semibold text-green-600">
+                -{formatCurrency(
+                  programType === 'SUPPLEMENTAL_FEE' 
+                    ? (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0)
+                    : results.markupCollected || results.cardPriceIncreaseCollected || 0
+                )}
+              </span>
+            </div>
+            
+            {/* Extra Cash Revenue for Cash Discounting */}
+            {programType === 'CASH_DISCOUNTING' && (results.extraCashRevenue || 0) > 0 && (
+              <div className="flex justify-between items-center pl-4">
+                <span className="text-sm text-gray-600">Extra Cash Revenue</span>
+                <span className="text-base font-semibold text-green-600">
+                  -{formatCurrency(results.extraCashRevenue || 0)}
+                </span>
+              </div>
+            )}
+            
+            {/* Net Cost */}
+            <div className="flex justify-between items-center pl-4 pt-2 border-t border-gray-200">
+              <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
+              <span className={`text-lg font-bold ${
+                (results.newCost || results.recovery || 0) <= 0 ? 'text-green-600' : 'text-gray-700'
+              }`}>
+                {(results.newCost || results.recovery || 0) <= 0 ? (
+                  <>
+                    <span className="text-sm font-normal">You earn</span> {formatCurrency(Math.abs(results.newCost || results.recovery || 0))}
+                  </>
+                ) : (
+                  formatCurrency(results.newCost || results.recovery || 0)
+                )}
+              </span>
+            </div>
+          </div>
         </div>
 
         {/* DETAILED BREAKDOWN - Collapsible */}
