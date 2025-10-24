@@ -34,9 +34,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
         <CardTitle className="flex items-center justify-between">
           <div className="flex items-center gap-2 text-xl text-gray-900">
             <Calculator className="h-5 w-5 text-gray-600" />
-            <span className="text-lg">
-              {programType === 'SUPPLEMENTAL_FEE' ? 'How It Works' : 'Calculation Details'}
-            </span>
+            <span className="text-lg">Calculation Details</span>
             <span className="text-sm text-gray-500 font-normal ml-2">(Technical Breakdown)</span>
           </div>
           <Button
