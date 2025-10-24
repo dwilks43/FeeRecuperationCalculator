@@ -329,7 +329,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm text-gray-600">Processor Charge on Cards</span>
                     <span className="text-xs text-gray-400 italic">Card Processed Total × Flat Rate</span>
                   </div>
-                  <span className="font-medium text-red-600">{formatCurrency(results.procCharge || 0)}</span>
+                  <span className="font-medium">{formatCurrency(results.procCharge || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-600">Card Menu Markup Collected (Cards)</span>
@@ -383,7 +383,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       <span className="text-xs text-gray-400 italic">Menu Markup − Discount Given</span>
                     </div>
                     <span className={`font-bold ${
-                      (results.extraCashRevenue || 0) > 0 ? 'text-amber-600' : 
+                      (results.extraCashRevenue || 0) > 0 ? 'text-green-600' : 
                       (results.extraCashRevenue || 0) < 0 ? 'text-red-600' : 
                       'text-gray-600'
                     }`}>
@@ -441,6 +441,13 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-xs text-gray-400 italic">Total Monthly Gain × 12</span>
                   </div>
                   <span className="font-bold text-green-600">{formatCurrency(results.netAnnual || 0)}</span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
+                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
+                  </div>
+                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
                 </div>
               </div>
             </div>
