@@ -43,14 +43,14 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
   const annualSavings = heroSavings * 12;
   const savingsPercent = results.currentCost > 0 ? (heroSavings / results.currentCost) * 100 : 0;
   
-  // Get contextual comparison (varies by business size)
+  // Get contextual comparison (emphasis on massive savings)
   const getContextualComparison = () => {
-    if (annualSavings >= 50000) return "That's like hiring a full-time employee";
-    if (annualSavings >= 20000) return "That's a new kitchen equipment upgrade";
-    if (annualSavings >= 10000) return "That's your holiday marketing budget covered";
-    if (annualSavings >= 5000) return "That's months of utility bills covered";
-    if (annualSavings >= 2000) return "That's your monthly supply costs covered";
-    return "That's real money back in your pocket";
+    if (annualSavings >= 50000) return "That's $50,000+ more profit every year";
+    if (annualSavings >= 20000) return "That's over $20,000 in pure profit annually";
+    if (annualSavings >= 10000) return "That's $10,000+ straight to your bottom line";
+    if (annualSavings >= 5000) return "That's thousands in extra profit every year";
+    if (annualSavings >= 2000) return "That's significant savings month after month";
+    return "That's real money back in your business";
   };
 
   return (
@@ -167,17 +167,27 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
             {/* Net Cost */}
             <div className="flex justify-between items-center pl-4 pt-2 border-t border-gray-200">
               <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
-              <span className={`text-lg font-bold ${
-                (results.newCost || results.recovery || 0) <= 0 ? 'text-green-600' : 'text-gray-700'
-              }`}>
-                {(results.newCost || results.recovery || 0) <= 0 ? (
-                  <>
-                    <span className="text-sm font-normal">You earn</span> {formatCurrency(Math.abs(results.newCost || results.recovery || 0))}
-                  </>
-                ) : (
-                  formatCurrency(results.newCost || results.recovery || 0)
-                )}
-              </span>
+              {(() => {
+                // Calculate the true net cost
+                const processingCharges = results.procCharge || results.processorChargeOnCards || results.processingFees || 0;
+                const feesCollected = programType === 'SUPPLEMENTAL_FEE' 
+                  ? (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0)
+                  : results.markupCollected || results.cardPriceIncreaseCollected || 0;
+                const extraRevenue = programType === 'CASH_DISCOUNTING' ? (results.extraCashRevenue || 0) : 0;
+                const netCost = processingCharges - feesCollected - extraRevenue;
+                
+                return (
+                  <span className={`text-lg font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
+                    {netCost <= 0 ? (
+                      <>
+                        <span className="text-sm font-normal">You earn</span> {formatCurrency(Math.abs(netCost))}
+                      </>
+                    ) : (
+                      formatCurrency(netCost)
+                    )}
+                  </span>
+                );
+              })()}
             </div>
           </div>
         </div>
@@ -321,12 +331,17 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           <p className="text-sm text-gray-600 italic">
             "This is money you're currently giving away to payment processors every month"
           </p>
-          {savingsPercent >= 90 && (
+          {savingsPercent >= 100 ? (
+            <div className="mt-2 inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+              <Trophy className="h-4 w-4" />
+              {savingsPercent >= 105 ? 'You\'re Making Money on Processing!' : 'Complete Cost Elimination Achieved!'}
+            </div>
+          ) : savingsPercent >= 90 ? (
             <div className="mt-2 inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
               <Trophy className="h-4 w-4" />
               Near-Complete Cost Elimination!
             </div>
-          )}
+          ) : null}
         </div>
       </CardContent>
     </Card>
