@@ -121,7 +121,9 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           {/* Current Cost */}
           <div className="flex justify-between items-center pb-3 border-b border-gray-200">
             <span className="text-sm font-semibold text-gray-700">
-              {programType === 'CASH_DISCOUNTING' ? 'Current Payment Acceptance Cost:' : 'Current Monthly Cost:'}
+              {programType === 'CASH_DISCOUNTING' ? 'Current Payment Acceptance Cost:' : 
+               programType === 'SUPPLEMENTAL_FEE' ? 'Current Processing Burden:' :
+               'Current Monthly Cost:'}
             </span>
             <span className="text-lg font-bold text-red-600">
               {formatCurrency(results.currentCost || 0)}
@@ -131,7 +133,9 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           {/* With Fee Recovery Program - High Level Summary */}
           <div className="space-y-2">
             <div className="text-sm font-semibold text-gray-700 mb-2">
-              {programType === 'CASH_DISCOUNTING' ? 'With Menu Optimization Program:' : 'With Fee Recovery Program:'}
+              {programType === 'CASH_DISCOUNTING' ? 'With Menu Optimization Program:' : 
+               programType === 'SUPPLEMENTAL_FEE' ? 'With Transparent Fee Recovery:' :
+               'With Fee Recovery Program:'}
             </div>
             
             {/* Show the high-level outcome, not the detailed math */}
@@ -139,6 +143,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               <span className="text-sm text-gray-600">
                 {programType === 'DUAL_PRICING' ? 'Your New Reality' : 
                  programType === 'CASH_DISCOUNTING' ? 'Menu Optimization Creates' : 
+                 programType === 'SUPPLEMENTAL_FEE' ? 'Fee Transparency Creates' :
                  'Your New Cost'}
               </span>
               <span className="text-lg font-bold">
@@ -167,8 +172,23 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         {formatCurrency(netCost)} remaining cost
                       </span>
                     );
+                  } else if (programType === 'SUPPLEMENTAL_FEE') {
+                    // For Supplemental Fee, show transparency creating savings
+                    const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
+                    const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
+                    const netCost = processingCharges - feesCollected;
+                    
+                    return netCost <= 0 ? (
+                      <span className="text-green-600">
+                        {formatCurrency(Math.abs(netCost))} monthly savings
+                      </span>
+                    ) : (
+                      <span className="text-gray-700">
+                        {formatCurrency(netCost)} remaining cost
+                      </span>
+                    );
                   } else {
-                    // For other programs, show the net cost
+                    // Default fallback
                     const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
                     const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
                     const netCost = processingCharges - feesCollected;
@@ -196,52 +216,52 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               <>
                 {/* Supplemental Fee Detailed Breakdown */}
                 <div className="space-y-2">
-                  <div className="text-xs font-medium text-gray-500 uppercase">Detailed Breakdown</div>
+                  <div className="text-xs font-medium text-gray-500 uppercase">Fee Transparency Impact</div>
                   
                   {/* Current vs New */}
-                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
-                    <span className="text-sm text-gray-600">Current Monthly Cost</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Current Processing Burden</span>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
-                  {/* Processor Charge */}
+                  {/* Processing After Transparent Fee */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Processing Charges</span>
+                    <span className="text-sm text-gray-600">Processing Cost (After Fee)</span>
                     <span className="text-sm font-semibold text-gray-600">
                       {formatCurrency(results.processorChargeOnCards || results.processingFees || 0)}
                     </span>
                   </div>
                   
-                  {/* Fee Collected on Cards */}
+                  {/* Transparent Fee from Cards */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Supplemental Fee (Cards)</span>
+                    <span className="text-sm text-gray-600">Transparent Fee from Cards</span>
                     <span className="text-sm font-semibold text-green-600">
                       -{formatCurrency(results.cardFeeCollected || 0)}
                     </span>
                   </div>
                   
-                  {/* Fee on Cash */}
+                  {/* Transparent Fee from Cash */}
                   {(results.supplementalFeeCash || 0) > 0 && (
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Supplemental Fee (Cash)</span>
+                      <span className="text-sm text-gray-600">Transparent Fee from Cash</span>
                       <span className="text-sm font-semibold text-green-600">
                         -{formatCurrency(results.supplementalFeeCash || 0)}
                       </span>
                     </div>
                   )}
                   
-                  {/* Net New Cost */}
+                  {/* Total Savings Result */}
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Your Net Cost</span>
+                    <span className="text-sm font-semibold text-gray-700">Total Net Gain (Monthly)</span>
                     {(() => {
                       const netCost = (results.processorChargeOnCards || results.processingFees || 0) - 
                                      (results.cardFeeCollected || 0) - 
                                      (results.supplementalFeeCash || 0);
                       return (
                         <span className={`text-sm font-bold ${netCost <= 0 ? 'text-green-600' : 'text-gray-700'}`}>
-                          {netCost <= 0 ? `You earn ${formatCurrency(Math.abs(netCost))}` : formatCurrency(netCost)}
+                          {netCost <= 0 ? `${formatCurrency(Math.abs(netCost))}` : `${formatCurrency(netCost)} cost remains`}
                         </span>
                       );
                     })()}

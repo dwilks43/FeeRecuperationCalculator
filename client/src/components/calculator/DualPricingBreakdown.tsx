@@ -196,6 +196,13 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="text-sm font-medium text-gray-700">Net Annual</span>
                   <span className="font-bold text-green-600">{formatCurrency(results.annualNetGainRevenue || 0)}</span>
                 </div>
+                <div className="flex justify-between items-center">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
+                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
+                  </div>
+                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
+                </div>
               </div>
             </div>
 
