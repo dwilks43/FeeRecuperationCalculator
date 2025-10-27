@@ -448,10 +448,15 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
-                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
+                    <span className="text-sm font-medium text-gray-700">Total Cost Reduction %</span>
+                    <span className="text-xs text-gray-400 italic">Total Savings (incl. Cash) ÷ Current Cost</span>
                   </div>
-                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
+                  <span className="font-bold">{(() => {
+                    const totalSavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
+                    const currentCost = results.currentCost || 0;
+                    const totalReductionPct = currentCost > 0 ? (totalSavings / currentCost) * 100 : 0;
+                    return totalReductionPct.toFixed(0) + '%';
+                  })()}</span>
                 </div>
               </div>
             </div>
