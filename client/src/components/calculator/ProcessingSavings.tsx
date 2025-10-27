@@ -149,11 +149,10 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               <span className="text-lg font-bold">
                 {(() => {
                   if (programType === 'DUAL_PRICING') {
-                    // For Dual Pricing, show the total net gain as profit
-                    const gain = results.netMonthly || results.savingsCardsOnly || 0;
+                    // For Dual Pricing, show the elimination of processing costs
                     return (
-                      <span className="text-green-600">
-                        You profit {formatCurrency(gain)}
+                      <span className="text-green-600 font-semibold">
+                        Processing eliminated
                       </span>
                     );
                   } else if (programType === 'CASH_DISCOUNTING') {
@@ -336,11 +335,11 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
               <>
                 {/* Dual Pricing Detailed Breakdown */}
                 <div className="space-y-2">
-                  <div className="text-xs font-medium text-gray-500 uppercase">Detailed Breakdown</div>
+                  <div className="text-xs font-medium text-gray-500 uppercase">How The Math Works</div>
                   
                   {/* Current vs New */}
-                  <div className="flex justify-between items-center bg-gray-50 rounded p-2">
-                    <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Current Processing Cost</span>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
                     </span>
@@ -348,23 +347,15 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   
                   {/* Processing Cost After Price Differential */}
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
+                    <span className="text-sm text-gray-600">Cost After Price Differential</span>
                     <span className="text-sm font-semibold text-gray-600">
                       {formatCurrency(results.netChangeCards || 0)}
                     </span>
                   </div>
                   
-                  {/* Processing Savings */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
-                    <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(results.savingsCardsOnly || 0)}
-                    </span>
-                  </div>
-                  
-                  {/* Total Net Gain */}
+                  {/* Total Net Gain - single clear result */}
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Total Net Gain (Monthly)</span>
+                    <span className="text-sm font-semibold text-gray-700">Total Net Gain</span>
                     <span className="text-sm font-bold text-green-600">
                       {formatCurrency(results.netMonthly || results.savingsCardsOnly || 0)}
                     </span>
