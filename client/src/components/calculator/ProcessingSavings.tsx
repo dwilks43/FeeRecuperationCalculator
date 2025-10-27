@@ -214,8 +214,15 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Cash Discount Revenue</span>
-                    <span className="text-sm font-semibold text-green-600">
-                      +{formatCurrency(results.extraCashRevenue || 0)}
+                    <span className={`text-sm font-semibold ${(results.extraCashRevenue || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                      {(() => {
+                        const cashRevenue = results.extraCashRevenue || 0;
+                        if (cashRevenue > 0) {
+                          return `+${formatCurrency(cashRevenue)}`;
+                        } else {
+                          return formatCurrency(cashRevenue);
+                        }
+                      })()}
                     </span>
                   </div>
                   
