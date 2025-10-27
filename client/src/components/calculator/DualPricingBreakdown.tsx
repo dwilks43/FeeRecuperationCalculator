@@ -144,7 +144,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm text-gray-600">Processing Cost after Price Differential</span>
                     <span className="text-xs text-gray-400 italic">Processing Cost = Supplemental Fee Collected − Processor Charge</span>
                   </div>
-                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.recovery || 0)}
                   </span>
                 </div>
