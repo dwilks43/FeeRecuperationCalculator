@@ -149,7 +149,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   </span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
-                  <span className="text-sm font-medium text-gray-700">Card Fee Coverage %</span>
+                  <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
                   <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
                 </div>
               </div>

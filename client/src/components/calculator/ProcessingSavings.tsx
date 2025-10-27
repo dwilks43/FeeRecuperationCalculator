@@ -121,9 +121,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
         <div className="bg-white/50 rounded-lg p-4">
           <div className="space-y-3">
             <div className="text-xs font-medium text-gray-500 uppercase mb-3">
-              {programType === 'CASH_DISCOUNTING' ? 'Menu Optimization Math' : 
-               programType === 'SUPPLEMENTAL_FEE' ? 'Fee Transparency Math' :
-               'How The Math Works'}
+              How The Math Works
             </div>
             
             {programType === 'SUPPLEMENTAL_FEE' ? (
@@ -138,14 +136,28 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Net Cost After Fee Collection</span>
-                    <span className="text-sm font-semibold text-gray-600">
+                    <span className="text-sm text-gray-600">Processing After Fee Collection</span>
+                    <span className="text-sm font-semibold">
                       {(() => {
                         const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
-                        const feesCollected = (results.cardFeeCollected || 0) + (results.supplementalFeeCash || 0);
-                        const netCost = processingCharges - feesCollected;
-                        return formatCurrency(Math.max(0, netCost));
+                        const cardFeesCollected = results.cardFeeCollected || 0;
+                        const netCost = processingCharges - cardFeesCollected;
+                        
+                        if (netCost < 0) {
+                          // Negative = profit, show as green with actual negative sign
+                          return <span className="text-green-600">{formatCurrency(netCost)}</span>;
+                        } else {
+                          // Positive or zero = remaining cost, show as gray
+                          return <span className="text-gray-600">{formatCurrency(netCost)}</span>;
+                        }
                       })()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Supplemental Fee on Cash</span>
+                    <span className="text-sm font-semibold text-green-600">
+                      +{formatCurrency(results.supplementalFeeCash || 0)}
                     </span>
                   </div>
                   
