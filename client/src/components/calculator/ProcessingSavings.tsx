@@ -38,7 +38,25 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
   
   const heroSavings = getHeroSavings();
   const annualSavings = heroSavings * 12;
-  const savingsPercent = results.currentCost > 0 ? (heroSavings / results.currentCost) * 100 : 0;
+  
+  // For savings percent, include total savings (with cash revenue for Cash Discounting)
+  const getTotalSavingsPercent = () => {
+    if (results.currentCost <= 0) return 0;
+    
+    if (programType === 'CASH_DISCOUNTING') {
+      // Include both card savings and cash revenue
+      const totalSavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
+      return (totalSavings / results.currentCost) * 100;
+    } else if (programType === 'SUPPLEMENTAL_FEE') {
+      // Use total net gain revenue
+      return (results.totalNetGainRevenue || 0) / results.currentCost * 100;
+    } else {
+      // Dual Pricing
+      return (heroSavings / results.currentCost) * 100;
+    }
+  };
+  
+  const savingsPercent = getTotalSavingsPercent();
   
   // Get contextual comparison (emphasis on massive savings)
   const getContextualComparison = () => {
@@ -151,17 +169,29 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Net Cost After Menu Optimization</span>
-                    <span className="text-sm font-semibold text-gray-600">
+                    <span className="text-sm text-gray-600">Processing After Menu Markup</span>
+                    <span className="text-sm font-semibold">
                       {(() => {
-                        const processingCharges = results.procCharge || 0;
-                        const feesCollected = results.markupCollected || 0;
-                        const extraRevenue = results.extraCashRevenue || 0;
-                        const netCost = processingCharges - feesCollected - extraRevenue;
-                        return netCost <= 0 ? 
-                          formatCurrency(0) : 
-                          formatCurrency(netCost);
+                        // Use netChangeCards which matches Calculation Details panel
+                        // netChangeCards = procCharge - markupCollected
+                        // Negative means profit (markup exceeds processing)
+                        const netChange = results.netChangeCards || 0;
+                        
+                        if (netChange < 0) {
+                          // Negative = profit, show as green with actual negative sign
+                          return <span className="text-green-600">{formatCurrency(netChange)}</span>;
+                        } else {
+                          // Positive or zero = remaining cost, show as gray
+                          return <span className="text-gray-600">{formatCurrency(netChange)}</span>;
+                        }
                       })()}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-gray-600">Cash Discount Revenue</span>
+                    <span className="text-sm font-semibold text-green-600">
+                      +{formatCurrency(results.extraCashRevenue || 0)}
                     </span>
                   </div>
                   
