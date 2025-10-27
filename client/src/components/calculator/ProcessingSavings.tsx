@@ -60,12 +60,24 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
   
   // Get contextual comparison (emphasis on massive savings)
   const getContextualComparison = () => {
-    if (annualSavings >= 50000) return "That's $50,000+ more profit every year";
-    if (annualSavings >= 20000) return "That's over $20,000 in pure profit annually";
-    if (annualSavings >= 10000) return "That's $10,000+ straight to your bottom line";
-    if (annualSavings >= 5000) return "That's thousands in extra profit every year";
-    if (annualSavings >= 2000) return "That's significant savings month after month";
-    return "That's real money back in your business";
+    // Round down to nearest $5,000
+    const roundedAmount = Math.floor(annualSavings / 5000) * 5000;
+    
+    if (roundedAmount >= 5000) {
+      // Format the rounded amount with commas
+      const formattedAmount = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(roundedAmount);
+      
+      return `That's ${formattedAmount}+ more profit every year`;
+    } else if (annualSavings >= 2000) {
+      return "That's significant savings month after month";
+    } else {
+      return "That's real money back in your business";
+    }
   };
 
   return (
