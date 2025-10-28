@@ -37,27 +37,41 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
             <span className="text-lg">Calculation Details</span>
             <span className="text-sm text-gray-500 font-normal ml-2">(Technical Breakdown)</span>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-            className="text-gray-600 hover:text-gray-800"
-          >
-            {isExpanded ? (
-              <>
-                <EyeOff className="h-4 w-4 mr-1" />
-                Hide
-              </>
-            ) : (
-              <>
-                <Eye className="h-4 w-4 mr-1" />
-                View
-              </>
-            )}
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                onTooltip('viewHideCalculationDetails' as TooltipKey);
+              }}
+              className="text-gray-400 hover:text-gray-600"
+              data-testid="button-tooltip-viewHide"
+            >
+              <HelpCircle className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsExpanded(!isExpanded);
+              }}
+              className="text-gray-600 hover:text-gray-800"
+            >
+              {isExpanded ? (
+                <>
+                  <EyeOff className="h-4 w-4 mr-1" />
+                  Hide
+                </>
+              ) : (
+                <>
+                  <Eye className="h-4 w-4 mr-1" />
+                  View
+                </>
+              )}
+            </Button>
+          </div>
         </CardTitle>
       </CardHeader>
       {isExpanded && (
