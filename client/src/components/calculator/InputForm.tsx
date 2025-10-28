@@ -117,13 +117,8 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const handlePriceDifferentialChange = (value: string) => {
     let priceDifferentialValue = parseNumericInput(value);
     
-    // Cap at 4% for Supplemental Fee mode only
-    if (inputs.programType === 'SUPPLEMENTAL_FEE' && priceDifferentialValue > 4) {
-      priceDifferentialValue = 4;
-      setInputValues(prev => ({ ...prev, priceDifferential: '4' }));
-    } else {
-      setInputValues(prev => ({ ...prev, priceDifferential: value }));
-    }
+    // No cap - allow values to exceed 4% so Cost Reduction can exceed 100%
+    setInputValues(prev => ({ ...prev, priceDifferential: value }));
     
     onInputChange('priceDifferential', priceDifferentialValue);
     
@@ -611,9 +606,6 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               />
               <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
             </div>
-            {inputs.programType === 'SUPPLEMENTAL_FEE' && (
-              <p className="text-xs text-gray-500 mt-1">Maximum 4.00%</p>
-            )}
           </div>
 
           {/* Cash Discount % - Only for Cash Discounting */}
