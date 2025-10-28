@@ -1,0 +1,115 @@
+INPUT FIELDS SECTION (InputForm.tsx)
+1.	Business Type (Restaurant/QSR vs Retail)
+"Restaurant/QSR includes tip calculations. Retail excludes tips from all calculations."
+2.	Program Type Radio Buttons
+"Choose your pricing strategy. Dual Pricing: Card price higher than cash. Cash Discounting: Menu prices elevated, cash gets discount. Supplemental Fee: Transparent fee added to all transactions."
+3.	Interchange Cost %
+"The wholesale rate charged by card networks (Visa/Mastercard/Discover/Amex). This is your processor's base cost. Typically, 1.5-2.25%. Use the Interchange Calculator below to get an estimate based on industry type.  See DMP staff for training on how to use this tool."
+4.	Tax Basis (Pre-tax/Post-tax)
+"When the fee is applied relative to sales tax. Pre-tax: Fee added before tax calculation. Post-tax: Fee added after tax."
+5.	Fee Timing (Before Tip/After Tip)
+"When the fee is applied relative to tips. Before Tip: Customer tips on amount including fee. After Tip: Fee added after tip calculation."
+CALCULATION DETAILS SECTION - Replace ALL Italic Descriptors with Tooltips
+DUAL PRICING MODE
+6.	Base Card Volume + Price Differential
+•	Remove: "Base × (1 + Price Differential)"
+•	Add Tooltip: "Menu price shown to card users. Formula: Base Card Volume × (1 + Price Differential %)"
+7.	Card Processed Total
+•	Remove: "Price-Adjusted Base × (1 + Tax) × (1 + Tip)"
+•	Add Tooltip: "Final amount processed including all increases. Formula: Base Card Volume + Price Differential × (1 + Tax %) × (1 + Tip %)"
+8.	Processor Charge on Cards
+•	Remove: "Processor Charge = Card Processed Total × Flat Rate"
+•	Add Tooltip: "What your processor charges under new program. Formula: Card Processed Total × Flat Rate %"
+9.	Processing Cost after Price Differential
+•	Remove: "Recovery = Card Price Increase − Processor Charge"
+•	Add Tooltip: "Net cost after collecting price differential. Negative = profit. Formula: Processor Charge − Card Price Increase Collected"
+10.	Cost Reduction %
+•	Remove: "Savings ÷ Current Cost"
+•	Add Tooltip: "Percentage of current costs eliminated. Formula: (Processing Cost Savings ÷ Current Cost) × 100"
+11.	Processing Cost After Price Differential (Savings panel)
+•	Remove: "Processor Charge − Card Price Increase Collected"
+•	Add Tooltip: "Your remaining processing cost after fee collection. Formula: Processor Charge on Cards −  Card Price Increase Collected"
+12.	Processing Cost Savings
+•	Remove: "Savings = Current Cost − Net Change"
+•	Add Tooltip: "Monthly savings on card processing. Formula: Current Processing Cost − Processing Cost after Price Differential"
+CASH DISCOUNTING MODE
+13.	Base Card Volume + Menu Markup
+•	Remove: "Base × (1 + Menu Markup)"
+•	Add Tooltip: "Card volume after menu markup. Formula: Base Card Volume × (1 + Menu Markup %)"
+14.	Card Processed Total
+•	Remove: "Menu-Priced Base × (1 + Tax) × (1 + Tip)"
+•	Add Tooltip: "Total card amount processed. Formula: Base Card Volume+Mark-up × (1 + Tax %) × (1 + Tip %)"
+15.	Base Cash Volume + Menu Markup
+•	Remove: "Cash Base × (1 + Menu Markup)"
+•	Add Tooltip: "Base Cash Volume plus Menu Markup before discount. Formula: Base Cash Volume (pre-tax, pre-tip) × (1 + Menu Markup %)"
+16.	Cash Discount Applied
+•	Remove: "(Base Cash Volume + Menu Markup) × Cash Discount %"
+•	Add Tooltip: "Discount given at register for cash. Formula: Base Cash Volume + Menu Markup × Cash Discount %"
+17.	Net Cash Base (after discount)
+•	Remove: "Cash Base × (1 + Menu Markup − Cash Discount %)"
+•	Add Tooltip: "Cash amount after markup minus discount. Formula: Base Cash Volume × (1 + Menu Markup % − Cash Discount %)"
+18.	Cash Processed Total
+•	Remove: "Net Cash Base × (1 + Tax) × (1 + Tip)"
+•	Add Tooltip: "Final cash amount including tax/tip. Formula: Net Cash Base (after discount) × (1 + Tax %) × (1 + Tip %)"
+19.	Processor Charge on Cards
+•	Remove: "Card Processed Total × Flat Rate"
+•	Add Tooltip: "Processing fee on card transactions. Formula: Card Processed Total (incl. menu markup, tax, and tip)× Flat Rate %"
+20.	Processing Cost after Menu Markup
+•	Remove: "Recovery = Card Markup − Processor Charge"
+•	Add Tooltip: "Net cost after collecting menu markup on cards. Formula: Processor Charge on Cards – Card Menu Markup Collected"
+
+21.	Current Processing Cost
+•	Remove: "Monthly Card Volume × Current Rate"
+•	Add Tooltip: "What you pay today for card processing. Formula: Card Volume × Current Rate %"
+22.	Processing Cost After Menu Markup
+•	Remove: "Processor Charge − Card Price Increase Collected"
+•	Add Tooltip: "Remaining cost after menu markup collection. Formula: Processor Charge on Cards − Card Menu Markup Collected”
+23.	Processing Cost Savings (Cards Only)
+•	Remove: "Current Cost − Net Change Cards"
+•	Add Tooltip: "Card processing savings. Formula: Current Processing Cost − Processing Cost After Menu Markup"
+24.	Revenue from Cash Differential
+•	Remove: "Cash Base × (Price Differential − Cash Discount %)"
+•	Add Tooltip: "Net revenue from cash pricing strategy. Formula: Base Cash Volume × (Menu Markup % − Cash Discount %)"
+25.	Total Net Gain (Monthly)
+•	Remove: "Processing Cost Savings + Revenue from Cash"
+•	Add Tooltip: "Complete monthly benefit. Formula: Processing Cost Savings + Revenue from Cash Differential"
+26.	Annual Net Gain
+•	Remove: "Total Monthly Gain × 12"
+•	Add Tooltip: "Yearly impact at current volumes. Formula: Total Net Gain (Monthly) × 12"
+27.	Total Cost Reduction %
+•	Remove: "Total Savings (incl. Cash) ÷ Current Cost"
+•	Add Tooltip: "Overall cost elimination percentage. Formula: (Total Net Gain (Monthly) ÷ Current Processing Cost) × 100"
+SUPPLEMENTAL FEE MODE
+31.	Fee-Eligible Volume (Cards)
+•	Remove: Dynamic caption like "(post-tax, pre-tip)"
+•	Add Tooltip: "Amount of card volume the fee applies to, varies by settings. Changes based on tax/tip timing selections."
+32.	Tip-Eligible Volume (Cards)
+•	Remove: Dynamic caption like "(post-tax + fee)"
+•	Add Tooltip: "Amount of card volume that tips are calculated on. Varies based on fee timing setting."
+33.	Processor Charge
+•	Remove: "Processor Charge = Card Processed Total × Flat Rate"
+•	Add Tooltip: "Processing fees on cards. Formula: Card Processed Total (after fee, tip, & tax)× Flat Rate %"
+34.	Processing Cost after Supplemental Fee
+•	Remove: "Processing Cost = Supplemental Fee Collected − Processor Charge"
+•	Add Tooltip: "Net position after fee collection. Negative = profit. Formula: Processor Charge − Fee Collected"
+35.	Processing Cost after Supplemental Fee (Savings panel)
+•	Remove: "Processing Cost = Processor Charge − Fee (Cards)"
+•	Add Tooltip: "Remaining cost after card fee collection. Formula: Processor Charge − Supplemental Fee Collected — Cards"
+36.	Processing Cost Savings (Cards Only)
+•	Remove: "Savings (Cards Only) = Current Cost − Net Change"
+•	Add Tooltip: "Card savings vs current rate. Formula: Current Processing Cost − Processing Cost after Supplemental Fee"
+GROSS PROFIT SECTION
+37.	Gross Profit Descriptor
+•	Remove: "Card Processed Total × (Flat Rate - Interchange Cost)"
+•	Add Tooltip: "Monthly gross profit to processor. Formula: Card Total × (Flat Rate % − Interchange %)"
+38.	Skytab Bonus Descriptor
+•	Remove: "Skytab bonus (capped at $10K)"
+•	Add Tooltip: "Gross bonus for Skytab deals. Formula: Gross Profit × 18 months × 60%, max $10,000"
+39.	Rep Share Descriptor
+•	Remove: "Rep 50% share"
+•	Add Tooltip: "Sales rep commission portion. Formula: Skytab Bonus × 50%"
+SPECIAL SECTIONS
+43.	Order of Operations Ribbon
+•	Add Tooltip on Info Icon: "The mathematical sequence of how prices, fees, taxes, and tips are calculated"
+44.	Section Headers (Derived Bases & Totals, Processing on Cards, etc.)
+•	Add Tooltip Icons: Brief explanations of what each section calculates

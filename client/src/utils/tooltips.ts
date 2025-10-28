@@ -45,7 +45,7 @@ export const UNIFIED_TOOLTIPS = {
     },
     businessType: {
       title: 'Business Type',
-      body: 'Restaurant/QSR: Includes tip calculations. Retail: Excludes tips from all calculations.'
+      body: 'Restaurant/QSR includes tip calculations. Retail excludes tips from all calculations.'
     },
     viewHideCalculationDetails: {
       title: 'View/Hide (Calculation Details)',
@@ -53,7 +53,7 @@ export const UNIFIED_TOOLTIPS = {
     },
     grossProfit: {
       title: 'Gross Profit (Cards)',
-      body: 'Internal only. Gross Profit (Cards) = (Flat Rate − Interchange) × Card Processed Total.'
+      body: 'Monthly gross profit to processor. Formula: Card Total × (Flat Rate % − Interchange %)'
     },
     processingCostSavingsPct: {
       title: 'Cost Reduction %',
@@ -69,7 +69,7 @@ export const UNIFIED_TOOLTIPS = {
     },
     orderOfOps: {
       title: 'Order of Operations',
-      body: 'Shows the exact sequence of how fees, taxes, and tips are calculated for transparency.'
+      body: 'The mathematical sequence of how prices, fees, taxes, and tips are calculated'
     },
     derivedSection: {
       title: 'Derived Bases & Totals',
@@ -80,28 +80,28 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Your actual card sales before tax, tip, and any fees. This is the foundation for all calculations.'
     },
     priceAdjustedBase: {
-      title: 'Price-Adjusted Base + Price Differential',
-      body: 'Price-Adjusted Base + Price Differential = Base × (1 + price differential). This is the card price the customer sees before tax.'
+      title: 'Base Card Volume + Price Differential',
+      body: 'Menu price shown to card users. Formula: Base Card Volume × (1 + Price Differential %)'
     },
     processed: {
       title: 'Card Processed Total',
-      body: 'Card Processed Total (incl. price differential, tax, and tip) = Price-Adjusted Base × (1 + tax) × (1 + tip). Example: $100 base, +4% diff → $104; +10% tax → $114.40; +20% tip → $137.28.'
+      body: 'Final amount processed including all increases. Formula: Base Card Volume + Price Differential × (1 + Tax %) × (1 + Tip %)'
     },
     processingSection: {
       title: 'Processing on Cards (New Program)',
       body: 'Processing on Cards (New Program): what the bank charges and what your markup covers.'
     },
     procCharge: {
-      title: 'Processor Charge',
-      body: 'What your processor charges under the new program. Formula: Total Processed × Flat Rate %'
+      title: 'Processor Charge on Cards',
+      body: 'What your processor charges under new program. Formula: Card Processed Total × Flat Rate %'
     },
     markupCollected: {
       title: 'Card Price Increase Collected (Dual Pricing)',
       body: 'Revenue collected from the price differential on card transactions. Formula: Base Volume × Price Differential %'
     },
     netChangeCards: {
-      title: 'Processing After Fee Collection',
-      body: 'Your net processing cost after collecting fees. Negative means you\'re profiting.'
+      title: 'Processing Cost after Price Differential',
+      body: 'Net cost after collecting price differential. Negative = profit. Formula: Processor Charge − Card Price Increase Collected'
     },
     coveragePct: {
       title: 'Coverage %',
@@ -117,7 +117,7 @@ export const UNIFIED_TOOLTIPS = {
     },
     savingsCardsOnly: {
       title: 'Processing Cost Savings',
-      body: 'Monthly amount saved on card processing fees compared to your current rate.'
+      body: 'Monthly savings on card processing. Formula: Current Processing Cost − Processing Cost after Price Differential'
     },
     netMonthly: {
       title: 'Total Net Monthly Gain',
@@ -166,7 +166,7 @@ export const UNIFIED_TOOLTIPS = {
   CASH_DISCOUNTING: {
     orderOfOps: {
       title: 'Order of Operations',
-      body: 'Shows the exact sequence of how fees, taxes, and tips are calculated for transparency.'
+      body: 'The mathematical sequence of how prices, fees, taxes, and tips are calculated'
     },
     cashDiscount: {
       title: 'Cash Discount %',
@@ -178,11 +178,11 @@ export const UNIFIED_TOOLTIPS = {
     },
     extraCashRevenue: {
       title: 'Revenue from Cash Differential',
-      body: 'Net revenue from marking up cash prices then giving cash discounts. Can be negative if discount exceeds markup.'
+      body: 'Net revenue from cash pricing strategy. Formula: Base Cash Volume × (Menu Markup % − Cash Discount %)'
     },
     netMonthly: {
-      title: 'Total Net Monthly Gain',
-      body: 'Complete monthly benefit including processing savings and additional revenue from fees.'
+      title: 'Total Net Gain (Monthly)',
+      body: 'Complete monthly benefit. Formula: Processing Cost Savings + Revenue from Cash Differential'
     }
   },
 
@@ -202,7 +202,7 @@ export const UNIFIED_TOOLTIPS = {
     },
     feeTiming: {
       title: 'Fee Timing',
-      body: 'AFTER_TIP: Tip at time of sale: tip is part of the checkout total. BEFORE_TIP: Tip handwritten – post sale: tip is added after the card is processed.'
+      body: 'When the fee is applied relative to tips. Before Tip: Customer tips on amount including fee. After Tip: Fee added after tip calculation.'
     },
     feeTimingAfterTip: {
       title: 'Fee Timing: After Tip',
@@ -213,8 +213,8 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Tip handwritten – post sale: tip is added after the card is processed.'
     },
     feeTaxBasis: {
-      title: 'Fee Tax Basis',
-      body: 'POST_TAX: Apply fee to post-tax amount (fee is computed on the taxed amount). PRE_TAX: Apply fee to pre-tax amount (fee is computed before tax).'
+      title: 'Tax Basis',
+      body: 'When the fee is applied relative to sales tax. Pre-tax: Fee added before tax calculation. Post-tax: Fee added after tax.'
     },
     feeTaxBasisPostTax: {
       title: 'Fee Tax Basis: Post Tax',
@@ -251,11 +251,11 @@ export const UNIFIED_TOOLTIPS = {
     },
     feeEligibleVolumeCards: {
       title: 'Fee-Eligible Volume (Cards)',
-      body: 'Fee-Eligible Volume (Cards): the dollar base the supplemental fee is applied to on cards (changes with timing/tax basis).'
+      body: 'Amount of card volume the fee applies to, varies by settings. Changes based on tax/tip timing selections.'
     },
     tipEligibleVolumeCards: {
       title: 'Tip-Eligible Volume (Cards)',
-      body: 'Tip-Eligible Volume (Cards): the dollar base the tip is applied to (changes with timing).'
+      body: 'Amount of card volume that tips are calculated on. Varies based on fee timing setting.'
     },
     supplementalFeeCards: {
       title: 'Supplemental Fee Collected',
@@ -278,12 +278,12 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Card Processed Total (incl. fee, tax & tip). Built from the selected order of operations (see caption above).'
     },
     procCharge: {
-      title: 'Processor Charge on Cards',
-      body: 'Processor Charge on Cards = Card Processed Total × Flat Rate.'
+      title: 'Processor Charge',
+      body: 'Processing fees on cards. Formula: Card Processed Total (after fee, tip, & tax)× Flat Rate %'
     },
     netChangeCards: {
-      title: 'Processing Cost After Price Differential',
-      body: 'Processing Cost After Price Differential = Processor Charge − Fee Collected on Cards.'
+      title: 'Processing Cost after Supplemental Fee',
+      body: 'Net position after fee collection. Negative = profit. Formula: Processor Charge − Fee Collected'
     },
     coveragePct: {
       title: 'Coverage %',
@@ -299,7 +299,7 @@ export const UNIFIED_TOOLTIPS = {
     },
     savingsCardsOnly: {
       title: 'Processing Cost Savings (Cards Only)',
-      body: 'Processing Cost Savings (Cards Only) = Current Cost − Processing Cost After Price Differential.'
+      body: 'Card savings vs current rate. Formula: Current Processing Cost − Processing Cost after Supplemental Fee'
     },
     netMonthly: {
       title: 'Total Net Monthly Gain',
@@ -435,7 +435,7 @@ export function getMicroFormulas(programType: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE
 const LEGACY_TOOLTIPS = {
   programType: {
     title: 'Program Type',
-    body: 'Choose the pricing model to show the merchant. Dual Pricing raises card price only. Supplemental Fee adds a post-tax fee to card and cash.'
+    body: 'Choose your pricing strategy. Dual Pricing: Card price higher than cash. Cash Discounting: Menu prices elevated, cash gets discount. Supplemental Fee: Transparent fee added to all transactions.'
   },
   supplementalFee: {
     title: 'Supplemental Fee',
@@ -454,12 +454,12 @@ const LEGACY_TOOLTIPS = {
     body: 'Coverage Gap = Markup − Processor (info only).'
   },
   skytabBonusGross: {
-    title: 'Skytab Bonus Calculation (Gross)',
-    body: 'Gross bonus estimate = Gross Profit × 18 months × 60%, capped at $10,000 maximum.'
+    title: 'Skytab Bonus (Gross)',
+    body: 'Gross bonus for Skytab deals. Formula: Gross Profit × 18 months × 60%, max $10,000'
   },
   skytabBonusRep: {
-    title: 'Skytab Bonus Calculation (Rep 50%)',
-    body: 'Rep share = Skytab Bonus (Gross) × 50%. Example: $10,000 × 50% = $5,000.'
+    title: 'Rep Share',
+    body: 'Sales rep commission portion. Formula: Skytab Bonus × 50%'
   },
   'dmp-profit': {
     title: 'DMP Gross Profit',
