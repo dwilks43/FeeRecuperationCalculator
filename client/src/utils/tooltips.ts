@@ -8,64 +8,76 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Enter the merchant\'s real volumes and rates. Card volume should include tax & tip; we back out the base for the math.'
     },
     monthlyCardVolume: {
-      title: 'Monthly Card Volume (Gross)',
-      body: 'Total card sales per month (tax + tip included). We\'ll back out tax/tip to find the pre-tax base.'
+      title: 'Monthly Credit Card Volume',
+      body: 'Total amount processed through credit/debit cards each month.'
     },
     monthlyCashVolume: {
       title: 'Monthly Cash Volume', 
-      body: 'Total cash sales per month. Used for cash fee revenue in Supplemental Fee.'
+      body: 'Total cash payments received monthly. This affects revenue calculations in Cash Discounting and Supplemental Fee modes.'
     },
     currentRate: {
       title: 'Current Processing Rate',
-      body: 'All-in rate with the current processor. Used to show today\'s processing cost for apples-to-apples savings.'
+      body: 'The effective rate percentage you currently pay for card processing. Example: Current Processing Rate = Total Fees ÷ Total Monthly Credit Card Volume. If you process $50,000 monthly in credit/debit cards and pay $1,250 in total fees, your Current Processing rate is 2.50% or Current Processing Rate = $1,250 ÷ $50,000'
     },
     interchangeCost: {
       title: 'Interchange Cost',
-      body: 'Estimated bank cost. Only used to show internal Gross Profit = (Flat Rate − Interchange) × Card Processed Total.'
+      body: 'The wholesale rate charged by card networks (Visa/Mastercard/Discover/Amex). This is your processor\'s base cost. Typically, 1.5-2.25%. Use the Interchange Calculator below to get an estimate based on industry type. See DMP staff for training on how to use this tool.'
     },
     taxRate: {
       title: 'Tax Rate',
-      body: 'Sales tax rate used in the ticket math.'
+      body: 'Sales tax percentage paid by merchant. This should be inclusive of ALL sales tax (ie. State, Local, Municipal).'
     },
     tipRate: {
-      title: 'Tip Rate', 
-      body: 'Typical tip rate for this merchant.'
+      title: 'Average Tip %', 
+      body: 'Average tip percentage customers leave over time.'
     },
     flatRate: {
       title: 'Flat Rate %',
-      body: 'DMP processing rate. Auto-mapped from the differential/fee; you can override. Used for processor charge math.'
+      body: 'Your new processing rate under the Fee Recuperation Program. Auto-calculated or manually entered. The auto-calculation is required for Shift4/SkyTab. For all other providers, this can be manually changed on a case-by-case.'
     },
     flatRateAutoBadge: {
-      title: 'Auto Flat Rate',
-      body: 'Auto-mapped from your differential/fee. Click to switch to Manual if underwriting requires a custom flat rate.'
+      title: 'Auto (Flat Rate toggle)',
+      body: 'Automatically calculates optimal flat rate. Turn off to enter a custom rate.'
     },
     flatRateManualBadge: {
       title: 'Manual Flat Rate',
       body: 'Manual override. Click "Reset to auto" to return to the mapped rate.'
+    },
+    businessType: {
+      title: 'Business Type',
+      body: 'Restaurant/QSR: Includes tip calculations. Retail: Excludes tips from all calculations.'
+    },
+    viewHideCalculationDetails: {
+      title: 'View/Hide (Calculation Details)',
+      body: 'Expand to see complete mathematical breakdown of all calculations.'
     },
     grossProfit: {
       title: 'Gross Profit (Cards)',
       body: 'Internal only. Gross Profit (Cards) = (Flat Rate − Interchange) × Card Processed Total.'
     },
     processingCostSavingsPct: {
-      title: 'Processing Cost Savings %',
-      body: 'Processing Cost Savings % = Savings on Cards ÷ Current Processing Cost.'
+      title: 'Cost Reduction %',
+      body: 'Percentage of current costs eliminated for this category. Over 100% means you\'re profiting from the program.'
     }
   },
 
   // Dual Pricing specific tooltips
   DUAL_PRICING: {
+    priceDifferential: {
+      title: 'Price Differential',
+      body: 'Percentage added to card transactions only. Example: 3.5% means a $100 purchase becomes $103.50 for card users.'
+    },
     orderOfOps: {
       title: 'Order of Operations',
-      body: 'Order of Operations: Base Card Volume → +Price Differential → +Tax → +Tip (handwritten on presented total).'
+      body: 'Shows the exact sequence of how fees, taxes, and tips are calculated for transparency.'
     },
     derivedSection: {
       title: 'Derived Bases & Totals',
       body: 'Derived Bases & Totals: makes the ticket math transparent for the client.'
     },
     base: {
-      title: 'Base Card Volume (pre-tax, pre-tip)',
-      body: 'Base Card Volume (pre-tax, pre-tip) = Card Gross ÷ (1 + tax + tip). Why it matters: this is the real price before taxes/tips.'
+      title: 'Base Card Volume',
+      body: 'Your actual card sales before tax, tip, and any fees. This is the foundation for all calculations.'
     },
     priceAdjustedBase: {
       title: 'Price-Adjusted Base + Price Differential',
@@ -80,16 +92,16 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Processing on Cards (New Program): what the bank charges and what your markup covers.'
     },
     procCharge: {
-      title: 'Processor Charge on Cards',
-      body: 'Processor Charge on Cards = Card Processed Total × Flat Rate.'
+      title: 'Processor Charge',
+      body: 'What your processor charges under the new program. Formula: Total Processed × Flat Rate %'
     },
     markupCollected: {
-      title: 'Card Price Increase Collected (Cards)',
-      body: 'Card Price Increase Collected (Cards) = Base × price differential. This is the extra revenue you collect at the register.'
+      title: 'Card Price Increase Collected (Dual Pricing)',
+      body: 'Revenue collected from the price differential on card transactions. Formula: Base Volume × Price Differential %'
     },
     netChangeCards: {
-      title: 'Processing Cost After Price Differential',
-      body: 'Processing Cost After Price Differential = Processor Charge − Card Price Increase Collected. Think of it as "what\'s left to pay the processor."'
+      title: 'Processing After Fee Collection',
+      body: 'Your net processing cost after collecting fees. Negative means you\'re profiting.'
     },
     coveragePct: {
       title: 'Coverage %',
@@ -104,16 +116,16 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Current Processing Cost (Today) = Card Gross × current rate.'
     },
     savingsCardsOnly: {
-      title: 'Processing Cost Savings (Cards Only)',
-      body: 'Processing Cost Savings (Cards Only) = Current Cost − Processing Cost After Price Differential.'
+      title: 'Processing Cost Savings',
+      body: 'Monthly amount saved on card processing fees compared to your current rate.'
     },
     netMonthly: {
-      title: 'Total Net Gain (Monthly)',
-      body: 'Total Net Gain (Monthly). Same as savings on cards for Dual Pricing.'
+      title: 'Total Net Monthly Gain',
+      body: 'Complete monthly benefit including processing savings and additional revenue from fees.'
     },
     netAnnual: {
-      title: 'Annual Net Gain',
-      body: 'Annual Net Gain = Monthly × 12.'
+      title: 'Annual Impact',
+      body: 'Your total yearly savings. Simply your monthly gain × 12.'
     },
     // Right rail specific tooltips
     rightRailCurrentCost: {
@@ -154,28 +166,32 @@ export const UNIFIED_TOOLTIPS = {
   CASH_DISCOUNTING: {
     orderOfOps: {
       title: 'Order of Operations',
-      body: 'Order of Operations: Base Volume → +Menu Markup → −Cash Discount (Cash Only) → +Tax → +Tip (handwritten on presented total).'
+      body: 'Shows the exact sequence of how fees, taxes, and tips are calculated for transparency.'
     },
     cashDiscount: {
       title: 'Cash Discount %',
-      body: 'The discount percentage given to cash-paying customers off the menu price. Often less than the menu markup, creating extra revenue.'
+      body: 'Discount given to cash-paying customers off the marked-up price. Example: 3% discount on a $10.40 menu price = $10.09 final price.'
     },
     menuMarkup: {
       title: 'Menu Markup %',
-      body: 'The percentage increase applied to all menu prices. Cards pay this full amount while cash gets a partial discount.'
+      body: 'Percentage added to all displayed prices. Example: 4% markup means a $10 item shows as $10.40 on the menu. This increase is applied to ALL tenders including card AND cash.'
     },
     extraCashRevenue: {
       title: 'Revenue from Cash Differential',
-      body: 'Extra revenue = Cash Base × (Menu Markup − Cash Discount). This is the difference between what\'s added to menu prices and what\'s discounted for cash.'
+      body: 'Net revenue from marking up cash prices then giving cash discounts. Can be negative if discount exceeds markup.'
     },
     netMonthly: {
-      title: 'Total Net Gain (Monthly)',
-      body: 'Total Net Gain = Card Processing Savings + Extra Cash Revenue. Includes both processing savings and the cash differential revenue.'
+      title: 'Total Net Monthly Gain',
+      body: 'Complete monthly benefit including processing savings and additional revenue from fees.'
     }
   },
 
   // Supplemental Fee specific tooltips
   SUPPLEMENTAL_FEE: {
+    supplementalFee: {
+      title: 'Supplemental Fee %',
+      body: 'Fee charged on ALL transactions, disclosed at checkout, and cannot be waived/removed based on tender type. Example: 3.75% fee on a $100 purchase adds $3.75.'
+    },
     modeIntro: {
       title: 'Supplemental Fee Mode',
       body: 'Supplemental Fee adds a line-item fee to all transactions (cards & cash). Timing/tax basis control the order of fee, tax, and tip.'
@@ -242,12 +258,12 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Tip-Eligible Volume (Cards): the dollar base the tip is applied to (changes with timing).'
     },
     supplementalFeeCards: {
-      title: 'Supplemental Fee Collected — Cards',
-      body: 'Supplemental Fee Collected — Cards = Fee-Eligible Volume (Cards) × fee %. This offsets the processor charge on card tickets.'
+      title: 'Supplemental Fee Collected',
+      body: 'Total fees collected from both card and cash transactions at your set percentage.'
     },
     supplementalFeeCash: {
       title: 'Supplemental Fee Collected — Cash',
-      body: 'Supplemental Fee Collected — Cash = Monthly Cash Volume × fee %. This is extra revenue from cash tickets.'
+      body: 'Total fees collected from both card and cash transactions at your set percentage.'
     },
     tipAmount: {
       title: 'Tip Amount',
@@ -286,12 +302,12 @@ export const UNIFIED_TOOLTIPS = {
       body: 'Processing Cost Savings (Cards Only) = Current Cost − Processing Cost After Price Differential.'
     },
     netMonthly: {
-      title: 'Total Net Gain (Monthly)',
-      body: 'Total Net Gain (Monthly) = Savings on cards + Fee collected on cash.'
+      title: 'Total Net Monthly Gain',
+      body: 'Complete monthly benefit including processing savings and additional revenue from fees.'
     },
     netAnnual: {
-      title: 'Annual Net Gain',
-      body: 'Annual Net Gain = Monthly × 12.'
+      title: 'Annual Impact',
+      body: 'Your total yearly savings. Simply your monthly gain × 12.'
     },
     // Right rail specific tooltips
     rightRailCurrentCost: {
