@@ -98,9 +98,17 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{formatCurrency(results.baseVolumePreTaxPreTip || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Fee-Eligible Volume (Cards)</span>
-                    <span className="text-xs text-gray-400 italic">({getDynamicCaption('feeBaseCards')})</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('feeEligibleVolumeCards' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-feeEligibleVolumeCards"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium">{formatCurrency(results.feeBaseCards || 0)}</span>
                 </div>
@@ -111,9 +119,17 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 {inputs.businessType !== 'RETAIL' && (
                   <>
                     <div className="flex justify-between items-center">
-                      <div className="flex flex-col">
+                      <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-600">Tip-Eligible Volume (Cards)</span>
-                        <span className="text-xs text-gray-400 italic">({getDynamicCaption('tipBase')})</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onTooltip('tipEligibleVolumeCards' as TooltipKey)}
+                          className="h-4 w-4 p-0"
+                          data-testid="button-tooltip-tipEligibleVolumeCards"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
                       </div>
                       <span className="font-medium">{formatCurrency(results.tipBase || 0)}</span>
                     </div>
@@ -143,9 +159,17 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{((results.derivedFlatRate || 0) * 100).toFixed(2)}%</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processor Charge</span>
-                    <span className="text-xs text-gray-400 italic">Processor Charge = Card Processed Total × Flat Rate</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('procCharge' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-procCharge"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium">{formatCurrency(results.processorChargeOnCards || 0)}</span>
                 </div>
@@ -154,9 +178,17 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processing Cost after Supplemental Fee</span>
-                    <span className="text-xs text-gray-400 italic">Processing Cost = Processor Charge − Supplemental Fee Collected</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('netChangeCards' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-netChangeCards"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.netChangeCards || 0)}
@@ -185,18 +217,34 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processing Cost after Supplemental Fee</span>
-                    <span className="text-xs text-gray-400 italic">Processing Cost = Processor Charge − Fee (Cards)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('netChangeCards' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-netChangeCards2"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.netChangeCards || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
-                    <span className="text-xs text-gray-400 italic">Savings (Cards Only) = Current Cost − Net Change</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('savingsCardsOnly' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-savingsCardsOnly"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
                 </div>
@@ -259,24 +307,36 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="font-medium">{formatCurrency(results.base || 0)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
                       <span className="text-sm text-gray-600">Base Card Volume + Menu Markup</span>
-                      <span className="text-xs text-gray-400 italic">Base × (1 + Menu Markup)</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onTooltip('markupOnCards' as TooltipKey)}
+                        className="h-4 w-4 p-0"
+                        data-testid="button-tooltip-markupOnCards"
+                      >
+                        <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                      </Button>
                     </div>
                     <span className="font-medium">{formatCurrency(results.priceAdjustedBase || 0)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
                       <span className="text-sm text-gray-600">
                         {inputs.businessType === 'RETAIL' ? 
                           'Card Processed Total (incl. markup and tax)' : 
                           'Card Processed Total (incl. markup, tax, and tip)'}
                       </span>
-                      <span className="text-xs text-gray-400 italic">
-                        {inputs.businessType === 'RETAIL' ?
-                          'Menu-Priced Base × (1 + Tax)' :
-                          'Menu-Priced Base × (1 + Tax) × (1 + Tip)'}
-                      </span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onTooltip('processed' as TooltipKey)}
+                        className="h-4 w-4 p-0"
+                        data-testid="button-tooltip-processed"
+                      >
+                        <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                      </Button>
                     </div>
                     <span className="font-bold">{formatCurrency(results.processed || 0)}</span>
                   </div>
@@ -297,38 +357,66 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       <span className="font-medium">{formatCurrency(results.baseCashVolume || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <div className="flex flex-col">
+                      <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-600">Base Cash Volume + Menu Markup</span>
-                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Menu Markup)</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onTooltip('markupOnCash' as TooltipKey)}
+                          className="h-4 w-4 p-0"
+                          data-testid="button-tooltip-markupOnCash"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
                       </div>
                       <span className="font-medium">{formatCurrency(results.menuPricedCashBase || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <div className="flex flex-col">
+                      <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-600">Cash Discount Applied</span>
-                        <span className="text-xs text-gray-400 italic">(Base Cash Volume + Menu Markup) × Cash Discount %</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onTooltip('cashDiscountApplied' as TooltipKey)}
+                          className="h-4 w-4 p-0"
+                          data-testid="button-tooltip-cashDiscountApplied"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
                       </div>
                       <span className="font-medium text-orange-600">−{formatCurrency(results.cashDiscountGiven || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <div className="flex flex-col">
+                      <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-600">Net Cash Base (after discount)</span>
-                        <span className="text-xs text-gray-400 italic">Cash Base × (1 + Menu Markup − Cash Discount %)</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onTooltip('netCashBase' as TooltipKey)}
+                          className="h-4 w-4 p-0"
+                          data-testid="button-tooltip-netCashBase"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
                       </div>
                       <span className="font-medium">{formatCurrency(results.netCashBase || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <div className="flex flex-col">
+                      <div className="flex items-center gap-1">
                         <span className="text-sm text-gray-600">
                           {inputs.businessType === 'RETAIL' ?
                             'Cash Processed Total (incl. net markup and tax)' :
                             'Cash Processed Total (incl. net markup, tax, and tip)'}
                         </span>
-                        <span className="text-xs text-gray-400 italic">
-                          {inputs.businessType === 'RETAIL' ?
-                            'Net Cash Base × (1 + Tax)' :
-                            'Net Cash Base × (1 + Tax) × (1 + Tip)'}
-                        </span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onTooltip('cashProcessedTotal' as TooltipKey)}
+                          className="h-4 w-4 p-0"
+                          data-testid="button-tooltip-cashProcessedTotal"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
                       </div>
                       <span className="font-bold">{formatCurrency(results.cashProcessedTotal || 0)}</span>
                     </div>
@@ -354,9 +442,17 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{((results.derivedFlatRate || 0) * 100).toFixed(2)}%</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processor Charge on Cards</span>
-                    <span className="text-xs text-gray-400 italic">Card Processed Total × Flat Rate</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('procCharge' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-procCharge2"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium">{formatCurrency(results.procCharge || 0)}</span>
                 </div>
@@ -365,18 +461,34 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processing Cost after Menu Markup</span>
-                    <span className="text-xs text-gray-400 italic">Recovery = Card Markup − Processor Charge</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('recovery' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-recovery"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.recovery || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
-                    <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('processingCostSavingsPct' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-processingCostSavingsPct"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-bold">{(() => {
                     const pct = (results.procSavingsPct || 0) * 100;
@@ -400,23 +512,47 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="font-medium">{formatCurrency(results.baseCashVolume || 0)}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
                       <span className="text-sm text-gray-600">Menu Markup on Cash</span>
-                      <span className="text-xs text-gray-400 italic">Cash Base × Menu Markup %</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onTooltip('menuMarkupOnCash' as TooltipKey)}
+                        className="h-4 w-4 p-0"
+                        data-testid="button-tooltip-menuMarkupOnCash"
+                      >
+                        <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                      </Button>
                     </div>
                     <span className="font-medium text-green-600">+{formatCurrency((results.menuPricedCashBase || 0) - (results.baseCashVolume || 0))}</span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
                       <span className="text-sm text-gray-600">Less: Cash Discount Given</span>
-                      <span className="text-xs text-gray-400 italic">(Cash Base + Markup) × Cash Discount %</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onTooltip('cashDiscountGiven' as TooltipKey)}
+                        className="h-4 w-4 p-0"
+                        data-testid="button-tooltip-cashDiscountGiven"
+                      >
+                        <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                      </Button>
                     </div>
                     <span className="font-medium text-orange-600">−{formatCurrency(results.cashDiscountGiven || 0)}</span>
                   </div>
                   <div className="flex justify-between items-center border-t pt-2 bg-amber-50 -mx-2 px-2 py-2 rounded">
-                    <div className="flex flex-col">
+                    <div className="flex items-center gap-1">
                       <span className="text-sm font-medium text-gray-700">Net Revenue from Cash</span>
-                      <span className="text-xs text-gray-400 italic">Menu Markup − Discount Given</span>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => onTooltip('extraCashRevenue' as TooltipKey)}
+                        className="h-4 w-4 p-0"
+                        data-testid="button-tooltip-extraCashRevenue"
+                      >
+                        <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                      </Button>
                     </div>
                     <span className={`font-bold ${
                       (results.extraCashRevenue || 0) > 0 ? 'text-green-600' : 
@@ -435,9 +571,17 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Net Savings & Revenue</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
-                    <span className="text-xs text-gray-400 italic">Monthly Card Volume × Current Rate</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('currentCost' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-currentCost"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
                 </div>
@@ -518,9 +662,17 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{formatCurrency(results.base || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Base Card Volume + Price Differential</span>
-                    <span className="text-xs text-gray-400 italic">Base × (1 + Price Differential)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('markupOnCards' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-markupOnCards-dual"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium">{formatCurrency(results.priceAdjustedBase || 0)}</span>
                 </div>
