@@ -183,6 +183,31 @@ export const UNIFIED_TOOLTIPS = {
     netMonthly: {
       title: 'Total Net Gain (Monthly)',
       body: 'Complete monthly benefit. Formula: Processing Cost Savings + Revenue from Cash Differential'
+    },
+    // Cash Discounting Calculation Details tooltips
+    processingAfterMarkup: {
+      title: 'Processing Cost After Menu Markup',
+      body: 'Processor Charge − Card Price Increase Collected'
+    },
+    savingsCardsOnlyCash: {
+      title: 'Processing Cost Savings (Cards Only)',
+      body: 'Current Cost − Net Change Cards'
+    },
+    cashRevenueDiff: {
+      title: 'Revenue from Cash Differential',
+      body: 'Cash Base × (Price Differential − Cash Discount %)'
+    },
+    totalNetGainCash: {
+      title: 'Total Net Gain (Monthly)',
+      body: 'Processing Cost Savings + Revenue from Cash'
+    },
+    annualNetGainCash: {
+      title: 'Annual Net Gain',
+      body: 'Total Monthly Gain × 12'
+    },
+    totalCostReductionCash: {
+      title: 'Total Cost Reduction %',
+      body: 'Total Savings (incl. Cash) ÷ Current Cost'
     }
   },
 

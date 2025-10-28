@@ -586,46 +586,94 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processing Cost After Menu Markup</span>
-                    <span className="text-xs text-gray-400 italic">Processor Charge − Card Price Increase Collected</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('processingAfterMarkup' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-processingAfterMarkup"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(Math.abs(results.netChangeCards || 0))}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Processing Cost Savings (Cards Only)</span>
-                    <span className="text-xs text-gray-400 italic">Current Cost − Net Change Cards</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('savingsCardsOnlyCash' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-savingsCardsOnlyCash"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm text-gray-600">Revenue from Cash Differential</span>
-                    <span className="text-xs text-gray-400 italic">Cash Base × (Price Differential − Cash Discount %)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('cashRevenueDiff' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-cashRevenueDiff"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-medium text-amber-600">{formatCurrency(results.extraCashRevenue || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm font-medium text-gray-700">Total Net Gain (Monthly)</span>
-                    <span className="text-xs text-gray-400 italic">Processing Cost Savings + Revenue from Cash</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('totalNetGainCash' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-totalNetGainCash"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-bold text-green-700">{formatCurrency(results.netMonthly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
-                    <span className="text-xs text-gray-400 italic">Total Monthly Gain × 12</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('annualNetGainCash' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-annualNetGainCash"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-bold text-green-600">{formatCurrency(results.netAnnual || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <div className="flex flex-col">
+                  <div className="flex items-center gap-1">
                     <span className="text-sm font-medium text-gray-700">Total Cost Reduction %</span>
-                    <span className="text-xs text-gray-400 italic">Total Savings (incl. Cash) ÷ Current Cost</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('totalCostReductionCash' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-totalCostReductionCash"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
                   </div>
                   <span className="font-bold">{(() => {
                     const totalSavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
