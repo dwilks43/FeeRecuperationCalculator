@@ -380,11 +380,29 @@ export const UI_MICRO_FORMULAS = {
       'Net Monthly = Savings (Cards) + Fee on Cash',
       'Annual = Monthly × 12'
     ]
+  },
+  CASH_DISCOUNTING: {
+    derived: [
+      'Base = Card Gross ÷ (1 + tax + tip)',
+      'Menu Markup applies to all prices',
+      'Cash Discount offered at register'
+    ],
+    processing: [
+      'Processor = Processed × Flat Rate',
+      'Markup (Cards) = Base × price differential',
+      'After Price Differential = Processor − Markup (Cards)'
+    ],
+    savings: [
+      'Current Cost = Card Gross × current rate',
+      'Cash Revenue = Cash Base × (Menu Markup − Cash Discount)',
+      'Net Monthly = Card Savings + Cash Revenue',
+      'Annual = Monthly × 12'
+    ]
   }
 };
 
 // Helper function to get tooltip based on program type and key
-export function getTooltip(key: string, programType?: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE') {
+export function getTooltip(key: string, programType?: 'DUAL_PRICING' | 'SUPPLEMENTAL_FEE' | 'CASH_DISCOUNTING') {
   // First check program-specific tooltips
   if (programType && UNIFIED_TOOLTIPS[programType]) {
     const programTooltips = UNIFIED_TOOLTIPS[programType] as Record<string, { title: string; body: string }>;
