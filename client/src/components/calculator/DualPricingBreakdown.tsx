@@ -141,7 +141,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Processing Cost after Price Differential</span>
+                    <span className="text-sm text-gray-600">Processing Cost after Supplemental Fee</span>
                     <span className="text-xs text-gray-400 italic">Processing Cost = Supplemental Fee Collected − Processor Charge</span>
                   </div>
                   <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
@@ -165,10 +165,10 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
-                    <span className="text-sm text-gray-600">Processing Cost after Price Differential</span>
+                    <span className="text-sm text-gray-600">Processing Cost after Supplemental Fee</span>
                     <span className="text-xs text-gray-400 italic">Processing Cost = Processor Charge − Fee (Cards)</span>
                   </div>
-                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.netChangeCards || 0)}
                   </span>
                 </div>
@@ -344,7 +344,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm text-gray-600">Processing Cost after Menu Markup</span>
                     <span className="text-xs text-gray-400 italic">Recovery = Card Markup − Processor Charge</span>
                   </div>
-                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.recovery || 0)}
                   </span>
                 </div>
@@ -414,7 +414,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm text-gray-600">Processing Cost After Menu Markup</span>
                     <span className="text-xs text-gray-400 italic">Processor Charge − Card Price Increase Collected</span>
                   </div>
-                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(Math.abs(results.netChangeCards || 0))}
                   </span>
                 </div>
@@ -537,7 +537,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm text-gray-600">Processing Cost after Price Differential</span>
                     <span className="text-xs text-gray-400 italic">Recovery = Card Price Increase − Processor Charge</span>
                   </div>
-                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.recovery || 0)}
                   </span>
                 </div>
@@ -564,7 +564,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm text-gray-600">Processing Cost After Price Differential</span>
                     <span className="text-xs text-gray-400 italic">Processor Charge − Card Price Increase Collected</span>
                   </div>
-                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-gray-900'}`}>
                     {formatCurrency(results.netChangeCards || 0)}
                   </span>
                 </div>
