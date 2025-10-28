@@ -123,7 +123,13 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           <div className="bg-white/80 rounded-lg p-4 border border-green-200">
             <div className="text-xs font-medium text-gray-500 uppercase mb-1">Cost Reduction</div>
             <div className="text-2xl font-bold text-green-700">
-              {savingsPercent.toFixed(0)}%
+              {(() => {
+                // Show 1 decimal place if close to 100% to avoid misleading rounding
+                if (savingsPercent >= 99 && savingsPercent <= 101) {
+                  return savingsPercent.toFixed(1) + '%';
+                }
+                return savingsPercent.toFixed(0) + '%';
+              })()}
             </div>
             <div className="text-xs text-gray-600 mt-1">saved vs today</div>
           </div>

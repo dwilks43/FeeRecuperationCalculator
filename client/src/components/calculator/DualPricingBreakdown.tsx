@@ -156,15 +156,22 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                 <div className="flex justify-between items-center">
                   <div className="flex flex-col">
                     <span className="text-sm text-gray-600">Processing Cost after Supplemental Fee</span>
-                    <span className="text-xs text-gray-400 italic">Processing Cost = Supplemental Fee Collected − Processor Charge</span>
+                    <span className="text-xs text-gray-400 italic">Processing Cost = Processor Charge − Supplemental Fee Collected</span>
                   </div>
-                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                    {formatCurrency(results.recovery || 0)}
+                  <span className={`font-medium ${(results.netChangeCards || 0) <= 0 ? 'text-green-600' : 'text-gray-900'}`}>
+                    {formatCurrency(results.netChangeCards || 0)}
                   </span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
                   <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
-                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
+                  <span className="font-bold">{(() => {
+                    const pct = (results.procSavingsPct || 0) * 100;
+                    // Show 1 decimal place if close to 100% to avoid misleading rounding
+                    if (pct >= 99 && pct <= 101) {
+                      return pct.toFixed(1) + '%';
+                    }
+                    return pct.toFixed(0) + '%';
+                  })()}</span>
                 </div>
               </div>
             </div>
@@ -211,6 +218,10 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     const currentCost = results.currentCost || 0;
                     const totalSavings = results.totalNetGainRevenue || 0;
                     const percentage = currentCost > 0 ? (totalSavings / currentCost) * 100 : 0;
+                    // Show 1 decimal place if close to 100% to avoid misleading rounding
+                    if (percentage >= 99 && percentage <= 101) {
+                      return percentage.toFixed(1) + '%';
+                    }
                     return percentage.toFixed(0) + '%';
                   })()}</span>
                 </div>
@@ -367,7 +378,14 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
                     <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
                   </div>
-                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
+                  <span className="font-bold">{(() => {
+                    const pct = (results.procSavingsPct || 0) * 100;
+                    // Show 1 decimal place if close to 100% to avoid misleading rounding
+                    if (pct >= 99 && pct <= 101) {
+                      return pct.toFixed(1) + '%';
+                    }
+                    return pct.toFixed(0) + '%';
+                  })()}</span>
                 </div>
               </div>
             </div>
@@ -469,6 +487,10 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     const totalSavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
                     const currentCost = results.currentCost || 0;
                     const totalReductionPct = currentCost > 0 ? (totalSavings / currentCost) * 100 : 0;
+                    // Show 1 decimal place if close to 100% to avoid misleading rounding
+                    if (totalReductionPct >= 99 && totalReductionPct <= 101) {
+                      return totalReductionPct.toFixed(1) + '%';
+                    }
                     return totalReductionPct.toFixed(0) + '%';
                   })()}</span>
                 </div>
@@ -560,7 +582,14 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
                     <span className="text-xs text-gray-400 italic">Savings ÷ Current Cost</span>
                   </div>
-                  <span className="font-bold">{((results.procSavingsPct || 0) * 100).toFixed(0)}%</span>
+                  <span className="font-bold">{(() => {
+                    const pct = (results.procSavingsPct || 0) * 100;
+                    // Show 1 decimal place if close to 100% to avoid misleading rounding
+                    if (pct >= 99 && pct <= 101) {
+                      return pct.toFixed(1) + '%';
+                    }
+                    return pct.toFixed(0) + '%';
+                  })()}</span>
                 </div>
               </div>
             </div>
