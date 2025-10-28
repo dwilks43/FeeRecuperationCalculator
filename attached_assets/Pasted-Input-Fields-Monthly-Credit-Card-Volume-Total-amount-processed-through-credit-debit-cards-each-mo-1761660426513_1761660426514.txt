@@ -1,0 +1,55 @@
+Input Fields
+Monthly Credit Card Volume
+"Total amount processed through credit/debit cards each month. "
+Monthly Cash Volume
+"Total cash payments received monthly. This affects revenue calculations in Cash Discounting and Supplemental Fee modes."
+Current Processing Rate
+"The effective rate percentage you currently pay for card processing.  Example: Current Processing Rate = Total Fees ÷ Total Monthly Credit Card Volume.  If you process $50,000 monthly in credit/debit cards and pay $1,250 in total fees, your Current Processing rate is 2.50% or  Current Processing Rate = $1,250 ÷ $50,000 ”
+Interchange Cost
+"The wholesale rate charged by card networks (Visa/Mastercard/Discover/Amex). This is your processor's base cost. Typically, 1.5-2.25%. Use the Interchange Calculator below to get an estimate based on industry type.  See DMP staff for training on how to use this tool."
+Price Differential (Dual Pricing)
+"Percentage added to card transactions only. Example: 3.5% means a $100 purchase becomes $103.50 for card users."
+Menu Markup % (Cash Discounting)
+"Percentage added to all displayed prices. Example: 4% markup means a $10 item shows as $10.40 on the menu.  This increase is applied to ALL tenders including card AND cash"
+Cash Discount % (Cash Discounting)
+"Discount given to cash-paying customers off the marked-up price. Example: 3% discount on a $10.40 menu price = $10.09 final price."
+Supplemental Fee %
+"Fee charged on ALL transactions, disclosed at checkout, and cannot be waived/removed based on tender type. Example: 3.75% fee on a $100 purchase adds $3.75."
+
+
+Flat Rate %
+"Your new processing rate under the Fee Recuperation Program. Auto-calculated or manually entered.  The auto-calculation is required for Shift4/SkyTab.  For all other providers, this can be manually changed on a case-by-case."
+Tax Rate
+"Sales tax percentage paid by merchant.  This should be inclusive of ALL sales tax (ie. State, Local, Municipal).
+Average Tip % 
+"Average tip percentage customers leave over time.”
+Business Type
+"Restaurant/QSR: Includes tip calculations. Retail: Excludes tips from all calculations."
+Calculated Fields
+Base Card Volume
+"Your actual card sales before tax, tip, and any fees. This is the foundation for all calculations."
+Cost Reduction %
+"Percentage of current costs eliminated for this category. Over 100% means you're profiting from the program."
+Processing Cost Savings
+"Monthly amount saved on card processing fees compared to your current rate."
+Card Price Increase Collected (Dual Pricing)
+"Revenue collected from the price differential on card transactions. Formula: Base Volume × Price Differential %"
+Revenue from Cash Differential (Cash Discounting)
+"Net revenue from marking up cash prices then giving cash discounts. Can be negative if discount exceeds markup."
+Supplemental Fee Collected
+"Total fees collected from both card and cash transactions at your set percentage."
+Processor Charge
+"What your processor charges under the new program. Formula: Total Processed × Flat Rate %"
+Processing After Fee Collection
+"Your net processing cost after collecting fees. Negative means you're profiting."
+Total Net Monthly Gain
+"Complete monthly benefit including processing savings and additional revenue from fees."
+Annual Impact
+"Your total yearly savings. Simply your monthly gain × 12."
+Special Indicators
+Order of Operations
+"Shows the exact sequence of how fees, taxes, and tips are calculated for transparency."
+Auto (Flat Rate toggle)
+"Automatically calculates optimal flat rate. Turn off to enter a custom rate."
+View/Hide (Calculation Details)
+"Expand to see complete mathematical breakdown of all calculations."
