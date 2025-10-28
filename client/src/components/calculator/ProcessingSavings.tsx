@@ -141,14 +141,32 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 {/* Supplemental Fee Math */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Current Processing Cost</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Current Processing Cost</span>
+                      <button
+                        onClick={() => onTooltip('currentCost' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-currentCost"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Processing After Fee Collection</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Processing After Fee Collection</span>
+                      <button
+                        onClick={() => onTooltip('netChangeCards' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-netChangeCards"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-semibold">
                       {(() => {
                         const processingCharges = results.processorChargeOnCards || results.processingFees || 0;
@@ -167,14 +185,32 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Supplemental Fee on Cash</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Supplemental Fee on Cash</span>
+                      <button
+                        onClick={() => onTooltip('supplementalFeeCash' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-supplementalFeeCash"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-semibold text-green-600">
                       +{formatCurrency(results.supplementalFeeCash || 0)}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Total Net Monthly Gain</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm font-semibold text-gray-700">Total Net Monthly Gain</span>
+                      <button
+                        onClick={() => onTooltip('netMonthly' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-netMonthly"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-bold text-green-600">
                       {formatCurrency(results.totalNetGainRevenue || 0)}
                     </span>
@@ -186,14 +222,32 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 {/* Cash Discounting Math */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Current Payment Acceptance Cost</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Current Payment Acceptance Cost</span>
+                      <button
+                        onClick={() => onTooltip('currentCost' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-currentCost-cash"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Processing After Menu Markup</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Processing After Menu Markup</span>
+                      <button
+                        onClick={() => onTooltip('netChangeCards' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-netChangeCards-cash"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-semibold">
                       {(() => {
                         // Use netChangeCards which matches Calculation Details panel
@@ -213,7 +267,16 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Cash Discount Revenue</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Cash Discount Revenue</span>
+                      <button
+                        onClick={() => onTooltip('extraCashRevenue' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-extraCashRevenue"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className={`text-sm font-semibold ${(results.extraCashRevenue || 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
                       {(() => {
                         const cashRevenue = results.extraCashRevenue || 0;
@@ -227,7 +290,16 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                   </div>
                   
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Total Net Monthly Gain</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm font-semibold text-gray-700">Total Net Monthly Gain</span>
+                      <button
+                        onClick={() => onTooltip('netMonthly' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-netMonthly-cash"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-bold text-green-600">
                       {formatCurrency(results.netMonthly || 0)}
                     </span>
@@ -239,21 +311,48 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                 {/* Dual Pricing Math */}
                 <div className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Current Processing Cost</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Current Processing Cost</span>
+                      <button
+                        onClick={() => onTooltip('currentCost' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-currentCost-dual"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-semibold text-red-600">
                       {formatCurrency(results.currentCost || 0)}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-600">Net Cost After Price Differential</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm text-gray-600">Net Cost After Price Differential</span>
+                      <button
+                        onClick={() => onTooltip('netChangeCards' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-netChangeCards-dual"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-semibold text-gray-600">
                       {formatCurrency(results.netChangeCards || 0)}
                     </span>
                   </div>
                   
                   <div className="flex justify-between items-center pt-2 border-t bg-green-50/50 rounded p-2 mt-2">
-                    <span className="text-sm font-semibold text-gray-700">Total Net Monthly Gain</span>
+                    <div className="flex items-center gap-1">
+                      <span className="text-sm font-semibold text-gray-700">Total Net Monthly Gain</span>
+                      <button
+                        onClick={() => onTooltip('netMonthly' as TooltipKey)}
+                        className="p-0 hover:opacity-80"
+                        data-testid="button-tooltip-netMonthly-dual"
+                      >
+                        <HelpCircle className="h-3 w-3 text-gray-400" />
+                      </button>
+                    </div>
                     <span className="text-sm font-bold text-green-600">
                       {formatCurrency(results.netMonthly || results.savingsCardsOnly || 0)}
                     </span>
