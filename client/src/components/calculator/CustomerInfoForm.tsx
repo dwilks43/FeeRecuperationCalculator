@@ -41,7 +41,8 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
     register,
     formState: { errors },
     watch,
-    setValue
+    setValue,
+    trigger
   } = useForm<CustomerInfo>({
     resolver: zodResolver(customerInfoSchema),
     defaultValues: {
@@ -89,10 +90,12 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
     setValue("salesRepPhone", formatted);
   };
 
-  const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleZipCodeChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     // Only allow numeric characters and limit to 5 digits
     const value = e.target.value.replace(/\D/g, '').slice(0, 5);
     setValue("zipCode", value);
+    // Trigger validation after setting the value
+    await trigger("zipCode");
   };
 
   return (
