@@ -60,23 +60,31 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
   
   // Get contextual comparison (emphasis on massive savings)
   const getContextualComparison = () => {
-    // Round down to nearest $5,000
-    const roundedAmount = Math.floor(annualSavings / 5000) * 5000;
-    
-    if (roundedAmount >= 5000) {
-      // Format the rounded amount with commas
-      const formattedAmount = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0,
-        maximumFractionDigits: 0,
-      }).format(roundedAmount);
-      
-      return `That's ${formattedAmount}+ more profit every year`;
+    // Enhanced marketing messages based on savings tiers
+    if (annualSavings >= 50000) {
+      return "That's a new employee's full salary recovered";
+    } else if (annualSavings >= 30000) {
+      return "Covers your entire yearly marketing budget";
+    } else if (annualSavings >= 20000) {
+      return "Funds your equipment upgrades for the year";
+    } else if (annualSavings >= 15000) {
+      return "That's your quarterly rent covered";
+    } else if (annualSavings >= 10000) {
+      return "Covers 2 months of payroll costs";
+    } else if (annualSavings >= 7500) {
+      return "Your holiday bonus fund secured";
+    } else if (annualSavings >= 5000) {
+      return "That's a month of inventory paid for";
+    } else if (annualSavings >= 3000) {
+      return "Covers your monthly utilities forever";
     } else if (annualSavings >= 2000) {
-      return "That's significant savings month after month";
+      return "Your insurance premiums now covered";
+    } else if (annualSavings >= 1000) {
+      return "That's your weekly supply costs handled";
+    } else if (annualSavings >= 500) {
+      return "Every penny counts for growth";
     } else {
-      return "That's real money back in your business";
+      return "Start keeping what you earn";
     }
   };
 
