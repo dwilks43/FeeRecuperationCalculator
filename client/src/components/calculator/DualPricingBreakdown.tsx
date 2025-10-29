@@ -47,6 +47,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               }}
               className="text-gray-400 hover:text-gray-600"
               data-testid="button-tooltip-viewHide"
+              tabIndex={-1}
             >
               <HelpCircle className="h-4 w-4" />
             </Button>

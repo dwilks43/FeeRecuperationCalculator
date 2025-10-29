@@ -37,7 +37,7 @@ export default function GrossProfit({
               variant="ghost"
               size="sm"
               className="h-auto p-0"
-              onClick={() => onTooltip('grossProfit')}
+              onClick={() => onTooltip('grossProfit' as TooltipKey)}
               data-testid="button-tooltip-dmp-profit"
               tabIndex={-1}
             >
@@ -67,7 +67,7 @@ export default function GrossProfit({
               variant="ghost"
               size="sm"
               className="h-auto p-0"
-              onClick={() => onTooltip('skytabBonusGross')}
+              onClick={() => onTooltip('skytabBonusGross' as TooltipKey)}
               data-testid="button-tooltip-skytab-bonus-gross"
               tabIndex={-1}
             >
@@ -97,7 +97,7 @@ export default function GrossProfit({
               variant="ghost"
               size="sm"
               className="h-auto p-0"
-              onClick={() => onTooltip('skytabBonusRep')}
+              onClick={() => onTooltip('skytabBonusRep' as TooltipKey)}
               data-testid="button-tooltip-skytab-bonus-rep"
               tabIndex={-1}
             >
