@@ -870,22 +870,85 @@ export function generateConfigDrivenPDF(data: any): string {
     
     // Handle new v1.7.3 body structure
     if (Array.isArray(page.body)) {
-      page.body.forEach((element: any) => {
-        if (element.type === 'card') {
-          // Determine column span
-          const colSpan = element.colSpan || 12;
-          const colClass = colSpan === 7 ? 'grid-col-7' : 
-                          colSpan === 5 ? 'grid-col-5' : 
-                          colSpan === 12 ? '' : 'grid-col';
+      // Group elements that should be in the same row
+      let currentRow: any[] = [];
+      let totalColSpan = 0;
+      
+      page.body.forEach((element: any, idx: number) => {
+        const colSpan = element.colSpan || 12;
+        
+        // Check if this element should start a new row
+        if (colSpan < 12) {
+          // Add to current row
+          currentRow.push(element);
+          totalColSpan += colSpan;
           
-          const card = generateCard(element, contextData, config);
-          
-          if (colSpan === 12) {
-            bodyContent += card;
-          } else {
-            // Wrap in grid if needed
-            bodyContent += `<div class="grid"><div class="${colClass}">${card}</div></div>`;
+          // If row is full or this is the last element, render the row
+          if (totalColSpan >= 12 || idx === page.body.length - 1) {
+            bodyContent += '<div class="grid">';
+            currentRow.forEach((el: any) => {
+              const elColSpan = el.colSpan || 12;
+              const colClass = elColSpan === 6 ? 'grid-col-6' :
+                              elColSpan === 7 ? 'grid-col-7' : 
+                              elColSpan === 5 ? 'grid-col-5' : 
+                              elColSpan === 12 ? '' : 'grid-col';
+              
+              let elementContent = '';
+              
+              if (el.type === 'card') {
+                elementContent = generateCard(el, contextData, config);
+              } else if (el.type === 'custom') {
+                // Process custom template with data bindings
+                let processedTemplate = el.template || '';
+                
+                // Replace FORMAT.money() and FORMAT.percent() functions
+                processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
+                  const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+                  return formatValue(value, 'currency', config);
+                });
+                
+                processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {
+                  const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+                  return formatValue(value, 'percent', config);
+                });
+                
+                // Process regular data bindings
+                processedTemplate = resolveDataBinding(processedTemplate, contextData, config);
+                elementContent = processedTemplate;
+              }
+              
+              bodyContent += `<div class="${colClass}">${elementContent}</div>`;
+            });
+            bodyContent += '</div>';
+            
+            // Reset for next row
+            currentRow = [];
+            totalColSpan = 0;
           }
+        } else if (element.type === 'card' && colSpan === 12) {
+          // Full-width card - render any pending row first
+          if (currentRow.length > 0) {
+            bodyContent += '<div class="grid">';
+            currentRow.forEach((el: any) => {
+              const elColSpan = el.colSpan || 12;
+              const colClass = elColSpan === 6 ? 'grid-col-6' :
+                              elColSpan === 7 ? 'grid-col-7' : 
+                              elColSpan === 5 ? 'grid-col-5' : 
+                              elColSpan === 12 ? '' : 'grid-col';
+              let elementContent = '';
+              if (el.type === 'card') {
+                elementContent = generateCard(el, contextData, config);
+              }
+              bodyContent += `<div class="${colClass}">${elementContent}</div>`;
+            });
+            bodyContent += '</div>';
+            currentRow = [];
+            totalColSpan = 0;
+          }
+          
+          // Render full-width element
+          const card = generateCard(element, contextData, config);
+          bodyContent += card;
         } else if (element.type === 'grid') {
           // Legacy grid structure
           const columns = element.columns.map((col: any) => {
