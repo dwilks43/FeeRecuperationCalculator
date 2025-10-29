@@ -277,6 +277,18 @@ export const UNIFIED_TOOLTIPS = {
       title: 'Fee Tax Basis: Pre Tax',
       body: 'Apply fee to pre-tax amount (fee is computed before tax).'
     },
+    totalNetGainRevenue: {
+      title: 'Net Monthly',
+      body: 'Total monthly gain from supplemental fee program. Includes both savings on card processing costs and revenue from fees collected on cash transactions.'
+    },
+    annualNetGainRevenue: {
+      title: 'Net Annual',
+      body: 'Total yearly gain from supplemental fee program. Calculated as Net Monthly × 12.'
+    },
+    totalCostReduction: {
+      title: 'Total Cost Reduction %',
+      body: 'Percentage of current processing costs eliminated through the supplemental fee program. Can exceed 100% when the program generates profit beyond cost coverage.'
+    },
     // Combo captions for different timing/tax basis combinations
     comboAfterTipPostTax: {
       title: 'Order: After Tip + Post Tax',

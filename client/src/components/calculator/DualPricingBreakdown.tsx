@@ -335,7 +335,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('totalNetGainCash' as TooltipKey)}
+                      onClick={() => onTooltip('totalNetGainRevenue' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalNetGainRevenue"
                     >
@@ -350,7 +350,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('annualNetGainCash' as TooltipKey)}
+                      onClick={() => onTooltip('annualNetGainRevenue' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-annualNetGainRevenue"
                     >
@@ -365,7 +365,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('totalCostReductionCash' as TooltipKey)}
+                      onClick={() => onTooltip('totalCostReduction' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalCostReductionPct"
                     >
@@ -789,7 +789,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('totalCostReductionCash' as TooltipKey)}
+                      onClick={() => onTooltip('totalCostReduction' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalCostReductionCash"
                     >
