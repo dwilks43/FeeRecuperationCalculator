@@ -39,6 +39,7 @@ export default function GrossProfit({
               className="h-auto p-0"
               onClick={() => onTooltip('grossProfit')}
               data-testid="button-tooltip-dmp-profit"
+              tabIndex={-1}
             >
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
             </Button>
@@ -68,6 +69,7 @@ export default function GrossProfit({
               className="h-auto p-0"
               onClick={() => onTooltip('skytabBonusGross')}
               data-testid="button-tooltip-skytab-bonus-gross"
+              tabIndex={-1}
             >
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
             </Button>
@@ -97,6 +99,7 @@ export default function GrossProfit({
               className="h-auto p-0"
               onClick={() => onTooltip('skytabBonusRep')}
               data-testid="button-tooltip-skytab-bonus-rep"
+              tabIndex={-1}
             >
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
             </Button>
