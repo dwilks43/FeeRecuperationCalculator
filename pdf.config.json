@@ -155,6 +155,16 @@
               "rowsFrom": [{ "from": "monthlySavings.rows" }],
               "valueFormatHintKey": "format"
             }
+          },
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div class='urgency-bar'><span class='icon'>⏰</span><span>Every month you wait costs you {{ FORMAT.money(salesImpact.heroNumber) }} - That's {{ FORMAT.money(salesImpact.heroNumber / 30) }} lost every single day!</span></div>"
+          },
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div class='cta-box'><div class='cta-title'>Ready to Keep Your {{ FORMAT.money(salesImpact.heroNumber) }} Every Month?</div><div class='cta-subtitle'>Join 2,000+ businesses already saving with DMP</div><div style='margin-top:10pt'><span class='cta-contact'>📞 Call Now: 1-800-DMP-SAVE</span><span class='cta-contact'>📧 Email: save@dmpay.com</span></div><div style='margin-top:8pt;font-size:10pt;opacity:0.9'>Implementation in 48 hours • No equipment changes • Full support included</div></div>"
           }
         ],
         "footer": { "left": "This quote is provided as an estimate of potential savings only. Actual results may vary.", "right": "© DMP — Confidential", "divider": true }

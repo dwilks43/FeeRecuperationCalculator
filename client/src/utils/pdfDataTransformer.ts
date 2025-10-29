@@ -732,20 +732,31 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
   const roundedAmount = Math.floor(annualSavings / 5000) * 5000;
   let businessContext = '';
   
-  if (roundedAmount >= 5000) {
-    // Format the rounded amount with commas
-    const formattedAmount = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(roundedAmount);
-    
-    businessContext = `That's ${formattedAmount}+ more profit every year`;
+  // Enhanced marketing messages based on savings tiers
+  if (annualSavings >= 50000) {
+    businessContext = "That's a new employee's full salary recovered";
+  } else if (annualSavings >= 30000) {
+    businessContext = "Covers your entire yearly marketing budget";
+  } else if (annualSavings >= 20000) {
+    businessContext = "Funds your equipment upgrades for the year";
+  } else if (annualSavings >= 15000) {
+    businessContext = "That's your quarterly rent covered";
+  } else if (annualSavings >= 10000) {
+    businessContext = "Covers 2 months of payroll costs";
+  } else if (annualSavings >= 7500) {
+    businessContext = "Your holiday bonus fund secured";
+  } else if (annualSavings >= 5000) {
+    businessContext = "That's a month of inventory paid for";
+  } else if (annualSavings >= 3000) {
+    businessContext = "Covers your monthly utilities forever";
   } else if (annualSavings >= 2000) {
-    businessContext = "That's significant savings month after month";
+    businessContext = "Your insurance premiums now covered";
+  } else if (annualSavings >= 1000) {
+    businessContext = "That's your weekly supply costs handled";
+  } else if (annualSavings >= 500) {
+    businessContext = "Every penny counts for growth";
   } else {
-    businessContext = "That's real money back in your business";
+    businessContext = "Start keeping what you earn";
   }
   
   return {
