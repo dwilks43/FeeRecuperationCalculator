@@ -220,6 +220,22 @@ export const UNIFIED_TOOLTIPS = {
     currentCost: {
       title: 'Current Processing Cost (Today)',
       body: 'Current Processing Cost (Today) = Card Gross × current rate.'
+    },
+    markupOnCash: {
+      title: 'Base Cash Volume + Menu Markup',
+      body: 'The cash volume after applying the menu markup to the menu prices. Cash customers see marked-up prices but receive a discount at the register.'
+    },
+    cashDiscountApplied: {
+      title: 'Cash Discount Applied',
+      body: 'The total dollar amount of discounts given to cash customers. Calculated as the cash discount percentage multiplied by the marked-up cash volume.'
+    },
+    netCashBase: {
+      title: 'Net Cash Base (after discount)',
+      body: 'The actual cash amount collected after applying the cash discount. This is what cash customers actually pay after receiving their discount.'
+    },
+    cashProcessedTotal: {
+      title: 'Cash Processed Total',
+      body: 'The total cash amount including the net base after discount, plus any applicable taxes and tips. This is the final amount collected from cash transactions.'
     }
   },
 
