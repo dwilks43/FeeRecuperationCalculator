@@ -236,6 +236,22 @@ export const UNIFIED_TOOLTIPS = {
     cashProcessedTotal: {
       title: 'Cash Processed Total',
       body: 'The total cash amount including the net base after discount, plus any applicable taxes and tips. This is the final amount collected from cash transactions.'
+    },
+    markupCollected: {
+      title: 'Card Menu Markup Collected',
+      body: 'The additional revenue collected from card transactions due to menu markup. Calculated as Card Volume × Menu Markup %.'
+    },
+    recovery: {
+      title: 'Processing Cost after Menu Markup',
+      body: 'The remaining processing cost after the menu markup offsets some of it. Calculated as Processor Charge − Card Menu Markup Collected.'
+    },
+    processingCostSavingsPct: {
+      title: 'Total Cost Reduction %',
+      body: 'Percentage of current processing costs eliminated through the menu markup strategy. Can exceed 100% when markup collection exceeds processing costs.'
+    },
+    netChangeCards: {
+      title: 'Processing After Menu Markup',
+      body: 'The processing cost remaining after menu markup revenue offsets it. When negative (shown in green), you\'re profiting from the markup. Calculated as Processor Charge − Card Menu Markup Collected.'
     }
   },
 
