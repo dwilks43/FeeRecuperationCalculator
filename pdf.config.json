@@ -90,8 +90,13 @@
         "layout": { "columns": 12, "gap": 10 },
         "body": [
           {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div class='impact-card'><div class='impact-header'><span class='title-bar aqua'></span><span class='title-text'>{{ salesImpact.title }}</span></div><div class='impact-hero'><div class='hero-label'>MONTHLY SAVINGS</div><div class='hero-amount'>${{ FORMAT.money(salesImpact.heroNumber) }}</div><div class='hero-context'>{{ salesImpact.businessContext }}</div></div><div class='impact-metrics'><div class='metric-row'><div class='metric-item'><div class='metric-label'>ANNUAL IMPACT</div><div class='metric-value'>${{ FORMAT.money(salesImpact.annualImpact) }}</div><div class='metric-note'>per year</div></div><div class='metric-item'><div class='metric-label'>COST REDUCTION</div><div class='metric-value'>{{ FORMAT.percent(salesImpact.costReduction) }}</div><div class='metric-note'>saved vs today</div></div></div></div></div>"
+          },
+          {
             "type": "card",
-            "colSpan": 6,
+            "colSpan": 12,
             "title": "<span class='title-bar ultramarine'></span><span class='title-text'>{{ customerInfo.title }}</span>",
             "table": {
               "cols": [
@@ -101,11 +106,6 @@
               "rowsFrom": [{ "from": "customerInfo.rows" }],
               "valueFormatHintKey": "format"
             }
-          },
-          {
-            "type": "custom",
-            "colSpan": 6,
-            "template": "<div class='impact-card'><div class='impact-header'><span class='title-bar aqua'></span><span class='title-text'>{{ salesImpact.title }}</span></div><div class='impact-hero'><div class='hero-label'>MONTHLY SAVINGS</div><div class='hero-amount'>${{ FORMAT.money(salesImpact.heroNumber) }}</div><div class='hero-context'>{{ salesImpact.businessContext }}</div></div><div class='impact-metrics'><div class='metric-row'><div class='metric-item'><div class='metric-label'>ANNUAL IMPACT</div><div class='metric-value'>${{ FORMAT.money(salesImpact.annualImpact) }}</div><div class='metric-note'>per year</div></div><div class='metric-item'><div class='metric-label'>COST REDUCTION</div><div class='metric-value'>{{ FORMAT.percent(salesImpact.costReduction) }}</div><div class='metric-note'>saved vs today</div></div></div></div></div>"
           }
         ],
         "footer": { "left": "This quote is provided as an estimate of potential savings only. Actual results may vary.", "right": "© DMP — Confidential", "divider": true }
