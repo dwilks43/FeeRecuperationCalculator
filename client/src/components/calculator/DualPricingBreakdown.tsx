@@ -239,7 +239,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   </span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
-                  <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-gray-700">Cost Reduction %</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('procSavingsPct' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-procSavingsPct-supplemental"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-bold">{(() => {
                     const pct = (results.procSavingsPct || 0) * 100;
                     // Show 1 decimal place if close to 100% to avoid misleading rounding
@@ -319,15 +330,48 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium text-green-600">{formatCurrency(results.supplementalFeeCash || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
-                  <span className="text-sm font-medium text-gray-700">Net Monthly</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-gray-700">Net Monthly</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('totalNetGainRevenue' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-totalNetGainRevenue"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-bold text-green-700">{formatCurrency(results.totalNetGainRevenue || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-700">Net Annual</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-gray-700">Net Annual</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('annualNetGainRevenue' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-annualNetGainRevenue"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-bold text-green-600">{formatCurrency(results.annualNetGainRevenue || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-700">Total Cost Reduction %</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-gray-700">Total Cost Reduction %</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('totalCostReductionPct' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-totalCostReductionPct"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-bold">{(() => {
                     const currentCost = results.currentCost || 0;
                     const totalSavings = results.totalNetGainRevenue || 0;
