@@ -332,6 +332,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="h-auto p-0"
                 onClick={() => onTooltip('monthlyCardVolume')}
                 data-testid="button-tooltip-monthly-volume"
+                tabIndex={-1}
               >
                 <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
               </Button>
@@ -360,6 +361,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="h-auto p-0"
                 onClick={() => onTooltip('monthlyCashVolume')}
                 data-testid="button-tooltip-monthly-cash-volume"
+                tabIndex={-1}
               >
                 <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
               </Button>
@@ -388,6 +390,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="h-auto p-0"
                 onClick={() => onTooltip('currentRate')}
                 data-testid="button-tooltip-current-rate"
+                tabIndex={-1}
               >
                 <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
               </Button>
@@ -415,6 +418,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="h-auto p-0"
                 onClick={() => onTooltip('interchangeCost')}
                 data-testid="button-tooltip-interchange-cost"
+                tabIndex={-1}
               >
                 <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
               </Button>
@@ -458,6 +462,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="h-auto p-0"
                 onClick={() => onTooltip('taxRate')}
                 data-testid="button-tooltip-tax-rate"
+                tabIndex={-1}
               >
                 <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
               </Button>
@@ -523,6 +528,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                   className="h-auto p-0"
                   onClick={() => onTooltip('tipRate')}
                   data-testid="button-tooltip-tip-rate"
+                  tabIndex={-1}
                 >
                   <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
                 </Button>
@@ -591,6 +597,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 className="h-auto p-0"
                 onClick={() => onTooltip(inputs.programType === 'SUPPLEMENTAL_FEE' ? 'supplementalFee' : inputs.programType === 'CASH_DISCOUNTING' ? 'menuMarkup' : 'priceDifferential')}
                 data-testid="button-tooltip-price-differential"
+                tabIndex={-1}
               >
                 <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
               </Button>
@@ -619,6 +626,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                   className="h-auto p-0"
                   onClick={() => onTooltip('cashDiscount')}
                   data-testid="button-tooltip-cash-discount"
+                  tabIndex={-1}
                 >
                   <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
                 </Button>
@@ -656,6 +664,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                   className="h-auto p-0"
                   onClick={() => onTooltip('flatRate')}
                   data-testid="button-tooltip-flat-rate-pct"
+                  tabIndex={-1}
                 >
                   <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
                 </Button>
