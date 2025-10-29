@@ -698,22 +698,54 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
 
 // Build Sales Impact section for hero display
 function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorResults): any {
-  const monthlySavings = results.netMonthly || results.monthlySavings || results.totalNetGainRevenue || 0;
-  const annualSavings = results.netAnnual || results.annualSavings || results.annualNetGainRevenue || 0;
-  const coveragePct = results.coveragePct || results.procSavingsPct || 0;
-  
-  // Generate emotional context based on savings amount
-  let businessContext = '';
-  if (monthlySavings >= 5000) {
-    businessContext = "That's your equipment upgrade fund covered";
-  } else if (monthlySavings >= 2000) {
-    businessContext = "That's your marketing budget covered";
-  } else if (monthlySavings >= 1000) {
-    businessContext = "That's your holiday marketing budget covered";
-  } else if (monthlySavings >= 500) {
-    businessContext = "That's extra profit for your business";
+  // Calculate the main hero number based on program type (matching ProcessingSavings.tsx logic)
+  let monthlySavings = 0;
+  if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+    monthlySavings = results.totalNetGainRevenue || 0;
+  } else if (inputs.programType === 'CASH_DISCOUNTING') {
+    // For Cash Discounting, include extra cash revenue
+    monthlySavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
   } else {
-    businessContext = "Every dollar saved improves your bottom line";
+    // Dual Pricing
+    monthlySavings = results.netMonthly || results.monthlySavings || 0;
+  }
+  
+  const annualSavings = monthlySavings * 12;
+  
+  // For savings percent, include total savings (matching ProcessingSavings.tsx logic)
+  let coveragePct = 0;
+  if (results.currentCost > 0) {
+    if (inputs.programType === 'CASH_DISCOUNTING') {
+      // Include both card savings and cash revenue
+      const totalSavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
+      coveragePct = (totalSavings / results.currentCost);
+    } else if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+      // Use total net gain revenue
+      coveragePct = (results.totalNetGainRevenue || 0) / results.currentCost;
+    } else {
+      // Dual Pricing
+      coveragePct = monthlySavings / results.currentCost;
+    }
+  }
+  
+  // Generate emotional context based on savings amount (matching UI logic)
+  const roundedAmount = Math.floor(annualSavings / 5000) * 5000;
+  let businessContext = '';
+  
+  if (roundedAmount >= 5000) {
+    // Format the rounded amount with commas
+    const formattedAmount = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(roundedAmount);
+    
+    businessContext = `That's ${formattedAmount}+ more profit every year`;
+  } else if (annualSavings >= 2000) {
+    businessContext = "That's significant savings month after month";
+  } else {
+    businessContext = "That's real money back in your business";
   }
   
   return {
