@@ -106,6 +106,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('feeEligibleVolumeCards' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-feeEligibleVolumeCards"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -121,6 +122,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('supplementalFeeCards' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-supplementalFeeCards"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -138,6 +140,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                           onClick={() => onTooltip('tipEligibleVolumeCards' as TooltipKey)}
                           className="h-4 w-4 p-0"
                           data-testid="button-tooltip-tipEligibleVolumeCards"
+                          tabIndex={-1}
                         >
                           <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                         </Button>
@@ -153,6 +156,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                           onClick={() => onTooltip('tipAmount' as TooltipKey)}
                           className="h-4 w-4 p-0"
                           data-testid="button-tooltip-tipAmount"
+                          tabIndex={-1}
                         >
                           <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                         </Button>
@@ -181,6 +185,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('processed' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-processed-supplemental"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -200,6 +205,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('procCharge' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-procCharge"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -215,6 +221,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('supplementalFeeCards' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-supplementalFeeCards"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -230,6 +237,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('netChangeCards' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-netChangeCards"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -247,6 +255,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('procSavingsPct' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-procSavingsPct-supplemental"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -276,6 +285,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('currentCost' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-currentCost-supplemental"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -291,6 +301,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('netChangeCards' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-netChangeCards2"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -308,6 +319,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('savingsCardsOnly' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-savingsCardsOnly"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -323,6 +335,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('supplementalFeeCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-supplementalFeeCash"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -338,6 +351,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('totalNetGainRevenue' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalNetGainRevenue"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -353,6 +367,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('annualNetGainRevenue' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-annualNetGainRevenue"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -368,6 +383,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('totalCostReduction' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalCostReductionPct"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -425,6 +441,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                         onClick={() => onTooltip('baseCardVolumeMarkup' as TooltipKey)}
                         className="h-4 w-4 p-0"
                         data-testid="button-tooltip-baseCardVolumeMarkup"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                       </Button>
@@ -444,6 +461,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                         onClick={() => onTooltip('processed' as TooltipKey)}
                         className="h-4 w-4 p-0"
                         data-testid="button-tooltip-processed"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                       </Button>
@@ -475,6 +493,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                           onClick={() => onTooltip('markupOnCash' as TooltipKey)}
                           className="h-4 w-4 p-0"
                           data-testid="button-tooltip-markupOnCash"
+                          tabIndex={-1}
                         >
                           <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                         </Button>
@@ -490,6 +509,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                           onClick={() => onTooltip('cashDiscountApplied' as TooltipKey)}
                           className="h-4 w-4 p-0"
                           data-testid="button-tooltip-cashDiscountApplied"
+                          tabIndex={-1}
                         >
                           <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                         </Button>
@@ -505,6 +525,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                           onClick={() => onTooltip('netCashBase' as TooltipKey)}
                           className="h-4 w-4 p-0"
                           data-testid="button-tooltip-netCashBase"
+                          tabIndex={-1}
                         >
                           <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                         </Button>
@@ -524,6 +545,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                           onClick={() => onTooltip('cashProcessedTotal' as TooltipKey)}
                           className="h-4 w-4 p-0"
                           data-testid="button-tooltip-cashProcessedTotal"
+                          tabIndex={-1}
                         >
                           <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                         </Button>
@@ -560,6 +582,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('procCharge' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-procCharge2"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -575,6 +598,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('markupCollected' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-markupCollected-cash"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -590,6 +614,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('recovery' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-recovery"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -607,6 +632,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('processingCostSavingsPct' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-processingCostSavingsPct"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -641,6 +667,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                         onClick={() => onTooltip('menuMarkupOnCash' as TooltipKey)}
                         className="h-4 w-4 p-0"
                         data-testid="button-tooltip-menuMarkupOnCash"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                       </Button>
@@ -656,6 +683,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                         onClick={() => onTooltip('cashDiscountGiven' as TooltipKey)}
                         className="h-4 w-4 p-0"
                         data-testid="button-tooltip-cashDiscountGiven"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                       </Button>
@@ -671,6 +699,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                         onClick={() => onTooltip('extraCashRevenue' as TooltipKey)}
                         className="h-4 w-4 p-0"
                         data-testid="button-tooltip-extraCashRevenue"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                       </Button>
@@ -700,6 +729,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('currentCost' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-currentCost"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -715,6 +745,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('processingAfterMarkup' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-processingAfterMarkup"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -732,6 +763,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('savingsCardsOnlyCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-savingsCardsOnlyCash"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -747,6 +779,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('cashRevenueDiff' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-cashRevenueDiff"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -762,6 +795,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('totalNetGainCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalNetGainCash"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -777,6 +811,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('annualNetGainCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-annualNetGainCash"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -792,6 +827,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('totalCostReduction' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalCostReductionCash"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -839,6 +875,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('priceAdjustedBase' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-priceAdjustedBase-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -858,6 +895,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('processed' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-processed-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -891,6 +929,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('procCharge' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-procCharge-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -906,6 +945,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('markupCollected' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-markupCollected-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -921,6 +961,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('recovery' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-recovery-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -938,6 +979,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('processingCostSavingsPct' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-processingCostSavingsPct-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -967,6 +1009,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('currentCost' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-currentCost-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -982,6 +1025,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('recovery' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-recovery-dual2"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -999,6 +1043,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('savingsCardsOnly' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-savingsCardsOnly-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -1014,6 +1059,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('netMonthly' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-netMonthly-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
@@ -1029,6 +1075,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       onClick={() => onTooltip('netAnnual' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-netAnnual-dual"
+                      tabIndex={-1}
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
