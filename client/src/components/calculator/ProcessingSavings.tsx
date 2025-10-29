@@ -121,7 +121,21 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           
           {/* Percentage Saved */}
           <div className="bg-white/80 rounded-lg p-4 border border-green-200">
-            <div className="text-xs font-medium text-gray-500 uppercase mb-1">Cost Reduction</div>
+            <div className="flex items-center gap-1">
+              <span className="text-xs font-medium text-gray-500 uppercase">Cost Reduction</span>
+              <button
+                onClick={() => onTooltip(
+                  programType === 'CASH_DISCOUNTING' ? 'totalCostReductionCash' as TooltipKey : 
+                  programType === 'SUPPLEMENTAL_FEE' ? 'totalCostReductionSupplemental' as TooltipKey :
+                  'totalCostReduction' as TooltipKey
+                )}
+                className="p-0 hover:opacity-80"
+                data-testid={`button-tooltip-costReduction-${programType.toLowerCase()}`}
+                tabIndex={-1}
+              >
+                <HelpCircle className="h-3 w-3 text-gray-400" />
+              </button>
+            </div>
             <div className="text-2xl font-bold text-green-700">
               {(() => {
                 // Show 1 decimal place if close to 100% to avoid misleading rounding

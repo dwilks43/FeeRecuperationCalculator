@@ -825,7 +825,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('totalCostReduction' as TooltipKey)}
+                      onClick={() => onTooltip('totalCostReductionCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalCostReductionCash"
                       tabIndex={-1}
