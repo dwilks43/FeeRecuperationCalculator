@@ -153,6 +153,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('currentCost' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-currentCost"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -169,6 +170,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('netChangeCards' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-netChangeCards"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -197,6 +199,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('supplementalFeeCash' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-supplementalFeeCash"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -213,6 +216,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('netMonthly' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-netMonthly"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -234,6 +238,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('currentCost' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-currentCost-cash"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -250,6 +255,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('netChangeCards' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-netChangeCards-cash"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -279,6 +285,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('extraCashRevenue' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-extraCashRevenue"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -302,6 +309,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('netMonthly' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-netMonthly-cash"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -323,6 +331,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('currentCost' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-currentCost-dual"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -339,6 +348,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('netChangeCards' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-netChangeCards-dual"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
@@ -355,6 +365,7 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
                         onClick={() => onTooltip('netMonthly' as TooltipKey)}
                         className="p-0 hover:opacity-80"
                         data-testid="button-tooltip-netMonthly-dual"
+                        tabIndex={-1}
                       >
                         <HelpCircle className="h-3 w-3 text-gray-400" />
                       </button>
