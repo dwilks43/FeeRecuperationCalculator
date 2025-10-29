@@ -74,16 +74,20 @@ function formatValue(value: any, format: string, config: PDFConfig): string {
     if (config.guards.coercePercentStrings && value.includes('%')) {
       return value; // Pass through as-is
     }
-    if (value.includes('$')) {
+    // For currency format, if string already has dollar sign, pass through
+    if (format === 'currency' && value.includes('$')) {
       return value; // Pass through as-is
     }
   }
   
-  const numValue = parseFloat(value);
+  // Try to parse numeric value from string (removing $ if present)
+  const cleanValue = typeof value === 'string' ? value.replace(/[$,]/g, '') : value;
+  const numValue = parseFloat(cleanValue);
   if (isNaN(numValue)) return String(value);
   
   switch (format) {
     case 'currency':
+    case 'money':  // Handle both currency and money formats
       const currencyFormat = config.pdf.formatting.currency;
       const formatted = numValue.toLocaleString('en-US', {
         minimumFractionDigits: currencyFormat.decimals,
