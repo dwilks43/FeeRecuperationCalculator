@@ -68,8 +68,12 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
 
   const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {
     if (typeof value === 'string') {
-      setInputValues(prev => ({ ...prev, [field]: value }));
-      const numericValue = parseNumericInput(value);
+      // Sanitize percentage inputs to only allow numeric characters
+      const percentageFields = ['currentRate', 'interchangeCost', 'taxRate', 'tipRate', 'cashDiscount'];
+      const sanitized = percentageFields.includes(field) ? sanitizePercentageInput(value) : value;
+      
+      setInputValues(prev => ({ ...prev, [field]: sanitized }));
+      const numericValue = parseNumericInput(sanitized);
       onInputChange(field, numericValue);
     } else {
       onInputChange(field, value);
@@ -115,10 +119,12 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   };
 
   const handlePriceDifferentialChange = (value: string) => {
-    let priceDifferentialValue = parseNumericInput(value);
+    // Sanitize input to only allow numeric characters
+    const sanitized = sanitizePercentageInput(value);
+    let priceDifferentialValue = parseNumericInput(sanitized);
     
     // No cap - allow values to exceed 4% so Cost Reduction can exceed 100%
-    setInputValues(prev => ({ ...prev, priceDifferential: value }));
+    setInputValues(prev => ({ ...prev, priceDifferential: sanitized }));
     
     onInputChange('priceDifferential', priceDifferentialValue);
     
@@ -139,9 +145,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   };
 
   const handleFlatRateChange = (value: string) => {
-    setInputValues(prev => ({ ...prev, flatRatePct: value }));
-    onInputChange('flatRatePct', parseNumericInput(value));
-    onInputChange('flatRateOverride', parseNumericInput(value));
+    // Sanitize input to only allow numeric characters
+    const sanitized = sanitizePercentageInput(value);
+    setInputValues(prev => ({ ...prev, flatRatePct: sanitized }));
+    onInputChange('flatRatePct', parseNumericInput(sanitized));
+    onInputChange('flatRateOverride', parseNumericInput(sanitized));
     setAutoSynced(false); // User manually edited flat rate
     setIsAutoFlatRate(false); // Mark as manual override
   };
@@ -181,10 +189,23 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     return numericValue.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
 
+  // Sanitize volume input to only allow numbers, decimal, and commas
+  const sanitizeVolumeInput = (value: string): string => {
+    // Allow only digits, decimal point, and commas
+    return value.replace(/[^0-9.,]/g, '');
+  };
+
+  // Sanitize percentage input to only allow numbers and decimal
+  const sanitizePercentageInput = (value: string): string => {
+    // Allow only digits and decimal point
+    return value.replace(/[^0-9.]/g, '');
+  };
+
   const handleVolumeChange = (value: string) => {
-    // Allow user to type freely, but format on blur
-    setInputValues(prev => ({ ...prev, monthlyVolume: value }));
-    const numericValue = parseNumericInput(value);
+    // Sanitize input to only allow numeric characters
+    const sanitized = sanitizeVolumeInput(value);
+    setInputValues(prev => ({ ...prev, monthlyVolume: sanitized }));
+    const numericValue = parseNumericInput(sanitized);
     onInputChange('monthlyVolume', numericValue);
   };
 
@@ -194,9 +215,10 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   };
 
   const handleCashVolumeChange = (value: string) => {
-    // Allow user to type freely, but format on blur
-    setInputValues(prev => ({ ...prev, monthlyCashVolume: value }));
-    const numericValue = parseNumericInput(value);
+    // Sanitize input to only allow numeric characters
+    const sanitized = sanitizeVolumeInput(value);
+    setInputValues(prev => ({ ...prev, monthlyCashVolume: sanitized }));
+    const numericValue = parseNumericInput(sanitized);
     onInputChange('monthlyCashVolume', numericValue);
   };
 
