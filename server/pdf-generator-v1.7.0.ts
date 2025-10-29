@@ -1090,6 +1090,11 @@ export function generateConfigDrivenPDF(data: any): string {
     
     // Handle new v1.7.3 body structure
     if (Array.isArray(page.body)) {
+      console.log(`Processing page ${index + 1} with ${page.body.length} elements`);
+      page.body.forEach((el: any, i: number) => {
+        console.log(`  Element ${i}: type=${el.type}, colSpan=${el.colSpan}, hasTemplate=${!!el.template}`);
+      });
+      
       // Group elements that should be in the same row
       let currentRow: any[] = [];
       let totalColSpan = 0;
@@ -1118,6 +1123,54 @@ export function generateConfigDrivenPDF(data: any): string {
               if (el.type === 'card') {
                 elementContent = generateCard(el, contextData, config);
               } else if (el.type === 'custom') {
+                console.log('Processing custom template for Monthly Impact...');
+                // Process custom template with data bindings
+                let processedTemplate = el.template || '';
+                
+                console.log('Template before processing:', processedTemplate.substring(0, 200));
+                
+                // Replace FORMAT.money() and FORMAT.percent() functions
+                processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
+                  const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+                  console.log(`FORMAT.money(${path}) resolved to:`, value);
+                  return formatValue(value, 'currency', config);
+                });
+                
+                processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {
+                  const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+                  console.log(`FORMAT.percent(${path}) resolved to:`, value);
+                  return formatValue(value, 'percent', config);
+                });
+                
+                // Process regular data bindings
+                processedTemplate = resolveDataBinding(processedTemplate, contextData, config);
+                console.log('Template after processing:', processedTemplate.substring(0, 500));
+                elementContent = processedTemplate;
+              }
+              
+              bodyContent += `<div class="${colClass}">${elementContent}</div>`;
+            });
+            bodyContent += '</div>';
+            
+            // Reset for next row
+            currentRow = [];
+            totalColSpan = 0;
+          }
+        } else if ((element.type === 'card' || element.type === 'custom') && colSpan === 12) {
+          // Full-width card or custom element - render any pending row first
+          if (currentRow.length > 0) {
+            bodyContent += '<div class="grid">';
+            currentRow.forEach((el: any) => {
+              const elColSpan = el.colSpan || 12;
+              const colClass = elColSpan === 6 ? 'grid-col-6' :
+                              elColSpan === 7 ? 'grid-col-7' : 
+                              elColSpan === 5 ? 'grid-col-5' : 
+                              elColSpan === 12 ? '' : 'grid-col';
+              let elementContent = '';
+              if (el.type === 'card') {
+                elementContent = generateCard(el, contextData, config);
+              } else if (el.type === 'custom') {
+                console.log('Processing custom template in pending row...');
                 // Process custom template with data bindings
                 let processedTemplate = el.template || '';
                 
@@ -1136,29 +1189,6 @@ export function generateConfigDrivenPDF(data: any): string {
                 processedTemplate = resolveDataBinding(processedTemplate, contextData, config);
                 elementContent = processedTemplate;
               }
-              
-              bodyContent += `<div class="${colClass}">${elementContent}</div>`;
-            });
-            bodyContent += '</div>';
-            
-            // Reset for next row
-            currentRow = [];
-            totalColSpan = 0;
-          }
-        } else if (element.type === 'card' && colSpan === 12) {
-          // Full-width card - render any pending row first
-          if (currentRow.length > 0) {
-            bodyContent += '<div class="grid">';
-            currentRow.forEach((el: any) => {
-              const elColSpan = el.colSpan || 12;
-              const colClass = elColSpan === 6 ? 'grid-col-6' :
-                              elColSpan === 7 ? 'grid-col-7' : 
-                              elColSpan === 5 ? 'grid-col-5' : 
-                              elColSpan === 12 ? '' : 'grid-col';
-              let elementContent = '';
-              if (el.type === 'card') {
-                elementContent = generateCard(el, contextData, config);
-              }
               bodyContent += `<div class="${colClass}">${elementContent}</div>`;
             });
             bodyContent += '</div>';
@@ -1167,8 +1197,35 @@ export function generateConfigDrivenPDF(data: any): string {
           }
           
           // Render full-width element
-          const card = generateCard(element, contextData, config);
-          bodyContent += card;
+          let elementContent = '';
+          if (element.type === 'card') {
+            elementContent = generateCard(element, contextData, config);
+          } else if (element.type === 'custom') {
+            console.log('Processing full-width custom template for Monthly Impact...');
+            // Process custom template with data bindings
+            let processedTemplate = element.template || '';
+            
+            console.log('Template before processing:', processedTemplate.substring(0, 200));
+            
+            // Replace FORMAT.money() and FORMAT.percent() functions
+            processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
+              const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+              console.log(`FORMAT.money(${path}) resolved to:`, value);
+              return formatValue(value, 'currency', config);
+            });
+            
+            processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {
+              const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+              console.log(`FORMAT.percent(${path}) resolved to:`, value);
+              return formatValue(value, 'percent', config);
+            });
+            
+            // Process regular data bindings
+            processedTemplate = resolveDataBinding(processedTemplate, contextData, config);
+            console.log('Template after processing (first 500 chars):', processedTemplate.substring(0, 500));
+            elementContent = processedTemplate;
+          }
+          bodyContent += elementContent;
         } else if (element.type === 'grid') {
           // Legacy grid structure
           const columns = element.columns.map((col: any) => {
