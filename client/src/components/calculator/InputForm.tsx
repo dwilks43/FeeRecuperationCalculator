@@ -206,33 +206,68 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     // First, remove non-numeric characters except decimal
     let sanitized = value.replace(/[^0-9.]/g, '');
     
+    // Remove all decimal points to get just the digits
+    const digitsOnly = sanitized.replace(/\./g, '');
+    
+    // Find the position of the first decimal point in the original sanitized string
+    const firstDecimalIndex = sanitized.indexOf('.');
+    
     // Fields with max 3 digits (x.xx format)
     const threeDigitFields = ['currentRate', 'interchangeCost', 'priceDifferential', 'flatRatePct', 'flatRateOverride', 'cashDiscount'];
     // Fields with max 4 digits (xx.xx format)
     const fourDigitFields = ['taxRate', 'tipRate'];
     
-    // Split by decimal point
-    const parts = sanitized.split('.');
+    let result = '';
     
     if (threeDigitFields.includes(field)) {
-      // For 3-digit fields (x.xx): max 1 digit before decimal, max 2 after
-      if (parts[0] && parts[0].length > 1) {
-        parts[0] = parts[0].slice(0, 1); // Keep only first digit
+      // For 3-digit fields (x.xx): max 1 digit before decimal, max 2 total after
+      if (firstDecimalIndex === -1) {
+        // No decimal point - just limit to 1 digit
+        result = digitsOnly.slice(0, 1);
+      } else if (firstDecimalIndex === 0) {
+        // Decimal at start (.xxx) - format as 0.xx
+        result = '0.' + digitsOnly.slice(0, 2);
+      } else if (firstDecimalIndex === 1) {
+        // Decimal after first digit (x.xxx) - perfect format already
+        const beforeDecimalDigits = sanitized.slice(0, 1);
+        const afterDecimalDigits = sanitized.slice(2).replace(/\./g, '');
+        result = beforeDecimalDigits + '.' + afterDecimalDigits.slice(0, 2);
+      } else {
+        // Decimal after multiple digits (12.345) - take first digit, then next 2 as decimal
+        const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
+        const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
+        // Take first digit from before decimal, then combine remaining digits
+        const firstDigit = beforeDecimalDigits.slice(0, 1);
+        const remainingBeforeDecimal = beforeDecimalDigits.slice(1);
+        const decimalPart = (remainingBeforeDecimal + afterDecimalDigits).slice(0, 2);
+        result = firstDigit + '.' + decimalPart;
       }
     } else if (fourDigitFields.includes(field)) {
       // For 4-digit fields (xx.xx): max 2 digits before decimal, max 2 after
-      if (parts[0] && parts[0].length > 2) {
-        parts[0] = parts[0].slice(0, 2); // Keep only first 2 digits
+      if (firstDecimalIndex === -1) {
+        // No decimal point - just limit to 2 digits
+        result = digitsOnly.slice(0, 2);
+      } else if (firstDecimalIndex === 0) {
+        // Decimal at start (.xxx) - format as 0.xx
+        result = '0.' + digitsOnly.slice(0, 2);
+      } else if (firstDecimalIndex <= 2) {
+        // Decimal within first 2 positions - keep position
+        const beforeDec = digitsOnly.slice(0, firstDecimalIndex);
+        const afterDec = digitsOnly.slice(firstDecimalIndex, firstDecimalIndex + 2);
+        result = beforeDec + (afterDec ? '.' + afterDec : '');
+      } else {
+        // Decimal after position 2 (e.g., 100.50) - keep first 2 digits before decimal
+        // Find where the decimal splits the digits
+        const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
+        const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
+        result = beforeDecimalDigits.slice(0, 2) + '.' + afterDecimalDigits.slice(0, 2);
       }
+    } else {
+      // For other fields, no special limiting
+      result = sanitized;
     }
     
-    // Limit decimal places to 2 for all percentage fields
-    if (parts[1]) {
-      parts[1] = parts[1].slice(0, 2);
-    }
-    
-    // Ensure only one decimal point
-    return parts.slice(0, 2).join('.');
+    return result;
   };
 
   const handleVolumeChange = (value: string) => {
