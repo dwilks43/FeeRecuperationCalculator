@@ -68,9 +68,9 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
 
   const handleInputChange = (field: keyof CalculatorInputs, value: string | number) => {
     if (typeof value === 'string') {
-      // Sanitize percentage inputs to only allow numeric characters
+      // Sanitize percentage inputs to only allow numeric characters with digit limits
       const percentageFields = ['currentRate', 'interchangeCost', 'taxRate', 'tipRate', 'cashDiscount'];
-      const sanitized = percentageFields.includes(field) ? sanitizePercentageInput(value) : value;
+      const sanitized = percentageFields.includes(field) ? sanitizeAndLimitPercentage(value, field) : value;
       
       setInputValues(prev => ({ ...prev, [field]: sanitized }));
       const numericValue = parseNumericInput(sanitized);
@@ -119,8 +119,8 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   };
 
   const handlePriceDifferentialChange = (value: string) => {
-    // Sanitize input to only allow numeric characters
-    const sanitized = sanitizePercentageInput(value);
+    // Sanitize input to only allow numeric characters with 3-digit limit (x.xx)
+    const sanitized = sanitizeAndLimitPercentage(value, 'priceDifferential');
     let priceDifferentialValue = parseNumericInput(sanitized);
     
     // No cap - allow values to exceed 4% so Cost Reduction can exceed 100%
@@ -145,8 +145,8 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   };
 
   const handleFlatRateChange = (value: string) => {
-    // Sanitize input to only allow numeric characters
-    const sanitized = sanitizePercentageInput(value);
+    // Sanitize input to only allow numeric characters with 3-digit limit (x.xx)
+    const sanitized = sanitizeAndLimitPercentage(value, 'flatRatePct');
     setInputValues(prev => ({ ...prev, flatRatePct: sanitized }));
     onInputChange('flatRatePct', parseNumericInput(sanitized));
     onInputChange('flatRateOverride', parseNumericInput(sanitized));
@@ -199,6 +199,40 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
   const sanitizePercentageInput = (value: string): string => {
     // Allow only digits and decimal point
     return value.replace(/[^0-9.]/g, '');
+  };
+
+  // Sanitize and limit percentage input based on field requirements
+  const sanitizeAndLimitPercentage = (value: string, field: string): string => {
+    // First, remove non-numeric characters except decimal
+    let sanitized = value.replace(/[^0-9.]/g, '');
+    
+    // Fields with max 3 digits (x.xx format)
+    const threeDigitFields = ['currentRate', 'interchangeCost', 'priceDifferential', 'flatRatePct', 'flatRateOverride', 'cashDiscount'];
+    // Fields with max 4 digits (xx.xx format)
+    const fourDigitFields = ['taxRate', 'tipRate'];
+    
+    // Split by decimal point
+    const parts = sanitized.split('.');
+    
+    if (threeDigitFields.includes(field)) {
+      // For 3-digit fields (x.xx): max 1 digit before decimal, max 2 after
+      if (parts[0] && parts[0].length > 1) {
+        parts[0] = parts[0].slice(0, 1); // Keep only first digit
+      }
+    } else if (fourDigitFields.includes(field)) {
+      // For 4-digit fields (xx.xx): max 2 digits before decimal, max 2 after
+      if (parts[0] && parts[0].length > 2) {
+        parts[0] = parts[0].slice(0, 2); // Keep only first 2 digits
+      }
+    }
+    
+    // Limit decimal places to 2 for all percentage fields
+    if (parts[1]) {
+      parts[1] = parts[1].slice(0, 2);
+    }
+    
+    // Ensure only one decimal point
+    return parts.slice(0, 2).join('.');
   };
 
   const handleVolumeChange = (value: string) => {
