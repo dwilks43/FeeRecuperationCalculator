@@ -113,7 +113,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{formatCurrency(results.feeBaseCards || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('supplementalFeeCards' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-supplementalFeeCards"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
                 {inputs.businessType !== 'RETAIL' && (
@@ -134,7 +145,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       <span className="font-medium">{formatCurrency(results.tipBase || 0)}</span>
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-600">Tip Amount</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-sm text-gray-600">Tip Amount</span>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => onTooltip('tipAmount' as TooltipKey)}
+                          className="h-4 w-4 p-0"
+                          data-testid="button-tooltip-tipAmount"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
+                      </div>
                       <span className="font-medium">{formatCurrency(results.tipAmount || 0)}</span>
                     </div>
                   </>
@@ -147,11 +169,22 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Processing on Cards (New Program)</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">
-                    {inputs.businessType === 'RETAIL' ?
-                      'Card Processed Total (after fee & tax)' :
-                      'Card Processed Total (after fee, tip, & tax)'}
-                  </span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">
+                      {inputs.businessType === 'RETAIL' ?
+                        'Card Processed Total (after fee & tax)' :
+                        'Card Processed Total (after fee, tip, & tax)'}
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('processed' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-processed-supplemental"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-bold">{formatCurrency(results.cardProcessedTotal || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -174,7 +207,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{formatCurrency(results.processorChargeOnCards || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">Supplemental Fee Collected — Cards</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('supplementalFeeCards' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-supplementalFeeCards"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-medium text-green-600">{formatCurrency(results.cardFeeCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -213,7 +257,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Savings vs Today</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('currentCost' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-currentCost-supplemental"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -249,7 +304,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Supplemental Fee Collected — Cash</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">Supplemental Fee Collected — Cash</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('supplementalFeeCash' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-supplementalFeeCash"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-medium text-green-600">{formatCurrency(results.supplementalFeeCash || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
