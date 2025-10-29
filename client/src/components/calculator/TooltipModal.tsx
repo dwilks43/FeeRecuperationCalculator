@@ -1,6 +1,4 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
 import { TooltipKey, TooltipContent } from "@/types/calculator";
 import { TOOLTIPS, getTooltip, getMicroFormulas, UI_MICRO_FORMULAS } from "@/utils/tooltips";
 
@@ -79,20 +77,9 @@ export default function TooltipModal({ isOpen, onClose, tooltipKey, programType,
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <div className="flex justify-between items-start">
-            <DialogTitle className="text-lg font-semibold text-gray-900 pr-8">
-              {content.title}
-            </DialogTitle>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onClose}
-              className="h-8 w-8 p-0"
-              data-testid="button-close-tooltip"
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
+          <DialogTitle className="text-lg font-semibold text-gray-900">
+            {content.title}
+          </DialogTitle>
         </DialogHeader>
         <div className="space-y-4">
           <p className="text-gray-600 leading-relaxed">{content.content}</p>
