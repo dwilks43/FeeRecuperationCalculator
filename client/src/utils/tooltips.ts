@@ -180,6 +180,10 @@ export const UNIFIED_TOOLTIPS = {
       title: 'Base Card Volume + Menu Markup',
       body: 'Base Card Volume × (1 + Menu Markup %)'
     },
+    processed: {
+      title: 'Card Processed Total',
+      body: 'Final card amount processed including menu markup, tax, and tip. Formula: (Base Card Volume + Menu Markup) × (1 + Tax %) × (1 + Tip %)'
+    },
     extraCashRevenue: {
       title: 'Revenue from Cash Differential',
       body: 'Net revenue from cash pricing strategy. Formula: Base Cash Volume × (Menu Markup % − Cash Discount %)'
