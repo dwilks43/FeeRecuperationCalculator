@@ -523,7 +523,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{formatCurrency(results.procCharge || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Menu Markup Collected (Cards)</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">Card Menu Markup Collected (Cards)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('markupCollected' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-markupCollected-cash"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
