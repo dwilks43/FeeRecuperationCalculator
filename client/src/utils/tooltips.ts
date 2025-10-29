@@ -176,6 +176,10 @@ export const UNIFIED_TOOLTIPS = {
       title: 'Menu Markup %',
       body: 'Percentage added to all displayed prices. Example: 4% markup means a $10 item shows as $10.40 on the menu. This increase is applied to ALL tenders including card AND cash.'
     },
+    baseCardVolumeMarkup: {
+      title: 'Base Card Volume + Menu Markup',
+      body: 'Base Card Volume × (1 + Menu Markup %)'
+    },
     extraCashRevenue: {
       title: 'Revenue from Cash Differential',
       body: 'Net revenue from cash pricing strategy. Formula: Base Cash Volume × (Menu Markup % − Cash Discount %)'
@@ -208,6 +212,14 @@ export const UNIFIED_TOOLTIPS = {
     totalCostReductionCash: {
       title: 'Total Cost Reduction %',
       body: 'Total Savings (incl. Cash) ÷ Current Cost'
+    },
+    procCharge: {
+      title: 'Processor Charge on Cards',
+      body: 'What your processor charges under new program. Formula: Card Processed Total × Flat Rate %'
+    },
+    currentCost: {
+      title: 'Current Processing Cost (Today)',
+      body: 'Current Processing Cost (Today) = Card Gross × current rate.'
     }
   },
 

@@ -312,9 +312,9 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onTooltip('markupOnCards' as TooltipKey)}
+                        onClick={() => onTooltip('baseCardVolumeMarkup' as TooltipKey)}
                         className="h-4 w-4 p-0"
-                        data-testid="button-tooltip-markupOnCards"
+                        data-testid="button-tooltip-baseCardVolumeMarkup"
                       >
                         <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                       </Button>
@@ -715,9 +715,9 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('markupOnCards' as TooltipKey)}
+                      onClick={() => onTooltip('priceAdjustedBase' as TooltipKey)}
                       className="h-4 w-4 p-0"
-                      data-testid="button-tooltip-markupOnCards-dual"
+                      data-testid="button-tooltip-priceAdjustedBase-dual"
                     >
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>

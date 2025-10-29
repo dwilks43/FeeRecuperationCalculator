@@ -37,7 +37,7 @@ export default function GrossProfit({
               variant="ghost"
               size="sm"
               className="h-auto p-0"
-              onClick={() => onTooltip('dmp-profit')}
+              onClick={() => onTooltip('grossProfit')}
               data-testid="button-tooltip-dmp-profit"
             >
               <HelpCircle className="h-4 w-4 text-gray-400 hover:text-dmp-blue-500" />
