@@ -13,12 +13,21 @@ const customerInfoSchema = z.object({
   streetAddress: z.string().optional(),
   city: z.string().optional(),
   state: z.string().optional(),
-  zipCode: z.string().optional(),
+  zipCode: z.string()
+    .regex(/^\d{5}$/, { message: "ZIP code must be exactly 5 digits" })
+    .optional()
+    .or(z.literal("")),
   contactName: z.string().optional(),
   contactTitle: z.string().optional(),
-  contactEmail: z.string().optional(),
+  contactEmail: z.string()
+    .email({ message: "Please enter a valid email address" })
+    .optional()
+    .or(z.literal("")),
   salesRepName: z.string().optional(),
-  salesRepEmail: z.string().optional(),
+  salesRepEmail: z.string()
+    .email({ message: "Please enter a valid email address" })
+    .optional()
+    .or(z.literal("")),
   salesRepPhone: z.string().optional()
 });
 
@@ -78,6 +87,12 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const formatted = formatPhoneNumber(e.target.value);
     setValue("salesRepPhone", formatted);
+  };
+
+  const handleZipCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Only allow numeric characters and limit to 5 digits
+    const value = e.target.value.replace(/\D/g, '').slice(0, 5);
+    setValue("zipCode", value);
   };
 
   return (
@@ -140,8 +155,14 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
                     id="zipCode"
                     data-testid="input-zip-code"
                     {...register("zipCode")}
+                    onChange={handleZipCodeChange}
                     placeholder="12345"
+                    maxLength={5}
+                    className={errors.zipCode ? "border-red-500" : ""}
                   />
+                  {errors.zipCode && (
+                    <p className="text-sm text-red-600 mt-1">{errors.zipCode.message}</p>
+                  )}
                 </div>
               </div>
 
@@ -245,7 +266,11 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
                   type="email"
                   {...register("contactEmail")}
                   placeholder="contact@business.com"
+                  className={errors.contactEmail ? "border-red-500" : ""}
                 />
+                {errors.contactEmail && (
+                  <p className="text-sm text-red-600 mt-1">{errors.contactEmail.message}</p>
+                )}
               </div>
             </div>
           </div>
@@ -276,7 +301,11 @@ export function CustomerInfoForm({ onDataChange, initialData }: CustomerInfoForm
                   type="email"
                   {...register("salesRepEmail")}
                   placeholder="salesrep@dmprocessing.com"
+                  className={errors.salesRepEmail ? "border-red-500" : ""}
                 />
+                {errors.salesRepEmail && (
+                  <p className="text-sm text-red-600 mt-1">{errors.salesRepEmail.message}</p>
+                )}
               </div>
 
               <div>
