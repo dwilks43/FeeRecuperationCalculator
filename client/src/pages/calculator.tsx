@@ -143,13 +143,24 @@ export default function Calculator() {
       if (!response.ok) throw new Error('PDF generation failed');
 
       const blob = await response.blob();
+      
+      // Extract filename from Content-Disposition header if available
+      const contentDisposition = response.headers.get('Content-Disposition');
+      let filename = 'DMP-Savings-Report.pdf';
+      if (contentDisposition) {
+        const filenameMatch = contentDisposition.match(/filename="([^"]+)"/);
+        if (filenameMatch && filenameMatch[1]) {
+          filename = filenameMatch[1];
+        }
+      }
+      
       const url = window.URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'DMP-Savings-Report.pdf';
+      a.download = filename;
       a.click();
       window.URL.revokeObjectURL(url);
-      console.log('PDF download initiated');
+      console.log('PDF download initiated with filename:', filename);
       
     } catch (error) {
       console.error('Error generating PDF:', error);

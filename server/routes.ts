@@ -768,9 +768,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Generate PDF using DocRaptor
       const pdfBuffer = await generateSavingsReportPDF(pdfData);
       
+      // Create filename with business name and timestamp
+      const businessName = calculatorData.businessName || 'Business';
+      const safeName = businessName.replace(/[^a-zA-Z0-9]/g, '_'); // Replace special chars with underscore
+      const timestamp = new Date().toISOString().slice(0, 10); // YYYY-MM-DD format
+      const filename = `DMP_Fee_Recovery_Report_${safeName}_${timestamp}.pdf`;
+      
       // Send PDF as download
       res.setHeader('Content-Type', 'application/pdf');
-      res.setHeader('Content-Disposition', 'attachment; filename="DMP-Savings-Report.pdf"');
+      res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
       res.send(pdfBuffer);
     } catch (error) {
       console.error('PDF generation failed:', error);
