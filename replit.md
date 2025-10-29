@@ -13,9 +13,15 @@ The calculator takes various merchant parameters (monthly credit card volume, mo
   - Collapsible "Calculation Details" section for technical breakdown
   - Color psychology: Green for gains, subtle grays for technical details
   - Visual progress indicators showing cost elimination percentage
-- **PDF Sales Impact Section**: New hero section added to PDF reports
-  - "Your Monthly Impact" appears first with emotional business context
-  - Technical calculations moved to secondary sections
+- **PDF Sales Impact Section**: New hero section added to PDF reports (v1.10.0)
+  - **Page 1 Layout**: Customer Information (left 6 columns) + Your Monthly Impact (right 6 columns)
+  - **Page 2 Layout**: Input Parameters + Live Volume Breakdown + Monthly Processing Savings
+  - **Dynamic Calculations**: Monthly Impact varies by pricing mode:
+    - Dual Pricing: Uses netMonthly value
+    - Cash Discounting: Combines savingsCardsOnly + extraCashRevenue
+    - Supplemental Fee: Uses totalNetGainRevenue
+  - **Business Context**: Emotional impact phrases based on annual savings amount
+  - **Visual Design**: Green gradient impact card with prominent savings display
   - Maintains professional DMP branding while emphasizing emotional impact
 
 ## Previous PDF Generation Updates (September 2025)
