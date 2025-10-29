@@ -335,7 +335,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('totalNetGainRevenue' as TooltipKey)}
+                      onClick={() => onTooltip('totalNetGainCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalNetGainRevenue"
                     >
@@ -350,7 +350,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('annualNetGainRevenue' as TooltipKey)}
+                      onClick={() => onTooltip('annualNetGainCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-annualNetGainRevenue"
                     >
@@ -365,7 +365,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => onTooltip('totalCostReductionPct' as TooltipKey)}
+                      onClick={() => onTooltip('totalCostReductionCash' as TooltipKey)}
                       className="h-4 w-4 p-0"
                       data-testid="button-tooltip-totalCostReductionPct"
                     >
