@@ -448,6 +448,206 @@ function generateCSS(config: PDFConfig): string {
             padding: ${spacing.cardPadding}px;
         }
 
+        /* Impact Card Styles - Enhanced Marketing Design */
+        .impact-card {
+            background: linear-gradient(135deg, #ECFDF5 0%, #D1FAE5 25%, #A7F3D0 50%, #6EE7B7 100%);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+            border: 2px solid #10B981;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .impact-card:before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        
+        .impact-header {
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .impact-hero {
+            text-align: center;
+            padding: 24px 0;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .hero-label {
+            font-size: 10px;
+            font-weight: 800;
+            color: #059669;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .hero-amount {
+            font-size: 48px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+            line-height: 1;
+            text-shadow: 0 3px 6px rgba(5,150,105,0.15);
+        }
+        
+        .hero-context {
+            font-size: 14px;
+            font-weight: 600;
+            color: #047857;
+            font-style: italic;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+        
+        .impact-metrics {
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(16,185,129,0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        .metric-row {
+            display: flex;
+            gap: 32px;
+        }
+        
+        .metric-item {
+            flex: 1;
+            text-align: center;
+            background: rgba(255,255,255,0.7);
+            border-radius: 12px;
+            padding: 16px 12px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .metric-label {
+            font-size: 9px;
+            font-weight: 800;
+            color: #047857;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+        
+        .metric-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #059669;
+            margin-bottom: 4px;
+            text-shadow: 0 2px 4px rgba(5,150,105,0.1);
+        }
+        
+        .metric-note {
+            font-size: 10px;
+            color: #047857;
+            font-weight: 500;
+        }
+        
+        /* Enhanced Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: linear-gradient(180deg, #F8FAFC 0%, #F1F5F9 100%);
+            padding: 10px 12px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #0A7A64;
+            text-align: left;
+            border-bottom: 2px solid #1CD3D3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        td {
+            padding: 8px 12px;
+            font-size: 11px;
+            color: #0F172A;
+            border-bottom: 1px solid #E5E7EB;
+        }
+        
+        tr:hover td {
+            background: #F0FDFA;
+        }
+        
+        .value-positive {
+            color: #059669;
+            font-weight: 700;
+        }
+        
+        .value-negative {
+            color: #DC2626;
+            font-weight: 700;
+        }
+        
+        .value-highlight {
+            color: #0046FF;
+            font-weight: 700;
+        }
+        
+        /* Card Styles with Better Design */
+        .card {
+            background: #FFFFFF;
+            border: 1px solid #E5E7EB;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0F172A;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #F1F5F9;
+        }
+        
+        /* Grid Layout */
+        .grid {
+            display: table;
+            width: 100%;
+            table-layout: fixed;
+            border-spacing: 16px 0;
+        }
+        
+        .grid-col-6 {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+        }
+        
+        .grid-col-7 {
+            display: table-cell;
+            width: 58.33%;
+            vertical-align: top;
+        }
+        
+        .grid-col-5 {
+            display: table-cell;
+            width: 41.67%;
+            vertical-align: top;
+        }
+
         /* Page Break */
         .page-break { page-break-before: always; }
 
@@ -613,6 +813,16 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
       const value = row.value !== undefined ? row.value : row.amount;
       const format = row[formatHintKey] || 'text';
       
+      // Apply color styling based on value
+      let valueClass = '';
+      if (typeof value === 'number') {
+        if (value < 0) {
+          valueClass = 'value-positive'; // Negative values are positive for merchant (savings)
+        } else if (format === 'currency' && value > 1000) {
+          valueClass = 'value-highlight'; // Highlight large amounts
+        }
+      }
+      
       // Check if this is a section header
       if (format === 'section' || label.startsWith('###')) {
         // Close previous section if exists
@@ -651,7 +861,7 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
         tableContent += `
           <tr>
             <th>${unifiedLabel}</th>
-            <td>${formattedValue}${badge}</td>
+            <td class="${valueClass}">${formattedValue}${badge}</td>
           </tr>
         `;
       }
