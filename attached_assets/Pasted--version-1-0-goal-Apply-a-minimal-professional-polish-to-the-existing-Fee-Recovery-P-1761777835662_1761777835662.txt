@@ -1,0 +1,129 @@
+{
+  "version": "1.0",
+  "goal": "Apply a minimal, professional polish to the existing Fee Recovery PDF without rebuilding layout. Update typography, colors, spacing, table styles, number alignment, page numbers, and consistent rounding. Keep everything DocRaptor-friendly.",
+  "context": {
+    "stack": "React/Vite + DocRaptor HTML-to-PDF",
+    "policy": [
+      "No external webfonts. Use system font stack.",
+      "No complex charts or libraries.",
+      "Do NOT recompute values in the template; read from frozen snapshot (calculatedValues)."
+    ]
+  },
+  "brand_tokens": {
+    "brand": "#0F60D8",
+    "ink": "#151922",
+    "muted": "#6A6F7A",
+    "line": "#E6E8EC",
+    "bg": "#F7F9FC",
+    "good": "#0E8A3D"
+  },
+  "files_create_or_update": [
+    {
+      "path": "src/pdf/styles/mvp-polish.css",
+      "contents": "/* ===== Minimal MVP Polish for DocRaptor (Prince CSS) ===== */\n@page {\n  size: Letter;\n  margin: 0.6in;\n  @bottom-right { content: \"Page \" counter(page) \" of \" counter(pages); font-size: 10px; color: #6A6F7A; }\n}\n:root{\n  --brand: #0F60D8;\n  --ink: #151922;\n  --muted: #6A6F7A;\n  --line: #E6E8EC;\n  --bg: #F7F9FC;\n  --good:#0E8A3D;\n}\nhtml, body { font-family: system-ui, -apple-system, \"Segoe UI\", Roboto, Arial, sans-serif; font-size: 12px; line-height: 1.45; color: var(--ink); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }\n.h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.2px; margin: 0 0 8px; }\n.h2 { font-size: 14px; font-weight: 700; margin: 16px 0 8px; }\n.small { font-size: 10px; color: var(--muted); }\n.subtle { color: var(--muted); }\n.section { margin: 16px 0; }\n.card { border: 1px solid var(--line); border-radius: 12px; background: #fff; padding: 14px; break-inside: avoid; }\n.kpis { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }\n.kpi { border: 1px solid var(--line); border-radius: 12px; background: var(--bg); padding: 14px; break-inside: avoid; }\n.kpi .label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }\n.kpi .value { font-size: 24px; font-weight: 800; margin-top: 2px; font-feature-settings: \"tnum\" 1, \"lnum\" 1; }\n.kpi .delta { font-size: 10px; color: var(--muted); margin-top: 4px; }\n.table { width: 100%; border-collapse: collapse; }\n.table th, .table td { padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }\n.table th { text-align: left; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }\n.table .num { text-align: right; white-space: nowrap; font-feature-settings: \"tnum\" 1, \"lnum\" 1; }\n.hr { height: 1px; background: var(--line); border: 0; margin: 10px 0; }\n.tag { display: inline-block; padding: 3px 8px; border-radius: 999px; background: #E8F0FE; color: var(--brand); font-size: 10px; font-weight: 700; }\n.text-brand { color: var(--brand); }\n.text-good { color: var(--good); }\np { orphans: 3; widows: 3; }\n.avoid-break { break-inside: avoid; }\n"
+    },
+    {
+      "path": "src/pdf/helpers/formatters.ts",
+      "contents": "export const fmtMoney = (n:number) => new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);\nexport const fmtPct = (n:number, digits=2) => `${(Math.round(n*100)/100).toFixed(digits)}%`;\n"
+    }
+  ],
+  "edits": [
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Add CSS link after existing styles to apply polish theme last.",
+      "find": "</head>",
+      "replace": "  <link rel=\"stylesheet\" href=\"../styles/mvp-polish.css\" />\n</head>"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Normalize top title to professional H1 + subtle subline.",
+      "find_regex": "(<h1[^>]*>.*?</h1>|<div[^>]*class=[\"'][^\"']*(title|header)[^\"']*[\"'][^>]*>.*?</div>)",
+      "replace": "<div class=\"h1\">Fee Recovery Impact for {{merchantName}}</div>\n<div class=\"subtle\">Based on inputs provided {{reportDate}}</div>"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Wrap current KPI blocks in quiet cards grid. Keep existing value bindings.",
+      "find_regex": "<div[^>]*class=[\"'][^\"']*(kpi-row|metrics|top-summary)[^\"']*[\"'][^>]*>[\\s\\S]*?</div>",
+      "replace": "<div class=\"kpis\">\n  <div class=\"kpi\">\n    <div class=\"label\">Monthly Savings</div>\n    <div class=\"value\">${{monthlySavings}}</div>\n    <div class=\"delta subtle\">= ${{annualSavings}} per year</div>\n  </div>\n  <div class=\"kpi\">\n    <div class=\"label\">% Cost Reduction</div>\n    <div class=\"value\">{{costReductionPct}}%</div>\n    <div class=\"delta subtle\">vs current effective cost</div>\n  </div>\n  <div class=\"kpi\">\n    <div class=\"label\">Program</div>\n    <div class=\"value\">{{programType}}</div>\n    <div class=\"delta\"><span class=\"tag\">Compliant</span></div>\n  </div>\n</div>"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Style inputs table as professional finance table.",
+      "find_regex": "<table[^>]*id=[\"']inputs[^\"']*[\"'][^>]*>",
+      "replace": "<table id=\"inputs\" class=\"table\">"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Style savings table as professional finance table.",
+      "find_regex": "<table[^>]*id=[\"']savings[^\"']*[\"'][^>]*>",
+      "replace": "<table id=\"savings\" class=\"table\">"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Right-align all numeric cells by adding .num class (heuristic pass for $ or %).",
+      "find_regex": "<td>(\\$[^<]*|[0-9][^<%]*%|[0-9][^<]*)</td>",
+      "replace": "<td class=\"num\">$1</td>"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Wrap Inputs section in a light card.",
+      "find": "<section id=\"inputs-section\">",
+      "replace": "<section id=\"inputs-section\" class=\"section card avoid-break\">"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Wrap Savings section in a light card.",
+      "find": "<section id=\"savings-section\">",
+      "replace": "<section id=\"savings-section\" class=\"section card avoid-break\">"
+    },
+    {
+      "path": "src/pdf/render.ts",
+      "description": "Enforce consistent formatting at render; ensure values come from frozen snapshot.",
+      "find_regex": "function\\s+renderCurrency\\s*\\([\\s\\S]*?\\)\\s*\\{[\\s\\S]*?\\}",
+      "replace": "function renderCurrency(v:number){ return fmtMoney(v); }"
+    },
+    {
+      "path": "src/pdf/render.ts",
+      "description": "Import shared formatters and use them in the templating map.",
+      "find": "/* __FORMATTERS_IMPORT__ */",
+      "replace": "import { fmtMoney, fmtPct } from '../helpers/formatters';"
+    },
+    {
+      "path": "src/pdf/render.ts",
+      "description": "Guarantee snapshot usage (no recompute on render).",
+      "find_regex": "const\\s+values\\s*=\\s*compute[^(]*\\([^)]*\\);",
+      "replace": "const values = calculatedValues; // use frozen Step 4 snapshot"
+    }
+  ],
+  "commands": [
+    {
+      "name": "Typecheck/Build",
+      "run": "pnpm build || npm run build || yarn build"
+    },
+    {
+      "name": "DocRaptor Test Render (Node)",
+      "run": "node scripts/docraptor-test.js",
+      "optional": true
+    }
+  ],
+  "files_create_or_update_optional": [
+    {
+      "path": "scripts/docraptor-test.js",
+      "contents": "/* Minimal Node DocRaptor test to render current HTML */\nconst fs = require('fs');\nconst DocRaptor = require('docraptor');\nconst client = new DocRaptor.DocApi();\nclient.apiClient.authentications['api_key'].apiKey = process.env.DOCRAPTOR_API_KEY;\n(async () => {\n  const html = fs.readFileSync('dist/pdf/Report.html', 'utf8');\n  const createReq = new DocRaptor.DocCreate();\n  createReq.test = true; // set false in production\n  createReq.name = 'DMP_Fee_Recovery_Report_Test.pdf';\n  createReq.documentType = 'pdf';\n  createReq.documentContent = html;\n  createReq.princeOptions = { media: 'print' };\n  const pdf = await client.createDoc(createReq);\n  fs.writeFileSync('DMP_Fee_Recovery_Report_Test.pdf', pdf);\n  console.log('PDF written: DMP_Fee_Recovery_Report_Test.pdf');\n})();\n"
+    }
+  ],
+  "verification": [
+    "All headings follow .h1 / .h2 classes.",
+    "Every numeric <td> now has class=\"num\" (spot-check savings table).",
+    "Inputs and Savings sections wrapped in .card .avoid-break for clean pagination.",
+    "Footer shows 'Page X of Y'.",
+    "No external @font-face in final CSS.",
+    "Numbers on the same line match across the doc (consistent rounding)."
+  ],
+  "outputs": [
+    "DMP_Fee_Recovery_Report_Test.pdf"
+  ],
+  "rollback": {
+    "note": "All edits are add-only or regex-replace. Revert by removing 'mvp-polish.css' link tag and deleting 'src/pdf/styles/mvp-polish.css'. Revert numeric cell class changes by restoring from VCS."
+  }
+}
