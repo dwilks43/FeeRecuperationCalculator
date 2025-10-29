@@ -651,7 +651,7 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
             </div>
 
             {/* Panel 3: Cash Revenue (New Program) */}
-            {inputs.programType === 'CASH_DISCOUNTING' && (inputs.monthlyCashVolume && inputs.monthlyCashVolume > 0) && (
+            {inputs.programType === 'CASH_DISCOUNTING' && (
               <div className="border border-gray-200 rounded-lg p-4 bg-white">
                 <h3 className="text-lg font-semibold text-gray-900 mb-3">Cash Revenue (New Program)</h3>
                 <div className="space-y-2">
