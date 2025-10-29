@@ -843,7 +843,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium">{formatCurrency(results.procCharge || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Card Price Increase Collected (Cards)</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">Card Price Increase Collected (Cards)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('markupCollected' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-markupCollected-dual"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-medium text-green-600">{formatCurrency(results.markupCollected || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -893,7 +904,18 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
               <h3 className="text-lg font-semibold text-gray-900 mb-3">Savings vs Today</h3>
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm text-gray-600">Current Processing Cost (Today)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('currentCost' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-currentCost-dual"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-medium text-red-600">{formatCurrency(results.currentCost || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -929,11 +951,33 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                   <span className="font-medium text-blue-600">{formatCurrency(results.savingsCardsOnly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2 bg-green-50 -mx-2 px-2 py-2 rounded">
-                  <span className="text-sm font-medium text-gray-700">Total Net Gain (Monthly)</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-gray-700">Total Net Gain (Monthly)</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('netMonthly' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-netMonthly-dual"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-bold text-green-700">{formatCurrency(results.netMonthly || 0)}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-sm font-medium text-gray-700">Annual Net Gain</span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onTooltip('netAnnual' as TooltipKey)}
+                      className="h-4 w-4 p-0"
+                      data-testid="button-tooltip-netAnnual-dual"
+                    >
+                      <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                    </Button>
+                  </div>
                   <span className="font-bold text-green-600">{formatCurrency(results.netAnnual || 0)}</span>
                 </div>
               </div>
