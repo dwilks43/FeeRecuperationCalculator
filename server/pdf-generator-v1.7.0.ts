@@ -278,6 +278,8 @@ function generateCSS(config: PDFConfig): string {
             background: var(--neutral10);
             border-bottom: ${borders.hairline};
             width: 60%;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .kv-table td {
@@ -286,6 +288,10 @@ function generateCSS(config: PDFConfig): string {
             font-weight: ${typography.value.weight};
             color: var(--neutral90);
             border-bottom: ${borders.hairline};
+            width: 40%;
+            text-align: right;
+            white-space: nowrap;
+            overflow: visible;
         }
 
         /* KPI Rail Styles */
