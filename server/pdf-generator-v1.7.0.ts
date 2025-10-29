@@ -1090,10 +1090,6 @@ export function generateConfigDrivenPDF(data: any): string {
     
     // Handle new v1.7.3 body structure
     if (Array.isArray(page.body)) {
-      console.log(`Processing page ${index + 1} with ${page.body.length} elements`);
-      page.body.forEach((el: any, i: number) => {
-        console.log(`  Element ${i}: type=${el.type}, colSpan=${el.colSpan}, hasTemplate=${!!el.template}`);
-      });
       
       // Group elements that should be in the same row
       let currentRow: any[] = [];
@@ -1123,28 +1119,22 @@ export function generateConfigDrivenPDF(data: any): string {
               if (el.type === 'card') {
                 elementContent = generateCard(el, contextData, config);
               } else if (el.type === 'custom') {
-                console.log('Processing custom template for Monthly Impact...');
                 // Process custom template with data bindings
                 let processedTemplate = el.template || '';
-                
-                console.log('Template before processing:', processedTemplate.substring(0, 200));
                 
                 // Replace FORMAT.money() and FORMAT.percent() functions
                 processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
                   const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
-                  console.log(`FORMAT.money(${path}) resolved to:`, value);
                   return formatValue(value, 'currency', config);
                 });
                 
                 processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {
                   const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
-                  console.log(`FORMAT.percent(${path}) resolved to:`, value);
                   return formatValue(value, 'percent', config);
                 });
                 
                 // Process regular data bindings
                 processedTemplate = resolveDataBinding(processedTemplate, contextData, config);
-                console.log('Template after processing:', processedTemplate.substring(0, 500));
                 elementContent = processedTemplate;
               }
               
@@ -1170,7 +1160,6 @@ export function generateConfigDrivenPDF(data: any): string {
               if (el.type === 'card') {
                 elementContent = generateCard(el, contextData, config);
               } else if (el.type === 'custom') {
-                console.log('Processing custom template in pending row...');
                 // Process custom template with data bindings
                 let processedTemplate = el.template || '';
                 
@@ -1201,28 +1190,22 @@ export function generateConfigDrivenPDF(data: any): string {
           if (element.type === 'card') {
             elementContent = generateCard(element, contextData, config);
           } else if (element.type === 'custom') {
-            console.log('Processing full-width custom template for Monthly Impact...');
             // Process custom template with data bindings
             let processedTemplate = element.template || '';
-            
-            console.log('Template before processing:', processedTemplate.substring(0, 200));
             
             // Replace FORMAT.money() and FORMAT.percent() functions
             processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
               const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
-              console.log(`FORMAT.money(${path}) resolved to:`, value);
               return formatValue(value, 'currency', config);
             });
             
             processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {
               const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
-              console.log(`FORMAT.percent(${path}) resolved to:`, value);
               return formatValue(value, 'percent', config);
             });
             
             // Process regular data bindings
             processedTemplate = resolveDataBinding(processedTemplate, contextData, config);
-            console.log('Template after processing (first 500 chars):', processedTemplate.substring(0, 500));
             elementContent = processedTemplate;
           }
           bodyContent += elementContent;
