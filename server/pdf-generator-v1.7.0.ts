@@ -51,6 +51,9 @@ interface PDFConfig {
     stripZeroKPIs: boolean;
     coercePercentStrings: boolean;
   };
+  styles?: {
+    globalCss?: string;
+  };
 }
 
 let config: PDFConfig | null = null;
@@ -682,6 +685,9 @@ function generateCSS(config: PDFConfig): string {
             font-size: ${typography.fine?.size || typography.small?.size || 9}px;
             color: var(--neutral40);
         }
+        
+        /* Global CSS from config */
+        ${config.styles?.globalCss || ''}
     </style>
   `;
 }
