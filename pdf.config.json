@@ -25,12 +25,16 @@
       "metrics": {
         "monthlySavings": ["ui.sections.salesImpact.heroNumber"],
         "annualSavings": ["ui.sections.salesImpact.annualImpact"],
+        "quarterlySavings": ["ui.sections.salesImpact.quarterlySavings"],
         "costReductionPct": ["ui.sections.salesImpact.costReduction"],
         "currentCost": ["results.currentCost"],
         "newProgramNetCost": ["results.newCost"],
         "processorCharge": ["results.processorChargeCards"],
         "diffCollected": ["results.cardMarkupCollected"],
-        "programType": ["inputs.programType"]
+        "programType": ["inputs.programType"],
+        "businessType": ["ui.sections.salesImpact.businessType", "inputs.businessType", "'RETAIL'"],
+        "isRestaurant": ["ui.sections.salesImpact.isRestaurant"],
+        "isRetail": ["ui.sections.salesImpact.isRetail"]
       },
       "salesRep": {
         "name": ["ui.sections.customerInformation.rows[6].value", "inputs.salesRepName", "'Your Representative'"],

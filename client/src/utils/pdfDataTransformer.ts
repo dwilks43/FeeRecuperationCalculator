@@ -751,13 +751,20 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
     businessContext = "Incremental cost improvement";
   }
   
+  // Add quarterly savings calculation
+  const quarterlySavings = monthlySavings * 3;
+  
   return {
     title: 'Your Monthly Impact',
     heroNumber: monthlySavings,
     businessContext: businessContext,
     annualImpact: annualSavings,
+    quarterlySavings: quarterlySavings,
     costReduction: coveragePct,
     programType: inputs.programType,
+    isRestaurant: inputs.businessType === 'RESTAURANT',
+    isRetail: inputs.businessType === 'RETAIL',
+    businessType: inputs.businessType || 'RETAIL',
     highlights: {
       monthly: {
         label: 'MONTHLY SAVINGS',
@@ -770,6 +777,12 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
         value: annualSavings,
         format: 'money',
         emphasis: 'strong'
+      },
+      quarterly: {
+        label: 'QUARTERLY IMPACT',
+        value: quarterlySavings,
+        format: 'money',
+        emphasis: 'metric'
       },
       coverage: {
         label: 'COST REDUCTION',
