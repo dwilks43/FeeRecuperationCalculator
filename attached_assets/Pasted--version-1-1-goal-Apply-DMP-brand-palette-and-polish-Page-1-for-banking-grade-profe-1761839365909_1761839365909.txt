@@ -1,0 +1,40 @@
+{
+  "version": "1.1",
+  "goal": "Apply DMP brand palette and polish Page 1 for banking-grade professionalism: replace Compliant chip, add a titled 3-bar 'Processing Cost vs Savings' graphic scaled to cost, complete waterfall mappings, add industry-specific Savings Allocation with quarterly $ amount, rewrite 'Next Steps (It’s Easy)' with contact on Page 1, refine Executive Summary text, and soften gray bands on later pages using brand tints. Keep all numbers from frozen calculatedValues and a single formatter.",
+  "brand_tokens": {
+    "ultramarine": "#004ED3",
+    "aqua": "#2BD8C2",
+    "spruce": "#00937B",
+    "ink": "#0B2340",
+    "muted": "#6A6F7A",
+    "line": "#E6E8EC",
+    "bg": "#F7F9FC"
+  },
+  "files_create_or_update": [
+    {
+      "path": "src/pdf/styles/mvp-polish.css",
+      "contents": "/* --- DMP Brand Palette & subtle accents --- */\n:root{\n  --brand: #004ED3;       /* ULTRAMARINE */\n  --accent-aqua:#2BD8C2;  /* AQUA */\n  --accent-spruce:#00937B;/* SPRUCE */\n  --ink:#0B2340;          /* INK */\n  --muted:#6A6F7A;\n  --line:#E6E8EC;\n  --bg:#F7F9FC;\n}\nhtml,body{font-family:system-ui,-apple-system,'Segoe UI',Roboto,Arial,sans-serif;font-size:12px;line-height:1.45;color:var(--ink)}\n.h1{font-size:22px;font-weight:700;letter-spacing:-.2px;margin:0 0 8px}\n.h2{font-size:14px;font-weight:700;margin:12px 0 8px}\n.small{font-size:10px;color:var(--muted)}.subtle{color:var(--muted)}\n.section{margin:16px 0}.card{border:1px solid var(--line);border-radius:12px;background:#fff;padding:14px;break-inside:avoid}\n.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}\n.kpi{border:1px solid var(--line);border-radius:12px;background:var(--bg);padding:14px;break-inside:avoid}\n.kpi .label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}\n.kpi .value{font-size:22px;font-weight:800;margin-top:2px;font-feature-settings:'tnum' 1,'lnum' 1}\n.kpi .delta{font-size:10px;color:var(--muted);margin-top:4px}\n.table{width:100%;border-collapse:collapse}\n.table th,.table td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}\n.table th{text-align:left;font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}\n.table .num{text-align:right;white-space:nowrap;font-feature-settings:'tnum' 1,'lnum' 1}\n.page-break{page-break-after:always}\n.no-break{break-inside:avoid}\n/* --- Page-1 bars (three-series) --- */\n.bars{display:grid;gap:8px;margin-top:8px}\n.bar{display:flex;align-items:center;gap:10px}\n.bar .label{width:150px;color:var(--muted);font-size:11px}\n.bar .track{flex:1;height:10px;background:#EFF2F6;border-radius:6px;overflow:hidden}\n.bar .fill--today{height:100%;background:var(--brand)}\n.bar .fill--program{height:100%;background:var(--brand);opacity:.7}\n.bar .fill--savings{height:100%;background:var(--accent-aqua);opacity:.55}\n.bar .value{min-width:110px;text-align:right;font-feature-settings:'tnum' 1,'lnum' 1}\n/* --- Section header accent on later pages (replace heavy gray rows) --- */\n.section-accent{border-top:3px solid var(--accent-spruce);padding-top:10px}\n/* Prevent contact wrap to next page */\n.contact-inline{display:flex;gap:10px;align-items:center;flex-wrap:wrap}\n.contact-inline .sep{color:var(--muted)}\n"
+    },
+    {
+      "path": "src/pdf/helpers/formatters.ts",
+      "contents": "export const fmtMoney=(n:number)=>new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:2}).format(n);\nexport const fmtPct=(n:number, digits=2)=>`${(Math.round(n*100)/100).toFixed(digits)}%`;\nexport const safeJoin=(...xs:(string|undefined|null)[])=>xs.filter(Boolean).join(' ');\n"
+    }
+  ],
+  "edits": [
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Refine Executive Summary text (remove (DMP), fix Dual Pricing underscore).",
+      "find_regex": "(<div class=\\\"h2\\\">Executive Summary<\\/div>[\\s\\S]*?<p class=\\\"small\\\">)([\\s\\S]*?)(<\\/p>)",
+      "replace": "$1This analysis is presented by Dynamic Merchant Processing to illustrate savings realized from the <strong>Dual Pricing</strong> program, based on inputs provided for {{merchantName}} on {{reportDate}}. Figures are estimates derived from the current processing profile and card-mix assumptions.$3"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Remove 'Compliant' chip from Program KPI.",
+      "find_regex": "<div class=\\\"delta\\\">[\\s\\S]*?<\\/div>",
+      "replace": ""
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Replace two-bar box with a titled three-bar 'Processing Cost vs Savings (Monthly)' graphic scaled to Today cost.",
+      "find_regex": "<div class=\\\"card\\\">[\\s\\S]*?<div class=\\\"h2\\\">At a glance[\\s\\S]*?<\\/div>\\s*<\\/div>",
+      "replace": "<div class=\\\"card no-break\\\">\\n  <div class=\\\"h2\\\">Processing Cost vs Savings (Monthly)<\\/div>\\n  <div class=\\\"bars\\\">\\n    <div class=\\\"bar\\\">\\n      <div class=\\\"label\\\">Today (Current Cost)<\\/div>\\n      <div class=\\\"track\\\"><div class=\\\"fill--today\\\" style=\\\"width: {{barTodayPct}}%;\\\"></div></div>\\n      <div class=\\\"value\\\">${{todayCost}}<\\/div>\\n    </div>\\n    <div class=\\\"bar\\\">\\n      <div class=\\\"label\\\">With Program (Net Cost)<\\/div>\\n      <div class=\\\"track\\\"><div class=\\\"fill--program\\\" style=\\\"width: {{barProgramPct}}%;\\\"></div></div>\\n      <div class=\\\"value\\\">${{newProgramNetCost}}<\\/div>\\n    </d
