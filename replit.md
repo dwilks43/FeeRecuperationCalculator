@@ -6,7 +6,13 @@ The calculator takes various merchant parameters (monthly credit card volume, mo
 
 **New Sales-Focused UI Design (October 2025)**: The interface has been transformed from a technical/mathematical presentation to an emotionally impactful sales tool. Key changes include a hero "Your Monthly Impact" section with prominent savings display, business context phrases like "That's your holiday marketing budget covered", and technical details hidden in a collapsible accordion to reduce cognitive load.
 
-## Recent PDF v1.1 Updates (October 2025 - Banking-Grade Polish)
+## Recent PDF v1.3 Updates (October 2025 - Final Banking-Grade Polish)
+- **Simplified Page-1 Waterfall**: Removed "Processor Charge on Cards" row for cleaner story
+  - Now shows only 3 rows: Today Cost → Price Differential → Net Cost
+  - Page-2 maintains detailed 8-row breakdown for technical reference
+- **All v1.2 Features Maintained**: Quarterly savings, industry-specific messaging, contact formatting
+
+## Previous PDF v1.1 Updates (October 2025 - Banking-Grade Polish)
 - **DMP Brand Palette Applied**: Updated all colors to official DMP brand colors
   - Ultramarine (#004ED3) for primary branding
   - Aqua (#2BD8C2) for accents
