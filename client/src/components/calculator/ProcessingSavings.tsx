@@ -394,20 +394,20 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
           </div>
         </div>
 
-        {/* CALL TO ACTION */}
+        {/* PROFESSIONAL SUMMARY */}
         <div className="text-center pt-4 border-t border-green-200">
-          <p className="text-sm text-gray-600 italic">
-            "This is money you're currently giving away to payment processors every month"
+          <p className="text-sm text-gray-600">
+            Processing cost optimization through strategic fee restructuring
           </p>
           {savingsPercent >= 100 ? (
             <div className="mt-2 inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
               <Trophy className="h-4 w-4" />
-              {savingsPercent >= 105 ? 'You\'re Making Money on Processing!' : 'Complete Cost Elimination Achieved!'}
+              {savingsPercent >= 105 ? 'Revenue-Positive Processing' : 'Full Cost Offset Achieved'}
             </div>
           ) : savingsPercent >= 90 ? (
             <div className="mt-2 inline-flex items-center gap-1 bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
               <Trophy className="h-4 w-4" />
-              Near-Complete Cost Elimination!
+              Substantial Cost Mitigation
             </div>
           ) : null}
         </div>

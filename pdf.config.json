@@ -77,7 +77,9 @@
         "h3": { "size": 12, "weight": 600, "color": "neutral70" },
         "body": { "size": 11, "weight": 400, "color": "neutral70" },
         "small": { "size": 10, "weight": 400, "color": "neutral50" },
-        "fine": { "size": 9, "weight": 400, "color": "neutral30" }
+        "fine": { "size": 9, "weight": 400, "color": "neutral30" },
+        "label": { "size": 10, "weight": 600, "color": "neutral50" },
+        "value": { "size": 11, "weight": 500, "color": "neutral90" }
       },
       "layout": {
         "pageWidthIn": 8.5,
