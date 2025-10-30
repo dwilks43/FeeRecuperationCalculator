@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Calculator, HelpCircle, Zap } from "lucide-react";
+import { Calculator, HelpCircle, Zap, AlertTriangle } from "lucide-react";
 import { CalculatorInputs, TooltipKey } from "@/types/calculator";
 import { parseNumericInput, formatNumberInput } from "@/utils/calculations";
 import { TOOLTIPS } from "@/utils/tooltips";
+import { useToast } from "@/hooks/use-toast";
 
 interface InputFormProps {
   inputs: CalculatorInputs;
@@ -15,6 +16,7 @@ interface InputFormProps {
 }
 
 export default function InputForm({ inputs, onInputChange, onTooltip }: InputFormProps) {
+  const { toast } = useToast();
   const [inputValues, setInputValues] = useState<Record<keyof CalculatorInputs, string>>({
     programType: inputs.programType,
     businessType: inputs.businessType || 'RESTAURANT',
@@ -99,6 +101,24 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     // Reset fee tax basis to default (PRE_TAX) when switching to Supplemental Fee
     if (newType === 'SUPPLEMENTAL_FEE') {
       onInputChange('feeTaxBasis', 'PRE_TAX' as any);
+    }
+    
+    // Smart handling for Cash Discounting mode
+    if (newType === 'CASH_DISCOUNTING') {
+      // If Cash Discount is 0 or unset, auto-populate with smart default
+      if (!inputs.cashDiscount || inputs.cashDiscount === 0) {
+        // Use Menu Markup % as the default Cash Discount % (they're usually similar)
+        const defaultCashDiscount = Math.min(priceDifferentialValue, 3.5); // Cap at 3.5% as typical max
+        onInputChange('cashDiscount', defaultCashDiscount);
+        setInputValues(prev => ({ ...prev, cashDiscount: formatNumberInput(defaultCashDiscount) }));
+        
+        // Show a toast notification to inform the user
+        toast({
+          title: "Cash Discount % Auto-Set",
+          description: `Cash Discount set to ${defaultCashDiscount}% based on Menu Markup. Please review and adjust if needed.`,
+          variant: "destructive", // Using destructive as warning isn't available
+        });
+      }
     }
     
     // Auto-calculate flat rate when switching programs
@@ -711,6 +731,12 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             <div>
               <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
                 Cash Discount (%)
+                {(!inputs.cashDiscount || inputs.cashDiscount === 0) && (
+                  <span className="flex items-center gap-1 text-amber-600">
+                    <AlertTriangle className="h-3 w-3" />
+                    <span className="text-xs font-normal">Required</span>
+                  </span>
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -725,7 +751,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
               <div className="relative">
                 <Input
                   type="text"
-                  className="pr-8 py-3 focus:ring-2 focus:ring-dmp-blue-500 placeholder:text-gray-400"
+                  className={`pr-8 py-3 focus:ring-2 placeholder:text-gray-400 ${
+                    (!inputs.cashDiscount || inputs.cashDiscount === 0)
+                      ? 'border-amber-500 focus:ring-amber-500 bg-amber-50'
+                      : 'focus:ring-dmp-blue-500'
+                  }`}
                   placeholder="3.50"
                   value={inputValues.cashDiscount}
                   onChange={(e) => handleInputChange('cashDiscount', e.target.value)}
@@ -733,7 +763,14 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
                 />
                 <span className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500">%</span>
               </div>
-              <p className="text-xs text-gray-500 mt-1">The discount given to cash customers</p>
+              {(!inputs.cashDiscount || inputs.cashDiscount === 0) ? (
+                <p className="text-xs text-amber-600 mt-1 font-medium flex items-center gap-1">
+                  <AlertTriangle className="h-3 w-3" />
+                  Cash Discount % must be set to calculate accurate savings in Cash Discounting mode
+                </p>
+              ) : (
+                <p className="text-xs text-gray-500 mt-1">The discount given to cash customers</p>
+              )}
             </div>
           )}
 
