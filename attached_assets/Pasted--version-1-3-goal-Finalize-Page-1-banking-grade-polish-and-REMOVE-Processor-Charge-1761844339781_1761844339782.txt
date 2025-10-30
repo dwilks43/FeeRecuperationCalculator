@@ -1,0 +1,69 @@
+{
+  "version": "1.3",
+  "goal": "Finalize Page-1 banking-grade polish and REMOVE 'Processor Charge on Cards' from the Page-1 summary waterfall so the story focuses on Today Cost → Price Differential Collected → Net Processing Cost (Program). Keep three-bar chart (Today / Net / Savings) scaled to Today=100, industry-specific Savings Allocation with quarterly $, 'Next Steps (It’s Easy)' + contact on Page 1, Executive Summary copy fixes, no 'Compliant' badge, and light brand accents on later pages. All values come from frozen calculatedValues with a single formatter.",
+  "brand_tokens": {
+    "ultramarine": "#004ED3",
+    "aqua": "#2BD8C2",
+    "spruce": "#00937B",
+    "ink": "#0B2340",
+    "muted": "#6A6F7A",
+    "line": "#E6E8EC",
+    "bg": "#F7F9FC"
+  },
+  "edits": [
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Executive Summary: remove '(DMP)', fix 'Dual_Pricing' to 'Dual Pricing', include merchant/date.",
+      "find_regex": "(<div class=\\\"h2\\\">Executive Summary<\\/div>\\s*<p class=\\\"small\\\">)[\\s\\S]*?(<\\/p>)",
+      "replace": "$1This analysis is presented by Dynamic Merchant Processing to illustrate savings realized from the <strong>Dual Pricing</strong> program, based on inputs provided for {{merchantName}} on {{reportDate}}. Figures are estimates derived from the current processing profile and card-mix assumptions.$2"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Program KPI: remove any 'Compliant' chip/badge line.",
+      "find_regex": "<div class=\\\"delta\\\">[\\s\\S]*?<\\/div>",
+      "replace": ""
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Three-bar chart: ensure titled and mapped to Today / Net Program / Savings, scaled to Today=100%.",
+      "find_regex": "<div class=\\\"card\\\">\\s*<div class=\\\"h2\\\">(?:At a glance|Processing Cost Comparison)[\\s\\S]*?<\\/div>\\s*<\\/div>",
+      "replace": "<div class=\\\"card no-break\\\">\\n  <div class=\\\"h2\\\">Processing Cost vs Savings (Monthly)<\\/div>\\n  <div class=\\\"bars\\\">\\n    <div class=\\\"bar\\\">\\n      <div class=\\\"label\\\">Today (Current Cost)<\\/div>\\n      <div class=\\\"track\\\"><div class=\\\"fill--today\\\" style=\\\"width: {{barTodayPct}}%;\\\"></div></div>\\n      <div class=\\\"value\\\">${{todayCost}}<\\/div>\\n    </div>\\n    <div class=\\\"bar\\\">\\n      <div class=\\\"label\\\">With Program (Net Cost)<\\/div>\\n      <div class=\\\"track\\\"><div class=\\\"fill--program\\\" style=\\\"width: {{barProgramPct}}%;\\\"></div></div>\\n      <div class=\\\"value\\\">${{newProgramNetCost}}<\\/div>\\n    </div>\\n    <div class=\\\"bar\\\">\\n      <div class=\\\"label\\\">Savings Eliminated<\\/div>\\n      <div class=\\\"track\\\"><div class=\\\"fill--savings\\\" style=\\\"width: {{barSavingsPct}}%;\\\"></div></div>\\n      <div class=\\\"value\\\">${{monthlySavings}}<\\/div>\\n    </div>\\n  </div>\\n  <div class=\\\"small\\\" style=\\\"margin-top:6px;\\\">Bars scaled to current monthly processing cost (Today = 100%).<\\/div>\\n<\\/div>"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Page-1 waterfall SUMMARY: REMOVE 'Processor Charge on Cards' row; show only Today, − Price Differential Collected (Cards), = Net Processing Cost (Program).",
+      "find_regex": "<div class=\\\"card\\\">\\s*<div class=\\\"h2\\\">How the Savings Are Calculated[\\s\\S]*?<\\/div>",
+      "replace": "<div class=\\\"card no-break\\\">\\n  <div class=\\\"h2\\\">How the Savings Are Calculated<\\/div>\\n  <table class=\\\"table\\\">\\n    <tr><th>Current Processing Cost (Today)<\\/th><td class=\\\"num\\\">${{todayCost}}<\\/td><\\/tr>\\n    <tr><th>− Price Differential Collected (Cards)<\\/th><td class=\\\"num\\\">−${{cardPriceIncreaseCollected}}<\\/td><\\/tr>\\n    <tr><th>= Net Processing Cost (Program)<\\/th><td class=\\\"num\\\">${{newProgramNetCost}}<\\/td><\\/tr>\\n  </table>\\n  <div class=\\\"small\\\">Details and assumptions appear on Page 2.<\\/div>\\n<\\/div>"
+    },
+    {
+      "path": "src/pdf/templates/Report.html",
+      "description": "Right column: keep industry-specific Savings Allocation with $/quarter; keep 'Next Steps (It’s Easy)' plus inline contact on Page 1.",
+      "find_regex": "<div class=\\\"card\\\">\\s*<div class=\\\"h2\\\">Savings Allocation Plan[\\s\\S]*?<\\/div>\\s*<\\/div>\\s*<div class=\\\"card\\\">\\s*<div class=\\\"h2\\\">Next Step[sS]?[\\s\\S]*?<\\/div>",
+      "replace": "<div class=\\\"card no-break\\\">\\n  <div class=\\\"h2\\\">Savings Allocation Plan<\\/div>\\n  {{#isRestaurant}}\\n  <ul class=\\\"small\\\" style=\\\"margin:6px 0 0 0;\\\">\\n    <li><strong>${{monthlySavings}}<\\/strong> per month → Offset two server shifts weekly<\\/li>\\n    <li><strong>${{quarterlySavings}}<\\/strong> per quarter → Smallwares/linen refresh or menu board updates<\\/li>\\n    <li><strong>${{annualSavings}}<\\/strong> per year → Replace POS tablets/handhelds<\\/li>\\n  <\\/ul>\\n  {{\\/isRestaurant}}\\n  {{#isRetail}}\\n  <ul class=\\\"small\\\" style=\\\"margin:6px 0 0 0;\\\">\\n    <li><strong>${{monthlySavings}}<\\/strong> per month → Add peak-hour staff coverage<\\/li>\\n    <li><strong>${{quarterlySavings}}<\\/strong> per quarter → Replenish core inventory / labels & supplies<\\/li>\\n    <li><strong>${{annualSavings}}<\\/strong> per year → Replace barcode scanners or label printers<\\/li>\\n  <\\/ul>\\n  {{\\/isRetail}}\\n<\\/div>\\n\\n<div class=\\\"card no-break\\\">\\n  <div class=\\\"h2\\\">Next Steps (It’s Easy)<\\/div>\\n  <ol class=\\\"small\\\" style=\\\"margin:6px 0 8px 16px;\\\">\\n    <li>Complete a quick online application (≈ 15 minutes).<\\/li>\\n    <li>Get approved and place your POS order.<\\/li>\\n    <li>Confirm key settings (menu items or retail pricing) — minimal time required.<\\/li>\\n    <li>We schedule installation on your timeline (typically 2–4 weeks).<\\/li>\\n    <li>Go live and start saving — verify on your first statement.<\\/li>\\n  </ol>\\n  <div class=\\\"small contact-inline\\\"><strong>{{repName}}<\\/strong><span class=\\\"sep\\\">·<\\/span>{{repPhone}}<span class=\\\"sep\\\">·<\\/span><a href=\\\"mailto:{{repEmail}}\\\">{{repEmail}}<\\/a><\\/div>\\n</div>"
+    },
+    {
+      "path": "src/pdf/templates/TechnicalDetails.html",
+      "description": "Later pages: replace heavy gray fills with light brand accents on section headers.",
+      "find_regex": "class=\\\"section\\\"",
+      "replace": "class=\\\"section section-accent\\\""
+    }
+  ],
+  "edits_post": [
+    {
+      "path": "src/pdf/render.ts",
+      "description": "Expose formatted snapshot values; compute bars relative to Today=100; compute quarterlySavings; keep single formatter; no processorCharge in Page-1 waterfall.",
+      "find_regex": "([\\s\\S]*)",
+      "replace": "import { fmtMoney } from '../helpers/formatters';\\n\\nconst values = calculatedValues; // frozen Step-4 snapshot\\n\\nconst todayCost = values.todayCost ?? 0;\\nconst newProgramNetCost = values.newProgramNetCost ?? 0;\\nconst monthlySavings = values.monthlySavings ?? (todayCost - newProgramNetCost);\\nconst annualSavings = values.annualSavings ?? (monthlySavings * 12);\\nconst cardPriceIncreaseCollected = values.cardPriceIncreaseCollected ?? values.diffCollected ?? 0;\\n\\n// Bars scaled to Today = 100%\\nconst base = Math.max(todayCost || 1);\\nconst barTodayPct = Math.round((todayCost / base) * 100);\\nconst barProgramPct = Math.round((newProgramNetCost / base) * 100);\\nconst barSavingsPct = Math.min(100, Math.round((monthlySavings / base) * 100));\\n\\n// Industry + contact\\nconst industry = (values.industryType || '').toLowerCase();\\nconst isRestaurant = /restaurant|qsr|bar/.test(industry);\\nconst isRetail = !isRestaurant;\\nconst repName = values.repName || '';\\nconst repPhone = values.repPhone || '';\\nconst repEmail = values.repEmail || '';\\n\\nObject.assign(templateData, {\\n  todayCost: fmtMoney(todayCost),\\n  newProgramNetCost: fmtMoney(newProgramNetCost),\\n  monthlySavings: fmtMoney(monthlySavings),\\n  annualSavings: fmtMoney(annualSavings),\\n  cardPriceIncreaseCollected: fmtMoney(cardPriceIncreaseCollected),\\n  costReductionPct: (values.costReductionPct ?? 0).toFixed(2),\\n  barTodayPct, barProgramPct, barSavingsPct,\\n  quarterlySavings: fmtMoney((monthlySavings || 0) * 3),\\n  isRestaurant, isRetail,\\n  repName, repPhone, repEmail,\\n  merchantName: values.merchantName || '',\\n  reportDate: values.reportDate || ''\\n});"
+    }
+  ],
+  "verification": [
+    "Page-1 waterfall shows ONLY: Current Processing Cost (Today), − Price Differential Collected (Cards), = Net Processing Cost (Program). No 'Processor Charge on Cards' row.",
+    "Three-bar chart titled 'Processing Cost vs Savings (Monthly)' with Today=100%, Program=Net Cost, Savings; colors use Ultramarine for cost bars and Aqua for Savings.",
+    "Executive Summary has 'Dual Pricing' (no underscore), includes merchant and date, and no '(DMP)'.",
+    "Program KPI displays just the program name (no 'Compliant').",
+    "Savings Allocation prints $/month, $/quarter, $/year with industry-specific bullets (restaurant OR retail, not both).",
+    "Next Steps (It’s Easy) shows five steps and inline contact on Page 1 without breaking.",
+    "All repeated figures match to the cent across pages (single formatter); no 'undefined' strings.",
+    "Later pages use white rows with thin separators and Spruce header accents; heavy gray fills removed."
+  ]
+}
