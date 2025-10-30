@@ -728,35 +728,27 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
     }
   }
   
-  // Generate emotional context based on savings amount (matching UI logic)
+  // Generate professional context based on savings amount (matching UI logic)
   const roundedAmount = Math.floor(annualSavings / 5000) * 5000;
   let businessContext = '';
   
-  // Enhanced marketing messages based on savings tiers
+  // Professional, conservative messaging for banking-grade report
   if (annualSavings >= 50000) {
-    businessContext = "That's a new employee's full salary recovered";
+    businessContext = "Annual operational cost reduction";
   } else if (annualSavings >= 30000) {
-    businessContext = "Covers your entire yearly marketing budget";
+    businessContext = "Significant annual savings achieved";
   } else if (annualSavings >= 20000) {
-    businessContext = "Funds your equipment upgrades for the year";
-  } else if (annualSavings >= 15000) {
-    businessContext = "That's your quarterly rent covered";
+    businessContext = "Substantial cost optimization";
   } else if (annualSavings >= 10000) {
-    businessContext = "Covers 2 months of payroll costs";
-  } else if (annualSavings >= 7500) {
-    businessContext = "Your holiday bonus fund secured";
+    businessContext = "Material expense reduction";
   } else if (annualSavings >= 5000) {
-    businessContext = "That's a month of inventory paid for";
-  } else if (annualSavings >= 3000) {
-    businessContext = "Covers your monthly utilities forever";
+    businessContext = "Meaningful cost savings";
   } else if (annualSavings >= 2000) {
-    businessContext = "Your insurance premiums now covered";
+    businessContext = "Notable expense reduction";
   } else if (annualSavings >= 1000) {
-    businessContext = "That's your weekly supply costs handled";
-  } else if (annualSavings >= 500) {
-    businessContext = "Every penny counts for growth";
+    businessContext = "Positive impact on margins";
   } else {
-    businessContext = "Start keeping what you earn";
+    businessContext = "Incremental cost improvement";
   }
   
   return {

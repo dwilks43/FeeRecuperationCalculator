@@ -58,33 +58,25 @@ export default function ProcessingSavings({ results, onTooltip, programType }: P
   
   const savingsPercent = getTotalSavingsPercent();
   
-  // Get contextual comparison (emphasis on massive savings)
+  // Get contextual comparison (conservative banking tone)
   const getContextualComparison = () => {
-    // Enhanced marketing messages based on savings tiers
+    // Professional, conservative messaging
     if (annualSavings >= 50000) {
-      return "That's a new employee's full salary recovered";
+      return "Annual operational cost reduction";
     } else if (annualSavings >= 30000) {
-      return "Covers your entire yearly marketing budget";
+      return "Significant annual savings achieved";
     } else if (annualSavings >= 20000) {
-      return "Funds your equipment upgrades for the year";
-    } else if (annualSavings >= 15000) {
-      return "That's your quarterly rent covered";
+      return "Substantial cost optimization";
     } else if (annualSavings >= 10000) {
-      return "Covers 2 months of payroll costs";
-    } else if (annualSavings >= 7500) {
-      return "Your holiday bonus fund secured";
+      return "Material expense reduction";
     } else if (annualSavings >= 5000) {
-      return "That's a month of inventory paid for";
-    } else if (annualSavings >= 3000) {
-      return "Covers your monthly utilities forever";
+      return "Meaningful cost savings";
     } else if (annualSavings >= 2000) {
-      return "Your insurance premiums now covered";
+      return "Notable expense reduction";
     } else if (annualSavings >= 1000) {
-      return "That's your weekly supply costs handled";
-    } else if (annualSavings >= 500) {
-      return "Every penny counts for growth";
+      return "Positive impact on margins";
     } else {
-      return "Start keeping what you earn";
+      return "Incremental cost improvement";
     }
   };
 

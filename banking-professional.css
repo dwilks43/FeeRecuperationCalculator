@@ -1,0 +1,455 @@
+/* Banking-Professional PDF Styles - Conservative, Boardroom-Ready */
+
+/* Base Typography - System fonts only, banking-conservative */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #1a1a1a;
+  margin: 0;
+  padding: 0;
+}
+
+/* Page setup */
+@page {
+  size: Letter;
+  margin: 0.75in;
+  @bottom-center {
+    content: "Page " counter(page) " of " counter(pages);
+    font-size: 9px;
+    color: #666;
+  }
+}
+
+/* Typography Scale - Banking conservative */
+.h1 { 
+  font-size: 22px; 
+  font-weight: 600; 
+  color: #1a1a1a;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
+}
+
+.h2 { 
+  font-size: 14px; 
+  font-weight: 600; 
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+  line-height: 1.3;
+}
+
+.h3 { 
+  font-size: 12px; 
+  font-weight: 600; 
+  color: #333;
+  margin: 0 0 6px 0;
+}
+
+.small { 
+  font-size: 10px; 
+  color: #666;
+}
+
+.fine { 
+  font-size: 9px; 
+  color: #888;
+}
+
+/* Numeric formatting */
+.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums lining-nums;
+  font-feature-settings: "tnum" on, "lnum" on;
+}
+
+/* Page breaks */
+.page {
+  page-break-after: always;
+  page-break-inside: avoid;
+}
+
+.page:last-child {
+  page-break-after: auto;
+}
+
+.page-break {
+  page-break-before: always;
+}
+
+/* Professional header */
+.header-professional {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 24px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #003366;
+}
+
+.header-logo {
+  height: 32px;
+}
+
+.header-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #003366;
+}
+
+.header-meta {
+  font-size: 10px;
+  color: #666;
+  text-align: right;
+}
+
+/* Executive Summary Card */
+.executive-summary {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.executive-summary .title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #003366;
+  margin-bottom: 8px;
+}
+
+.executive-summary .content {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* Two-column grid */
+.two-column-grid {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  gap: 20px;
+}
+
+.column-left {
+  display: table-cell;
+  width: 60%;
+  padding-right: 20px;
+  vertical-align: top;
+}
+
+.column-right {
+  display: table-cell;
+  width: 40%;
+  vertical-align: top;
+}
+
+/* KPI Cards - Professional */
+.kpi-grid {
+  display: table;
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.kpi-card {
+  display: table-cell;
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px;
+  text-align: center;
+  vertical-align: top;
+}
+
+.kpi-card + .kpi-card {
+  border-left: none;
+}
+
+.kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.kpi-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #003366;
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 2px;
+}
+
+.kpi-note {
+  font-size: 9px;
+  color: #888;
+}
+
+.kpi-tag {
+  display: inline-block;
+  background: #28a745;
+  color: white;
+  font-size: 8px;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  margin-top: 4px;
+}
+
+/* Comparison Bars */
+.comparison-chart {
+  background: #fafafa;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.comparison-row {
+  margin-bottom: 10px;
+}
+
+.comparison-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 2px;
+}
+
+.bar-container {
+  background: #e9ecef;
+  height: 20px;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+}
+
+.bar-fill {
+  height: 100%;
+  background: #003366;
+  display: inline-block;
+}
+
+.bar-fill.current {
+  background: #dc3545;
+}
+
+.bar-fill.program {
+  background: #28a745;
+}
+
+.bar-value {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  font-weight: 600;
+  color: white;
+}
+
+/* Mini Waterfall Table */
+.waterfall-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 8px;
+  font-size: 11px;
+}
+
+.waterfall-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.waterfall-table td:first-child {
+  text-align: left;
+  color: #333;
+}
+
+.waterfall-table td:last-child {
+  text-align: right;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.waterfall-table tr.total td {
+  border-top: 2px solid #003366;
+  border-bottom: 2px solid #003366;
+  font-weight: 700;
+  color: #003366;
+}
+
+.waterfall-table tr.subtraction td:last-child::before {
+  content: "− ";
+}
+
+/* Decision Support Sections */
+.decision-section {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 12px;
+  margin-bottom: 16px;
+}
+
+.decision-section .title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #003366;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 1px solid #e9ecef;
+}
+
+.decision-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.decision-list li {
+  font-size: 11px;
+  color: #333;
+  margin-bottom: 6px;
+  padding-left: 16px;
+  position: relative;
+}
+
+.decision-list li::before {
+  content: "•";
+  color: #003366;
+  position: absolute;
+  left: 0;
+}
+
+.allocation-amount {
+  font-weight: 600;
+  color: #003366;
+}
+
+/* Next Steps */
+.next-steps {
+  background: #f0f4f8;
+  border: 1px solid #003366;
+  border-radius: 4px;
+  padding: 12px;
+}
+
+.next-steps .title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #003366;
+  margin-bottom: 8px;
+}
+
+.step-number {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: #003366;
+  color: white;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 10px;
+  line-height: 20px;
+  margin-right: 8px;
+}
+
+.contact-line {
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid #dee2e6;
+  font-size: 11px;
+  color: #333;
+}
+
+.contact-line strong {
+  color: #003366;
+}
+
+/* Professional tables */
+.table-professional {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  margin-bottom: 16px;
+}
+
+.table-professional th {
+  background: #f8f9fa;
+  border-bottom: 2px solid #dee2e6;
+  padding: 8px;
+  text-align: left;
+  font-weight: 600;
+  color: #003366;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table-professional td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #e9ecef;
+  color: #333;
+}
+
+.table-professional td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.table-professional tr:hover {
+  background: #f8f9fa;
+}
+
+/* Footer */
+.footer-professional {
+  margin-top: 40px;
+  padding-top: 12px;
+  border-top: 1px solid #dee2e6;
+  font-size: 9px;
+  color: #888;
+  display: table;
+  width: 100%;
+}
+
+.footer-left {
+  display: table-cell;
+}
+
+.footer-right {
+  display: table-cell;
+  text-align: right;
+}
+
+/* Hide marketing elements */
+.urgency-bar,
+.cta-box,
+.impact-card::before,
+.hero-amount::before,
+@keyframes pulse,
+@keyframes bounce {
+  display: none !important;
+}
+
+/* Clean, professional cards */
+.card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 16px;
+  margin-bottom: 16px;
+  page-break-inside: avoid;
+}
+
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #003366;
+  margin-bottom: 12px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid #e9ecef;
+}

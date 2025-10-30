@@ -1,0 +1,126 @@
+Objective
+
+Polish the PDF output for the Fee Recovery report to a professional, banking-grade Page 1 while keeping the existing data and downstream pages intact. Keep the left side as a 1-to-1 of our UI metrics, add a brief Executive Summary above it, and convert the right side into a decision column (Savings Allocation, Service & Implementation, Next Steps). Move Customer Information to Page 2. Keep DocRaptor/Prince-CSS constraints in mind (no external fonts, conservative layout).
+
+Scope of Work
+
+Page 1 only: new header + two-column layout.
+
+Force Customer Information and Inputs/Assumptions to Page 2.
+
+Light CSS nudge for banking tone (type scale, spacing, number alignment).
+
+No recomputation: all numbers are rendered from the frozen calculatedValues snapshot.
+
+Page 1 – Structure
+
+Add a top card titled Executive Summary with one paragraph:
+
+“This analysis is presented by Dynamic Merchant Processing (DMP) to illustrate the savings realized from the {{programType}} program based on inputs provided for {{merchantName}} on {{reportDate}}. Figures are estimates derived from the current processing profile and card-mix assumptions.”
+
+Below it, create a two-column grid (≈ 1.6:1 ratio).
+
+Left Column (keep the UI truth)
+
+Heading: Your Monthly Impact (keep this title).
+
+Three KPIs (same data as current UI):
+
+Monthly Savings (Est.) → ${monthlySavings} and “Annualized: ${annualSavings}”
+
+Cost Reduction vs Today → ${costReductionPct}%
+
+Program → ${programType} with a small “Compliant” tag
+
+Add a simple two-bar comparison (Today vs With Program). Scale both bars to the max of the two costs so the longer bar is 100%. Display ${todayCost} and ${newProgramNetCost} to the right.
+
+Add a mini waterfall table showing:
+
+Current Processing Cost → ${todayCost}
+
+Processor Charge on Cards → ${processorCharge}
+
+− Price Differential Collected → ${diffCollected}
+
+= Net Processing Cost (Program) → ${newProgramNetCost}
+
+Include a one-line caption: “Details and assumptions appear on Page 2.”
+
+Right Column (decision support, no compliance block)
+
+Savings Allocation Plan (3 bullets):
+
+${monthlySavings} per month → short use case (e.g., allocation1)
+
+quarterlySavings = monthlySavings * 3 → allocation2
+
+${annualSavings} per year → allocation3
+Use concise, vertical-specific copy the rep can set (e.g., restaurants: “two server shifts/week”, “beer/wine reorder”, “handheld upgrade”).
+
+Service & Implementation
+
+Three bullets, banking-calm tone:
+
+Best-in-class service, led by POS professionals who manage the changeover end-to-end.
+
+Structured onboarding with menu/config migration and staff orientation.
+
+Post-go-live support via rapid-response service desk.
+
+Next Steps (no QR):
+
+3 steps: Confirm inputs & program → Schedule installation window → Go live and review first statement to verify savings.
+
+Contact line: rep name, email (mailto), phone.
+
+Page 2 and Later
+
+Insert a page break after the Page 1 block so Customer Information and Inputs & Assumptions start at the top of Page 2.
+
+Leave existing detailed tables and appendix content as-is, aside from the global style updates below.
+
+Styling Guardrails (DocRaptor/Prince-CSS friendly)
+
+Keep system font stack (no external fonts). Base 12px; H1 ~22px; H2 ~14px; small ~10px.
+
+Use tabular/lining numerals for all numeric cells; right-align money/percents.
+
+Light card borders, generous padding, muted brand palette (one primary + neutral grays).
+
+Add page numbers in the footer if not already present.
+
+Avoid awkward splits: apply break-inside: avoid to KPI cards and tables.
+
+Data & Formatting Rules
+
+Single source of truth: All numbers must come from the frozen Step-4 snapshot (calculatedValues). Do not recompute in the template.
+
+Rounding consistency: One shared currency/percent formatter; every repeated figure must match everywhere.
+
+Bar widths: todayBarPct and newProgBarPct scaled against max(todayCost, newProgramNetCost).
+
+Derived values: quarterlySavings = monthlySavings * 3.
+
+Null safety: Guard optional fields (e.g., city/state) to avoid “undefinedundefined”. Hide rows/cards if the underlying value is null/empty.
+
+Content Hygiene
+
+Keep “Your Monthly Impact” title (user preference).
+
+Use Executive Summary tone at the top; remove salesy taglines (no “Start keeping what you earn”; no urgency clocks).
+
+Show the “Trusted by …” line once elsewhere (footer or last page), not on Page 1.
+
+Acceptance Criteria
+
+Page 1 shows: Executive Summary paragraph, left column with KPIs + simple compare + mini waterfall, right column with Savings Allocation, Service & Implementation, Next Steps.
+
+Customer Information begins at the top of Page 2.
+
+All numeric columns are aligned; repeated figures are identical across the document.
+
+No visual regressions on later pages; no overflow or awkward page breaks.
+
+No missing/undefined placeholders rendered; no external font requests.
+
+The PDF feels conservative and boardroom-ready (banking tone), with the UI truth preserved.
