@@ -6,6 +6,23 @@ The calculator takes various merchant parameters (monthly credit card volume, mo
 
 **New Sales-Focused UI Design (October 2025)**: The interface has been transformed from a technical/mathematical presentation to an emotionally impactful sales tool. Key changes include a hero "Your Monthly Impact" section with prominent savings display, business context phrases like "That's your holiday marketing budget covered", and technical details hidden in a collapsible accordion to reduce cognitive load.
 
+## Recent PDF v1.1 Updates (October 2025 - Banking-Grade Polish)
+- **DMP Brand Palette Applied**: Updated all colors to official DMP brand colors
+  - Ultramarine (#004ED3) for primary branding
+  - Aqua (#2BD8C2) for accents
+  - Spruce (#00937B) for positive indicators
+  - Ink (#0B2340) for text
+  - Muted (#6A6F7A) for secondary text
+  - Line (#E6E8EC) for borders
+  - BG (#F7F9FC) for subtle backgrounds
+- **Executive Summary Refined**: Removed "(DMP)" text, improved professional tone
+- **Compliant Chip Removed**: Cleaned up Program KPI display
+- **3-Bar Processing Cost Chart**: New "Processing Cost vs Savings (Monthly)" with Today/Program/Savings bars
+- **Industry-Specific Savings Allocation**: Tailored messages for restaurant/retail businesses
+- **Enhanced Next Steps Section**: Added "It's Easy" tagline with contact box featuring sales rep details
+- **Professional Contact Box**: Clear call-to-action with "Ready to Get Started?" and formatted contact info
+- **Brand Tints Applied**: Softened all gray bands using brand colors throughout PDF
+
 ## Recent UI & PDF Updates (October 2025)
 - **Sales-Focused UI Transformation**: Complete redesign from technical to emotional presentation
   - Hero "Your Monthly Impact" section with prominent savings number ($X,XXX.XX)
