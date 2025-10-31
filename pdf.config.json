@@ -128,7 +128,12 @@
           {
             "type": "custom",
             "colSpan": 12,
-            "template": "<div class='kpi-grid'><div class='kpi-card'><div class='kpi-label'>Monthly Savings (Est.)</div><div class='kpi-value'>{{ FORMAT.money(metrics.monthlySavings) }}</div><div class='kpi-note'>Annualized: {{ FORMAT.money(metrics.annualSavings) }}</div></div><div class='kpi-card'><div class='kpi-label'>Cost Reduction vs Today</div><div class='kpi-value'>{{ FORMAT.percent(metrics.costReductionPct) }}</div><div class='kpi-note'>of processing eliminated</div></div><div class='kpi-card'><div class='kpi-label'>Program</div><div class='kpi-value small'>{{ metrics.programType }}</div></div></div><div class='comparison-chart'><div class='h2'>Processing Cost vs Savings (Monthly)</div><table class='waterfall-table'><tr><td>Current Processing Cost</td><td class='num'>{{ FORMAT.money(metrics.currentCost) }}</td></tr><tr><td>Net Cost With Program</td><td class='num'>{{ FORMAT.money(metrics.newProgramNetCost) }}</td></tr><tr><td>Monthly Savings</td><td class='num'>{{ FORMAT.money(metrics.monthlySavings) }}</td></tr></table><div class='fine'>Details and assumptions appear on Page 2.</div></div><div style='page-break-after:always;'></div>"
+            "template": "<div class='kpi-grid'><div class='kpi-card'><div class='kpi-label'>Monthly Savings (Est.)</div><div class='kpi-value'>{{ FORMAT.money(metrics.monthlySavings) }}</div><div class='kpi-note'>Annualized: {{ FORMAT.money(metrics.annualSavings) }}</div></div><div class='kpi-card'><div class='kpi-label'>Cost Reduction vs Today</div><div class='kpi-value'>{{ FORMAT.percent(metrics.costReductionPct) }}</div><div class='kpi-note'>of processing eliminated</div></div><div class='kpi-card'><div class='kpi-label'>Program</div><div class='kpi-value small'>{{ metrics.programType }}</div></div></div><div class='comparison-chart'><div class='h2'>Processing Cost vs Savings (Monthly)</div><table class='waterfall-table'><tr><td>Current Processing Cost</td><td class='num'>{{ FORMAT.money(metrics.currentCost) }}</td></tr><tr><td>Net Cost With Program</td><td class='num'>{{ FORMAT.money(metrics.newProgramNetCost) }}</td></tr><tr><td>Monthly Savings</td><td class='num'>{{ FORMAT.money(metrics.monthlySavings) }}</td></tr></table><div class='fine'>Details and assumptions appear on Page 2.</div></div>"
+          },
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div class='page' style='page-break-after:always;height:1px;'>&nbsp;</div>"
           }
         ]
       },
