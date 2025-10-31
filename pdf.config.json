@@ -70,6 +70,54 @@
         "bgLight": "#F7F9FC",
         "bgSubtle": "#fafafa",
         "white": "#ffffff"
+      },
+      "typography": {
+        "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+        "h1": {
+          "size": 22,
+          "weight": 800
+        },
+        "h2": {
+          "size": 16,
+          "weight": 700
+        },
+        "h3": {
+          "size": 12,
+          "weight": 700
+        },
+        "body": {
+          "size": 10,
+          "weight": 400
+        },
+        "small": {
+          "size": 9,
+          "weight": 400
+        },
+        "label": {
+          "size": 10,
+          "weight": 600,
+          "color": "#0B2340"
+        },
+        "value": {
+          "size": 10,
+          "weight": 600,
+          "color": "#0B2340"
+        },
+        "fine": {
+          "size": 9,
+          "weight": 400,
+          "color": "#6A6F7A"
+        }
+      },
+      "borders": {
+        "radius": 8,
+        "hairline": "1px solid #E6E8EC"
+      },
+      "spacing": {
+        "colGap": 16,
+        "cardPadding": 12,
+        "blockY": 16,
+        "rowY": 8
       }
     },
     "pages": [
