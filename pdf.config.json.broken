@@ -1,0 +1,326 @@
+{
+  "version": "2.0.0-banking-professional",
+  "pdf": {
+    "rendering": {
+      "sourceOfTruth": "ui",
+      "noNewMath": true,
+      "bindStrategy": "byKey",
+      "interpolateStrings": true,
+      "fallbackNullToEmpty": true
+    },
+    "dataBindings": {
+      "merchant": {
+        "name": "inputs.merchant.name",
+        "contactName": "inputs.merchant.contactName",
+        "phone": "inputs.merchant.phone",
+        "email": "inputs.merchant.email"
+      },
+      "meta": {
+        "reportId": "ui.report.id",
+        "reportDate": "ui.report.dateISO"
+      },
+      "metrics": {
+        "monthlySavings": "results.netMonthly",
+        "annualSavings": "results.annualSavings",
+        "quarterlySavings": "results.quarterlySavings",
+        "costReductionPct": "results.costReductionPct",
+        "isRetail": "inputs.businessType === \"RETAIL\"",
+        "isRestaurant": "inputs.businessType === \"RESTAURANT_QSR\"",
+        "currentCost": "results.currentMonthlyProcessingFee",
+        "diffCollected": "results.totalPriceDiffCollected",
+        "newProgramNetCost": "results.newProgramNetCost",
+        "programType": "inputs.programType === \"DUAL_PRICING\" ? \"Dual Pricing\" : inputs.programType === \"CASH_DISCOUNTING\" ? \"Cash Discounting\" : \"Supplemental Fee\""
+      },
+      "customerInformation": "ui.sections.customerInformation",
+      "inputParameters": "ui.sections.inputParameters",
+      "liveVolumeBreakdown": "ui.sections.liveVolumeBreakdown",
+      "monthlyProcessingSavings": "ui.sections.monthlyProcessingSavings",
+      "monthlySavings": "ui.monthlySavings.items",
+      "brand": {
+        "logoUrl": "inputs.internal.logo"
+      },
+      "contacts": {
+        "sales": {
+          "name": "inputs.salesRep?.name",
+          "phone": "inputs.salesRep?.phone",
+          "email": "inputs.salesRep?.email"
+        }
+      }
+    },
+    "theme": {
+      "colors": {
+        "primary": "#004ED3",
+        "ultramarine": "#004ED3",
+        "aqua": "#2BD8C2",
+        "spruce": "#00937B",
+        "ink": "#0B2340",
+        "muted": "#6A6F7A",
+        "line": "#E6E8EC",
+        "bg": "#F7F9FC",
+        "secondary": "#2BD8C2",
+        "success": "#00937B",
+        "danger": "#dc3545",
+        "neutral90": "#0B2340",
+        "neutral70": "#0B2340",
+        "neutral50": "#6A6F7A",
+        "neutral30": "#888",
+        "neutral10": "#E6E8EC",
+        "bgLight": "#F7F9FC",
+        "bgSubtle": "#fafafa",
+        "white": "#ffffff"
+      },
+      "typography": {
+        "fontFamily": "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif",
+        "h1": {
+          "size": 22,
+          "weight": 600,
+          "color": "neutral90"
+        },
+        "h2": {
+          "size": 14,
+          "weight": 600,
+          "color": "neutral90"
+        },
+        "h3": {
+          "size": 12,
+          "weight": 600,
+          "color": "neutral70"
+        },
+        "body": {
+          "size": 11,
+          "weight": 400,
+          "color": "neutral70"
+        },
+        "small": {
+          "size": 10,
+          "weight": 400,
+          "color": "neutral50"
+        },
+        "fine": {
+          "size": 9,
+          "weight": 400,
+          "color": "neutral30"
+        },
+        "label": {
+          "size": 10,
+          "weight": 600,
+          "color": "neutral50"
+        },
+        "value": {
+          "size": 11,
+          "weight": 500,
+          "color": "neutral90"
+        }
+      },
+      "layout": {
+        "pageWidthIn": 8.5,
+        "pageHeightIn": 11,
+        "marginIn": 0.75,
+        "gridGap": 20,
+        "cardPadding": 16
+      },
+      "borders": {
+        "radius": 4,
+        "standard": "1px solid #dee2e6",
+        "emphasis": "2px solid #003366"
+      }
+    },
+    "formatting": {
+      "currency": {
+        "decimals": 2,
+        "thousands": true,
+        "style": "leadingMinus",
+        "symbol": "$",
+        "align": "right"
+      },
+      "percent": {
+        "decimals": 1,
+        "suffix": "%",
+        "thousands": false,
+        "style": "leadingMinus",
+        "align": "right"
+      },
+      "normalizePercent": {
+        "mode": "auto",
+        "thresholdGtOneTreatAsPercent": true
+      },
+      "tabularNumbers": true
+    },
+    "pages": [
+      {
+        "name": "Executive",
+        "header": {
+          "title": "<div class='header-professional'><img class='header-logo' src='{{ brand.logoUrl }}' alt='DMP'/></div>",
+          "showOnPage": 1
+        },
+        "layout": {
+          "columns": 12,
+          "gap": 0
+        },
+        "body": [
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div style='text-align: center; margin-bottom: 20px;'>\n  <div class='h1' style='color: #004ED3;'>Fee Recovery Analysis</div>\n  <div class='title-sub'>{{ merchant.name }} • {{ meta.reportDate }} • Report #{{ meta.reportId }}</div>\n</div>"
+          },
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div class='grid-12'>\n  <!-- Three KPI Cards -->\n  <div class='col-4'>\n    <div class='kpi-card'>\n      <div class='kpi-label'>Monthly Savings (Est.)</div>\n      <div class='kpi-value'>{{ FORMAT.money(metrics.monthlySavings) }}</div>\n    </div>\n  </div>\n  <div class='col-4'>\n    <div class='kpi-card'>\n      <div class='kpi-label'>Cost Reduction vs Today</div>\n      <div class='kpi-value'>{{ FORMAT.percent(metrics.costReductionPct, 0) }}</div>\n    </div>\n  </div>\n  <div class='col-4'>\n    <div class='kpi-card'>\n      <div class='kpi-label'>Program</div>\n      <div class='kpi-value'>{{ metrics.programType }}</div>\n    </div>\n  </div>\n</div>\n\n<!-- 3-Row Comparison Table -->\n<div class='section'>\n  <div class='h2'>Processing Cost vs Savings (Monthly)</div>\n  <table class='waterfall-table'>\n    <tr>\n      <td class='waterfall-label'>Current Processing Cost</td>\n      <td class='waterfall-value negative'>{{ FORMAT.money(metrics.currentCost) }}</td>\n    </tr>\n    <tr>\n      <td class='waterfall-label'>Net Cost With Program</td>\n      <td class='waterfall-value negative'>{{ FORMAT.money(metrics.newProgramNetCost) }}</td>\n    </tr>\n    <tr>\n      <td class='waterfall-label'>Monthly Savings</td>\n      <td class='waterfall-value positive'>{{ FORMAT.money(metrics.monthlySavings) }}</td>\n    </tr>\n  </table>\n</div>"
+          }
+        ],
+        "footer": {
+          "left": "This quote is provided as an estimate of potential savings only. Actual results may vary.",
+          "right": "© DMP — Confidential"
+        }
+      },
+      {
+        "name": "Details",
+        "header": {
+          "title": "",
+          "showOnPage": 0
+        },
+        "layout": {
+          "columns": 12,
+          "gap": 16
+        },
+        "body": [
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div class='page-break'></div>"
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "{{ customerInfo.title }}",
+            "table": {
+              "cols": [
+                {
+                  "key": "label",
+                  "title": "Field",
+                  "align": "left"
+                },
+                {
+                  "key": "value",
+                  "title": "Value",
+                  "align": "right"
+                }
+              ],
+              "rowsFrom": [
+                {
+                  "from": "customerInfo.rows"
+                }
+              ],
+              "valueFormatHintKey": "format",
+              "tableClass": "table-professional"
+            }
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "Inputs & Assumptions",
+            "table": {
+              "cols": [
+                {
+                  "key": "label",
+                  "title": "Parameter",
+                  "align": "left"
+                },
+                {
+                  "key": "value",
+                  "title": "Value",
+                  "align": "right"
+                }
+              ],
+              "rowsFrom": [
+                {
+                  "from": "inputParams.rows"
+                }
+              ],
+              "valueFormatHintKey": "format",
+              "tableClass": "table-professional"
+            }
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "{{ liveVolume.title }}",
+            "note": "{{ liveVolume.note }}",
+            "table": {
+              "cols": [
+                {
+                  "key": "label",
+                  "title": "Calculation",
+                  "align": "left"
+                },
+                {
+                  "key": "value",
+                  "title": "Amount",
+                  "align": "right"
+                }
+              ],
+              "rowsFrom": [
+                {
+                  "from": "liveVolume.rows"
+                }
+              ],
+              "valueFormatHintKey": "format",
+              "tableClass": "table-professional"
+            }
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "{{ monthlySavings.title }}",
+            "table": {
+              "cols": [
+                {
+                  "key": "label",
+                  "title": "Item",
+                  "align": "left"
+                },
+                {
+                  "key": "value",
+                  "title": "Value",
+                  "align": "right"
+                }
+              ],
+              "rowsFrom": [
+                {
+                  "from": "monthlySavings.rows"
+                }
+              ],
+              "valueFormatHintKey": "format",
+              "tableClass": "table-professional"
+            }
+          }
+        ],
+        "footer": {
+          "left": "Trusted by 2,000+ businesses nationwide",
+          "right": "© DMP — Confidential"
+        }
+      }
+    ]
+  },
+  "styles": {
+    "globalCss": "body{ font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;font-size:12px;line-height:1.5;color:#0B2340;margin:0;padding:0;}@page{ size:Letter;margin:0.75in;@bottom-center{ content:'Page ' counter(page) ' of ' counter(pages);font-size:9px;color:#6A6F7A;}}.h1{ font-size:22px;font-weight:600;color:#0B2340;margin:0 0 12px 0;line-height:1.2;}.h2{ font-size:14px;font-weight:600;color:#0B2340;margin:0 0 8px 0;line-height:1.3;}.h3{ font-size:12px;font-weight:600;color:#0B2340;margin:0 0 6px 0;}.small{ font-size:10px;color:#6A6F7A;}.fine{ font-size:9px;color:#6A6F7A;}.num{ text-align:right;font-variant-numeric:tabular-nums lining-nums;font-feature-settings:'tnum' on, 'lnum' on;}.page{ page-break-after:always;page-break-inside:avoid;}.page:last-child{ page-break-after:auto;}.page-break{ page-break-before:always;}.header-professional{ display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:24px;padding-bottom:8px;border-bottom:2px solid #004ED3;}.header-logo{ height:32px;}.header-title{ font-size:16px;font-weight:600;color:#004ED3;}.header-meta{ font-size:10px;color:#6A6F7A;text-align:right;}.executive-summary{ background:#F7F9FC;border:1px solid #E6E8EC;border-radius:4px;padding:16px;margin-bottom:20px;}.executive-summary .title{ font-size:14px;font-weight:600;color:#004ED3;margin-bottom:8px;}.executive-summary .content{ font-size:11px;line-height:1.6;color:#0B2340;}.two-column-grid{ display:table;width:100%;table-layout:fixed;gap:20px;}.column-left{ display:table-cell;width:60%;padding-right:20px;vertical-align:top;}.column-right{ display:table-cell;width:40%;vertical-align:top;}.kpi-grid{ display:table;width:100%;margin-bottom:16px;}.kpi-card{ display:table-cell;background:white;border:1px solid #E6E8EC;border-radius:4px;padding:12px;text-align:center;vertical-align:top;}.kpi-card + .kpi-card{ border-left:none;}.kpi-label{ font-size:10px;font-weight:600;color:#6A6F7A;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;}.kpi-value{ font-size:20px;font-weight:700;color:#004ED3;font-variant-numeric:tabular-nums;margin-bottom:2px;}.kpi-note{ font-size:9px;color:#888;}.kpi-tag{ display:inline-block;background:#28a745;color:white;font-size:8px;padding:2px 6px;border-radius:2px;text-transform:uppercase;margin-top:4px;}.comparison-chart{ background:#F7F9FC;border:1px solid #E6E8EC;border-radius:4px;padding:12px;margin-bottom:16px;}.comparison-row{ margin-bottom:10px;}.comparison-label{ font-size:10px;font-weight:600;color:#0B2340;margin-bottom:2px;}.bar-container{ background:#E6E8EC;height:20px;border-radius:2px;position:relative;overflow:hidden;}.bar-fill{ height:100%;background:#003366;display:inline-block;}.bar-fill.current{ background:#dc3545;}.bar-fill.program{ background:#28a745;}.bar-value{ position:absolute;right:4px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:600;color:white;}.waterfall-table{ width:100%;border-collapse:collapse;margin-bottom:8px;font-size:11px;}.waterfall-table td{ padding:6px 8px;border-bottom:1px solid #E6E8EC;}.waterfall-table td:first-child{ text-align:left;color:#0B2340;}.waterfall-table td:last-child{ text-align:right;font-weight:600;font-variant-numeric:tabular-nums;}.waterfall-table tr.total td{ border-top:2px solid #004ED3;border-bottom:2px solid #004ED3;font-weight:700;color:#004ED3;}.waterfall-table tr.subtraction td:last-child::before{ content:'− ';}.decision-section{ background:white;border:1px solid #E6E8EC;border-radius:4px;padding:12px;margin-bottom:16px;}.decision-section .title{ font-size:12px;font-weight:600;color:#004ED3;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #E6E8EC;}.decision-list{ list-style:none;padding:0;margin:0;}.decision-list li{ font-size:11px;color:#0B2340;margin-bottom:6px;padding-left:16px;position:relative;}.decision-list li::before{ content:'•';color:#004ED3;position:absolute;left:0;}.allocation-amount{ font-weight:600;color:#004ED3;}.next-steps{ background:#F7F9FC;border:1px solid #004ED3;border-radius:4px;padding:12px;}.next-steps .title{ font-size:12px;font-weight:600;color:#004ED3;margin-bottom:8px;}.step-number{ display:inline-block;width:20px;height:20px;background:#004ED3;color:white;text-align:center;border-radius:50%;font-size:10px;line-height:20px;margin-right:8px;}.contact-box{ background:#F7F9FC;border:1px solid #004ED3;border-radius:4px;padding:12px;margin-top:12px;}.contact-title{ font-size:11px;font-weight:600;color:#004ED3;margin-bottom:8px;}.contact-line{ font-size:11px;color:#0B2340;line-height:1.4;}.contact-line strong{ color:#004ED3;}.table-professional{ width:100%;border-collapse:collapse;font-size:11px;margin-bottom:16px;}.table-professional th{ background:#F7F9FC;border-bottom:2px solid #E6E8EC;padding:8px;text-align:left;font-weight:600;color:#004ED3;font-size:10px;text-transform:uppercase;letter-spacing:0.5px;}.table-professional td{ padding:6px 8px;border-bottom:1px solid #E6E8EC;color:#0B2340;}.table-professional td.num{ text-align:right;font-variant-numeric:tabular-nums;}.table-professional tr:hover{ background:#F7F9FC;}.footer-professional{ margin-top:40px;padding-top:12px;border-top:1px solid #E6E8EC;font-size:9px;color:#6A6F7A;display:table;width:100%;}.footer-left{ display:table-cell;}.footer-right{ display:table-cell;text-align:right;}.urgency-bar,.cta-box,.impact-card::before,.hero-amount::before{ display:none !important;}.card{ background:white;border:1px solid #E6E8EC;border-radius:4px;padding:16px;margin-bottom:16px;page-break-inside:avoid;}.card-title{ font-size:12px;font-weight:600;color:#004ED3;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid #E6E8EC;}",
+    "formatters": {
+      "money": {
+        "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; const s=v<0?'− ':''; return `${s}$${Math.abs(v).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})}` }"
+      },
+      "percent": {
+        "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return `${(v*100).toFixed(1)}%` }"
+      },
+      "number": {
+        "fn": "n => { const v=Number(n); if(!isFinite(v)) return '—'; return v.toLocaleString() }"
+      }
+    },
+    "valueRenderer": {
+      "fn": "(row)=>{ if(!row) return '—'; if(row.format==='money') return FORMAT.money(row.value); if(row.format==='percent') return FORMAT.percent(row.value); if(row.format==='number') return FORMAT.number(row.value); return row.value ?? '—'; }"
+    }
+  },
+  "guards": {
+    "hideEmptyRows": true
+  }
+}

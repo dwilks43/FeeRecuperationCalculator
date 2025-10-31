@@ -689,16 +689,99 @@ function generateCSS(config: PDFConfig): string {
         /* Global CSS from config */
         ${config.styles?.globalCss || ''}
         
-        /* Updated Title Styling - Centered */
-        .h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.2px; margin: 0; text-align: center; }
-        .title-sub { color: #6A6F7A; margin-bottom: 8px; text-align: center; }
+        /* Title Styling */
+        .h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.2px; margin: 0; }
+        .title-sub { color: #6A6F7A; margin-bottom: 8px; }
         .title-rule { height: 1px; background: #E6E8EC; width: 100%; margin: 6px 0 10px; }
         
-        /* Next Steps Horizontal Band */
-        .next-steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .next-steps-card { border: 1px solid #E6E8EC; border-radius: 12px; padding: 12px; background: #fff; break-inside: avoid; page-break-inside: avoid; }
+        /* Your Monthly Impact Hero Section */
+        .your-monthly-impact { margin: 20px 0; }
+        .hero-stats { display: grid; grid-template-columns: 2fr 1.5fr 1fr; gap: 16px; margin: 16px 0; }
+        .hero-main, .hero-secondary, .hero-tertiary { 
+          border: 1px solid #E6E8EC; 
+          border-radius: 12px; 
+          padding: 16px;
+          text-align: center;
+        }
+        .hero-main .label, .hero-secondary .label, .hero-tertiary .label {
+          font-size: 11px;
+          text-transform: uppercase;
+          color: #6A6F7A;
+          margin-bottom: 8px;
+        }
+        .hero-main .value {
+          font-size: 28px;
+          font-weight: 800;
+          color: #00937B;
+          margin: 8px 0;
+        }
+        .hero-secondary .value {
+          font-size: 24px;
+          font-weight: 700;
+          color: #004ED3;
+          margin: 8px 0;
+        }
+        .hero-tertiary .value-small {
+          font-size: 14px;
+          font-weight: 600;
+          color: #0B2340;
+        }
+        .hero-main .annual {
+          font-size: 11px;
+          color: #6A6F7A;
+        }
+        .hero-secondary .sub {
+          font-size: 10px;
+          color: #6A6F7A;
+        }
+        
+        /* Savings Allocation */
+        .savings-allocation { margin: 16px 0; }
+        .savings-allocation ul { list-style: none; padding: 0; }
+        .savings-allocation li { 
+          margin: 8px 0; 
+          padding-left: 16px; 
+          position: relative;
+          font-size: 11px;
+          color: #0B2340;
+        }
+        .savings-allocation li:before { 
+          content: "•"; 
+          position: absolute; 
+          left: 0;
+          color: #00937B;
+        }
+        
+        /* Service Implementation */
+        .service-implementation { margin: 16px 0; }
+        .service-implementation ul { list-style: none; padding: 0; }
+        .service-implementation li { 
+          margin: 8px 0; 
+          padding-left: 16px; 
+          position: relative;
+          font-size: 11px;
+          color: #0B2340;
+        }
+        .service-implementation li:before { 
+          content: "•"; 
+          position: absolute; 
+          left: 0;
+          color: #004ED3;
+        }
+        
+        /* Next Steps */
+        .next-steps { margin: 20px 0; border-top: 1px solid #E6E8EC; padding-top: 16px; }
+        .steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+        .step { padding: 8px; }
+        .step-number { font-size: 11px; font-weight: 700; color: #004ED3; margin-bottom: 4px; }
+        .step-text { font-size: 10px; color: #6A6F7A; }
+        
+        /* Waterfall Tables */
+        .simplified-waterfall { width: 100%; margin: 12px 0; }
+        .simplified-waterfall td { padding: 6px 0; }
+        
         .h3 { font-size: 12px; font-weight: 700; margin: 0 0 6px; }
-        .small { font-size: 10px; color: #6A6F7A; }
+        .footnote { font-size: 9px; color: #6A6F7A; margin-top: 8px; font-style: italic; }
     </style>
   `;
 }
