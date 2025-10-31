@@ -6,16 +6,7 @@ The calculator takes various merchant parameters (monthly credit card volume, mo
 
 **New Sales-Focused UI Design (October 2025)**: The interface has been transformed from a technical/mathematical presentation to an emotionally impactful sales tool. Key changes include a hero "Your Monthly Impact" section with prominent savings display, business context phrases like "That's your holiday marketing budget covered", and technical details hidden in a collapsible accordion to reduce cognitive load.
 
-## Recent PDF v1.4 Updates (October 2025 - Sales-Grade PDF)
-- **Centered Page-1 Title**: "Fee Recovery Analysis" centered at 20px with thin rule underneath
-- **Horizontal Next Steps Band**: Three-column "Next Steps (It's Easy)" layout locked on Page 1
-- **Humanized Program Labels**: "Dual Pricing" not "DUAL_PRICING" throughout PDF via humanizeProgram()
-- **Guarded Contact Fields**: Empty sales rep fields no longer display "undefined" or blank mailto links
-- **Professional Assumptions Card**: Added concise 3-bullet assumptions section
-- **Numeric Alignment**: All currency/percentage cells right-aligned with tabular numerals
-- **Inline CSS Styling**: Comprehensive CSS embedded directly in PDF template for consistent rendering
-
-## Previous PDF v1.3 Updates (October 2025 - Final Banking-Grade Polish)
+## Recent PDF v1.3 Updates (October 2025 - Final Banking-Grade Polish)
 - **Simplified Page-1 Waterfall**: Removed "Processor Charge on Cards" row for cleaner story
   - Now shows only 3 rows: Today Cost → Price Differential → Net Cost
   - Page-2 maintains detailed 8-row breakdown for technical reference

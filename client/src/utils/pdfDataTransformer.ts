@@ -1,6 +1,5 @@
 import { CalculatorInputs, CalculatorResults, CustomerInfo } from '@/types/calculator';
 import { formatCurrency } from './calculations';
-import { humanizeProgram, formatContact } from './pdfFormatters';
 
 /**
  * v1.7.3 PDF Data Transformer
@@ -150,10 +149,14 @@ function buildCustomerInfoRows(customerInfo: Partial<CustomerInfo>): any[] {
 function buildInputParamsRows(inputs: CalculatorInputs): any[] {
   const rows = [];
   
-  // Program Type (humanized for display)
+  // Program Type
   rows.push({ 
     label: 'Program Type', 
-    value: humanizeProgram(inputs.programType), 
+    value: inputs.programType === 'DUAL_PRICING' ? 
+      'Dual Pricing' : 
+      inputs.programType === 'CASH_DISCOUNTING' ? 
+      'Cash Discounting' : 
+      'Supplemental Fee', 
     format: 'text' 
   });
   
@@ -1106,16 +1109,6 @@ export function preparePdfData(
   // Build the UI model
   const uiModel = buildPdfUiModel(inputs, results, customerInfo);
   
-  // Format contact info with guards for empty fields
-  const contactFormatted = formatContact(
-    customerInfo.salesRepName,
-    customerInfo.salesRepEmail,
-    customerInfo.salesRepPhone
-  );
-  
-  // Add humanized program label
-  const programLabel = humanizeProgram(inputs.programType);
-  
   // Merge with existing calculator data (preserving backward compatibility)
   return {
     ...calculatorData,
@@ -1134,8 +1127,6 @@ export function preparePdfData(
     salesRepEmail: customerInfo.salesRepEmail || '',
     salesRepPhone: customerInfo.salesRepPhone || '',
     programType: inputs.programType,
-    programLabel: programLabel, // Add humanized label
-    contactFormatted: contactFormatted, // Add formatted contact info
     inputs: inputs,
     results: results
   };
