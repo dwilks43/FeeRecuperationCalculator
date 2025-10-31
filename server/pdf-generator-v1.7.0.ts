@@ -693,6 +693,12 @@ function generateCSS(config: PDFConfig): string {
         .h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.2px; margin: 0; }
         .title-sub { color: #6A6F7A; margin-bottom: 8px; }
         .title-rule { height: 1px; background: #E6E8EC; width: 100%; margin: 6px 0 10px; }
+        
+        /* Next Steps Horizontal Band */
+        .next-steps-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .next-steps-card { border: 1px solid #E6E8EC; border-radius: 12px; padding: 12px; background: #fff; break-inside: avoid; page-break-inside: avoid; }
+        .h3 { font-size: 12px; font-weight: 700; margin: 0 0 6px; }
+        .small { font-size: 10px; color: #6A6F7A; }
     </style>
   `;
 }
