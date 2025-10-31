@@ -247,7 +247,7 @@
       {
         "name": "Executive",
         "header": {
-          "title": "<div class='header-professional'><div><img class='header-logo' src='{{ brand.logoUrl }}' alt='DMP'/><span class='header-title'>Fee Recovery Analysis</span></div><div class='header-meta'>Report # {{ meta.reportId }}<br/>{{ meta.reportDate }}</div></div>",
+          "title": "<div class='header-professional'><img class='header-logo' src='{{ brand.logoUrl }}' alt='DMP'/></div>",
           "showOnPage": 1
         },
         "layout": {
@@ -258,7 +258,7 @@
           {
             "type": "custom",
             "colSpan": 12,
-            "template": "<div class='h1'>Fee Recovery Analysis</div>\n<div class='title-sub'>{{ merchant.name }} • {{ meta.reportDate }} • Report #{{ meta.reportId }}</div>\n<div class='title-rule'></div>\n<div class='executive-summary' style='margin-top: 16px;'><div class='title'>Executive Summary</div><div class='content'>This analysis is presented by Dynamic Merchant Processing to illustrate savings realized from the <strong>{{ metrics.programType }}</strong> program, based on inputs provided for {{ merchant.name }} on {{ meta.reportDate }}. Figures are estimates derived from the current processing profile and card-mix assumptions.</div></div>"
+            "template": "<div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;'>\n  <div class='h1' style='text-align: left; flex: 1; color: #004ED3;'>Fee Recovery Analysis</div>\n  <div style='text-align: right; color: #6A6F7A; font-size: 11px;'>\n    {{ meta.reportDate }} • Report #{{ meta.reportId }}\n  </div>\n</div>\n<div class='title-rule'></div>\n<div class='executive-summary' style='margin-top: 16px;'><div class='title'>Executive Summary</div><div class='content'>This analysis is presented by Dynamic Merchant Processing to illustrate savings realized from the <strong>{{ metrics.programType }}</strong> program, based on inputs provided for {{ merchant.name }} on {{ meta.reportDate }}. Figures are estimates derived from the current processing profile and card-mix assumptions.</div></div>"
           },
           {
             "type": "custom",
