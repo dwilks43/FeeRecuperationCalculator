@@ -689,9 +689,9 @@ function generateCSS(config: PDFConfig): string {
         /* Global CSS from config */
         ${config.styles?.globalCss || ''}
         
-        /* Updated Title Styling */
-        .h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.2px; margin: 0; }
-        .title-sub { color: #6A6F7A; margin-bottom: 8px; }
+        /* Updated Title Styling - Centered */
+        .h1 { font-size: 20px; font-weight: 800; letter-spacing: -0.2px; margin: 0; text-align: center; }
+        .title-sub { color: #6A6F7A; margin-bottom: 8px; text-align: center; }
         .title-rule { height: 1px; background: #E6E8EC; width: 100%; margin: 6px 0 10px; }
         
         /* Next Steps Horizontal Band */

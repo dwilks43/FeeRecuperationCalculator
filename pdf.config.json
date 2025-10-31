@@ -9,139 +9,42 @@
       "fallbackNullToEmpty": true
     },
     "dataBindings": {
-      "brand": {
-        "logoUrl": [
-          "ui.brand.logoUrl",
-          "ui.brand.logo",
-          "ui.logoUrl",
-          "logoBase64"
-        ]
+      "merchant": {
+        "name": "inputs.merchant.name",
+        "contactName": "inputs.merchant.contactName",
+        "phone": "inputs.merchant.phone",
+        "email": "inputs.merchant.email"
       },
       "meta": {
-        "reportId": [
-          "ui.report.id",
-          "report.id"
-        ],
-        "reportDate": [
-          "ui.report.dateISO",
-          "report.createdAtISO"
-        ]
-      },
-      "merchant": {
-        "name": [
-          "ui.sections.customerInformation.rows[0].value",
-          "inputs.businessName",
-          "'Business'"
-        ]
-      },
-      "salesImpact": {
-        "heroNumber": [
-          "ui.sections.salesImpact.heroNumber"
-        ],
-        "annualImpact": [
-          "ui.sections.salesImpact.annualImpact"
-        ],
-        "costReduction": [
-          "ui.sections.salesImpact.costReduction"
-        ]
+        "reportId": "ui.report.id",
+        "reportDate": "ui.report.dateISO"
       },
       "metrics": {
-        "monthlySavings": [
-          "ui.sections.salesImpact.heroNumber"
-        ],
-        "annualSavings": [
-          "ui.sections.salesImpact.annualImpact"
-        ],
-        "quarterlySavings": [
-          "ui.sections.salesImpact.quarterlySavings"
-        ],
-        "costReductionPct": [
-          "ui.sections.salesImpact.costReduction"
-        ],
-        "currentCost": [
-          "results.currentCost"
-        ],
-        "newProgramNetCost": [
-          "results.newCost"
-        ],
-        "processorCharge": [
-          "results.processorChargeCards"
-        ],
-        "diffCollected": [
-          "results.cardMarkupCollected"
-        ],
-        "programType": [
-          "inputs.programType"
-        ],
-        "businessType": [
-          "ui.sections.salesImpact.businessType",
-          "inputs.businessType",
-          "'RETAIL'"
-        ],
-        "isRestaurant": [
-          "ui.sections.salesImpact.isRestaurant"
-        ],
-        "isRetail": [
-          "ui.sections.salesImpact.isRetail"
-        ]
+        "monthlySavings": "results.netMonthly",
+        "annualSavings": "results.annualSavings",
+        "quarterlySavings": "results.quarterlySavings",
+        "costReductionPct": "results.costReductionPct",
+        "isRetail": "inputs.businessType === \"RETAIL\"",
+        "isRestaurant": "inputs.businessType === \"RESTAURANT_QSR\"",
+        "currentCost": "results.currentMonthlyProcessingFee",
+        "diffCollected": "results.totalPriceDiffCollected",
+        "newProgramNetCost": "results.newProgramNetCost",
+        "programType": "inputs.programType === \"DUAL_PRICING\" ? \"Dual Pricing\" : inputs.programType === \"CASH_DISCOUNTING\" ? \"Cash Discounting\" : \"Supplemental Fee\""
       },
-      "salesRep": {
-        "name": [
-          "ui.sections.customerInformation.rows[6].value",
-          "inputs.salesRepName",
-          "'Your Representative'"
-        ],
-        "email": [
-          "ui.sections.customerInformation.rows[7].value",
-          "inputs.salesRepEmail",
-          "'sales@dmp.com'"
-        ],
-        "phone": [
-          "ui.sections.customerInformation.rows[8].value",
-          "inputs.salesRepPhone",
-          "'1-800-DMP-SAVE'"
-        ]
+      "customerInformation": "ui.sections.customerInformation",
+      "inputParameters": "ui.sections.inputParameters",
+      "liveVolumeBreakdown": "ui.sections.liveVolumeBreakdown",
+      "monthlyProcessingSavings": "ui.sections.monthlyProcessingSavings",
+      "monthlySavings": "ui.monthlySavings.items",
+      "brand": {
+        "logoUrl": "inputs.internal.logo"
       },
-      "customerInfo": {
-        "title": [
-          "ui.sections.customerInformation.title",
-          "'Customer Information'"
-        ],
-        "rows": [
-          "ui.sections.customerInformation.rows"
-        ]
-      },
-      "inputParams": {
-        "title": [
-          "ui.sections.inputParameters.title",
-          "'Input Parameters'"
-        ],
-        "rows": [
-          "ui.sections.inputParameters.rows"
-        ]
-      },
-      "liveVolume": {
-        "title": [
-          "ui.sections.liveVolumeBreakdown.title",
-          "'Technical Calculation Details'"
-        ],
-        "note": [
-          "ui.sections.liveVolumeBreakdown.note",
-          "ui.orderOfOperationsText"
-        ],
-        "rows": [
-          "ui.sections.liveVolumeBreakdown.rows"
-        ]
-      },
-      "monthlySavings": {
-        "title": [
-          "ui.sections.monthlyProcessingSavings.title",
-          "'Processing Cost Breakdown'"
-        ],
-        "rows": [
-          "ui.sections.monthlyProcessingSavings.rows",
-          "ui.monthlySavings.items"
-        ]
+      "contacts": {
+        "sales": {
+          "name": "inputs.salesRep?.name",
+          "phone": "inputs.salesRep?.phone",
+          "email": "inputs.salesRep?.email"
+        }
       }
     },
     "theme": {
@@ -258,12 +161,12 @@
           {
             "type": "custom",
             "colSpan": 12,
-            "template": "<div style='display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;'>\n  <div class='h1' style='text-align: left; flex: 1; color: #004ED3;'>Fee Recovery Analysis</div>\n  <div style='text-align: right; color: #6A6F7A; font-size: 11px;'>\n    {{ meta.reportDate }} • Report #{{ meta.reportId }}\n  </div>\n</div>\n<div class='title-rule'></div>\n<div class='executive-summary' style='margin-top: 16px;'><div class='title'>Executive Summary</div><div class='content'>This analysis is presented by Dynamic Merchant Processing to illustrate savings realized from the <strong>{{ metrics.programType }}</strong> program, based on inputs provided for {{ merchant.name }} on {{ meta.reportDate }}. Figures are estimates derived from the current processing profile and card-mix assumptions.</div></div>"
+            "template": "<div style='text-align: center; margin-bottom: 20px;'>\n  <div class='h1' style='color: #004ED3;'>Fee Recovery Analysis</div>\n  <div class='title-sub'>{{ merchant.name }} • {{ meta.reportDate }} • Report #{{ meta.reportId }}</div>\n</div>"
           },
           {
             "type": "custom",
             "colSpan": 12,
-            "template": "<div class='two-column-grid'><div class='column-left'><div class='h2'>Your Monthly Impact</div><div class='kpi-grid'><div class='kpi-card'><div class='kpi-label'>Monthly Savings (Est.)</div><div class='kpi-value'>{{ FORMAT.money(metrics.monthlySavings) }}</div><div class='kpi-note'>Annualized: {{ FORMAT.money(metrics.annualSavings) }}</div></div><div class='kpi-card'><div class='kpi-label'>Cost Reduction vs Today</div><div class='kpi-value'>{{ FORMAT.percent(metrics.costReductionPct) }}</div><div class='kpi-note'>of processing eliminated</div></div><div class='kpi-card'><div class='kpi-label'>Program</div><div class='kpi-value small'>{{ metrics.programType }}</div></div></div><div class='comparison-chart'><div class='h2'>Processing Cost vs Savings (Monthly)</div><div class='comparison-row'><div class='comparison-label'>Today (Current Cost)</div><div class='bar-container'><div class='bar-fill current' style='width:100%;background:#004ED3'><span class='bar-value'>{{ FORMAT.money(metrics.currentCost) }}</span></div></div></div><div class='comparison-row'><div class='comparison-label'>With Program (Net Cost)</div><div class='bar-container'><div class='bar-fill program' style='width:{{ Math.max(0, metrics.newProgramNetCost) > 0 ? (Math.abs(metrics.newProgramNetCost) / metrics.currentCost * 100) : 0 }}%;background:#004ED3;opacity:0.7'><span class='bar-value'>{{ FORMAT.money(metrics.newProgramNetCost) }}</span></div></div></div><div class='comparison-row'><div class='comparison-label'>Monthly Savings</div><div class='bar-container'><div class='bar-fill savings' style='width:{{ metrics.monthlySavings > 0 ? (metrics.monthlySavings / metrics.currentCost * 100) : 0 }}%;background:#00937B'><span class='bar-value'>{{ FORMAT.money(metrics.monthlySavings) }}</span></div></div></div></div><table class='waterfall-table'><tr><td>Current Processing Cost</td><td class='num'>{{ FORMAT.money(metrics.currentCost) }}</td></tr><tr class='subtraction'><td>Price Differential Collected (Cards)</td><td class='num'>{{ FORMAT.money(metrics.diffCollected) }}</td></tr><tr class='total'><td>Net Processing Cost (Program)</td><td class='num'>{{ FORMAT.money(metrics.newProgramNetCost) }}</td></tr></table><div class='fine'>Details and assumptions appear on Page 2.</div></div><div class='column-right'><div class='decision-section'><div class='title'>Savings Allocation Plan</div>{{#metrics.isRestaurant}}<ul class='decision-list'><li><span class='allocation-amount'>{{ FORMAT.money(metrics.monthlySavings) }}</span> per month → Offset two server shifts weekly</li><li><span class='allocation-amount'>{{ FORMAT.money(metrics.quarterlySavings) }}</span> per quarter → Smallwares/linen refresh or menu board updates</li><li><span class='allocation-amount'>{{ FORMAT.money(metrics.annualSavings) }}</span> per year → Replace aging kitchen equipment or expand catering</li></ul>{{/metrics.isRestaurant}}{{#metrics.isRetail}}<ul class='decision-list'><li><span class='allocation-amount'>{{ FORMAT.money(metrics.monthlySavings) }}</span> per month → Fund seasonal promotions and local advertising</li><li><span class='allocation-amount'>{{ FORMAT.money(metrics.quarterlySavings) }}</span> per quarter → Refresh inventory displays or POS upgrades</li><li><span class='allocation-amount'>{{ FORMAT.money(metrics.annualSavings) }}</span> per year → Store renovation or e-commerce expansion</li></ul>{{/metrics.isRetail}}</div><div class='decision-section'><div class='title'>Service & Implementation</div><ul class='decision-list'><li>Best-in-class service, led by POS professionals who manage the changeover end-to-end</li><li>Structured onboarding with menu/config migration and staff orientation</li><li>Post-go-live support via rapid-response service desk</li></ul></div><div class='section next-steps-row'>\n  <div class='next-steps-card'>\n    <div class='h3'>1) Confirm Inputs</div>\n    <div class='small'>Validate card mix, tax/tip, and price differential.</div>\n  </div>\n  <div class='next-steps-card'>\n    <div class='h3'>2) Schedule Install</div>\n    <div class='small'>Pick onboarding window; we prep config & staff.</div>\n  </div>\n  <div class='next-steps-card'>\n    <div class='h3'>3) Go Live</div>\n    <div class='small'><strong>Annualized impact:</strong> {{ FORMAT.money(metrics.annualSavings) }}</div>\n  </div>\n</div></div></div>"
+            "template": "<div class='grid-12'>\n  <!-- Three KPI Cards -->\n  <div class='col-4'>\n    <div class='kpi-card'>\n      <div class='kpi-label'>Monthly Savings (Est.)</div>\n      <div class='kpi-value'>{{ FORMAT.money(metrics.monthlySavings) }}</div>\n    </div>\n  </div>\n  <div class='col-4'>\n    <div class='kpi-card'>\n      <div class='kpi-label'>Cost Reduction vs Today</div>\n      <div class='kpi-value'>{{ FORMAT.percent(metrics.costReductionPct, 0) }}</div>\n    </div>\n  </div>\n  <div class='col-4'>\n    <div class='kpi-card'>\n      <div class='kpi-label'>Program</div>\n      <div class='kpi-value'>{{ metrics.programType }}</div>\n    </div>\n  </div>\n</div>\n\n<!-- 3-Row Comparison Table -->\n<div class='section'>\n  <div class='h2'>Processing Cost vs Savings (Monthly)</div>\n  <table class='waterfall-table'>\n    <tr>\n      <td class='waterfall-label'>Current Processing Cost</td>\n      <td class='waterfall-value negative'>{{ FORMAT.money(metrics.currentCost) }}</td>\n    </tr>\n    <tr>\n      <td class='waterfall-label'>Net Cost With Program</td>\n      <td class='waterfall-value negative'>{{ FORMAT.money(metrics.newProgramNetCost) }}</td>\n    </tr>\n    <tr>\n      <td class='waterfall-label'>Monthly Savings</td>\n      <td class='waterfall-value positive'>{{ FORMAT.money(metrics.monthlySavings) }}</td>\n    </tr>\n  </table>\n</div>"
           }
         ],
         "footer": {

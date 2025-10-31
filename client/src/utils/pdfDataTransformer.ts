@@ -1038,8 +1038,8 @@ export function buildPdfUiModel(
     liveVolumeRows = buildSupplementalFeeBreakdownRows(inputs, results);
   }
   
-  // Build sales impact section first (hero display)
-  const salesImpact = buildSalesImpactSection(inputs, results);
+  // Build sales impact section first (hero display) - REMOVED FROM PAGE 1
+  // const salesImpact = buildSalesImpactSection(inputs, results);
   
   // Build monthly savings items for technical breakdown
   const monthlySavingsItems = buildMonthlySavingsItems(inputs, results);
@@ -1048,7 +1048,7 @@ export function buildPdfUiModel(
   const uiModel = {
     ui: {
       sections: {
-        salesImpact: salesImpact,  // New hero section at the top
+        // salesImpact: salesImpact,  // Removed from Page 1 per simplified layout
         customerInformation: {
           title: 'Customer Information',
           rows: buildCustomerInfoRows(customerInfo)
@@ -1080,7 +1080,7 @@ export function buildPdfUiModel(
       orderOfOperationsText: orderOfOperationsText,
       // Include labels for PDF rendering
       labels: {
-        salesImpact: 'Your Monthly Impact',
+        // salesImpact: 'Your Monthly Impact',  // Removed from Page 1
         customerInformation: 'Customer Information',
         inputParameters: 'Input Parameters',
         liveVolumeBreakdown: 'Technical Calculation Details',
