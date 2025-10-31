@@ -74,7 +74,7 @@ function formatValue(value: any, format: string, config: PDFConfig): string {
   
   // Handle string values that already contain % or $
   if (typeof value === 'string') {
-    if (config.guards.coercePercentStrings && value.includes('%')) {
+    if (config.guards?.coercePercentStrings && value.includes('%')) {
       return value; // Pass through as-is
     }
     // For currency format, if string already has dollar sign, pass through
