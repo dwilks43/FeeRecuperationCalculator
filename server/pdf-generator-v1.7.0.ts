@@ -688,6 +688,11 @@ function generateCSS(config: PDFConfig): string {
         
         /* Global CSS from config */
         ${config.styles?.globalCss || ''}
+        
+        /* Centered Title Styling - v1.4 */
+        .h1 { text-align: center; font-size: 20px; font-weight: 800; letter-spacing: -0.2px; margin: 0 0 6px; }
+        .title-sub { text-align: center; color: #6A6F7A; margin-bottom: 8px; }
+        .title-rule { height: 1px; background: #E6E8EC; width: 72%; margin: 6px auto 10px; }
     </style>
   `;
 }
