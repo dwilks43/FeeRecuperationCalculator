@@ -751,6 +751,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const calculatorData = req.body;
       
+      console.log('🔍 [ROUTES] Received programType:', calculatorData.programType);
+      console.log('🔍 [ROUTES] Received metrics.programType:', calculatorData.metrics?.programType);
+      console.log('🔍 [ROUTES] Received ui.sections.salesImpact.programType:', calculatorData.ui?.sections?.salesImpact?.programType);
+      
       // Ensure we forward programType, inputs, and results for dual-mode support
       const pdfData = {
         ...calculatorData,
@@ -760,6 +764,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         // Add logo data for PDF header
         logoBase64: LOGO_DATA_URL
       };
+      
+      console.log('🔍 [ROUTES] pdfData.programType before sending to generator:', pdfData.programType);
+      console.log('🔍 [ROUTES] pdfData.metrics.programType before sending to generator:', pdfData.metrics?.programType);
       
       // Log the exact payload for debugging (without the large base64 logo)
       const payloadForLogging = { ...pdfData, logoBase64: '[BASE64_LOGO_DATA_REDACTED]' };

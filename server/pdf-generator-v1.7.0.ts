@@ -810,6 +810,11 @@ function resolveDataBinding(path: string, data: any, config: PDFConfig): any {
     return path.replace(/\{\{\s*([^}]+)\s*\}\}/g, (match, binding) => {
       const trimmed = binding.trim();
       
+      // Special logging for programType paths
+      if (trimmed.includes('programType')) {
+        console.log('🔍 [PDF-GEN] Resolving binding:', trimmed);
+      }
+      
       // Check dataBindings first
       const bindingParts = trimmed.split('.');
       if (bindingParts.length >= 2) {
@@ -822,6 +827,10 @@ function resolveDataBinding(path: string, data: any, config: PDFConfig): any {
           for (const fallbackPath of dataBinding) {
             const value = resolvePath(data, fallbackPath);
             if (value !== null && value !== undefined) {
+              // Special logging for programType values
+              if (trimmed.includes('programType')) {
+                console.log('🔍 [PDF-GEN] Found value via dataBinding:', fallbackPath, '=', value);
+              }
               return value;
             }
           }
@@ -830,6 +839,12 @@ function resolveDataBinding(path: string, data: any, config: PDFConfig): any {
       
       // Direct path resolution as fallback
       const value = resolvePath(data, trimmed);
+      
+      // Special logging for programType values
+      if (trimmed.includes('programType')) {
+        console.log('🔍 [PDF-GEN] Direct path resolution for:', trimmed, '=', value);
+      }
+      
       return value !== null && value !== undefined ? value : '';
     });
   }

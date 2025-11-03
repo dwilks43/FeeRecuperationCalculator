@@ -1120,8 +1120,13 @@ export function preparePdfData(
   results: CalculatorResults,
   customerInfo: Partial<CustomerInfo>
 ): any {
+  console.log('🔍 [PDF-TRANSFORM] Starting preparePdfData');
+  console.log('🔍 [PDF-TRANSFORM] Raw inputs.programType:', inputs.programType);
+  
   // Build the UI model
   const uiModel = buildPdfUiModel(inputs, results, customerInfo);
+  
+  console.log('🔍 [PDF-TRANSFORM] uiModel.ui.sections.salesImpact.programType:', uiModel.ui.sections.salesImpact.programType);
   
   // Create metrics object from salesImpact for executive summary
   const metrics = {
@@ -1136,8 +1141,13 @@ export function preparePdfData(
     isRetail: uiModel.ui.sections.salesImpact.isRetail || false
   };
   
+  console.log('🔍 [PDF-TRANSFORM] metrics.programType:', metrics.programType);
+  
+  const transformedProgramType = getProgramTypeLabel(inputs.programType);
+  console.log('🔍 [PDF-TRANSFORM] getProgramTypeLabel result:', transformedProgramType);
+  
   // Merge with existing calculator data (preserving backward compatibility)
-  return {
+  const finalData = {
     ...calculatorData,
     ...uiModel.ui.report, // Add report id and date at root level
     ui: uiModel.ui,
@@ -1158,4 +1168,14 @@ export function preparePdfData(
     inputs: inputs,
     results: results
   };
+  
+  console.log('🔍 [PDF-TRANSFORM] finalData.programType:', finalData.programType);
+  console.log('🔍 [PDF-TRANSFORM] finalData.metrics.programType:', finalData.metrics.programType);
+  console.log('🔍 [PDF-TRANSFORM] Complete finalData:', JSON.stringify({
+    programType: finalData.programType,
+    'metrics.programType': finalData.metrics?.programType,
+    'ui.sections.salesImpact.programType': finalData.ui?.sections?.salesImpact?.programType
+  }, null, 2));
+  
+  return finalData;
 }
