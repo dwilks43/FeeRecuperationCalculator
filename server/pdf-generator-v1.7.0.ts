@@ -56,16 +56,12 @@ interface PDFConfig {
   };
 }
 
-let config: PDFConfig | null = null;
-
-// Load configuration
+// Load configuration fresh on each call to ensure CSS changes take effect
 function loadConfig(): PDFConfig {
-  if (!config) {
-    const configPath = path.join(process.cwd(), 'pdf.config.json');
-    const configData = fs.readFileSync(configPath, 'utf-8');
-    config = JSON.parse(configData);
-  }
-  return config!;
+  const configPath = path.join(process.cwd(), 'pdf.config.json');
+  const configData = fs.readFileSync(configPath, 'utf-8');
+  const config = JSON.parse(configData);
+  return config;
 }
 
 // Value formatting and normalization
