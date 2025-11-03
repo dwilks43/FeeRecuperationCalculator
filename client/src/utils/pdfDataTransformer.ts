@@ -52,6 +52,20 @@ function getFeeTaxBasisLabel(feeTaxBasis?: string): string {
   }
 }
 
+// Map program type to user-friendly text
+function getProgramTypeLabel(programType: string): string {
+  switch (programType) {
+    case 'DUAL_PRICING':
+      return 'Dual Pricing';
+    case 'CASH_DISCOUNTING':
+      return 'Cash Discounting';
+    case 'SUPPLEMENTAL_FEE':
+      return 'Supplemental Fee';
+    default:
+      return programType;
+  }
+}
+
 // Get order of operations text based on program type and settings
 function getOrderOfOperationsText(inputs: CalculatorInputs): string {
   const isRetail = inputs.businessType === 'RETAIL';
@@ -761,7 +775,7 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
     annualImpact: annualSavings,
     quarterlySavings: quarterlySavings,
     costReduction: coveragePct,
-    programType: inputs.programType,
+    programType: getProgramTypeLabel(inputs.programType),
     isRestaurant: inputs.businessType === 'RESTAURANT',
     isRetail: inputs.businessType === 'RETAIL',
     businessType: inputs.businessType || 'RETAIL',
@@ -1091,7 +1105,7 @@ export function buildPdfUiModel(
     inputs: inputs,
     results: results,
     customerInfo: customerInfo,
-    programType: inputs.programType
+    programType: getProgramTypeLabel(inputs.programType)
   };
   
   return uiModel;
@@ -1109,11 +1123,25 @@ export function preparePdfData(
   // Build the UI model
   const uiModel = buildPdfUiModel(inputs, results, customerInfo);
   
+  // Create metrics object from salesImpact for executive summary
+  const metrics = {
+    monthlySavings: uiModel.ui.sections.salesImpact.heroNumber || 0,
+    annualSavings: uiModel.ui.sections.salesImpact.annualImpact || 0,
+    quarterlySavings: uiModel.ui.sections.salesImpact.quarterlySavings || 0,
+    costReductionPct: uiModel.ui.sections.salesImpact.costReduction || 0,
+    currentCost: results.currentCost || 0,
+    newProgramNetCost: results.processorChargeCards - (results.markupCollectedCards || results.markupCardsDual || 0),
+    programType: uiModel.ui.sections.salesImpact.programType || getProgramTypeLabel(inputs.programType),
+    isRestaurant: uiModel.ui.sections.salesImpact.isRestaurant || false,
+    isRetail: uiModel.ui.sections.salesImpact.isRetail || false
+  };
+  
   // Merge with existing calculator data (preserving backward compatibility)
   return {
     ...calculatorData,
     ...uiModel.ui.report, // Add report id and date at root level
     ui: uiModel.ui,
+    metrics: metrics,  // Add metrics for executive summary
     // Ensure all required fields are present
     businessName: customerInfo.businessName || '',
     streetAddress: customerInfo.streetAddress || '',
@@ -1126,7 +1154,7 @@ export function preparePdfData(
     salesRepName: customerInfo.salesRepName || '',
     salesRepEmail: customerInfo.salesRepEmail || '',
     salesRepPhone: customerInfo.salesRepPhone || '',
-    programType: inputs.programType,
+    programType: getProgramTypeLabel(inputs.programType),
     inputs: inputs,
     results: results
   };
