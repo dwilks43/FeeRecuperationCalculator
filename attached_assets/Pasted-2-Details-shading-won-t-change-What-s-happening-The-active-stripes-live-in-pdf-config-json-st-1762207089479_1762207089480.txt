@@ -1,0 +1,52 @@
+2) “Details” shading won’t change
+
+What’s happening
+
+The active stripes live in pdf.config.json → styles.globalCss. You already have:
+
+.table-professional td{ background:#FAFBFD !important; }
+.table-professional tr:nth-child(even) td{ background:#F7F9FC !important; }
+
+
+If a section isn’t using tableClass: "table-professional" (or is using a different class like your generator’s .kv-table), your new colors won’t apply.
+
+If any generator code emits inline backgrounds on <td>, those can override weaker selectors.
+
+Make it stick
+
+Confirm your tables use the class you’re styling. In pdf.config.json I see many tables set "tableClass": "table-professional". For any table that still looks unstriped, set its "tableClass" to "table-professional" as well (or add a matching selector for that table’s class).
+
+Change the two hexes in one place (globalCss):
+
+Base cells: #FAFBFD
+
+Even rows: #F7F9FC
+Example: make base white and stripe a touch darker:
+
+.table-professional td{ background:#FFFFFF !important; }
+.table-professional tr:nth-child(even) td{ background:#EEF3FB !important; }
+
+
+If still no change, you’re being overridden. Raise specificity:
+
+.card-professional .table-professional tr:nth-child(even) td{ background:#EEF3FB !important; }
+
+
+and neutralize any inline styles:
+
+.table-professional td[style*="background"]{ background:inherit !important; }
+
+
+If a specific block uses the legacy generator table (.kv-table), add stripes there too:
+
+.kv-table td{ background:#FFFFFF !important; }
+.kv-table tr:nth-child(even) td{ background:#EEF3FB !important; }
+
+
+Quick proof check
+At the end of globalCss, add a temporary rule:
+
+body[data-css-check="1"] .css-check{ border:3px solid red !important; }
+
+
+Then drop <div class="css-check" style="height:0"></div> near the top of the HTML. If you don’t see the red border in the PDF, your CSS isn’t loading last—fix the load order in pdf-generator-v1.7.0.ts (the file already inlines ${config.styles?.globalCss || ''}; keep your globalCss assignment after any other table CSS).
