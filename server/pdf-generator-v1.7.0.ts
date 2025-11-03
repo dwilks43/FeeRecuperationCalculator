@@ -956,7 +956,7 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
           <div style="margin-top: ${currentSection ? '16px' : '0'}; margin-bottom: 8px; padding: 6px 0; border-bottom: 2px solid #E2E8F0;">
             <h4 style="font-size: 14px; font-weight: 700; color: #0F172A; margin: 0;">${sectionTitle}</h4>
           </div>
-          <table class="kv-table">
+          <table class="${table.tableClass || 'kv-table'}">
         `;
         currentSection = sectionTitle;
       } else {
@@ -995,7 +995,7 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
     
     // If no sections were created, wrap all in a single table
     if (!currentSection && tableContent) {
-      cardContent = `<table class="kv-table">${tableContent}</table>`;
+      cardContent = `<table class="${table.tableClass || 'kv-table'}">${tableContent}</table>`;
     } else {
       cardContent = tableContent;
     }
