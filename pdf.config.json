@@ -31,7 +31,7 @@
         "newProgramNetCost": ["results.newCost"],
         "processorCharge": ["results.processorChargeCards"],
         "diffCollected": ["results.cardMarkupCollected"],
-        "programType": ["inputs.programType"],
+        "programType": ["metrics.programType", "ui.sections.salesImpact.programType", "programType"],
         "businessType": ["ui.sections.salesImpact.businessType", "inputs.businessType", "'RETAIL'"],
         "isRestaurant": ["ui.sections.salesImpact.isRestaurant"],
         "isRetail": ["ui.sections.salesImpact.isRetail"]
