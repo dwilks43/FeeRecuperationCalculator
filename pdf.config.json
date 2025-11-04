@@ -167,6 +167,20 @@
               "valueFormatHintKey": "format",
               "tableClass": "table-professional"
             }
+          },
+          {
+            "type": "card",
+            "colSpan": 12,
+            "title": "{{ monthlySavings.title }}",
+            "table": {
+              "cols": [
+                { "key": "label", "title": "Item", "align": "left" },
+                { "key": "value", "title": "Value", "align": "right" }
+              ],
+              "rowsFrom": [{ "from": "monthlySavings.rows" }],
+              "valueFormatHintKey": "format",
+              "tableClass": "table-professional"
+            }
           }
         ]
       },
@@ -186,20 +200,6 @@
                 { "key": "value", "title": "Amount", "align": "right" }
               ],
               "rowsFrom": [{ "from": "liveVolume.rows" }],
-              "valueFormatHintKey": "format",
-              "tableClass": "table-professional"
-            }
-          },
-          {
-            "type": "card",
-            "colSpan": 12,
-            "title": "{{ monthlySavings.title }}",
-            "table": {
-              "cols": [
-                { "key": "label", "title": "Item", "align": "left" },
-                { "key": "value", "title": "Value", "align": "right" }
-              ],
-              "rowsFrom": [{ "from": "monthlySavings.rows" }],
               "valueFormatHintKey": "format",
               "tableClass": "table-professional"
             }
