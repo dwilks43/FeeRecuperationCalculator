@@ -169,6 +169,11 @@
             }
           },
           {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div style='background:#F7F9FC;border-left:3px solid #004ED3;padding:12px 16px;margin-top:-8px;margin-bottom:16px;page-break-inside:avoid;'><div style='font-size:9px;font-weight:600;color:#004ED3;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;'>What this means</div><div style='font-size:11px;color:#0B2340;line-height:1.4;'>{{#metrics.isRestaurant}}This proposal is tailored for your restaurant's unique transaction patterns.{{/metrics.isRestaurant}}{{#metrics.isRetail}}Custom analysis based on your retail business profile and volume.{{/metrics.isRetail}}</div></div>"
+          },
+          {
             "type": "card",
             "colSpan": 12,
             "title": "{{ monthlySavings.title }}",
@@ -181,6 +186,11 @@
               "valueFormatHintKey": "format",
               "tableClass": "table-professional"
             }
+          },
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div style='background:#F7F9FC;border-left:3px solid #004ED3;padding:12px 16px;margin-top:-8px;margin-bottom:16px;page-break-inside:avoid;'><div style='font-size:9px;font-weight:600;color:#004ED3;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;'>What this means</div><div style='font-size:11px;color:#0B2340;line-height:1.4;'>{{#metrics.isRestaurant}}Offsets ~2 server shifts per week at current wage assumptions.{{/metrics.isRestaurant}}{{#metrics.isRetail}}Net gain equals ~{{ FORMAT.money(metrics.monthlySavings) }}/mo available for inventory or marketing.{{/metrics.isRetail}}</div></div>"
           }
         ]
       },
@@ -203,6 +213,11 @@
               "valueFormatHintKey": "format",
               "tableClass": "table-professional"
             }
+          },
+          {
+            "type": "custom",
+            "colSpan": 12,
+            "template": "<div style='background:#F7F9FC;border-left:3px solid #004ED3;padding:12px 16px;margin-top:-8px;margin-bottom:16px;page-break-inside:avoid;'><div style='font-size:9px;font-weight:600;color:#004ED3;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px;'>What this means</div><div style='font-size:11px;color:#0B2340;line-height:1.4;'>{{#metrics.isRestaurant}}Volume assumptions verified to ensure scalable savings at current throughput.{{/metrics.isRestaurant}}{{#metrics.isRetail}}These breakdowns show real dollar impact based on your actual transaction mix.{{/metrics.isRetail}}</div></div>"
           }
         ]
       }
