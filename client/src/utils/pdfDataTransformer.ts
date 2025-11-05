@@ -724,7 +724,17 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
     monthlySavings = results.netMonthly || results.monthlySavings || 0;
   }
   
-  const annualSavings = monthlySavings * 12;
+  // Use frozen snapshot from results object for consistency
+  let annualSavings = 0;
+  if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+    annualSavings = results.annualNetGainRevenue || (results.totalNetGainRevenue ? results.totalNetGainRevenue * 12 : 0);
+  } else if (inputs.programType === 'CASH_DISCOUNTING') {
+    // For Cash Discounting, use the pre-computed annual value
+    annualSavings = results.annualSavings || (monthlySavings * 12);
+  } else {
+    // Dual Pricing - use the pre-computed annual value
+    annualSavings = results.netAnnual || results.annualSavings || (monthlySavings * 12);
+  }
   
   // For savings percent, include total savings (matching ProcessingSavings.tsx logic)
   let coveragePct = 0;
@@ -765,8 +775,8 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
     businessContext = "Incremental cost improvement";
   }
   
-  // Add quarterly savings calculation
-  const quarterlySavings = monthlySavings * 3;
+  // Calculate quarterly savings from the frozen annual value for consistency
+  const quarterlySavings = annualSavings / 4;
   
   return {
     title: 'Your Monthly Impact',
