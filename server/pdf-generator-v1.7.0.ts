@@ -82,7 +82,7 @@ function formatValue(value: any, format: string, config: PDFConfig): string {
   // Try to parse numeric value from string (removing $ if present)
   const cleanValue = typeof value === 'string' ? value.replace(/[$,]/g, '') : value;
   const numValue = parseFloat(cleanValue);
-  if (isNaN(numValue)) return String(value);
+  if (isNaN(numValue)) return value !== undefined ? String(value) : '';
   
   switch (format) {
     case 'currency':
@@ -115,7 +115,7 @@ function formatValue(value: any, format: string, config: PDFConfig): string {
         : `${percentFormatted}%`;
         
     default:
-      return String(value);
+      return value !== undefined && value !== null ? String(value) : '';
   }
 }
 
@@ -163,8 +163,9 @@ function resolveBindingOrPath(key: string, data: any, config: PDFConfig): any {
     }
   }
   
-  // Fall back to direct path resolution
-  return resolvePath(data, key);
+  // Fall back to direct path resolution with undefined handling
+  const result = resolvePath(data, key);
+  return result !== null && result !== undefined ? result : '';
 }
 
 // Evaluate conditional expressions (e.g., "program==DUAL_PRICING")
@@ -845,8 +846,9 @@ function resolveDataBinding(path: string, data: any, config: PDFConfig): any {
     });
   }
   
-  // Direct path resolution
-  return resolvePath(data, path);
+  // Direct path resolution with undefined handling
+  const result = resolvePath(data, path);
+  return result !== null && result !== undefined ? result : '';
 }
 
 // Generate card content
@@ -969,7 +971,7 @@ function generateCard(block: any, data: any, config: PDFConfig): string {
         
         const formattedValue = formatType !== 'text' ? 
           formatValue(value, formatType, config) : 
-          String(value || '');
+          (value !== null && value !== undefined ? String(value) : '');
         
         // Handle badges if present
         let badge = '';
