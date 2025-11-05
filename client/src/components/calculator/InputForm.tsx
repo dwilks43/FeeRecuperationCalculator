@@ -272,8 +272,17 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
         result = beforeDecimalDigits.slice(0, 2) + '.' + afterDecimalDigits.slice(0, 2);
       }
+      
+      // Enforce maximum of 10 for cashDiscount
+      if (field === 'cashDiscount') {
+        const numericValue = parseFloat(result);
+        if (!isNaN(numericValue) && numericValue > 10) {
+          result = '10';
+        }
+      }
     } else if (fiveDigitFields.includes(field)) {
       // For 5-digit fields (xxx.xx): max 3 digits before decimal, max 2 after
+      // Special case for priceDifferential - max value is 100%
       if (firstDecimalIndex === -1) {
         // No decimal point - just limit to 3 digits
         result = digitsOnly.slice(0, 3);
@@ -291,6 +300,14 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
         const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
         result = beforeDecimalDigits.slice(0, 3) + '.' + afterDecimalDigits.slice(0, 2);
+      }
+      
+      // Enforce maximum of 100 for priceDifferential (Menu Markup)
+      if (field === 'priceDifferential') {
+        const numericValue = parseFloat(result);
+        if (!isNaN(numericValue) && numericValue > 100) {
+          result = '100';
+        }
       }
     } else {
       // For other fields, no special limiting
