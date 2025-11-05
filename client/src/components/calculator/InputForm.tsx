@@ -105,20 +105,8 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     
     // Smart handling for Cash Discounting mode
     if (newType === 'CASH_DISCOUNTING') {
-      // If Cash Discount is 0 or unset, auto-populate with smart default
-      if (!inputs.cashDiscount || inputs.cashDiscount === 0) {
-        // Use Menu Markup % as the default Cash Discount % (they're usually similar)
-        const defaultCashDiscount = Math.min(priceDifferentialValue, 3.5); // Cap at 3.5% as typical max
-        onInputChange('cashDiscount', defaultCashDiscount);
-        setInputValues(prev => ({ ...prev, cashDiscount: formatNumberInput(defaultCashDiscount) }));
-        
-        // Show a toast notification to inform the user
-        toast({
-          title: "Cash Discount % Auto-Set",
-          description: `Cash Discount set to ${defaultCashDiscount}% based on Menu Markup. Please review and adjust if needed.`,
-          variant: "destructive", // Using destructive as warning isn't available
-        });
-      }
+      // Allow Cash Discount to be 0%, no auto-population
+      // User can now set any value from 0% to 10%
     }
     
     // Auto-calculate flat rate when switching programs
@@ -233,9 +221,11 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     const firstDecimalIndex = sanitized.indexOf('.');
     
     // Fields with max 3 digits (x.xx format)
-    const threeDigitFields = ['currentRate', 'interchangeCost', 'priceDifferential', 'flatRatePct', 'flatRateOverride', 'cashDiscount'];
+    const threeDigitFields = ['currentRate', 'interchangeCost', 'flatRatePct', 'flatRateOverride'];
     // Fields with max 4 digits (xx.xx format)
-    const fourDigitFields = ['taxRate', 'tipRate'];
+    const fourDigitFields = ['taxRate', 'tipRate', 'cashDiscount'];
+    // Fields with max 5 digits (xxx.xx format) - Menu Markup can go up to 100%
+    const fiveDigitFields = ['priceDifferential'];
     
     let result = '';
     
@@ -281,6 +271,26 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
         const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
         result = beforeDecimalDigits.slice(0, 2) + '.' + afterDecimalDigits.slice(0, 2);
+      }
+    } else if (fiveDigitFields.includes(field)) {
+      // For 5-digit fields (xxx.xx): max 3 digits before decimal, max 2 after
+      if (firstDecimalIndex === -1) {
+        // No decimal point - just limit to 3 digits
+        result = digitsOnly.slice(0, 3);
+      } else if (firstDecimalIndex === 0) {
+        // Decimal at start (.xxx) - format as 0.xx
+        result = '0.' + digitsOnly.slice(0, 2);
+      } else if (firstDecimalIndex <= 3) {
+        // Decimal within first 3 positions - keep position
+        const beforeDec = digitsOnly.slice(0, firstDecimalIndex);
+        const afterDec = digitsOnly.slice(firstDecimalIndex, firstDecimalIndex + 2);
+        result = beforeDec + (afterDec ? '.' + afterDec : '');
+      } else {
+        // Decimal after position 3 (e.g., 1000.50) - keep first 3 digits before decimal
+        // Find where the decimal splits the digits
+        const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
+        const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
+        result = beforeDecimalDigits.slice(0, 3) + '.' + afterDecimalDigits.slice(0, 2);
       }
     } else {
       // For other fields, no special limiting
