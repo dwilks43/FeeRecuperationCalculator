@@ -140,7 +140,7 @@
           {
             "type": "custom",
             "colSpan": 12,
-            "template": "<div class='card-professional' style='background:white;border:1px solid #E6E8EC;border-radius:8px;padding:20px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.06);'><div class='card-title' style='font-size:14px;font-weight:600;color:#004ED3;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #004ED3;'>Turn Fees Into Growth</div><div style='font-size:12px;color:#0B2340;margin-bottom:16px;'>You're losing 2.25% to 3% on every transaction. Here's how flipping that script transforms your business:</div><ul class='allocation-list' style='list-style:none;padding:0;margin:0;'>{{#metrics.growthBullets}}<li style='display:flex;align-items:center;padding:10px;margin-bottom:8px;background:#F7F9FC;border-radius:4px;'><span style='font-weight:700;color:#00937B;margin-right:12px;font-size:14px;'>{{.}}</span></li>{{/metrics.growthBullets}}</ul></div>"
+            "template": "<div class='card-professional' style='background:white;border:1px solid #E6E8EC;border-radius:8px;padding:20px;margin-bottom:20px;box-shadow:0 2px 4px rgba(0,0,0,0.06);'><div class='card-title' style='font-size:14px;font-weight:600;color:#004ED3;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #004ED3;'>Turn Fees Into Growth</div><div style='font-size:12px;color:#0B2340;margin-bottom:16px;'>You're losing 2.25% to 3% on every transaction. Here's how flipping that script transforms your business:</div><ul class='allocation-list' style='list-style:none;padding:0;margin:0;'><li style='display:flex;align-items:center;padding:10px;margin-bottom:8px;background:#F7F9FC;border-radius:4px;'><span style='font-weight:700;color:#00937B;margin-right:12px;font-size:14px;'>{{ metrics.growthBullet1 }}</span></li><li style='display:flex;align-items:center;padding:10px;margin-bottom:8px;background:#F7F9FC;border-radius:4px;'><span style='font-weight:700;color:#00937B;margin-right:12px;font-size:14px;'>{{ metrics.growthBullet2 }}</span></li><li style='display:flex;align-items:center;padding:10px;margin-bottom:8px;background:#F7F9FC;border-radius:4px;'><span style='font-weight:700;color:#00937B;margin-right:12px;font-size:14px;'>{{ metrics.growthBullet3 }}</span></li></ul></div>"
           },
           {
             "type": "custom",
@@ -186,6 +186,16 @@
               "valueFormatHintKey": "format",
               "tableClass": "table-professional"
             }
+          },
+          {
+            "type": "custom",
+            "colSpan": 6,
+            "template": "<div style='margin-top:16px;padding:12px;background:#F7F9FC;border-radius:6px;border-left:3px solid #00937B;'><div style='font-size:11px;font-weight:600;color:#00937B;margin-bottom:4px;'>Quarterly Savings</div><div style='font-size:16px;font-weight:700;color:#0B2340;'>{{ FORMAT.money(metrics.quarterlySavings) }}</div><div style='font-size:10px;color:#6A6F7A;margin-top:4px;'>Available every 3 months</div></div>"
+          },
+          {
+            "type": "custom",
+            "colSpan": 6,
+            "template": "<div style='margin-top:16px;padding:12px;background:#F7F9FC;border-radius:6px;border-left:3px solid #004ED3;'><div style='font-size:11px;font-weight:600;color:#004ED3;margin-bottom:4px;'>Annual Impact</div><div style='font-size:16px;font-weight:700;color:#0B2340;'>{{ FORMAT.money(metrics.annualSavings) }}</div><div style='font-size:10px;color:#6A6F7A;margin-top:4px;'>Total yearly benefit</div></div>"
           },
           {
             "type": "custom",

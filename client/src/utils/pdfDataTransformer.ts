@@ -1171,6 +1171,7 @@ export function preparePdfData(
     ]
   };
 
+  const selectedBullets = bulletsByVertical[vertical];
   const metrics = {
     monthlySavings: uiModel.ui.sections.salesImpact.heroNumber || 0,
     annualSavings: uiModel.ui.sections.salesImpact.annualImpact || 0,
@@ -1182,7 +1183,11 @@ export function preparePdfData(
     isRestaurant,
     isRetail,
     businessVertical: vertical,
-    growthBullets: bulletsByVertical[vertical]
+    growthBullets: selectedBullets,
+    // Individual bullet properties for PDF template
+    growthBullet1: selectedBullets[0] || '',
+    growthBullet2: selectedBullets[1] || '',
+    growthBullet3: selectedBullets[2] || ''
   };
   
   console.log('🔍 [PDF-TRANSFORM] metrics.programType:', metrics.programType);
