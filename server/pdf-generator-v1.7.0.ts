@@ -1369,7 +1369,8 @@ export function generateConfigDrivenPDF(data: any): string {
     `;
   }).join('');
   
-  return `
+  // Build the complete HTML
+  let html = `
     <!DOCTYPE html>
     <html lang="en">
     <head>
@@ -1385,4 +1386,9 @@ export function generateConfigDrivenPDF(data: any): string {
     </body>
     </html>
   `;
+  
+  // Scrub literal undefined values before sending to DocRaptor
+  html = html.replace(/>\s*undefined\s*</g, '><');
+  
+  return html;
 }
