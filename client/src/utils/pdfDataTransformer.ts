@@ -1145,7 +1145,7 @@ export function preparePdfData(
     quarterlySavings: uiModel.ui.sections.salesImpact.quarterlySavings || 0,
     costReductionPct: uiModel.ui.sections.salesImpact.costReduction || 0,
     currentCost: results.currentCost || 0,
-    newProgramNetCost: results.processorChargeCards - (results.markupCollectedCards || results.markupCardsDual || 0),
+    newProgramNetCost: (results.processingFees || 0) - (results.markupCollected || 0),
     programType: uiModel.ui.sections.salesImpact.programType || getProgramTypeLabel(inputs.programType),
     isRestaurant: uiModel.ui.sections.salesImpact.isRestaurant || false,
     isRetail: uiModel.ui.sections.salesImpact.isRetail || false
