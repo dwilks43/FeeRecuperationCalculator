@@ -1139,6 +1139,38 @@ export function preparePdfData(
   console.log('🔍 [PDF-TRANSFORM] uiModel.ui.sections.salesImpact.programType:', uiModel.ui.sections.salesImpact.programType);
   
   // Create metrics object from salesImpact for executive summary
+  // Helper function to convert to boolean properly
+  const toBool = (v: any) =>
+    v === true || v === 1 || v === '1' || /^true$/i.test(String(v || ''));
+
+  // Determine business vertical using proper boolean conversion
+  const rawType = String(
+    uiModel.ui?.sections?.salesImpact?.businessType ?? inputs?.businessType ?? ''
+  ).toUpperCase();
+  
+  const isRestaurant = (rawType === 'RESTAURANT') || toBool(uiModel.ui?.sections?.salesImpact?.isRestaurant);
+  const isRetail = (rawType === 'RETAIL') || toBool(uiModel.ui?.sections?.salesImpact?.isRetail);
+
+  // Make them mutually exclusive to avoid double-render
+  const vertical = isRestaurant ? 'restaurant' : (isRetail ? 'retail' : 'neutral');
+
+  // Build exactly ONE list for Turn Fees Into Growth bullets
+  const bulletsByVertical: Record<string, string[]> = {
+    restaurant: [
+      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo → Labor coverage (reduce OT or add a server/line cook).`,
+      `${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr → Menu & experience (smallwares, linen, menu photography).`,
+      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr → Upgrades (kitchen equipment, patio/dining refresh).`
+    ],
+    retail: [
+      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo → Staffing coverage (associate hours or retention bonus).`,
+      `${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr → Merch & POS (fixtures, seasonal displays, scanner refresh).`,
+      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr → Store growth (lighting/signage, inventory expansion).`
+    ],
+    neutral: [
+      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo → Net gain available for staffing or marketing.`
+    ]
+  };
+
   const metrics = {
     monthlySavings: uiModel.ui.sections.salesImpact.heroNumber || 0,
     annualSavings: uiModel.ui.sections.salesImpact.annualImpact || 0,
@@ -1147,8 +1179,10 @@ export function preparePdfData(
     currentCost: results.currentCost || 0,
     newProgramNetCost: (results.processingFees || 0) - (results.markupCollected || 0),
     programType: uiModel.ui.sections.salesImpact.programType || getProgramTypeLabel(inputs.programType),
-    isRestaurant: uiModel.ui.sections.salesImpact.isRestaurant || false,
-    isRetail: uiModel.ui.sections.salesImpact.isRetail || false
+    isRestaurant,
+    isRetail,
+    businessVertical: vertical,
+    growthBullets: bulletsByVertical[vertical]
   };
   
   console.log('🔍 [PDF-TRANSFORM] metrics.programType:', metrics.programType);

@@ -1,0 +1,158 @@
+1) Kill the duplicates in Turn Fees Into Growth (root-cause + fix)
+Root cause
+
+You’re gating the section with Mustache booleans metrics.isRestaurant / metrics.isRetail in the template, but those flags are likely arriving as strings ("true", "false", or non-empty values) or both are being set truthy in your transformer. Mustache treats any non-empty string as truthy, so multiple blocks render.
+
+Fix (recommended approach)
+
+Do the logic once in pdfDataTransformer.ts and give the template a single prebuilt list to print.
+
+In pdfDataTransformer.ts (render-prep):
+
+const toBool = (v: any) =>
+  v === true || v === 1 || v === '1' || /^true$/i.test(String(v || ''));
+
+const rawType = String(
+  ui?.sections?.salesImpact?.businessType ?? inputs?.businessType ?? ''
+).toUpperCase();
+
+const isRestaurant = (rawType === 'RESTAURANT') || toBool(ui?.sections?.salesImpact?.isRestaurant);
+const isRetail     = (rawType === 'RETAIL')     || toBool(ui?.sections?.salesImpact?.isRetail);
+
+// make them mutually exclusive to avoid double-render
+const vertical = isRestaurant ? 'restaurant' : (isRetail ? 'retail' : 'neutral');
+
+// Build exactly ONE list
+const bulletsByVertical = {
+  restaurant: [
+    `${values.monthlySavings}/mo → Labor coverage (reduce OT or add a server/line cook).`,
+    `${values.quarterlySavings}/qtr → Menu & experience (smallwares, linen, menu photography).`,
+    `${values.annualSavings}/yr → Upgrades (kitchen equipment, patio/dining refresh).`,
+  ],
+  retail: [
+    `${values.monthlySavings}/mo → Staffing coverage (associate hours or retention bonus).`,
+    `${values.quarterlySavings}/qtr → Merch & POS (fixtures, seasonal displays, scanner refresh).`,
+    `${values.annualSavings}/yr → Store growth (lighting/signage, inventory expansion).`,
+  ],
+  neutral: [
+    `${values.monthlySavings}/mo → Net gain available for staffing or marketing.`,
+  ],
+};
+
+view.businessVertical = vertical;
+view.growthBullets = bulletsByVertical[vertical];
+
+
+In pdf.config.json: replace the whole “Turn Fees Into Growth” bullets block with a single loop.
+Right now you’re branching on isRestaurant/isRetail with nested {{#}} / {{^}}. Swap that for:
+
+<ul class='allocation-list' style='list-style:none;padding:0;margin:0;'>
+  {{#growthBullets}}
+    <li style='display:flex;align-items:center;padding:10px;margin-bottom:8px;background:#F7F9FC;border-radius:4px;'>
+      <span style='font-weight:700;color:#00937B;margin-right:12px;font-size:14px;'>{{this.split(" ")[0]}}</span>
+      <span style='color:#0B2340;font-size:12px;'>{{this.slice(this.indexOf(" ")+1)}}</span>
+    </li>
+  {{/growthBullets}}
+</ul>
+
+
+Result: the template can’t duplicate—there’s only one list to render.
+(Your current branching is in the “Details” page’s first custom block. You can see it today rendering {{#metrics.isRestaurant}} … {{/metrics.isRestaurant}} etc. in your JSON template. 
+
+pdf.config
+
+)
+
+2) Get Customer Information + Processing Cost Breakdown onto the same page (Page 2)
+
+You already created a dedicated page named CustomerData that has both cards in order (good), and you even start it with a manual page break (<div class='page-break'>) before the timeline (also good). But these two cards will still split if they can’t both fit in the remaining space.
+
+You have two options—both are safe with DocRaptor/Prince:
+
+Option A — Make them fit (minor compression)
+
+In styles.globalCss reduce vertical density for those two cards only:
+
+Lower table cell padding from 8px 10px → 6px 8px
+
+Trim card padding from 24px → 16px
+
+Slightly reduce table font from 11px → 10.5px
+
+These are one-line tweaks inside your existing selectors:
+
+/* Tables used by both cards */
+.table-professional td { padding:6px 8px; font-size:10.5px; }
+
+/* Generic cards */
+.card { padding:16px; }
+
+/* Card titles */
+.card-title { margin-bottom:10px; padding-bottom:6px; }
+
+
+(These selectors already exist in your CSS—adjust the values in place. 
+
+index
+
+)
+
+Option B — Two-column layout for the pair
+
+On the CustomerData page in pdf.config.json, change both cards’ colSpan from 12 to 6. That puts them side-by-side, almost always fitting on a single page:
+
+{
+  "type": "card",
+  "colSpan": 6,
+  "title": "{{ customerInfo.title }}",
+  ...
+},
+{
+  "type": "card",
+  "colSpan": 6,
+  "title": "{{ monthlySavings.title }}",
+  ...
+}
+
+
+You’re already on a 12-column grid for that page, so this is a drop-in tweak. The two cards are already consecutive on the CustomerData page block. 
+
+pdf.config
+
+3) Show “Dual Pricing” everywhere (not DUAL_PRICING)
+
+Right now Page 1 uses {{ metrics.programType }} in both the Executive Summary and the KPI “Program” card, which will surface DUAL_PRICING if upstream didn’t transform it. Add a small formatter in pdf.config.json and wrap the output:
+
+Add formatter:
+
+"program": { "fn": "v => String(v||'').replace(/_/g,' ').toLowerCase().replace(/\\b[a-z]/g,c=>c.toUpperCase())" }
+
+
+Use it in two places (Executive + KPI):
+
+Executive Summary:
+Dynamic's <strong>{{ FORMAT.program(metrics.programType) }}</strong> solution …
+
+KPI “Program” value:
+<div class='kpi-value small'>{{ FORMAT.program(metrics.programType) }}</div>
+
+(Those exact spots exist in your template today. 
+
+pdf.config
+
+)
+
+4) Final polish you can apply in seconds
+
+Scrub literal undefined before sending to DocRaptor:
+
+html = html.replace(/>\s*undefined\s*</g, '><');
+
+
+Consistent currency formatting is already set in formatters.money with two decimals; you’re good there. 
+
+pdf.config
+
+Table striping/alignment is already correct in your CSS (TD-level striping, tabular numbers). Keep it. 
+
+index
