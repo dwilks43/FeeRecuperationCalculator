@@ -145,6 +145,16 @@
           {
             "type": "custom",
             "colSpan": 12,
+            "template": "<div style='display:flex;gap:16px;margin-top:24px;margin-bottom:24px;'><div style='flex:1;background:#F7F9FC;border-radius:8px;padding:16px;border-left:4px solid #00937B;'><div style='font-size:24px;font-weight:700;color:#00937B;margin-bottom:4px;'>2,000+</div><div style='font-size:12px;font-weight:600;color:#0B2340;margin-bottom:2px;'>Active Merchants</div><div style='font-size:10px;color:#6A6F7A;'>Processing with confidence daily</div></div><div style='flex:1;background:#F7F9FC;border-radius:8px;padding:16px;border-left:4px solid #004ED3;'><div style='font-size:24px;font-weight:700;color:#004ED3;margin-bottom:4px;'>$2.4B+</div><div style='font-size:12px;font-weight:600;color:#0B2340;margin-bottom:2px;'>Annual Volume</div><div style='font-size:10px;color:#6A6F7A;'>Processed securely in 2024</div></div><div style='flex:1;background:#F7F9FC;border-radius:8px;padding:16px;border-left:4px solid #2BD8C2;'><div style='font-size:24px;font-weight:700;color:#2BD8C2;margin-bottom:4px;'>24/7</div><div style='font-size:12px;font-weight:600;color:#0B2340;margin-bottom:2px;'>Live Support</div><div style='font-size:10px;color:#6A6F7A;'>Real humans, not chatbots</div></div></div>"
+          },
+          {
+            "type": "custom", 
+            "colSpan": 12,
+            "template": "<div style='background:white;border:1px solid #E6E8EC;border-radius:8px;padding:20px;margin-top:20px;'><div style='font-size:13px;font-weight:600;color:#0B2340;margin-bottom:12px;'>Why Business Owners Choose Dynamic</div><div style='display:flex;gap:12px;'><div style='flex:1;'><div style='display:flex;align-items:start;margin-bottom:10px;'><span style='color:#00937B;font-size:16px;margin-right:8px;flex-shrink:0;'>✓</span><div><div style='font-size:11px;font-weight:600;color:#0B2340;margin-bottom:2px;'>Compliant Implementation</div><div style='font-size:10px;color:#6A6F7A;'>All signage, receipts, and training included</div></div></div><div style='display:flex;align-items:start;margin-bottom:10px;'><span style='color:#00937B;font-size:16px;margin-right:8px;flex-shrink:0;'>✓</span><div><div style='font-size:11px;font-weight:600;color:#0B2340;margin-bottom:2px;'>No Contracts or Termination Fees</div><div style='font-size:10px;color:#6A6F7A;'>Month-to-month flexibility with no penalties</div></div></div></div><div style='flex:1;'><div style='display:flex;align-items:start;margin-bottom:10px;'><span style='color:#00937B;font-size:16px;margin-right:8px;flex-shrink:0;'>✓</span><div><div style='font-size:11px;font-weight:600;color:#0B2340;margin-bottom:2px;'>Roll-Back Safety Net</div><div style='font-size:10px;color:#6A6F7A;'>Switch back anytime in first 90 days</div></div></div><div style='display:flex;align-items:start;'><span style='color:#00937B;font-size:16px;margin-right:8px;flex-shrink:0;'>✓</span><div><div style='font-size:11px;font-weight:600;color:#0B2340;margin-bottom:2px;'>Same-Day Funding Available</div><div style='font-size:10px;color:#6A6F7A;'>Get your money when you need it</div></div></div></div></div></div>"
+          },
+          {
+            "type": "custom",
+            "colSpan": 12,
             "template": "<div class='contact-professional' style='background:white;border:2px solid #004ED3;border-radius:8px;padding:24px;margin-top:20px;page-break-inside:avoid;'><div style='display:flex;justify-content:space-between;align-items:start;'><div style='flex:1;'><div style='font-size:16px;font-weight:600;color:#004ED3;margin-bottom:8px;'>Ready to Get Started?</div><div style='font-size:12px;color:#0B2340;line-height:1.6;margin-bottom:12px;'>Add <strong style='color:#00937B;'>3% to your bottom line</strong> with Dynamic's proven payment solutions.</div><div style='list-style:none;padding:0;margin:0;'><div style='display:flex;align-items:center;gap:6px;margin-bottom:6px;'><span style='color:#00937B;font-size:14px;'>✓</span><span style='font-size:11px;color:#0B2340;'>White-glove service</span></div><div style='display:flex;align-items:center;gap:6px;'><span style='color:#00937B;font-size:14px;'>✓</span><span style='font-size:11px;color:#0B2340;'>2,000+ businesses trust us</span></div></div></div><div style='background:#F7F9FC;border-radius:6px;padding:16px;min-width:200px;margin-left:20px;'><div style='font-size:11px;font-weight:600;color:#004ED3;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.5px;'>Your Representative</div><div style='font-size:14px;font-weight:600;color:#0B2340;margin-bottom:8px;'>{{ salesRep.name }}</div><div style='font-size:12px;color:#0B2340;margin-bottom:4px;'><span style='color:#004ED3;margin-right:6px;'>📧</span>{{ salesRep.email }}</div><div style='font-size:12px;color:#0B2340;'><span style='color:#004ED3;margin-right:6px;'>📞</span>{{ salesRep.phone }}</div></div></div></div>"
           }
         ]
@@ -170,7 +180,8 @@
               ],
               "rowsFrom": [{ "from": "customerInfo.rows" }],
               "valueFormatHintKey": "format",
-              "tableClass": "table-professional"
+              "tableClass": "table-professional",
+              "minHeight": "320px"
             }
           },
           {
@@ -184,7 +195,8 @@
               ],
               "rowsFrom": [{ "from": "monthlySavings.rows" }],
               "valueFormatHintKey": "format",
-              "tableClass": "table-professional"
+              "tableClass": "table-professional",
+              "minHeight": "320px"
             }
           },
           {
