@@ -846,9 +846,9 @@ function resolveDataBinding(path: string, data: any, config: PDFConfig): any {
     });
   }
   
-  // Direct path resolution with undefined handling
-  const result = resolvePath(data, path);
-  return result !== null && result !== undefined ? result : '';
+  // If no data bindings found, return the original string (it's likely static HTML)
+  // This is especially important for custom templates with no bindings
+  return path;
 }
 
 // Generate card content
@@ -1204,12 +1204,22 @@ export function generateConfigDrivenPDF(data: any): string {
     // Handle new v1.7.3 body structure
     if (Array.isArray(page.body)) {
       
+      // Debug logging for page processing
+      if (page.name === 'Details' || page.name === 'CustomerData') {
+        console.log(`🔍 [PDF-GEN] Processing page ${page.name} with ${page.body.length} elements`);
+      }
+      
       // Group elements that should be in the same row
       let currentRow: any[] = [];
       let totalColSpan = 0;
       
       page.body.forEach((element: any, idx: number) => {
         const colSpan = element.colSpan || 12;
+        
+        // Debug logging for Details page elements
+        if (page.name === 'Details') {
+          console.log(`🔍 [PDF-GEN] Details page element ${idx + 1}/${page.body.length}, type: ${element.type}, colSpan: ${colSpan}, templateLength: ${element.template?.length || 0}`);
+        }
         
         // Check if this element should start a new row
         if (colSpan < 12) {
@@ -1260,6 +1270,11 @@ export function generateConfigDrivenPDF(data: any): string {
             totalColSpan = 0;
           }
         } else if ((element.type === 'card' || element.type === 'custom') && colSpan === 12) {
+          // Debug logging for Details page processing
+          if (page.name === 'Details') {
+            console.log(`🔍 [PDF-GEN] Processing full-width element ${idx + 1}, bodyContent length before: ${bodyContent.length}`);
+          }
+          
           // Full-width card or custom element - render any pending row first
           if (currentRow.length > 0) {
             bodyContent += '<div class="grid">';
@@ -1318,10 +1333,28 @@ export function generateConfigDrivenPDF(data: any): string {
             });
             
             // Process regular data bindings
+            if (page.name === 'Details') {
+              console.log(`🔍 [PDF-GEN] Before resolveDataBinding, element ${idx + 1} template contains {{ }}:`, processedTemplate.includes('{{'));
+              console.log(`🔍 [PDF-GEN] Template first 100 chars:`, processedTemplate.substring(0, 100));
+            }
             processedTemplate = resolveDataBinding(processedTemplate, contextData, config);
+            if (page.name === 'Details') {
+              console.log(`🔍 [PDF-GEN] After resolveDataBinding, element ${idx + 1} result length:`, processedTemplate.length);
+              if (processedTemplate.length === 0) {
+                console.log(`🔍 [PDF-GEN] ERROR: resolveDataBinding returned empty for element ${idx + 1}`);
+              }
+            }
             elementContent = processedTemplate;
           }
           bodyContent += elementContent;
+          
+          // Debug logging for Details page after adding content
+          if (page.name === 'Details') {
+            console.log(`🔍 [PDF-GEN] After adding element ${idx + 1}, bodyContent length: ${bodyContent.length}`);
+            if (elementContent.length === 0) {
+              console.log(`🔍 [PDF-GEN] WARNING: Element ${idx + 1} produced empty content!`);
+            }
+          }
         } else if (element.type === 'grid') {
           // Legacy grid structure
           const columns = element.columns.map((col: any) => {
