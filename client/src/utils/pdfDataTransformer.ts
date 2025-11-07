@@ -1154,24 +1154,37 @@ export function preparePdfData(
   // Make them mutually exclusive to avoid double-render
   const vertical = isRestaurant ? 'restaurant' : (isRetail ? 'retail' : 'neutral');
 
-  // Build exactly ONE list for Turn Fees Into Growth bullets with HTML formatting
-  const bulletsByVertical: Record<string, string[]> = {
-    restaurant: [
-      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo</span> → Labor coverage (reduce OT or add a server/line cook).`,
-      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr</span> → Menu & experience (smallwares, linen, menu photography).`,
-      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr</span> → Upgrades (kitchen equipment, patio/dining refresh).`
-    ],
-    retail: [
-      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo</span> → Staffing coverage (associate hours or retention bonus).`,
-      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr</span> → Merch & POS (fixtures, seasonal displays, scanner refresh).`,
-      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr</span> → Store growth (lighting/signage, inventory expansion).`
-    ],
-    neutral: [
-      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo</span> → Net gain available for staffing or marketing.`
-    ]
+  // Build structured bullet data for proper styling in PDF template
+  const monthlyAmount = formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0));
+  const quarterlyAmount = formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4));
+  const annualAmount = formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0));
+  
+  // Create structured data for template styling
+  const bulletData = {
+    restaurant: {
+      amounts: [`${monthlyAmount}/mo`, `${quarterlyAmount}/qtr`, `${annualAmount}/yr`],
+      descriptions: [
+        'Labor coverage (reduce OT or add a server/line cook).',
+        'Menu & experience (smallwares, linen, menu photography).',
+        'Upgrades (kitchen equipment, patio/dining refresh).'
+      ]
+    },
+    retail: {
+      amounts: [`${monthlyAmount}/mo`, `${quarterlyAmount}/qtr`, `${annualAmount}/yr`],
+      descriptions: [
+        'Staffing coverage (associate hours or retention bonus).',
+        'Merch & POS (fixtures, seasonal displays, scanner refresh).',
+        'Store growth (lighting/signage, inventory expansion).'
+      ]
+    },
+    neutral: {
+      amounts: [`${monthlyAmount}/mo`],
+      descriptions: ['Net gain available for staffing or marketing.']
+    }
   };
-
-  const selectedBullets = bulletsByVertical[vertical];
+  
+  const selectedBulletData = bulletData[vertical];
+  
   const metrics = {
     monthlySavings: uiModel.ui.sections.salesImpact.heroNumber || 0,
     annualSavings: uiModel.ui.sections.salesImpact.annualImpact || 0,
@@ -1183,11 +1196,17 @@ export function preparePdfData(
     isRestaurant,
     isRetail,
     businessVertical: vertical,
-    growthBullets: selectedBullets,
-    // Individual bullet properties for PDF template
-    growthBullet1: selectedBullets[0] || '',
-    growthBullet2: selectedBullets[1] || '',
-    growthBullet3: selectedBullets[2] || ''
+    // Structured bullet data for template
+    growthAmount1: selectedBulletData.amounts[0] || '',
+    growthAmount2: selectedBulletData.amounts[1] || '',
+    growthAmount3: selectedBulletData.amounts[2] || '',
+    growthDesc1: selectedBulletData.descriptions[0] || '',
+    growthDesc2: selectedBulletData.descriptions[1] || '',
+    growthDesc3: selectedBulletData.descriptions[2] || '',
+    // Legacy format for backward compatibility
+    growthBullet1: `${selectedBulletData.amounts[0]} → ${selectedBulletData.descriptions[0]}`,
+    growthBullet2: selectedBulletData.amounts[1] ? `${selectedBulletData.amounts[1]} → ${selectedBulletData.descriptions[1]}` : '',
+    growthBullet3: selectedBulletData.amounts[2] ? `${selectedBulletData.amounts[2]} → ${selectedBulletData.descriptions[2]}` : ''
   };
   
   console.log('🔍 [PDF-TRANSFORM] metrics.programType:', metrics.programType);
