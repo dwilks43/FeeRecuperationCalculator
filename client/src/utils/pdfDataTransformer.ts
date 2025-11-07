@@ -1154,20 +1154,20 @@ export function preparePdfData(
   // Make them mutually exclusive to avoid double-render
   const vertical = isRestaurant ? 'restaurant' : (isRetail ? 'retail' : 'neutral');
 
-  // Build exactly ONE list for Turn Fees Into Growth bullets
+  // Build exactly ONE list for Turn Fees Into Growth bullets with HTML formatting
   const bulletsByVertical: Record<string, string[]> = {
     restaurant: [
-      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo → Labor coverage (reduce OT or add a server/line cook).`,
-      `${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr → Menu & experience (smallwares, linen, menu photography).`,
-      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr → Upgrades (kitchen equipment, patio/dining refresh).`
+      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo</span> → Labor coverage (reduce OT or add a server/line cook).`,
+      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr</span> → Menu & experience (smallwares, linen, menu photography).`,
+      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr</span> → Upgrades (kitchen equipment, patio/dining refresh).`
     ],
     retail: [
-      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo → Staffing coverage (associate hours or retention bonus).`,
-      `${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr → Merch & POS (fixtures, seasonal displays, scanner refresh).`,
-      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr → Store growth (lighting/signage, inventory expansion).`
+      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo</span> → Staffing coverage (associate hours or retention bonus).`,
+      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4))}/qtr</span> → Merch & POS (fixtures, seasonal displays, scanner refresh).`,
+      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0))}/yr</span> → Store growth (lighting/signage, inventory expansion).`
     ],
     neutral: [
-      `${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo → Net gain available for staffing or marketing.`
+      `<span style='color:#00937B;font-weight:700;'>${formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0))}/mo</span> → Net gain available for staffing or marketing.`
     ]
   };
 
