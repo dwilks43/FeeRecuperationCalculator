@@ -1164,22 +1164,22 @@ export function preparePdfData(
     restaurant: {
       amounts: [`${monthlyAmount}/mo`, `${quarterlyAmount}/qtr`, `${annualAmount}/yr`],
       descriptions: [
-        'Labor coverage (reduce OT or add a server/line cook).',
-        'Menu & experience (smallwares, linen, menu photography).',
-        'Upgrades (kitchen equipment, patio/dining refresh).'
+        'Expand your team or reduce labor pressure during peak hours.',
+        'Upgrade equipment or refresh your dining atmosphere.',
+        'Build reserves for seasonal fluctuations or expansion plans.'
       ]
     },
     retail: {
       amounts: [`${monthlyAmount}/mo`, `${quarterlyAmount}/qtr`, `${annualAmount}/yr`],
       descriptions: [
-        'Staffing coverage (associate hours or retention bonus).',
-        'Merch & POS (fixtures, seasonal displays, scanner refresh).',
-        'Store growth (lighting/signage, inventory expansion).'
+        'Invest in inventory management systems or staff training.',
+        'Enhance customer experience with store improvements.',
+        'Accelerate growth with marketing campaigns or new locations.'
       ]
     },
     neutral: {
       amounts: [`${monthlyAmount}/mo`],
-      descriptions: ['Net gain available for staffing or marketing.']
+      descriptions: ['Direct savings to your highest priority business needs.']
     }
   };
   
@@ -1193,6 +1193,7 @@ export function preparePdfData(
     currentCost: results.currentCost || 0,
     newProgramNetCost: (results.processingFees || 0) - (results.markupCollected || 0),
     programType: uiModel.ui.sections.salesImpact.programType || getProgramTypeLabel(inputs.programType),
+    currentProcessingRate: inputs.currentRate || 2.5,
     isRestaurant,
     isRetail,
     businessVertical: vertical,
