@@ -6,7 +6,17 @@ The calculator takes various merchant parameters (monthly credit card volume, mo
 
 **New Sales-Focused UI Design (October 2025)**: The interface has been transformed from a technical/mathematical presentation to an emotionally impactful sales tool. Key changes include a hero "Your Monthly Impact" section with prominent savings display, business context phrases like "That's your holiday marketing budget covered", and technical details hidden in a collapsible accordion to reduce cognitive load.
 
-## Recent PDF v1.3 Updates (October 2025 - Final Banking-Grade Polish)
+## Recent PDF v1.4 Updates (November 2025 - Content & Branding Refresh)
+- **Executive Summary Enhanced**: Improved marketing copy with bold "Annualized" formatting
+- **Label Updates**: Changed "Added to Bottom Line" to "% of Processing Cost Offset" throughout
+- **Program Benefits Expanded**: Increased from 4 to 6 items with more compelling content
+- **Dynamic Processing Rate**: Integrated current processing rate into "Turn Fees Into Growth" section
+- **Marketing Stats Updated**: Changed $2.4B to $1B+ annual volume for accuracy
+- **Trust Building Content**: New "Why Business Owners Choose Dynamic" value propositions
+- **Implementation Steps**: Simplified to: Complete Paperwork, White Glove Solution Ordering, Go-Live
+- **Trust Metrics Refined**: 95%+ client retention, $1B+ annual volume, A+ BBB rating
+
+## Previous PDF v1.3 Updates (October 2025 - Final Banking-Grade Polish)
 - **Simplified Page-1 Waterfall**: Removed "Processor Charge on Cards" row for cleaner story
   - Now shows only 3 rows: Today Cost → Price Differential → Net Cost
   - Page-2 maintains detailed 8-row breakdown for technical reference
