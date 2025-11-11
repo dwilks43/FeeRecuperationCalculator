@@ -90,13 +90,15 @@ async function sendSavingsReportEmail(toEmails: string[], ccEmails: string[], ca
 function generateEmailHTML(data: any, verifiedSender: string): string {
   const { monthlySavings, annualSavings, monthlyVolume, results } = data;
   const businessName = data.businessName || 'Valued Merchant';
-  const salesRepEmail = data.salesRepEmail || '';
+  const salesRepName = data.salesRepName || 'Your Sales Representative';
+  const salesRepEmail = data.salesRepEmail || 'quotes@dmprocessing.com';
+  const salesRepPhone = data.salesRepPhone || '877-515-0028';
   
   // Build mailto link with CC for sales rep
   const mailtoParams = new URLSearchParams({
     subject: 'Request More Information about Processing Savings'
   });
-  if (salesRepEmail) {
+  if (salesRepEmail && salesRepEmail !== 'quotes@dmprocessing.com') {
     mailtoParams.append('cc', salesRepEmail);
   }
   const contactLink = `mailto:quotes@dmprocessing.com?${mailtoParams.toString()}`;
@@ -106,55 +108,279 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
   const annualSavingsValue = results?.annualSavings || annualSavings || 0;
   const volume = results?.monthlyVolume || monthlyVolume || 0;
   
+  // Format numbers with commas
+  const formatCurrency = (num: number): string => {
+    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+  
+  // Base64 encoded DMP logo (simplified logo representation)
+  const logoBase64 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHg9IjUiIHk9IjEwIiB3aWR0aD0iMzAiIGhlaWdodD0iMjAiIGZpbGw9IiMwMDRFRDMiIHJ4PSIyIi8+PHRleHQgeD0iMjAiIHk9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNHB4Ij5ETVQ8L3RleHQ+PHRleHQgeD0iNjUiIHk9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMEI0MjgwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTJweCIgZm9udC13ZWlnaHQ9IjYwMCI+RHluYW1pYzwvdGV4dD48L3N2Zz4=';
+  
   return `
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%); color: white; padding: 30px; text-align: center; border-radius: 8px; }
-        .content { background: #f9f9f9; padding: 30px; border-radius: 8px; margin: 20px 0; }
-        .highlight { background: #e8f4fd; border-left: 4px solid #004ED3; padding: 15px; margin: 20px 0; }
-        .savings { font-size: 24px; font-weight: bold; color: #059669; }
-        .footer { text-align: center; color: #666; font-size: 12px; margin-top: 30px; }
-        .cta { background: #004ED3; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; display: inline-block; margin: 20px 0; }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, Arial, sans-serif; 
+            line-height: 1.6; 
+            color: #0B2340;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+        }
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: white;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        .header { 
+            background: linear-gradient(135deg, #004ED3 0%, #2BD8C2 100%); 
+            color: white; 
+            padding: 40px 30px; 
+            text-align: center;
+        }
+        .logo {
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            font-size: 16px;
+            opacity: 0.95;
+        }
+        .content { 
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #0B2340;
+            margin-bottom: 20px;
+        }
+        .highlight { 
+            background: linear-gradient(135deg, #F7F9FC 0%, #E8F7F5 100%);
+            border-left: 4px solid #00937B;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 147, 123, 0.1);
+        }
+        .highlight h3 {
+            margin-top: 0;
+            color: #004ED3;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .savings-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 6px;
+        }
+        .savings-label {
+            font-size: 14px;
+            color: #6A6F7A;
+            font-weight: 500;
+        }
+        .savings-value {
+            font-size: 26px;
+            font-weight: 700;
+            color: #00937B;
+        }
+        .benefits-list {
+            background: #F7F9FC;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 25px 0;
+        }
+        .benefits-list ul {
+            margin: 10px 0;
+            padding-left: 0;
+            list-style: none;
+        }
+        .benefits-list li {
+            padding: 8px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #0B2340;
+            font-size: 15px;
+        }
+        .benefits-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #00937B;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta { 
+            background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%);
+            color: white !important;
+            padding: 16px 40px;
+            text-decoration: none;
+            border-radius: 50px;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 78, 211, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 78, 211, 0.4);
+        }
+        .signature {
+            background: #0B2340;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+        }
+        .signature-grid {
+            display: table;
+            width: 100%;
+        }
+        .signature-col {
+            display: table-cell;
+            vertical-align: top;
+            padding: 0 15px;
+        }
+        .signature-col:first-child {
+            border-right: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .signature h4 {
+            color: #2BD8C2;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0 0 15px 0;
+        }
+        .signature p {
+            margin: 5px 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .signature a {
+            color: #2BD8C2;
+            text-decoration: none;
+        }
+        .signature a:hover {
+            text-decoration: underline;
+        }
+        .footer { 
+            text-align: center;
+            padding: 20px;
+            background: #F7F9FC;
+            color: #6A6F7A;
+            font-size: 12px;
+        }
+        .footer-logo {
+            font-weight: 700;
+            color: #004ED3;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        @media only screen and (max-width: 600px) {
+            .signature-grid { display: block; }
+            .signature-col { 
+                display: block; 
+                padding: 15px 0;
+                border-right: none !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            .signature-col:last-child { border-bottom: none; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>Your DMP Savings Report</h1>
-            <p>Personalized analysis from Dynamic Merchant Processing</p>
+            <div class="logo">
+                <img src="${logoBase64}" alt="DMP" style="height: 40px;">
+            </div>
+            <h1>Your Savings Report is Ready!</h1>
+            <p>Personalized Payment Processing Analysis</p>
         </div>
         
         <div class="content">
-            <p>Hello ${businessName},</p>
+            <p class="greeting">Hello ${businessName},</p>
             
-            <p>Thank you for providing your processing information for this quote.</p>
+            <p>Thank you for taking the time to explore how Dynamic Merchant Processing can transform your payment processing costs into profit. Based on your current processing volume and our proven Fee Recuperation Program, we're excited to show you the significant savings available to your business.</p>
             
             <div class="highlight">
-                <h3>Your Potential Savings:</h3>
-                <div class="savings">Monthly: $${savings.toFixed(2)}</div>
-                <div class="savings">Annual: $${annualSavingsValue.toFixed(2)}</div>
+                <h3>💰 Your Potential Impact:</h3>
+                <div class="savings-row">
+                    <span class="savings-label">Monthly Savings</span>
+                    <span class="savings-value">$${formatCurrency(savings)}</span>
+                </div>
+                <div class="savings-row">
+                    <span class="savings-label">Annual Savings</span>
+                    <span class="savings-value">$${formatCurrency(annualSavingsValue)}</span>
+                </div>
             </div>
             
-            <p>Your detailed savings report is attached to this email as a PDF. This report includes:</p>
-            <ul>
-                <li>Complete breakdown of your current vs. new processing costs</li>
-                <li>Volume analysis with dual pricing calculations</li>
-                <li>Monthly and annual savings projections</li>
-            </ul>
+            <div class="benefits-list">
+                <p><strong>Your Detailed PDF Report (attached) includes:</strong></p>
+                <ul>
+                    <li>Complete breakdown of your current vs. new processing costs</li>
+                    <li>Line-by-line analysis of fees and savings</li>
+                    <li>Customized implementation roadmap for your business</li>
+                    <li>Real numbers based on your actual processing volume</li>
+                </ul>
+            </div>
             
-            <p>Ready to start saving? Our team is here to help you implement this solution.</p>
+            <p style="font-size: 16px; color: #0B2340; margin-top: 30px;">
+                <strong>What makes Dynamic different?</strong> We don't just process payments – we partner with you to ensure every transaction adds to your bottom line, not your expenses.
+            </p>
             
-            <a href="${contactLink}" class="cta">Contact Us Today</a>
+            <div class="cta-section">
+                <p style="color: #6A6F7A; margin-bottom: 20px;">Ready to keep more of what you earn?</p>
+                <a href="${contactLink}" class="cta">Start Saving Today →</a>
+                <p style="color: #6A6F7A; font-size: 13px; margin-top: 15px;">
+                    Or simply reply to this email to schedule a consultation
+                </p>
+            </div>
+        </div>
+        
+        <div class="signature">
+            <div class="signature-grid">
+                <div class="signature-col">
+                    <h4>Your Sales Representative</h4>
+                    <p><strong>${salesRepName}</strong></p>
+                    <p><a href="mailto:${salesRepEmail}">${salesRepEmail}</a></p>
+                    <p>📞 ${salesRepPhone}</p>
+                </div>
+                <div class="signature-col">
+                    <h4>Corporate Headquarters</h4>
+                    <p><strong>Dynamic Merchant Processing</strong></p>
+                    <p>1323 Hamric Dr E, Suite C<br>Oxford, AL 36203</p>
+                    <p><a href="mailto:info@dmprocessing.com">info@dmprocessing.com</a></p>
+                    <p>📞 877-515-0028</p>
+                    <p><a href="https://dmprocessing.com">www.dmprocessing.com</a></p>
+                </div>
+            </div>
         </div>
         
         <div class="footer">
-            <p>Dynamic Merchant Processing | Professional Payment Solutions</p>
-            <p>This report was generated using your provided data and DMP's proven dual pricing model.</p>
+            <div class="footer-logo">DYNAMIC MERCHANT PROCESSING</div>
+            <p>Professional Payment Solutions Since 2003</p>
+            <p style="margin-top: 15px;">This report was generated using your provided data and DMP's proven dual pricing model.<br>
+            All calculations are estimates based on the information provided.</p>
         </div>
     </div>
 </body>
@@ -164,32 +390,74 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
 function generateEmailText(data: any, verifiedSender: string): string {
   const { monthlySavings, annualSavings, monthlyVolume, results } = data;
   const businessName = data.businessName || 'Valued Merchant';
+  const salesRepName = data.salesRepName || 'Your Sales Representative';
+  const salesRepEmail = data.salesRepEmail || 'quotes@dmprocessing.com';
+  const salesRepPhone = data.salesRepPhone || '877-515-0028';
   
   // Use results data if available, fallback to root level data
   const savings = results?.monthlySavings || monthlySavings || 0;
   const annualSavingsValue = results?.annualSavings || annualSavings || 0;
   const volume = results?.monthlyVolume || monthlyVolume || 0;
   
+  // Format numbers with commas
+  const formatCurrency = (num: number): string => {
+    return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  };
+  
   return `
 Hello ${businessName},
 
-Thank you for providing your processing information for this quote.
+Thank you for taking the time to explore how Dynamic Merchant Processing can transform 
+your payment processing costs into profit. Based on your current processing volume and 
+our proven Fee Recuperation Program, we're excited to show you the significant savings 
+available to your business.
 
-YOUR POTENTIAL SAVINGS:
-Monthly: $${savings.toFixed(2)}
-Annual: $${annualSavingsValue.toFixed(2)}
+═══════════════════════════════════════════
+💰 YOUR POTENTIAL IMPACT
+═══════════════════════════════════════════
+Monthly Savings: $${formatCurrency(savings)}
+Annual Savings:  $${formatCurrency(annualSavingsValue)}
+═══════════════════════════════════════════
 
-Your detailed savings report is attached to this email as a PDF. This report includes:
-- Complete breakdown of your current vs. new processing costs
-- Volume analysis with dual pricing calculations  
-- Monthly and annual savings projections
+YOUR DETAILED PDF REPORT (attached) includes:
+✓ Complete breakdown of your current vs. new processing costs
+✓ Line-by-line analysis of fees and savings
+✓ Customized implementation roadmap for your business
+✓ Real numbers based on your actual processing volume
 
-Ready to start saving? Our team is here to help you implement this solution.
+What makes Dynamic different? We don't just process payments – we partner with you 
+to ensure every transaction adds to your bottom line, not your expenses.
 
-Contact us at: quotes@dmprocessing.com
+Ready to keep more of what you earn? Contact us today to get started:
+• Email: quotes@dmprocessing.com
+• Phone: 877-515-0028
+• Or simply reply to this email to schedule a consultation
 
-Dynamic Merchant Processing | Professional Payment Solutions
+────────────────────────────────────────────
+YOUR SALES REPRESENTATIVE
+────────────────────────────────────────────
+${salesRepName}
+Email: ${salesRepEmail}
+Phone: ${salesRepPhone}
+
+────────────────────────────────────────────
+CORPORATE HEADQUARTERS
+────────────────────────────────────────────
+Dynamic Merchant Processing
+1323 Hamric Dr E, Suite C
+Oxford, AL 36203
+
+Email: info@dmprocessing.com
+Phone: 877-515-0028
+Web: www.dmprocessing.com
+
+═══════════════════════════════════════════
+DYNAMIC MERCHANT PROCESSING
+Professional Payment Solutions Since 2003
+═══════════════════════════════════════════
+
 This report was generated using your provided data and DMP's proven dual pricing model.
+All calculations are estimates based on the information provided.
 `;
 }
 
