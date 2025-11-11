@@ -94,14 +94,12 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
   const salesRepEmail = data.salesRepEmail || 'quotes@dmprocessing.com';
   const salesRepPhone = data.salesRepPhone || '877-515-0028';
   
-  // Build mailto link with CC for sales rep
-  const mailtoParams = new URLSearchParams({
-    subject: 'Request More Information about Processing Savings'
-  });
+  // Build mailto link with CC for sales rep - properly encode subject
+  const subject = encodeURIComponent('Request More Information about Processing Savings');
+  let contactLink = `mailto:quotes@dmprocessing.com?subject=${subject}`;
   if (salesRepEmail && salesRepEmail !== 'quotes@dmprocessing.com') {
-    mailtoParams.append('cc', salesRepEmail);
+    contactLink += `&cc=${encodeURIComponent(salesRepEmail)}`;
   }
-  const contactLink = `mailto:quotes@dmprocessing.com?${mailtoParams.toString()}`;
   
   // Use results data if available, fallback to root level data
   const savings = results?.monthlySavings || monthlySavings || 0;
@@ -113,8 +111,18 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
     return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
   
-  // Base64 encoded DMP logo (simplified logo representation)
-  const logoBase64 = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTIwIiBoZWlnaHQ9IjQwIiB2aWV3Qm94PSIwIDAgMTIwIDQwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxyZWN0IHg9IjUiIHk9IjEwIiB3aWR0aD0iMzAiIGhlaWdodD0iMjAiIGZpbGw9IiMwMDRFRDMiIHJ4PSIyIi8+PHRleHQgeD0iMjAiIHk9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSJ3aGl0ZSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXdlaWdodD0iYm9sZCIgZm9udC1zaXplPSIxNHB4Ij5ETVQ8L3RleHQ+PHRleHQgeD0iNjUiIHk9IjI0IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjMEI0MjgwIiBmb250LWZhbWlseT0iQXJpYWwsIHNhbnMtc2VyaWYiIGZvbnQtc2l6ZT0iMTJweCIgZm9udC13ZWlnaHQ9IjYwMCI+RHluYW1pYzwvdGV4dD48L3N2Zz4=';
+  // Create a properly formatted DMP logo as inline SVG HTML
+  const logoHTML = `
+    <div style="display: inline-block; padding: 10px 0;">
+      <div style="display: flex; align-items: center; justify-content: center;">
+        <div style="background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%); color: white; padding: 8px 16px; border-radius: 4px; font-family: Arial, sans-serif; font-weight: bold; font-size: 18px; letter-spacing: 1px;">
+          DMP
+        </div>
+        <div style="color: #0B2340; margin-left: 10px; font-family: Arial, sans-serif; font-size: 16px; font-weight: 600;">
+          Dynamic Merchant Processing
+        </div>
+      </div>
+    </div>`;
   
   return `
 <!DOCTYPE html>
@@ -311,7 +319,7 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
     <div class="container">
         <div class="header">
             <div class="logo">
-                <img src="${logoBase64}" alt="DMP" style="height: 40px;">
+                ${logoHTML}
             </div>
             <h1>Your Savings Report is Ready!</h1>
             <p>Personalized Payment Processing Analysis</p>
