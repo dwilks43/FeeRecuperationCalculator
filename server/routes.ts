@@ -153,6 +153,9 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
         }
         .logo {
             margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .header h1 {
             margin: 0;
@@ -237,20 +240,26 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
             margin: 40px 0;
         }
         .cta { 
-            background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%);
+            background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%) !important;
             color: white !important;
             padding: 16px 40px;
-            text-decoration: none;
+            text-decoration: none !important;
             border-radius: 50px;
-            display: inline-block;
+            display: inline-block !important;
             font-size: 16px;
             font-weight: 600;
             box-shadow: 0 4px 15px rgba(0, 78, 211, 0.3);
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin: 10px 0;
+            text-align: center;
         }
         .cta:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0, 78, 211, 0.4);
+        }
+        a.cta {
+            background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%) !important;
+            color: white !important;
+            text-decoration: none !important;
         }
         .signature {
             background: #0B2340;
@@ -358,7 +367,9 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
             
             <div class="cta-section">
                 <p style="color: #6A6F7A; margin-bottom: 20px;">Ready to keep more of what you earn?</p>
-                <a href="${contactLink}" class="cta">Start Saving Today →</a>
+                <div style="margin: 20px 0;">
+                    <a href="${contactLink}" class="cta" style="background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%) !important; color: white !important; padding: 16px 40px; text-decoration: none !important; border-radius: 50px; display: inline-block !important; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 78, 211, 0.3);">Start Saving Today →</a>
+                </div>
                 <p style="color: #6A6F7A; font-size: 13px; margin-top: 15px;">
                     Or simply reply to this email to schedule a consultation
                 </p>
@@ -387,7 +398,7 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
         <div class="footer">
             <div class="footer-logo">DYNAMIC MERCHANT PROCESSING</div>
             <p>Professional Payment Solutions Since 2003</p>
-            <p style="margin-top: 15px;">This report was generated using your provided data and DMP's proven dual pricing model.<br>
+            <p style="margin-top: 15px;">This report was generated using your provided data and DMP's Fee Recuperation Calculator.<br>
             All calculations are estimates based on the information provided.</p>
         </div>
     </div>
@@ -464,7 +475,7 @@ DYNAMIC MERCHANT PROCESSING
 Professional Payment Solutions Since 2003
 ═══════════════════════════════════════════
 
-This report was generated using your provided data and DMP's proven dual pricing model.
+This report was generated using your provided data and DMP's Fee Recuperation Calculator.
 All calculations are estimates based on the information provided.
 `;
 }
