@@ -1192,6 +1192,7 @@ export function preparePdfData(
     costReductionPct: uiModel.ui.sections.salesImpact.costReduction || 0,
     currentCost: results.currentCost || 0,
     newProgramNetCost: (results.processingFees || 0) - (results.markupCollected || 0),
+    processingCostAfterDiff: results.recovery || results.netChangeCards || results.residualAfterMarkup || results.newCost || 0,
     programType: uiModel.ui.sections.salesImpact.programType || getProgramTypeLabel(inputs.programType),
     currentProcessingRate: inputs.currentRate || 2.5,
     isRestaurant,
