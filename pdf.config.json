@@ -29,6 +29,7 @@
         "costReductionPct": ["ui.sections.salesImpact.costReduction"],
         "currentCost": ["results.currentCost"],
         "newProgramNetCost": ["results.newCost"],
+        "processingCostAfterDiff": ["metrics.processingCostAfterDiff", "results.recovery", "results.netChangeCards", "results.residualAfterMarkup", "results.newCost"],
         "processorCharge": ["results.processorChargeCards"],
         "diffCollected": ["results.cardMarkupCollected"],
         "programType": ["metrics.programType", "ui.sections.salesImpact.programType", "programType"],
