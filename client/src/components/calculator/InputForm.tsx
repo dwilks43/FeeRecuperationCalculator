@@ -223,13 +223,55 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     // Fields with max 3 digits (x.xx format)
     const threeDigitFields = ['currentRate', 'interchangeCost', 'flatRatePct', 'flatRateOverride'];
     // Fields with max 4 digits (xx.xx format)
-    const fourDigitFields = ['taxRate', 'tipRate', 'cashDiscount'];
-    // Fields with max 5 digits (xxx.xx format) - Menu Markup can go up to 100%
-    const fiveDigitFields = ['priceDifferential'];
+    const fourDigitFields = ['taxRate', 'tipRate'];
+    // Fields with special handling for 1-10% range with decimals
+    const quarterPercentFields = ['cashDiscount', 'priceDifferential'];
     
     let result = '';
     
-    if (threeDigitFields.includes(field)) {
+    if (quarterPercentFields.includes(field)) {
+      // Special handling for cashDiscount and priceDifferential (1-10% in 0.25% increments)
+      // Allow proper decimal input format
+      if (firstDecimalIndex === -1) {
+        // No decimal point - limit to 2 digits max (for "10")
+        result = digitsOnly.slice(0, 2);
+      } else if (firstDecimalIndex === 0) {
+        // Decimal at start (.xx) - format as 0.xx
+        result = '0.' + digitsOnly.slice(0, 2);
+      } else {
+        // Has decimal - properly preserve the decimal position
+        const beforeDecimal = sanitized.substring(0, firstDecimalIndex);
+        const afterDecimal = sanitized.substring(firstDecimalIndex + 1).replace(/\./g, '');
+        
+        // Limit to 2 digits before decimal and 2 after
+        const limitedBefore = beforeDecimal.slice(0, 2);
+        const limitedAfter = afterDecimal.slice(0, 2);
+        
+        result = limitedBefore + (limitedAfter.length > 0 ? '.' + limitedAfter : '');
+      }
+      
+      // Ensure we don't exceed 10%
+      const numValue = parseFloat(result);
+      if (!isNaN(numValue) && numValue > 10) {
+        result = '10';
+      }
+      
+      // Validate 0.25% increments when complete
+      if (result && !result.endsWith('.') && result.indexOf('.') !== -1) {
+        const num = parseFloat(result);
+        if (!isNaN(num)) {
+          // Round to nearest 0.25
+          const rounded = Math.round(num * 4) / 4;
+          // Only apply rounding if user has finished typing (no trailing zeros being entered)
+          if (result.indexOf('.') === -1 || result.split('.')[1].length === 2) {
+            // Check if the value needs rounding
+            if (Math.abs(num - rounded) > 0.001) {
+              // Keep the user's value for now, rounding will happen on blur
+            }
+          }
+        }
+      }
+    } else if (threeDigitFields.includes(field)) {
       // For 3-digit fields (x.xx): max 1 digit before decimal, max 2 total after
       if (firstDecimalIndex === -1) {
         // No decimal point - just limit to 1 digit
@@ -271,43 +313,6 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
         const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
         result = beforeDecimalDigits.slice(0, 2) + '.' + afterDecimalDigits.slice(0, 2);
-      }
-      
-      // Enforce maximum of 10 for cashDiscount
-      if (field === 'cashDiscount') {
-        const numericValue = parseFloat(result);
-        if (!isNaN(numericValue) && numericValue > 10) {
-          result = '10';
-        }
-      }
-    } else if (fiveDigitFields.includes(field)) {
-      // For 5-digit fields (xxx.xx): max 3 digits before decimal, max 2 after
-      // Special case for priceDifferential - max value is 100%
-      if (firstDecimalIndex === -1) {
-        // No decimal point - just limit to 3 digits
-        result = digitsOnly.slice(0, 3);
-      } else if (firstDecimalIndex === 0) {
-        // Decimal at start (.xxx) - format as 0.xx
-        result = '0.' + digitsOnly.slice(0, 2);
-      } else if (firstDecimalIndex <= 3) {
-        // Decimal within first 3 positions - keep position
-        const beforeDec = digitsOnly.slice(0, firstDecimalIndex);
-        const afterDec = digitsOnly.slice(firstDecimalIndex, firstDecimalIndex + 2);
-        result = beforeDec + (afterDec ? '.' + afterDec : '');
-      } else {
-        // Decimal after position 3 (e.g., 1000.50) - keep first 3 digits before decimal
-        // Find where the decimal splits the digits
-        const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
-        const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
-        result = beforeDecimalDigits.slice(0, 3) + '.' + afterDecimalDigits.slice(0, 2);
-      }
-      
-      // Enforce maximum of 100 for priceDifferential (Menu Markup)
-      if (field === 'priceDifferential') {
-        const numericValue = parseFloat(result);
-        if (!isNaN(numericValue) && numericValue > 100) {
-          result = '100';
-        }
       }
     } else {
       // For other fields, no special limiting
@@ -521,7 +526,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           {/* Current Processing Rate */}
           <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Current Processing Rate
+              Current Processing Rate %
               <Button
                 variant="ghost"
                 size="sm"
@@ -549,7 +554,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           {/* Interchange Cost */}
           <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Interchange Cost
+              Interchange Cost %
               <Button
                 variant="ghost"
                 size="sm"
@@ -593,7 +598,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           {/* Tax Rate */}
           <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Tax Rate
+              Sales Tax
               <Button
                 variant="ghost"
                 size="sm"
