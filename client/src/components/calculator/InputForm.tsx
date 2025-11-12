@@ -232,8 +232,6 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
     if (quarterPercentFields.includes(field)) {
       // Special handling for cashDiscount and priceDifferential (1-10% in 0.25% increments)
       // Allow proper decimal input format
-      console.log(`[DEBUG ${field}] Input value: "${value}", Sanitized: "${sanitized}", FirstDecimalIndex: ${firstDecimalIndex}`);
-      
       if (firstDecimalIndex === -1) {
         // No decimal point - limit to 2 digits max (for "10")
         result = digitsOnly.slice(0, 2);
@@ -250,8 +248,6 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         const beforeDecimal = sanitized.substring(0, firstDecimalIndex);
         const afterDecimal = sanitized.substring(firstDecimalIndex + 1).replace(/\./g, '');
         
-        console.log(`[DEBUG ${field}] BeforeDecimal: "${beforeDecimal}", AfterDecimal: "${afterDecimal}"`);
-        
         // Limit to 2 digits before decimal and 2 after
         const limitedBefore = beforeDecimal.slice(0, 2);
         const limitedAfter = afterDecimal.slice(0, 2);
@@ -261,17 +257,12 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           result = result + '.' + limitedAfter;
         }
         
-        console.log(`[DEBUG ${field}] Result before 10% check: "${result}"`);
-        
         // Ensure we don't exceed 10%
         const numValue = parseFloat(result);
         if (!isNaN(numValue) && numValue > 10) {
-          console.log(`[DEBUG ${field}] Value ${numValue} exceeds 10, capping to 10`);
           result = '10';
         }
       }
-      
-      console.log(`[DEBUG ${field}] Final result: "${result}"`);
     } else if (threeDigitFields.includes(field)) {
       // For 3-digit fields (x.xx): max 1 digit before decimal, max 2 total after
       if (firstDecimalIndex === -1) {
