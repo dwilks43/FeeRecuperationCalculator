@@ -294,17 +294,19 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       } else if (firstDecimalIndex === 0) {
         // Decimal at start (.xxx) - format as 0.xx
         result = '0.' + digitsOnly.slice(0, 2);
-      } else if (firstDecimalIndex <= 2) {
-        // Decimal within first 2 positions - keep position
-        const beforeDec = digitsOnly.slice(0, firstDecimalIndex);
-        const afterDec = digitsOnly.slice(firstDecimalIndex, firstDecimalIndex + 2);
-        result = beforeDec + (afterDec ? '.' + afterDec : '');
       } else {
-        // Decimal after position 2 (e.g., 100.50) - keep first 2 digits before decimal
-        // Find where the decimal splits the digits
-        const beforeDecimalDigits = sanitized.slice(0, firstDecimalIndex).replace(/\./g, '');
-        const afterDecimalDigits = sanitized.slice(firstDecimalIndex + 1).replace(/\./g, '');
-        result = beforeDecimalDigits.slice(0, 2) + '.' + afterDecimalDigits.slice(0, 2);
+        // Has decimal - properly preserve the decimal position
+        const beforeDecimal = sanitized.substring(0, firstDecimalIndex);
+        const afterDecimal = sanitized.substring(firstDecimalIndex + 1).replace(/\./g, '');
+        
+        // Limit to 2 digits before decimal and 2 after
+        const limitedBefore = beforeDecimal.slice(0, 2);
+        const limitedAfter = afterDecimal.slice(0, 2);
+        
+        result = limitedBefore;
+        if (limitedAfter.length > 0 || sanitized.includes('.')) {
+          result = result + '.' + limitedAfter;
+        }
       }
     } else {
       // For other fields, no special limiting
