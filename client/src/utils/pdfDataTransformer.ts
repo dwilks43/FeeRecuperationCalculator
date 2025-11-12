@@ -1154,10 +1154,10 @@ export function preparePdfData(
   // Make them mutually exclusive to avoid double-render
   const vertical = isRestaurant ? 'restaurant' : (isRetail ? 'retail' : 'neutral');
 
-  // Build structured bullet data for proper styling in PDF template
-  const monthlyAmount = formatMoney(Math.round(uiModel.ui.sections.salesImpact.heroNumber || 0));
-  const quarterlyAmount = formatMoney(Math.round((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4));
-  const annualAmount = formatMoney(Math.round(uiModel.ui.sections.salesImpact.annualImpact || 0));
+  // Build structured bullet data for proper styling in PDF template - keep exact cents values
+  const monthlyAmount = formatMoney(uiModel.ui.sections.salesImpact.heroNumber || 0);
+  const quarterlyAmount = formatMoney((uiModel.ui.sections.salesImpact.annualImpact || 0) / 4);
+  const annualAmount = formatMoney(uiModel.ui.sections.salesImpact.annualImpact || 0);
   
   // Create structured data for template styling
   const bulletData = {
