@@ -660,7 +660,7 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   
   rows.push({ 
     label: 'Cost Reduction %', 
-    value: results.procSavingsPct || 0, 
+    value: results.coveragePct || 0, 
     format: 'percent' 
   });
   
@@ -738,14 +738,15 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
   
   // For savings percent, include total savings (matching ProcessingSavings.tsx logic)
   let coveragePct = 0;
-  if (results.currentCost > 0) {
+  if (results.currentCost && results.currentCost > 0) {
     if (inputs.programType === 'CASH_DISCOUNTING') {
       // Include both card savings and cash revenue
       const totalSavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
       coveragePct = (totalSavings / results.currentCost);
     } else if (inputs.programType === 'SUPPLEMENTAL_FEE') {
-      // Use procSavingsPct to match the UI
-      coveragePct = results.procSavingsPct || 0;
+      // Use total net gain revenue to match the UI
+      const totalNetGain = results.totalNetGainRevenue || 0;
+      coveragePct = totalNetGain / results.currentCost;
     } else {
       // Dual Pricing
       coveragePct = monthlySavings / results.currentCost;
