@@ -312,7 +312,7 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const pd   = (inputs.priceDifferential || 0) / 100;
   // Use flatRatePct (Bank Mapping) field, with fallback for legacy
   // Auto-calculate flat rate based on price differential if not provided
-  const flatRateAuto = calculateAutoFlatRate(priceDiff);
+  const flatRateAuto = calculateAutoFlatRate(pd);
   const fr = inputs.flatRatePct !== undefined ? 
     inputs.flatRatePct / 100 : 
     (inputs.flatRate !== undefined ? inputs.flatRate / 100 : flatRateAuto);     // what DMP charges merchant under DP
