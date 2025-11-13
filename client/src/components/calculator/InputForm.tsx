@@ -592,7 +592,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           {/* Tax Rate */}
           <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-              Sales Tax
+              Sales Tax %
               <Button
                 variant="ghost"
                 size="sm"
@@ -658,7 +658,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           {inputs.businessType !== 'RETAIL' ? (
             <div>
               <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
-                Tip Rate
+                Tip Rate %
                 <Button
                   variant="ghost"
                   size="sm"
@@ -727,7 +727,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
           <div>
             <Label className="flex items-center gap-2 text-sm font-medium text-gray-700 mb-2">
               {inputs.programType === 'SUPPLEMENTAL_FEE' ? 'Supplemental Fee (%)' : 
-               inputs.programType === 'CASH_DISCOUNTING' ? 'Menu Markup (%)' : 'Price Differential'}
+               inputs.programType === 'CASH_DISCOUNTING' ? 'Menu Markup (%)' : 'Price Differential %'}
               <Button
                 variant="ghost"
                 size="sm"
