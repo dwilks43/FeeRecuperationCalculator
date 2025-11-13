@@ -160,7 +160,7 @@ function buildCustomerInfoRows(customerInfo: Partial<CustomerInfo>): any[] {
 }
 
 // Build Input Parameters rows
-function buildInputParamsRows(inputs: CalculatorInputs): any[] {
+function buildInputParamsRows(inputs: CalculatorInputs, results: CalculatorResults): any[] {
   const rows = [];
   
   // Program Type
@@ -206,12 +206,12 @@ function buildInputParamsRows(inputs: CalculatorInputs): any[] {
     });
   }
   
-  // Flat Rate % - use flatRatePct if available, otherwise flatRate
-  // Always pass as decimal (divide by 100) so PDF generator converts properly
-  const flatRateValue = inputs.flatRatePct !== undefined ? inputs.flatRatePct : inputs.flatRate;
+  // Flat Rate % - use the auto-calculated derivedFlatRate from results
+  // This ensures we show the correctly calculated flat rate (e.g., 3.85% for 4% price differential)
+  // derivedFlatRate is already in decimal form (0.0385 for 3.85%)
   rows.push({ 
     label: 'Flat Rate %', 
-    value: flatRateValue / 100,  // Pass as decimal for consistent PDF formatting
+    value: results.derivedFlatRate || 0,  // Already in decimal form
     format: 'percent' 
   });
   
@@ -1079,7 +1079,7 @@ export function buildPdfUiModel(
         },
         inputParameters: {
           title: 'Input Parameters',
-          rows: buildInputParamsRows(inputs)
+          rows: buildInputParamsRows(inputs, results)
         },
         liveVolumeBreakdown: {
           title: 'Technical Calculation Details',
