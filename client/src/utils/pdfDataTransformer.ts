@@ -660,7 +660,7 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   
   rows.push({ 
     label: 'Cost Reduction %', 
-    value: results.coveragePct || 0, 
+    value: results.procSavingsPct || 0, 
     format: 'percent' 
   });
   
