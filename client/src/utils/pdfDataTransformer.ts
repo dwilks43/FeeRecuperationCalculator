@@ -744,8 +744,8 @@ function buildSalesImpactSection(inputs: CalculatorInputs, results: CalculatorRe
       const totalSavings = (results.savingsCardsOnly || 0) + (results.extraCashRevenue || 0);
       coveragePct = (totalSavings / results.currentCost);
     } else if (inputs.programType === 'SUPPLEMENTAL_FEE') {
-      // Use total net gain revenue
-      coveragePct = (results.totalNetGainRevenue || 0) / results.currentCost;
+      // Use procSavingsPct to match the UI
+      coveragePct = results.procSavingsPct || 0;
     } else {
       // Dual Pricing
       coveragePct = monthlySavings / results.currentCost;
