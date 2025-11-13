@@ -620,8 +620,8 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
                   </div>
-                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                    {formatCurrency(results.recovery || 0)}
+                  <span className="font-medium text-gray-900">
+                    {formatCurrency(Math.abs(results.recovery || 0))}
                   </span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">
@@ -967,8 +967,8 @@ export default function DualPricingBreakdown({ results, inputs, onTooltip, progr
                       <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
                     </Button>
                   </div>
-                  <span className={`font-medium ${(results.recovery || 0) >= 0 ? 'text-green-600' : 'text-gray-900'}`}>
-                    {formatCurrency(results.recovery || 0)}
+                  <span className="font-medium text-gray-900">
+                    {formatCurrency(Math.abs(results.recovery || 0))}
                   </span>
                 </div>
                 <div className="flex justify-between items-center border-t pt-2">

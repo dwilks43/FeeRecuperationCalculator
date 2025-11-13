@@ -1235,10 +1235,17 @@ export function generateConfigDrivenPDF(data: any): string {
                 // Process custom template with data bindings
                 let processedTemplate = el.template || '';
                 
-                // Replace FORMAT.money() and FORMAT.percent() functions
+                // Replace FORMAT.money(), FORMAT.moneyAbs(), and FORMAT.percent() functions
                 processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
                   const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
                   return formatValue(value, 'currency', config);
+                });
+                
+                processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.moneyAbs\((.*?)\) \}\}/g, (match, path) => {
+                  const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+                  const numValue = parseFloat(String(value).replace(/[$,]/g, ''));
+                  const absValue = Math.abs(numValue || 0);
+                  return formatValue(absValue, 'currency', config);
                 });
                 
                 processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {
@@ -1276,10 +1283,17 @@ export function generateConfigDrivenPDF(data: any): string {
                 // Process custom template with data bindings
                 let processedTemplate = el.template || '';
                 
-                // Replace FORMAT.money() and FORMAT.percent() functions
+                // Replace FORMAT.money(), FORMAT.moneyAbs(), and FORMAT.percent() functions
                 processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
                   const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
                   return formatValue(value, 'currency', config);
+                });
+                
+                processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.moneyAbs\((.*?)\) \}\}/g, (match, path) => {
+                  const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+                  const numValue = parseFloat(String(value).replace(/[$,]/g, ''));
+                  const absValue = Math.abs(numValue || 0);
+                  return formatValue(absValue, 'currency', config);
                 });
                 
                 processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {

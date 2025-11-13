@@ -311,9 +311,11 @@ function calculateDualPricingResults(inputs: CalculatorInputs): CalculatorResult
   const tip  = (inputs.tipRate || 0) / 100;
   const pd   = (inputs.priceDifferential || 0) / 100;
   // Use flatRatePct (Bank Mapping) field, with fallback for legacy
+  // Auto-calculate flat rate based on price differential if not provided
+  const flatRateAuto = calculateAutoFlatRate(priceDiff);
   const fr = inputs.flatRatePct !== undefined ? 
     inputs.flatRatePct / 100 : 
-    (inputs.flatRate || 0) / 100;     // what DMP charges merchant under DP
+    (inputs.flatRate !== undefined ? inputs.flatRate / 100 : flatRateAuto);     // what DMP charges merchant under DP
   const curr = (inputs.currentRate || 0) / 100;
 
   // 1) Base Card Volume (pre-tax, pre-tip) - v1.5.0 aligned terminology
@@ -442,9 +444,11 @@ function calculateCashDiscountingResults(inputs: CalculatorInputs): CalculatorRe
   const tip = (inputs.tipRate || 0) / 100;
   const pd = (inputs.priceDifferential || 0) / 100;  // menu markup %
   const cd = (inputs.cashDiscount || 0) / 100;       // cash discount %
+  // Auto-calculate flat rate based on cash discount if not provided
+  const flatRateAuto = calculateAutoFlatRate(cd);
   const fr = inputs.flatRatePct !== undefined ? 
     inputs.flatRatePct / 100 : 
-    (inputs.flatRate || 0) / 100;
+    (inputs.flatRate !== undefined ? inputs.flatRate / 100 : flatRateAuto);
   const curr = (inputs.currentRate || 0) / 100;
 
   // CARDS CALCULATIONS

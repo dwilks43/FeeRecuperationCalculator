@@ -337,12 +337,12 @@ function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: Calcul
   
   rows.push({ 
     label: 'Processing Cost after Price Differential', 
-    value: results.recovery || results.netChangeCards || results.residualAfterMarkup || results.newCost || 0, 
+    value: Math.abs(results.recovery || results.netChangeCards || results.residualAfterMarkup || results.newCost || 0), 
     format: 'money' 
   });
   
   rows.push({ 
-    label: 'Coverage %', 
+    label: 'Cost Reduction %', 
     value: results.coveragePct || 0, 
     format: 'percent' 
   });
@@ -498,7 +498,7 @@ function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: Ca
   });
   
   rows.push({ 
-    label: 'Coverage %', 
+    label: 'Cost Reduction %', 
     value: results.coveragePct || 0, 
     format: 'percent' 
   });
@@ -654,12 +654,12 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   
   rows.push({ 
     label: 'Processing Cost after Price Differential', 
-    value: results.recovery || results.netChangeCards || results.netCostForProcessingCards || 0, 
+    value: Math.abs(results.recovery || results.netChangeCards || results.netCostForProcessingCards || 0), 
     format: 'money' 
   });
   
   rows.push({ 
-    label: 'Coverage %', 
+    label: 'Cost Reduction %', 
     value: results.coveragePct || 0, 
     format: 'percent' 
   });
@@ -860,9 +860,9 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
       format: 'money'
     });
     
-    // 6. Processing Cost Savings %
+    // 6. Cost Reduction %
     items.push({
-      label: 'Processing Cost Savings %',
+      label: 'Cost Reduction %',
       value: results.procSavingsPct || results.processingCostSavingsPct || 0,
       format: 'percent'
     });
@@ -969,7 +969,7 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
     // 4. Processing Cost after Price Differential
     items.push({
       label: 'Processing Cost after Price Differential',
-      value: results.recovery || 0,
+      value: Math.abs(results.recovery || 0),
       format: 'money'
     });
     
