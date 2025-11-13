@@ -261,7 +261,7 @@ function calculateSupplementalFeeResults(inputs: CalculatorInputs): CalculatorRe
     skytabBonusRep,
     collectedLabel: 'Supplemental Fee Collected',
     collectedValue,
-    derivedFlatRate: flatRateAuto,
+    derivedFlatRate: flatRate,
     tipAssumptionNote: tipTiming === 'AFTER_TIP' ? 'Tip at Time of Sale' : 'Tip Handwritten – Post Sale',
     
     // Display fields
