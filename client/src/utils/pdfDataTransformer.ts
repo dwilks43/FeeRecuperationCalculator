@@ -343,7 +343,7 @@ function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: Calcul
   
   rows.push({ 
     label: 'Cost Reduction %', 
-    value: results.coveragePct || 0, 
+    value: results.procSavingsPct || 0, 
     format: 'percent' 
   });
   
@@ -499,7 +499,7 @@ function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: Ca
   
   rows.push({ 
     label: 'Cost Reduction %', 
-    value: results.coveragePct || 0, 
+    value: results.procSavingsPct || 0, 
     format: 'percent' 
   });
   
@@ -660,7 +660,7 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   
   rows.push({ 
     label: 'Cost Reduction %', 
-    value: results.coveragePct || 0, 
+    value: results.procSavingsPct || 0, 
     format: 'percent' 
   });
   
