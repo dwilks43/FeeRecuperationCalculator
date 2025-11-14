@@ -23,6 +23,7 @@ export default function Calculator() {
     currentRate: 0,
     interchangeCost: 0,
     flatRate: 0,
+    flatRatePct: 0, // Initialize flatRatePct
     taxRate: 0,
     tipRate: 0,
     priceDifferential: 0,
@@ -107,6 +108,7 @@ export default function Calculator() {
       currentRate: 0,
       interchangeCost: 0,
       flatRate: 0,
+      flatRatePct: 0, // Reset flatRatePct
       taxRate: 0,
       tipRate: 0,
       priceDifferential: 0
@@ -116,6 +118,8 @@ export default function Calculator() {
 
   const handleGenerateReport = async () => {
     console.log('Download PDF clicked');
+    console.log('Current inputs.flatRatePct:', inputs.flatRatePct);
+    console.log('Current calculatorData.flatRatePct:', calculatorData.flatRatePct);
     try {
       setIsGeneratingPDF(true);
       
@@ -129,6 +133,7 @@ export default function Calculator() {
       );
       
       console.log('Transformed data:', transformedData);
+      console.log('Transformed data flatRatePct:', transformedData.inputs?.flatRatePct, transformedData.metrics?.flatRatePct);
       console.log('Sending request to /api/generate-savings-report...');
       
       const response = await fetch('/api/generate-savings-report', {

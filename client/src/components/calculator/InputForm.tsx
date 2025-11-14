@@ -182,6 +182,13 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
 
   // Initialize auto-calculated flat rate on component mount
   useEffect(() => {
+    console.log('InputForm useEffect - Initial state:', {
+      flatRatePct: inputs.flatRatePct,
+      priceDifferential: inputs.priceDifferential,
+      isAutoFlatRate,
+      programType: inputs.programType
+    });
+    
     // Only auto-calculate if flatRatePct is not already set and we're in auto mode
     if ((inputs.flatRatePct === undefined || inputs.flatRatePct === 0) && isAutoFlatRate && inputs.priceDifferential > 0) {
       let flatRate: number;
@@ -193,6 +200,7 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
         const priceDiff = inputs.priceDifferential / 100;
         flatRate = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100; // Convert to percentage with 2 decimals
       }
+      console.log('InputForm useEffect - Auto-calculating flatRatePct:', flatRate);
       onInputChange('flatRatePct', flatRate);
       setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
       setAutoSynced(true);
@@ -375,11 +383,23 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       priceDifferential: 6.00
     };
 
+    // First load all demo values except priceDifferential
     Object.entries(demoValues).forEach(([key, value]) => {
-      const field = key as keyof CalculatorInputs;
-      setInputValues(prev => ({ ...prev, [field]: value.toString() }));
-      onInputChange(field, value);
+      if (key !== 'priceDifferential') {
+        const field = key as keyof CalculatorInputs;
+        setInputValues(prev => ({ ...prev, [field]: value.toString() }));
+        onInputChange(field, value);
+      }
     });
+
+    // Set autoSynced to true so price differential change will trigger flat rate calculation
+    setAutoSynced(true);
+    setIsAutoFlatRate(true);
+    
+    // Now set price differential which will trigger handlePriceDifferentialChange
+    // and auto-calculate flatRatePct
+    setInputValues(prev => ({ ...prev, priceDifferential: demoValues.priceDifferential.toString() }));
+    handlePriceDifferentialChange(demoValues.priceDifferential.toString());
   };
 
   return (
