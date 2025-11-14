@@ -1186,6 +1186,27 @@ export function preparePdfData(
   
   const selectedBulletData = bulletData[vertical];
   
+  // Calculate processing cost after differential based on program type
+  let processingCostAfterDiff = 0;
+  if (inputs.programType === 'DUAL_PRICING') {
+    // For Dual Pricing: use netChangeCards (which is procCharge - markupCollected)
+    processingCostAfterDiff = results.netChangeCards || results.recovery || 0;
+  } else if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+    // For Supplemental Fee: use netChangeCards or residualAfterMarkup
+    processingCostAfterDiff = results.netChangeCards || results.residualAfterMarkup || 0;
+  } else if (inputs.programType === 'CASH_DISCOUNTING') {
+    // For Cash Discounting: use recovery
+    processingCostAfterDiff = results.recovery || results.netChangeCards || 0;
+  }
+  
+  console.log('🔍 [PDF-TRANSFORM] processingCostAfterDiff calculation:', {
+    programType: inputs.programType,
+    recovery: results.recovery,
+    netChangeCards: results.netChangeCards,
+    residualAfterMarkup: results.residualAfterMarkup,
+    calculated: processingCostAfterDiff
+  });
+
   const metrics = {
     monthlySavings: uiModel.ui.sections.salesImpact.heroNumber || 0,
     annualSavings: uiModel.ui.sections.salesImpact.annualImpact || 0,
@@ -1193,7 +1214,7 @@ export function preparePdfData(
     costReductionPct: uiModel.ui.sections.salesImpact.costReduction || 0,
     currentCost: results.currentCost || 0,
     newProgramNetCost: (results.processingFees || 0) - (results.markupCollected || 0),
-    processingCostAfterDiff: results.recovery || results.netChangeCards || results.residualAfterMarkup || results.newCost || 0,
+    processingCostAfterDiff: processingCostAfterDiff,
     programType: uiModel.ui.sections.salesImpact.programType || getProgramTypeLabel(inputs.programType),
     currentProcessingRate: inputs.currentRate || 2.5,
     isRestaurant,
