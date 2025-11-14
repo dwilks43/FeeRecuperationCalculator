@@ -1354,10 +1354,34 @@ export function generateConfigDrivenPDF(data: any): string {
             // Process custom template with data bindings
             let processedTemplate = element.template || '';
             
-            // Replace FORMAT.money() and FORMAT.percent() functions
+            // Replace FORMAT.money(), FORMAT.moneyAbs(), and FORMAT.percent() functions
             processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.money\((.*?)\) \}\}/g, (match, path) => {
               const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
               return formatValue(value, 'currency', config);
+            });
+            
+            processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.moneyAbs\((.*?)\) \}\}/g, (match, path) => {
+              const value = resolveDataBinding(`{{ ${path} }}`, contextData, config);
+              // Debug logging for processingCostAfterDiff
+              if (path.includes('processingCostAfterDiff')) {
+                console.log(`🔍 [PDF-GEN] FORMAT.moneyAbs Debug (full-width):`, {
+                  path,
+                  resolvedValue: value,
+                  typeOfValue: typeof value,
+                  stringValue: String(value)
+                });
+              }
+              const numValue = parseFloat(String(value).replace(/[$,]/g, ''));
+              const absValue = Math.abs(numValue || 0);
+              const formatted = formatValue(absValue, 'currency', config);
+              if (path.includes('processingCostAfterDiff')) {
+                console.log(`🔍 [PDF-GEN] FORMAT.moneyAbs Result (full-width):`, {
+                  numValue,
+                  absValue,
+                  formatted
+                });
+              }
+              return formatted;
             });
             
             processedTemplate = processedTemplate.replace(/\{\{ FORMAT\.percent\((.*?)\) \}\}/g, (match, path) => {
