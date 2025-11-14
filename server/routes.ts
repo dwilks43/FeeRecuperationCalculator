@@ -491,6 +491,26 @@ async function generateSavingsReportPDF(data: any): Promise<Buffer> {
   const { generateConfigDrivenPDF } = await import('./pdf-generator-v1.7.0');
   const htmlContent = generateConfigDrivenPDF(data);
   
+  // Debug: Check if the Net Cost row is present in the generated HTML
+  const hasNetCostRow = htmlContent.includes('Net Cost After Price Differential');
+  console.log('🔍 [PDF-DEBUG] HTML contains "Net Cost After Price Differential" row:', hasNetCostRow);
+  
+  if (hasNetCostRow) {
+    // Extract just the waterfall table section for inspection
+    const waterfallMatch = htmlContent.match(/<table class='waterfall-table'>[\s\S]*?<\/table>/);
+    if (waterfallMatch) {
+      console.log('🔍 [PDF-DEBUG] Waterfall table HTML:', waterfallMatch[0]);
+    }
+  } else {
+    // Check what's actually in the HTML where we expect the row
+    const waterfallMatch = htmlContent.match(/<table class='waterfall-table'>[\s\S]*?<\/table>/);
+    if (waterfallMatch) {
+      console.log('🔍 [PDF-DEBUG] Waterfall table (missing Net Cost row):', waterfallMatch[0]);
+    } else {
+      console.log('🔍 [PDF-DEBUG] No waterfall table found in HTML!');
+    }
+  }
+  
   const docConfig = {
     document_type: 'pdf',
     document_content: htmlContent,
