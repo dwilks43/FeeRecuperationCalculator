@@ -1207,6 +1207,14 @@ export function preparePdfData(
     calculated: processingCostAfterDiff
   });
 
+  // Debug logging for flatRatePct
+  console.log('🔍 [PDF-TRANSFORM] derivedFlatRate debug:', {
+    'results.derivedFlatRate': results.derivedFlatRate,
+    'inputs.flatRatePct': inputs.flatRatePct,
+    'calculatorData.flatRatePct': calculatorData.flatRatePct,
+    'typeof results.derivedFlatRate': typeof results.derivedFlatRate
+  });
+
   const metrics = {
     monthlySavings: uiModel.ui.sections.salesImpact.heroNumber || 0,
     annualSavings: uiModel.ui.sections.salesImpact.annualImpact || 0,
@@ -1217,6 +1225,7 @@ export function preparePdfData(
     processingCostAfterDiff: processingCostAfterDiff,
     programType: uiModel.ui.sections.salesImpact.programType || getProgramTypeLabel(inputs.programType),
     currentProcessingRate: inputs.currentRate || 2.5,
+    flatRatePct: results.derivedFlatRate || inputs.flatRatePct || 0,  // Try both sources for flat rate
     isRestaurant,
     isRetail,
     businessVertical: vertical,

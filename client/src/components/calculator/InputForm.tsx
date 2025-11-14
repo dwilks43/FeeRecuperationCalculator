@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -179,6 +179,27 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       setIsAutoFlatRate(true);
     }
   };
+
+  // Initialize auto-calculated flat rate on component mount
+  useEffect(() => {
+    // Only auto-calculate if flatRatePct is not already set and we're in auto mode
+    if ((inputs.flatRatePct === undefined || inputs.flatRatePct === 0) && isAutoFlatRate && inputs.priceDifferential > 0) {
+      let flatRate: number;
+      if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+        const fee = inputs.priceDifferential / 100;
+        flatRate = Math.round(calculateAutoFlatRate(fee) * 10000) / 100; // Convert to percentage with 2 decimals
+      } else {
+        // DUAL_PRICING and CASH_DISCOUNTING modes use priceDiff/(1+priceDiff)
+        const priceDiff = inputs.priceDifferential / 100;
+        flatRate = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100; // Convert to percentage with 2 decimals
+      }
+      onInputChange('flatRatePct', flatRate);
+      setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRate) }));
+      setAutoSynced(true);
+    }
+    // We only want this to run once on mount to set the initial value
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const computeFeeFromFlatRate = () => {
     if (inputs.flatRatePct && inputs.flatRatePct > 0) {
