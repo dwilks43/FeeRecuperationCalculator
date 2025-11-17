@@ -383,23 +383,32 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
       priceDifferential: 6.00
     };
 
-    // First load all demo values except priceDifferential
+    // Load all demo values first
     Object.entries(demoValues).forEach(([key, value]) => {
-      if (key !== 'priceDifferential') {
-        const field = key as keyof CalculatorInputs;
-        setInputValues(prev => ({ ...prev, [field]: value.toString() }));
-        onInputChange(field, value);
-      }
+      const field = key as keyof CalculatorInputs;
+      setInputValues(prev => ({ ...prev, [field]: value.toString() }));
+      onInputChange(field, value);
     });
 
-    // Set autoSynced to true so price differential change will trigger flat rate calculation
+    // Calculate and set flatRatePct based on the demo price differential
+    const priceDiff = demoValues.priceDifferential / 100;
+    let flatRatePct: number;
+    if (inputs.programType === 'SUPPLEMENTAL_FEE') {
+      flatRatePct = Math.round(calculateAutoFlatRate(priceDiff) * 10000) / 100;
+    } else {
+      // DUAL_PRICING and CASH_DISCOUNTING modes
+      flatRatePct = Math.round(calculateAutoFlatRateDualPricing(priceDiff) * 10000) / 100;
+    }
+    
+    console.log('Demo Data - Auto-calculated flatRatePct:', flatRatePct, 'from priceDiff:', priceDiff);
+    
+    // Explicitly set flatRatePct in both local and parent state
+    setInputValues(prev => ({ ...prev, flatRatePct: formatNumberInput(flatRatePct) }));
+    onInputChange('flatRatePct', flatRatePct);
+    
+    // Set auto sync flags
     setAutoSynced(true);
     setIsAutoFlatRate(true);
-    
-    // Now set price differential which will trigger handlePriceDifferentialChange
-    // and auto-calculate flatRatePct
-    setInputValues(prev => ({ ...prev, priceDifferential: demoValues.priceDifferential.toString() }));
-    handlePriceDifferentialChange(demoValues.priceDifferential.toString());
   };
 
   return (
