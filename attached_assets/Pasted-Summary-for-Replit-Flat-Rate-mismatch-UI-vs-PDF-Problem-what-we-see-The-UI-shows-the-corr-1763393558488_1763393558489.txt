@@ -1,0 +1,73 @@
+Summary for Replit — Flat Rate % mismatch (UI vs PDF)
+
+Problem (what we see):
+
+The UI shows the correct Flat Rate % (e.g., 3.85% when price differential = 6%).
+
+The PDF (Page 4 → “Technical Calculation Details → Processing on Cards (New Program)”) shows 4% or the price differential–derived value instead.
+
+So the PDF is not reflecting the UI’s Flat Rate %.
+
+Why it’s happening:
+
+In the PDF pipeline, the “Flat Rate %” row is built from results.derivedFlatRate (decimal) instead of the UI value inputs.flatRatePct (percent).
+
+The PDF percent formatter is set to 0 decimals, so even a correct 0.0385 is rendered as 4% instead of 3.85%.
+
+In some templates, bindings may still reference results.derivedFlatRate, overriding the row value built by the transformer.
+
+What to change (minimal + safe):
+
+Transformer (client/src/utils/pdfDataTransformer.ts):
+
+Create a single canonical value for the PDF:
+flatRatePdfDecimal = (inputs.flatRatePct ? inputs.flatRatePct / 100 : results.derivedFlatRate || 0)
+(Normalize to decimal; UI percent takes precedence, fallback to derived.)
+
+Use that value for the “Flat Rate %” rows in:
+
+Input Parameters (ui.sections.inputParameters.rows)
+
+Processing on Cards (New Program) (ui.sections.liveVolumeBreakdown.rows)
+
+Set each row’s format/type to "percent" so the PDF applies percent formatting.
+
+PDF config (pdf.config.json):
+
+Set formatting.percent.decimals = 2 (currently 0) so 0.0385 → 3.85% consistently.
+
+Ensure the cell does not rebinding to results.derivedFlatRate in the template; it should use the row’s value built by the transformer.
+
+PDF generator (server/pdf-generator-v1.7.0.ts):
+
+Confirm the rendering path respects the row’s type/format and calls the percent formatter on the row value.
+
+(Optional hardening) In formatValue('percent', v), accept both decimal (0.0385) and percent (3.85) defensively.
+
+Acceptance criteria:
+
+With price differential = 6%, UI shows Flat Rate % = 3.85% → PDF shows 3.85% in both:
+
+Input Parameters → “Flat Rate %”
+
+Technical Calculation Details → “FLAT RATE %”
+
+If inputs.flatRatePct is absent, PDF cleanly falls back to results.derivedFlatRate (decimal) and still renders with two decimals.
+
+No template cell directly references results.derivedFlatRate for this row.
+
+Secondary items Replit can fix next (if you want them to own it)
+
+Turn Fees Into Growth duplicates:
+
+Build one array in the transformer (growthBullets) based on a single businessVertical (restaurant|retail|neutral).
+
+Template: iterate that single list (remove multi-branch Mustache).
+
+(Reason: Mustache truthiness on string booleans was rendering multiple blocks.)
+
+Keep “Customer Information” + “Processing Cost Breakdown” on the same page:
+
+Free space on Page 2 (move Rep block to end, keep “Ready to Get Started” tight).
+
+Wrap the two sections in a container with break-inside: avoid; add a hard page break before the wrapper or make them two columns (6/6) on the CustomerData page so they fit.
