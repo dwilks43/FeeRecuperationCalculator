@@ -55,6 +55,9 @@ async function sendSavingsReportEmail(toEmails: string[], ccEmails: string[], ca
   // Convert PDF to base64 for attachment
   const pdfBase64 = pdfBuffer.toString('base64');
   
+  // Convert the DMP logo to base64 for inline attachment (strip data URI prefix)
+  const logoBase64 = LOGO_DATA_URL.replace(/^data:image\/\w+;base64,/, '');
+  
   const emailData = {
     From: verifiedSender,
     To: toEmails.join(','),
@@ -62,11 +65,19 @@ async function sendSavingsReportEmail(toEmails: string[], ccEmails: string[], ca
     Subject: 'Your DMP Dual Pricing Savings Report',
     HtmlBody: generateEmailHTML(calculatorData, verifiedSender),
     TextBody: generateEmailText(calculatorData, verifiedSender),
-    Attachments: [{
-      Name: 'DMP-Savings-Report.pdf',
-      Content: pdfBase64,
-      ContentType: 'application/pdf'
-    }]
+    Attachments: [
+      {
+        Name: 'DMP-Savings-Report.pdf',
+        Content: pdfBase64,
+        ContentType: 'application/pdf'
+      },
+      {
+        Name: 'dmp-logo.jpg',
+        Content: logoBase64,
+        ContentType: 'image/jpeg',
+        ContentID: 'dmpLogo'  // This allows us to reference it as cid:dmpLogo in HTML
+      }
+    ]
   };
 
   const response = await fetch('https://api.postmarkapp.com/email', {
@@ -111,15 +122,23 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
     return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
   
-  // Create a properly formatted DMP logo as inline HTML with better email client compatibility
+  // Create logo HTML with proper image reference and fallback text
   const logoHTML = `
     <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
       <tr>
-        <td style="background: #004ED3; color: white; padding: 8px 16px; border-radius: 4px 0 0 4px; font-family: Arial, sans-serif; font-weight: bold; font-size: 18px; letter-spacing: 1px;">
-          DMP
-        </td>
-        <td style="background: white; color: #0B2340; padding: 8px 16px; font-family: Arial, sans-serif; font-size: 16px; font-weight: 600;">
-          Dynamic Merchant Processing
+        <td align="center">
+          <!--[if !mso]><!-->
+          <img src="cid:dmpLogo" alt="Dynamic Merchant Processing" width="200" height="60" style="display:block; border:0; outline:none; text-decoration:none; max-width:200px;" />
+          <!--<![endif]-->
+          <!--[if mso]>
+          <table cellpadding="0" cellspacing="0" border="0" width="200">
+            <tr>
+              <td style="background:#004ED3; color:white; padding:8px 16px; font-family:Arial,sans-serif; font-weight:bold; font-size:18px; text-align:center;">
+                DMP
+              </td>
+            </tr>
+          </table>
+          <![endif]-->
         </td>
       </tr>
     </table>`;
@@ -153,9 +172,10 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
         }
         .logo {
             margin-bottom: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            display: inline-block;
         }
         .header h1 {
             margin: 0;
