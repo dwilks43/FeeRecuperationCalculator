@@ -111,18 +111,18 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
     return num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   };
   
-  // Create a properly formatted DMP logo as inline SVG HTML
+  // Create a properly formatted DMP logo as inline HTML with better email client compatibility
   const logoHTML = `
-    <div style="display: inline-block; padding: 10px 0;">
-      <div style="display: flex; align-items: center; justify-content: center;">
-        <div style="background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%); color: white; padding: 8px 16px; border-radius: 4px; font-family: Arial, sans-serif; font-weight: bold; font-size: 18px; letter-spacing: 1px;">
+    <table cellpadding="0" cellspacing="0" border="0" style="margin: 0 auto;">
+      <tr>
+        <td style="background: #004ED3; color: white; padding: 8px 16px; border-radius: 4px 0 0 4px; font-family: Arial, sans-serif; font-weight: bold; font-size: 18px; letter-spacing: 1px;">
           DMP
-        </div>
-        <div style="color: #0B2340; margin-left: 10px; font-family: Arial, sans-serif; font-size: 16px; font-weight: 600;">
+        </td>
+        <td style="background: white; color: #0B2340; padding: 8px 16px; font-family: Arial, sans-serif; font-size: 16px; font-weight: 600;">
           Dynamic Merchant Processing
-        </div>
-      </div>
-    </div>`;
+        </td>
+      </tr>
+    </table>`;
   
   return `
 <!DOCTYPE html>
@@ -367,9 +367,15 @@ function generateEmailHTML(data: any, verifiedSender: string): string {
             
             <div class="cta-section">
                 <p style="color: #6A6F7A; margin-bottom: 20px;">Ready to keep more of what you earn?</p>
-                <div style="margin: 20px 0;">
-                    <a href="${contactLink}" class="cta" style="background: linear-gradient(135deg, #004ED3 0%, #0066FF 100%) !important; color: white !important; padding: 16px 40px; text-decoration: none !important; border-radius: 50px; display: inline-block !important; font-size: 16px; font-weight: 600; box-shadow: 0 4px 15px rgba(0, 78, 211, 0.3);">Start Saving Today →</a>
-                </div>
+                <table cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 20px auto;">
+                    <tr>
+                        <td align="center" style="background-color: #004ED3; border-radius: 50px;">
+                            <a href="${contactLink}" style="background-color: #004ED3; border: 1px solid #004ED3; font-family: 'Segoe UI', Arial, sans-serif; font-size: 16px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 50px; font-weight: bold; padding: 16px 40px;" target="_blank">
+                                <span style="color: #ffffff;">Start Saving Today →</span>
+                            </a>
+                        </td>
+                    </tr>
+                </table>
                 <p style="color: #6A6F7A; font-size: 13px; margin-top: 15px;">
                     Or simply reply to this email to schedule a consultation
                 </p>
