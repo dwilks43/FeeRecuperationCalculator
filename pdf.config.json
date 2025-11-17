@@ -115,7 +115,7 @@
     },
     "formatting": {
       "currency": { "decimals": 2, "thousands": true, "style": "leadingMinus", "symbol": "$", "align": "right" },
-      "percent": { "decimals": 0, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
+      "percent": { "decimals": 2, "suffix": "%", "thousands": false, "style": "leadingMinus", "align": "right" },
       "normalizePercent": { "mode": "auto", "thresholdGtOneTreatAsPercent": true },
       "tabularNumbers": true
     },

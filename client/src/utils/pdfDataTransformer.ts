@@ -206,12 +206,14 @@ function buildInputParamsRows(inputs: CalculatorInputs, results: CalculatorResul
     });
   }
   
-  // Flat Rate % - use the auto-calculated derivedFlatRate from results
-  // This ensures we show the correctly calculated flat rate (e.g., 3.85% for 4% price differential)
-  // derivedFlatRate is already in decimal form (0.0385 for 3.85%)
+  // Flat Rate % - prioritize UI value (inputs.flatRatePct) over auto-calculated (results.derivedFlatRate)
+  // This ensures PDF matches what the user sees in the UI
+  // inputs.flatRatePct is in percent (3.85), convert to decimal (0.0385)
+  // results.derivedFlatRate is already in decimal form (0.0385)
+  const flatRatePdfDecimal = inputs.flatRatePct ? inputs.flatRatePct / 100 : (results.derivedFlatRate || 0);
   rows.push({ 
     label: 'Flat Rate %', 
-    value: results.derivedFlatRate || 0,  // Already in decimal form
+    value: flatRatePdfDecimal,  // Normalized to decimal for PDF formatter
     format: 'percent' 
   });
   
@@ -317,9 +319,10 @@ function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: Calcul
     format: 'money' 
   });
   
+  // Use the same normalized flat rate value for consistency
   rows.push({ 
     label: 'Flat Rate %', 
-    value: results.derivedFlatRate || 0, 
+    value: inputs.flatRatePct ? inputs.flatRatePct / 100 : (results.derivedFlatRate || 0), 
     format: 'percent' 
   });
   
@@ -473,9 +476,10 @@ function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: Ca
     format: 'money' 
   });
   
+  // Use the same normalized flat rate value for consistency
   rows.push({ 
     label: 'Flat Rate %', 
-    value: results.derivedFlatRate || 0, 
+    value: inputs.flatRatePct ? inputs.flatRatePct / 100 : (results.derivedFlatRate || 0), 
     format: 'percent' 
   });
   
@@ -634,9 +638,10 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
     format: 'money' 
   });
   
+  // Use the same normalized flat rate value for consistency
   rows.push({ 
     label: 'Flat Rate %', 
-    value: results.derivedFlatRate || 0, 
+    value: inputs.flatRatePct ? inputs.flatRatePct / 100 : (results.derivedFlatRate || 0), 
     format: 'percent' 
   });
   
