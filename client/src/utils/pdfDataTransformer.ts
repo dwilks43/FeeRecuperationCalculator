@@ -347,7 +347,7 @@ function buildDualPricingBreakdownRows(inputs: CalculatorInputs, results: Calcul
   rows.push({ 
     label: 'Cost Reduction %', 
     value: results.procSavingsPct || 0, 
-    format: 'percent' 
+    format: 'percentWhole' 
   });
   
   // Section 3: Savings vs Today
@@ -504,7 +504,7 @@ function buildCashDiscountingBreakdownRows(inputs: CalculatorInputs, results: Ca
   rows.push({ 
     label: 'Cost Reduction %', 
     value: results.procSavingsPct || 0, 
-    format: 'percent' 
+    format: 'percentWhole' 
   });
   
   // Panel 3: Cash Revenue (New Program) - always show for Cash Discounting
@@ -666,7 +666,7 @@ function buildSupplementalFeeBreakdownRows(inputs: CalculatorInputs, results: Ca
   rows.push({ 
     label: 'Cost Reduction %', 
     value: results.procSavingsPct || 0, 
-    format: 'percent' 
+    format: 'percentWhole' 
   });
   
   // Section 3: Savings vs Today
@@ -990,7 +990,7 @@ function buildMonthlySavingsItems(inputs: CalculatorInputs, results: CalculatorR
     items.push({
       label: 'Processing Cost Savings %',
       value: results.procSavingsPct || 0,
-      format: 'percent'
+      format: 'percentWhole'
     });
     
     // 7. Total Net Gain (Monthly)
