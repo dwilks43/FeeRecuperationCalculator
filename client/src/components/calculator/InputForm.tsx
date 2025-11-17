@@ -668,34 +668,34 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
               <div className="mt-2 flex justify-center">
                 <div>
-                  <Label className="text-xs font-medium text-gray-600">Tip Timing</Label>
+                  <Label className="text-xs font-medium text-gray-600">Fee Tax Basis</Label>
                   <div className="space-y-2 mt-1">
                     <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
-                        name="tipTiming"
-                        value="BEFORE_TIP"
-                        checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP')) === 'BEFORE_TIP'}
-                        onChange={(e) => handleRadioChange('tipTiming', 'BEFORE_TIP')}
+                        name="feeTaxBasis"
+                        value="PRE_TAX"
+                        checked={(inputs.feeTaxBasis || 'PRE_TAX') === 'PRE_TAX'}
+                        onChange={(e) => handleRadioChange('feeTaxBasis', 'PRE_TAX')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
-                        <div className="font-medium">Tip handwritten (fee before tip)</div>
-                        <div className="text-gray-500 text-xs">Tip is added after the card is processed; fee is calculated before tip.</div>
+                        <div className="font-medium">Apply fee to pre-tax amount</div>
+                        <div className="text-gray-500 text-xs">Fee is calculated before tax.</div>
                       </div>
                     </label>
                     <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
-                        name="tipTiming"
-                        value="AFTER_TIP"
-                        checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_AFTER_TIP' ? 'AFTER_TIP' : 'BEFORE_TIP')) === 'AFTER_TIP'}
-                        onChange={(e) => handleRadioChange('tipTiming', 'AFTER_TIP')}
+                        name="feeTaxBasis"
+                        value="POST_TAX"
+                        checked={inputs.feeTaxBasis === 'POST_TAX'}
+                        onChange={(e) => handleRadioChange('feeTaxBasis', 'POST_TAX')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
-                        <div className="font-medium">Tip at time of sale (fee after tip)</div>
-                        <div className="text-gray-500 text-xs">Tip is part of the transaction when the fee is calculated.</div>
+                        <div className="font-medium">Apply fee to post-tax amount</div>
+                        <div className="text-gray-500 text-xs">Tax is added before fee.</div>
                       </div>
                     </label>
                   </div>
@@ -734,34 +734,34 @@ export default function InputForm({ inputs, onInputChange, onTooltip }: InputFor
             {inputs.programType === 'SUPPLEMENTAL_FEE' && (
               <div className="mt-2 flex justify-center">
                 <div>
-                  <Label className="text-xs font-medium text-gray-600">Fee Tax Basis</Label>
+                  <Label className="text-xs font-medium text-gray-600">Tip Timing</Label>
                   <div className="space-y-2 mt-1">
                     <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
-                        name="feeTaxBasis"
-                        value="PRE_TAX"
-                        checked={(inputs.feeTaxBasis || 'PRE_TAX') === 'PRE_TAX'}
-                        onChange={(e) => handleRadioChange('feeTaxBasis', 'PRE_TAX')}
+                        name="tipTiming"
+                        value="BEFORE_TIP"
+                        checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_BEFORE_TIP' ? 'BEFORE_TIP' : 'AFTER_TIP')) === 'BEFORE_TIP'}
+                        onChange={(e) => handleRadioChange('tipTiming', 'BEFORE_TIP')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
-                        <div className="font-medium">Apply fee to pre-tax amount</div>
-                        <div className="text-gray-500 text-xs">Fee is calculated before tax.</div>
+                        <div className="font-medium">Tip handwritten (fee before tip)</div>
+                        <div className="text-gray-500 text-xs">Tip is added after the card is processed; fee is calculated before tip.</div>
                       </div>
                     </label>
                     <label className="flex items-start text-xs cursor-pointer">
                       <input
                         type="radio"
-                        name="feeTaxBasis"
-                        value="POST_TAX"
-                        checked={inputs.feeTaxBasis === 'POST_TAX'}
-                        onChange={(e) => handleRadioChange('feeTaxBasis', 'POST_TAX')}
+                        name="tipTiming"
+                        value="AFTER_TIP"
+                        checked={(inputs.tipTiming || (inputs.feeTiming === 'FEE_AFTER_TIP' ? 'AFTER_TIP' : 'BEFORE_TIP')) === 'AFTER_TIP'}
+                        onChange={(e) => handleRadioChange('tipTiming', 'AFTER_TIP')}
                         className="mr-2 mt-0.5"
                       />
                       <div>
-                        <div className="font-medium">Apply fee to post-tax amount</div>
-                        <div className="text-gray-500 text-xs">Tax is added before fee.</div>
+                        <div className="font-medium">Tip at time of sale (fee after tip)</div>
+                        <div className="text-gray-500 text-xs">Tip is part of the transaction when the fee is calculated.</div>
                       </div>
                     </label>
                   </div>
